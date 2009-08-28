@@ -1,0 +1,34 @@
+
+
+<% if RAILS_ENV=="development" && false -%>
+  <table><tr><td>
+        <h1 style="color:red;">Development Mode</h1>
+      </td><td>
+        <%= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox"),
+          root_path %>
+      </td>
+    </tr>
+  </table>
+<% else -%>
+<table width="100%">
+
+  <tr>
+    <td style="text-align:center; ">
+      <%= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50),
+    root_path %>
+      
+    </td>
+    <td>
+      <p id="header_text" style="background-color: #ACCBE0;padding-top:1em;padding-bottom:1em">
+        Look inside the <b>method box</b>. Find and share <b>Datasets</b>, <b>Methods</b> and <b>Know-how</b>. Making <b>best practice</b> your practice
+      </p>
+    </td>
+    <!--<td style="text-align:right;">
+      <%#= link_to image_tag("eLab3.gif",:alt=>"eLab",:title=>"eLab"),root_path %>
+    </td>-->
+
+  </tr>
+</table>
+
+  
+<% end -%>

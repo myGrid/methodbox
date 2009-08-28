@@ -1,0 +1,81 @@
+<% truncate_length_for_boxes = 22 -%>
+<%= stylesheet_link_tag "scrolltable" %>
+<%= javascript_include_tag 'toggler.js' %>
+
+<ul class="sectionIcons">
+
+  <%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
+  <% if @archive.complete -%>
+    <li><%= icon('download', download_csvarchive_url, "Download CSV file", nil, "Download CSV file") -%></li>
+  <% elsif @archive.failure %>
+    <%= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
+  <% else %>
+    <li><B>Not yet available for download</B></li>
+  <% end %>
+  <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
+</ul>
+
+<h1 class="contribution_title">CSV Archive: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
+
+
+
+<div class="show_basic">
+  <%#*<div class="main_content_left_box">%>
+  <div class="box_about_actor">
+    <p>
+      <b>Title:</b>
+      <% unless @archive.title.blank? -%>
+        <span class="title"><%=h @archive.title -%></span>
+      <% else -%>
+        <p class="none_text">
+          No title
+        </p>
+      <% end -%>
+    </p>
+
+
+    <br/>
+
+    <p>
+      <b>Description</b>
+      <% unless @archive.description.blank? -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@archive.description)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
+    </p>
+    <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
+    <%#*</div>%>
+  </div>
+  <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
+
+    <table style="background-color:#ACCBE0;" width="100%">
+      <tr><td><%= submit_tag 'Add selected variables to cart'%></td></tr>
+      <tr><td> Select:
+          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+          ,&nbsp
+          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+      </td></tr>
+    </table>
+
+    <br/>
+    <div id="variablesTable">
+      <%= render :partial => "surveys/variables_table" %>
+    </div>
+    <br/>
+    <table style="background-color:#ACCBE0;" width="100%">
+      <tr><td><%= submit_tag 'Add selected variables to cart'%></td></tr>
+      <tr><td> Select:
+          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+          ,&nbsp
+          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+      </td></tr>
+    </table>
+
+  <% end %>
+
+</div>

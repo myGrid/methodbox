@@ -1,0 +1,33 @@
+<%= javascript_include_tag 'toggler.js' %>
+
+<div class="show_basic">
+  <br/>
+   <b>Datasets selected: <% @survey_list.each do |val| %>
+       <%= link_to(Survey.find(val).title, survey_path(Survey.find(val))) -%>
+      <% end %>
+      </b><br/><br/>
+  <% if SOLR_ENABLED && logged_in? && current_user.person %>
+
+    <% form_remote_tag :url => search_variables_surveys_url do -%>
+      <%#= hidden_field_tag 'survey_list', @survey_list %>
+      <% @survey_list.each do |val| %>
+        <%= hidden_field_tag "survey_list[]", val %>
+      <% end %>
+      <%= text_field_tag :search_query, @search_query %>
+      <%#= select_tag :search_type, options_for_select(search_type_options,@search_type)  %>
+      <%= submit_tag 'Search datasets' %>
+      <% end %>
+
+      <%# @survey_list.each do |item| %>
+        <%# item.class %>
+        <%#  Survey.find(item).year -%>
+      <%# end %>
+      <div id="table">
+        <%#= render :partial => "faceted_browse", :locals => { :collection => @variables, :survey_list => @survey_list} %>
+
+      </div>
+    
+  <% end %>
+
+</div>
+

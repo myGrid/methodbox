@@ -1,0 +1,103 @@
+<%= stylesheet_link_tag "scrolltable" %>
+
+
+<%#*<div class="show_basic">%>
+<%# if SOLR_ENABLED && logged_in? && current_user.person %>
+
+<%# form_remote_tag(:update => "table", :url => '/surveys/search_variables' ) do -%>
+<%#= text_field_tag :search_query, @search_query %>
+<%#= select_tag :search_type, options_for_select(search_type_options,@search_type)  %>
+<%#= submit_tag "Find variables"  %>
+<%# end -%>
+<%# end %>
+<%#*</div>%>
+<% unless @sorted_variables.empty? -%>
+  <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
+    <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
+    <%#= hidden_field_tag 'survey_array', @survey_list %>
+    <% @survey_list.each do |val| %>
+      <%= hidden_field_tag "survey_list[]", val %>
+    <% end %>
+    <table style="background-color:#ACCBE0;" width="100%">
+      <tr><td>
+<%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year'")%>
+<%#= image_submit_tag('famfamfam_silk/cart_add.png', :value=>'Add selected variables to cart')%>
+</td></tr>
+      <tr><td> Select:
+          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+          ,&nbsp
+          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+      </td></tr>
+    </table>
+
+    <%#= text_field_tag :search_query, @search_query %>
+    <%#= select_tag :search_type, options_for_select(search_type_options,@search_type)  %>
+    <%#= submit_tag 'Search variables' %>
+    <br/>
+
+
+    <%# form_remote_tag :url => search_variables_surveys_url do -%>
+    <%#= submit_tag 'Uncheck selection' %>
+    <%= hidden_field_tag 'search_query', @search_query %>
+    <%#*<div id="tableContainer" class="tableContainer">%>
+    <div id="variablesTable">
+      <%= render :partial => "variables_table" %>
+    </div>
+    <%#*</div>%>
+    <br/>
+    <table style="background-color:#ACCBE0;" width="100%">
+      <tr><td><%= submit_tag 'Add selected variables to cart'%></td></tr>
+      <tr><td> Select:
+          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+          ,&nbsp
+          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+      </td></tr>
+    </table>
+  <% end %>
+<% end %>
+<%#*<script type="text/javascript">%>
+
+<%#*//takes in the enclosing div, the element to be changed, the percent off the enclosing div%>
+<%#*//that it should be and any offset needed to be added%>
+<%#*function setWidthOfTable() {%>
+<%#*console.log("set width of table")%>
+<%#*var tablediv = document.getElementById("tableContainer")%>
+<%#*var curr_width = parseInt(tablediv.style.offsetWidth); // removes the "px" at the end%>
+<%#*console.log("curr width " + curr_width)%>
+<%#*//headers%>
+<%#*var first = document.getElementById("firstHeader")%>
+<%#*first.style.width = ((curr_width/100)*10) +"px";%>
+
+<%#*var second = document.getElementById("secondHeader")%>
+<%#*second.style.width = ((curr_width/100)*20) +"px";%>
+
+<%#*var third = document.getElementById("thirdHeader")%>
+<%#*third.style.width = ((curr_width/100)*30) +"px";%>
+
+<%#*var fourth = document.getElementById("fourthHeader")%>
+<%#*fourth.style.width = ((curr_width/100)*20) +"px";%>
+
+<%#*var fifth = document.getElementById("fifthHeader")%>
+<%#*fifth.style.width = ((curr_width/100)*20) +"px";%>
+
+
+<%#*//tds%>
+<%#*var firstTD = document.getElementById("firstTD")%>
+<%#*firstTD.style.width = ((curr_width/100)*10) +"px";%>
+
+<%#*var secondTD = document.getElementById("secondTD")%>
+<%#*secondTD.style.width = ((curr_width/100)*20) +"px";%>
+
+<%#*var thirdTD = document.getElementById("thirdTD")%>
+<%#*thirdTD.style.width = ((curr_width/100)*30) +"px";%>
+
+<%#*var fourthTD = document.getElementById("fourthTD")%>
+<%#*fourthTD.style.width = ((curr_width/100)*20) +"px";%>
+
+<%#*var fifthTD = document.getElementById("fifthTD")%>
+<%#*fifthTD.style.width = (((curr_width/100)*20) - 16) +"px";%>
+
+
+<%#*};%>
+<%#*</script>%>
+

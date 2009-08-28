@@ -1,0 +1,78 @@
+<% project = resource_list_item %>
+<% drag_id = model_to_drag_id(project) %>
+
+<% truncate_projects_institutions_length = 25 -%>
+
+<div class="list_items_container">
+  <table class="list_item">
+    <tr>
+      <td class="item_avatar" style="width: 100px">
+        <% image_tag = avatar(project, 60, true) -%>
+        <%= link_to_draggable(image_tag, url_for(project), :id => drag_id, :class => "asset", :title => tooltip_title_attrib(h(project.name))) -%>
+      </td>
+
+      <td class="item_details">
+        <p class="name">
+          <% project_name = h(project.name) -%>
+          <%= project_name.blank? ? "<span class='none_text'>Unknown</span>" : link_to(project_name, project_path(project)) -%>
+        </p>
+
+        <div class="box_standout">
+          <%= truncate(text_or_not_specified(project.description, :description => true), :length=>300) %>
+        </div>
+
+        <% web_page_link = ((is_nil_or_empty? project.web_page) ? "<span class='none_text'>Not specified</span>" : (link_to h(project.web_page), h(project.web_page),:popup=>true)) -%>
+        <p class="web_page">
+          <label>Public Web page:</label>
+          <%= "&nbsp;" + web_page_link -%>
+        </p>
+
+        <% wiki_page_link = ((is_nil_or_empty? project.wiki_page) ? "<span class='none_text'>Not specified</span>" : (link_to h(project.wiki_page), h(project.wiki_page),:popup=>true)) -%>
+        <p class="wiki_page">
+          <label>Internal Web page:</label>
+          <%= "&nbsp;" + wiki_page_link -%>
+        </p>
+
+        <div class="tags">
+
+          <div style="margin-top: 0.3em">
+            <p style="margin-left: 1em;">
+              <label>Tags:</label>
+              <% unless project.organisms.empty? -%>
+                <%= list_item_tags_list project.organisms,:type=>:organisms %>
+              <% else -%>
+                <span class="none_text">Not known</span>
+              <% end -%>
+            </p>
+
+
+          </div>
+        </div>
+
+      </td>
+
+      <%#*<td class="item_right_table_cell" style="width: 170px;">%>
+        <%#*<div>%>
+          <%#*<p class="section_header">Institutions</p>%>
+          <%#*<ul>%>
+            <%# unless project.institutions.empty? -%>
+              <%# for institution in project.institutions %>
+                <%#*<li>%>
+                  <%# if institution.country -%>
+									  <%#= flag_icon(institution.country) -%>
+									<%# else -%>
+  									<%#= icon("institution", nil, "Institution", nil, "&nbsp;"); -%>
+									<%# end -%>
+                  <%#= link_to(truncate(h(institution.name), :length=>truncate_projects_institutions_length), url_for(institution), :title => tooltip_title_attrib(h(institution.name))) -%>
+                <%#*</li>%>
+              <%# end  %>
+            <%# else -%>
+              <%#*<li><span class="none_text" style="margin-left: 1em;">Not known</span></li>%>
+            <%# end -%>
+          <%#*</ul>%>
+        <%#*</div>%>
+      <%#*</td>%>
+
+    </tr>
+  </table>
+</div>

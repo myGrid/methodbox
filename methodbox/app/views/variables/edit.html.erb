@@ -1,0 +1,100 @@
+<h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
+<% form_tag :url => update_variable_url do -%>
+  <div class="show_basic">
+    <div class="main_content_left_box">
+      <div class="box_about_actor">
+        <p>
+          <b>Title:</b>
+          <span class="title"><%=h @variable.name -%></span>
+        </p>
+        <br/>
+
+        <p>
+          <b>Description:</b>
+          <% unless @variable.value.blank? -%>
+            <div class="box_standout">
+              <%= simple_format(white_list(@variable.value)) -%>
+            </div>
+          <% else -%>
+            <p class="none_text">
+              No description
+            </p>
+          <% end -%>
+        </p>
+        <br/>
+        <p>
+          <b>Add new tags:</b>
+
+          <div id="facebook" class="clearfix" style="width:690px;margin:auto;">
+
+            <div tabindex="-1" style="width:690px;margin:auto;" id="<%=@variable.name + @variable.survey_id.to_s -%>_expertise_ids" class="clearfix tokenizer" onclick="$('<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input').focus();">
+              <span class="tokenizer_stretcher">^_^</span>
+              <span class="tab_stop"><input type="text" id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_hidden_input" tabindex="-1" ></span>
+
+              <div id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_display" class="tokenizer_input">
+                <input type="text" size="1" tabindex="" id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input" />
+              </div>
+
+            </div>
+            <%#= image_submit_tag('famfamfam_silk/disk.png', :alt=>'Save tags', :title=>'Save tags') -%>
+
+            <div id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_populate" class="clearfix autocomplete typeahead_list" style="width: 600px; height: auto; overflow-y: hidden;display:none">
+              <div class="typeahead_message">Enter tags for this variable</div>
+            </div>
+
+          </div>
+        </p>
+        <p>
+          <b>Current tags:</b>
+          <% @all_tags.each do |tag| %>
+            <%= tag.name %>
+            <% end %>
+        </p>
+        <%#*<p>%>
+      <%#*<b>Current tags for all variables:</b>%>
+      <%#*<div class="tags_smaller">%>
+        <%#*<div class="hTagcloud">%>
+          <%#*<div class="popularity">%>
+            <%# tag_cloud @all_tags, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
+              <%#=  link_to_remote tag.name,:anchor=>tag.id, :url => { :action => "search_for_tags", :id => tag.id }%>
+              <%#=  link_to_remote tag.name, :url =>search_for_tags_variable_url(:tag_id=>tag.id) %>
+
+              <%#= link_to tag.name, :class => css_class -%>
+            <%# end -%>
+
+          <%#*</div>%>
+        <%#*</div>%>
+      <%#*</div>%>
+    <%#*</p>%>
+        <p>
+          <b>Your notes:</b>
+          <div class="box_standout">
+            More info to come
+          </div>
+        </p>
+
+      </div>
+      <br/>
+      <%=  submit_tag 'Update variable' -%>
+    </div>
+
+  </div>
+
+<% end %>
+
+<script type="text/javascript">
+  var prepopulate_with = <%=Array.new.to_json %>
+  var variable_list = <%= get_all_annotations_for_variable(@variable) %>
+  var variable_autocompleter_id='<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocompleter'
+  var variable_autocompleter = new Autocompleter.LocalAdvanced(
+  variable_autocompleter_id, '<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input', '<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_display', '<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_populate', variable_list, prepopulate_with, {
+    frequency: 0.1,
+    updateElement: addAction,
+    search_field: "name",
+    id_field: "id",
+    validation_type: "any"
+  });
+  var hidden_input = new HiddenInput('<%=@variable.name + @variable.survey_id.to_s -%>_variable_hidden_input',variable_autocompleter);
+
+  autocompleters[variable_autocompleter_id] = variable_autocompleter;
+</script>

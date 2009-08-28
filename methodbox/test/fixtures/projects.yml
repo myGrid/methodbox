@@ -1,0 +1,38 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  name: Project1
+  web_page: "http://www.goggle.com"
+  wiki_page: "http://www.goggle.com"
+
+two:
+  id: 2
+  name: Project2
+  
+
+three:
+  id: 3
+  name: Project3
+  
+#a project not associated with any Workgroups or People
+four:
+  id: 4
+  name: Project4
+
+
+# ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
+
+myexperiment_project:
+  name: "myExperiment"
+
+moses_project:
+  name: "Moses"
+
+
+sysmo_project:
+  name: "SysMO"
+
+
+empty_project:
+  name: "empty project with no members..."

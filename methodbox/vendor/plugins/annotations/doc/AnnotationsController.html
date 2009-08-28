@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+	<title>Class: AnnotationsController</title>
+
+	<link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+	<script src="./js/jquery.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/thickbox-compressed.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/quicksearch.js" type="text/javascript"
+		charset="utf-8"></script>
+	<script src="./js/darkfish.js" type="text/javascript"
+		charset="utf-8"></script>
+
+</head>
+<body class="class">
+
+	<div id="metadata">
+		<div id="file-metadata">
+			<div id="file-list-section" class="section">
+				<h3 class="section-header">In Files</h3>
+				<div class="section-body">
+					<ul>
+					
+						<li><a href="./lib/app/controllers/annotations_controller_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+							class="thickbox" title="lib/app/controllers/annotations_controller.rb">lib/app/controllers/annotations_controller.rb</a></li>
+					
+					</ul>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<div id="class-metadata">
+
+			<!-- Parent Class -->
+			
+			<div id="parent-class-section" class="section">
+				<h3 class="section-header">Parent</h3>
+				
+				<p class="link"><a href="ApplicationController.html">ApplicationController</a></p>
+				
+			</div>
+			
+
+			<!-- Namespace Contents -->
+			
+
+			<!-- Method Quickref -->
+			
+			<div id="method-list-section" class="section">
+				<h3 class="section-header">Methods</h3>
+				<ul class="link-list">
+					
+					<li><a href="#M000044">#authorise_action</a></li>
+					
+					<li><a href="#M000032">#create</a></li>
+					
+					<li><a href="#M000038">#create_multiple</a></li>
+					
+					<li><a href="#M000041">#destroy</a></li>
+					
+					<li><a href="#M000039">#edit</a></li>
+					
+					<li><a href="#M000043">#find_annotatable</a></li>
+					
+					<li><a href="#M000042">#find_annotation</a></li>
+					
+					<li><a href="#M000027">#index</a></li>
+					
+					<li><a href="#M000031">#new</a></li>
+					
+					<li><a href="#M000030">#show</a></li>
+					
+					<li><a href="#M000040">#update</a></li>
+					
+				</ul>
+			</div>
+			
+
+			<!-- Included Modules -->
+			
+		</div>
+
+		<div id="project-metadata">
+			
+			
+			<div id="fileindex-section" class="section project-section">
+				<h3 class="section-header">Files</h3>
+				<ul>
+				
+					<li class="file"><a href="./AUTHORS_rdoc.html">AUTHORS.rdoc</a></li>
+				
+					<li class="file"><a href="./CHANGELOG_rdoc.html">CHANGELOG.rdoc</a></li>
+				
+					<li class="file"><a href="./INDEX_rdoc.html">INDEX.rdoc</a></li>
+				
+					<li class="file"><a href="./LICENSE.html">LICENSE</a></li>
+				
+					<li class="file"><a href="./README_rdoc.html">README.rdoc</a></li>
+				
+					<li class="file"><a href="./RUNNING_TESTS_rdoc.html">RUNNING_TESTS.rdoc</a></li>
+				
+					<li class="file"><a href="./RakeFile.html">RakeFile</a></li>
+				
+					<li class="file"><a href="./TODO_rdoc.html">TODO.rdoc</a></li>
+				
+					<li class="file"><a href="./VERSION_yml.html">VERSION.yml</a></li>
+				
+				</ul>
+			</div>
+			
+
+			<div id="classindex-section" class="section project-section">
+				<h3 class="section-header">Class Index
+					<span class="search-toggle"><img src="./images/find.png"
+						height="16" width="16" alt="[+]"
+						title="show/hide quicksearch" /></span></h3>
+				<form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+				<fieldset>
+					<legend>Quicksearch</legend>
+					<input type="text" name="quicksearch" value=""
+						class="quicksearch-field" />
+				</fieldset>
+				</form>
+
+				<ul class="link-list">
+				
+					<li><a href="./Annotations/Acts/Annotatable/ClassMethods.html">Annotations::Acts::Annotatable::ClassMethods</a></li>
+				
+					<li><a href="./Annotations/Acts/Annotatable/InstanceMethods.html">Annotations::Acts::Annotatable::InstanceMethods</a></li>
+				
+					<li><a href="./Annotations/Acts/Annotatable/SingletonMethods.html">Annotations::Acts::Annotatable::SingletonMethods</a></li>
+				
+					<li><a href="./Annotations/Acts/AnnotationSource/ClassMethods.html">Annotations::Acts::AnnotationSource::ClassMethods</a></li>
+				
+					<li><a href="./Annotations/Acts/AnnotationSource/InstanceMethods.html">Annotations::Acts::AnnotationSource::InstanceMethods</a></li>
+				
+					<li><a href="./Annotations/Acts/AnnotationSource/SingletonMethods.html">Annotations::Acts::AnnotationSource::SingletonMethods</a></li>
+				
+					<li><a href="./Annotations/Config.html">Annotations::Config</a></li>
+				
+					<li><a href="./AnnotationsVersionFu.html">AnnotationsVersionFu</a></li>
+				
+					<li><a href="./AnnotationsVersionFu/ClassMethods.html">AnnotationsVersionFu::ClassMethods</a></li>
+				
+					<li><a href="./AnnotationsVersionFu/InstanceMethods.html">AnnotationsVersionFu::InstanceMethods</a></li>
+				
+					<li><a href="./Annotation.html">Annotation</a></li>
+				
+					<li><a href="./AnnotationAttribute.html">AnnotationAttribute</a></li>
+				
+					<li><a href="./AnnotationValueSeed.html">AnnotationValueSeed</a></li>
+				
+					<li><a href="./AnnotationsController.html">AnnotationsController</a></li>
+				
+					<li><a href="./AnnotationsMigrationGenerator.html">AnnotationsMigrationGenerator</a></li>
+				
+					<li><a href="./AnnotationsMigrationV1.html">AnnotationsMigrationV1</a></li>
+				
+				</ul>
+				<div id="no-class-search-results" style="display: none;">No matching classes.</div>
+			</div>
+
+			
+		</div>
+	</div>
+
+	<div id="documentation">
+		<h1 class="class">AnnotationsController</h1>
+
+		<div id="description">
+			
+		</div>
+
+		<!-- Constants -->
+		
+
+		<!-- Attributes -->
+		
+
+		<!-- Methods -->
+		
+		<div id="public-instance-method-details" class="method-section section">
+			<h3 class="section-header">Public Instance Methods</h3>
+
+		
+			<div id="create-method" class="method-detail ">
+				<a name="M000032"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">create</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+POST /annotations POST /annotations.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="create-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 49</span>
+49:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create</span>
+50:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_type</span>].<span class="ruby-identifier">blank?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_id</span>].<span class="ruby-identifier">blank?</span>
+51:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">logged_in?</span>
+52:         <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_type</span>] = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>
+53:         <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_id</span>] = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>
+54:       <span class="ruby-keyword kw">end</span>
+55:     <span class="ruby-keyword kw">end</span>
+56:     
+57:     <span class="ruby-ivar">@annotation</span> = <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>])
+58:     <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">annotatable</span> = <span class="ruby-ivar">@annotatable</span>
+59: 
+60:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+61:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">save</span>
+62:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-value str">'Annotation was successfully created.'</span>
+63:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:back</span> }
+64:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotation</span>, <span class="ruby-identifier">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:created</span>, <span class="ruby-identifier">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotation</span> }
+65:       <span class="ruby-keyword kw">else</span>
+66:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;new&quot;</span> }
+67:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:unprocessable_entity</span> }
+68:       <span class="ruby-keyword kw">end</span>
+69:     <span class="ruby-keyword kw">end</span>
+70:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="create-multiple-method" class="method-detail ">
+				<a name="M000038"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">create_multiple</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+POST /annotations/create_multiple POST /annotations/create_multiple.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="create-multiple-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 74</span>
+74:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_multiple</span>
+75:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_type</span>].<span class="ruby-identifier">blank?</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_id</span>].<span class="ruby-identifier">blank?</span>
+76:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">logged_in?</span>
+77:         <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_type</span>] = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">class</span>.<span class="ruby-identifier">name</span>
+78:         <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:source_id</span>] = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>
+79:       <span class="ruby-keyword kw">end</span>
+80:     <span class="ruby-keyword kw">end</span>
+81:     
+82:     <span class="ruby-identifier">success</span>, <span class="ruby-identifier">annotations</span>, <span class="ruby-identifier">errors</span> = <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">create_multiple</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:separator</span>])
+83: 
+84:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+85:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">success</span>
+86:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-value str">'Annotations were successfully created.'</span>
+87:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:back</span> }
+88:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">annotations</span>, <span class="ruby-identifier">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:created</span>, <span class="ruby-identifier">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotatable</span> }
+89:       <span class="ruby-keyword kw">else</span>
+90:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:error</span>] = <span class="ruby-value str">'Some or all annotations failed to be created.'</span>
+91:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:back</span> }
+92:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">annotations</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">errors</span>, <span class="ruby-identifier">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:unprocessable_entity</span> }
+93:       <span class="ruby-keyword kw">end</span>
+94:     <span class="ruby-keyword kw">end</span>
+95:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="destroy-method" class="method-detail ">
+				<a name="M000041"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">destroy</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+DELETE /annotations/1 DELETE /annotations/1.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="destroy-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 120</span>
+120:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">destroy</span>
+121:     <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">destroy</span>
+122: 
+123:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+124:       <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-value str">'Annotation successfully deleted.'</span>
+125:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:back</span> }
+126:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">head</span> <span class="ruby-identifier">:ok</span> }
+127:     <span class="ruby-keyword kw">end</span>
+128:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="edit-method" class="method-detail ">
+				<a name="M000039"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">edit</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+GET /annotations/1/edit
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="edit-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 98</span>
+98:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">edit</span>
+99:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="index-method" class="method-detail ">
+				<a name="M000027"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">index</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+GET /annotations GET /annotations.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="index-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 11</span>
+11:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
+12:     <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:num</span>] <span class="ruby-operator">||=</span> <span class="ruby-value">50</span>
+13:     
+14:     <span class="ruby-ivar">@annotations</span> =  
+15:     <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@annotatable</span>.<span class="ruby-identifier">nil?</span>
+16:       <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">:all</span>, <span class="ruby-identifier">:limit</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:num</span>])      
+17:     <span class="ruby-keyword kw">else</span>
+18:       <span class="ruby-ivar">@annotatable</span>.<span class="ruby-identifier">latest_annotations</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:num</span>])
+19:     <span class="ruby-keyword kw">end</span>
+20: 
+21:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+22:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-comment cmt"># index.html.erb</span>
+23:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotations</span> }
+24:     <span class="ruby-keyword kw">end</span>
+25:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="new-method" class="method-detail ">
+				<a name="M000031"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">new</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+GET /annotations/new GET /annotations/new.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="new-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 38</span>
+38:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">new</span>
+39:     <span class="ruby-ivar">@annotation</span> = <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">new</span>
+40: 
+41:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+42:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-comment cmt"># new.html.erb</span>
+43:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotation</span> }
+44:     <span class="ruby-keyword kw">end</span>
+45:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="show-method" class="method-detail ">
+				<a name="M000030"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">show</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+GET /annotations/1 GET /annotations/1.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="show-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 29</span>
+29:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">show</span>
+30:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+31:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> <span class="ruby-comment cmt"># show.html.erb</span>
+32:       <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotation</span> }
+33:     <span class="ruby-keyword kw">end</span>
+34:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="update-method" class="method-detail ">
+				<a name="M000040"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">update</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+PUT /annotations/1 PUT /annotations/1.xml
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="update-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 103</span>
+103:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">update</span>
+104:     <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">value</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:value</span>]
+105:     <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">version_creator_id</span> = <span class="ruby-identifier">current_user</span>.<span class="ruby-identifier">id</span>
+106:     <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+107:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">save</span>
+108:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-value str">'Annotation was successfully updated.'</span>
+109:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:back</span> }
+110:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">head</span> <span class="ruby-identifier">:ok</span> }
+111:       <span class="ruby-keyword kw">else</span>
+112:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;edit&quot;</span> }
+113:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">render</span> <span class="ruby-identifier">:xml</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">errors</span>, <span class="ruby-identifier">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">:unprocessable_entity</span> }
+114:       <span class="ruby-keyword kw">end</span>
+115:     <span class="ruby-keyword kw">end</span>
+116:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+		<div id="protected-instance-method-details" class="method-section section">
+			<h3 class="section-header">Protected Instance Methods</h3>
+
+		
+			<div id="authorise-action-method" class="method-detail ">
+				<a name="M000044"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">authorise_action</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p>
+Currently only checks that the source of the annotation matches the current
+user
+</p>
+					
+
+					
+					<div class="method-source-code"
+						id="authorise-action-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 150</span>
+150:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">authorise_action</span>
+151:     <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">logged_in?</span> <span class="ruby-keyword kw">or</span> (<span class="ruby-ivar">@annotation</span>.<span class="ruby-identifier">source</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">current_user</span>)
+152:       <span class="ruby-comment cmt"># TODO: return either a 401 or 403 depending on authentication</span>
+153:       <span class="ruby-identifier">respond_to</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">format</span><span class="ruby-operator">|</span>
+154:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:error</span>] = <span class="ruby-value str">'You are not allowed to perform this action.'</span>
+155:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">html</span> { <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:back</span> }
+156:         <span class="ruby-identifier">format</span>.<span class="ruby-identifier">xml</span>  { <span class="ruby-identifier">head</span> <span class="ruby-identifier">:forbidden</span> }
+157:       <span class="ruby-keyword kw">end</span>
+158:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+159:     <span class="ruby-keyword kw">end</span>
+160:     <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+161:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="find-annotatable-method" class="method-detail ">
+				<a name="M000043"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">find_annotatable</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="find-annotatable-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 136</span>
+136:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_annotatable</span>
+137:     <span class="ruby-ivar">@annotatable</span> = <span class="ruby-keyword kw">nil</span>
+138:     
+139:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>]
+140:       <span class="ruby-ivar">@annotatable</span> = <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">find_annotatable</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:annotatable_type</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotation</span>][<span class="ruby-identifier">:annotatable_id</span>])
+141:     <span class="ruby-keyword kw">end</span>
+142:     
+143:     <span class="ruby-comment cmt"># If still nil try again with alternative params</span>
+144:     <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@annotatable</span>.<span class="ruby-identifier">nil?</span>
+145:       <span class="ruby-ivar">@annotatable</span> = <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">find_annotatable</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotatable_type</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:annotatable_id</span>])
+146:     <span class="ruby-keyword kw">end</span>
+147:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+			<div id="find-annotation-method" class="method-detail ">
+				<a name="M000042"></a>
+
+				<div class="method-heading">
+				
+					<span class="method-name">find_annotation</span><span
+						class="method-args">()</span>
+					<span class="method-click-advice">click to toggle source</span>
+				
+				</div>
+
+				<div class="method-description">
+					
+					<p class="missing-docs">(Not documented)</p>
+					
+
+					
+					<div class="method-source-code"
+						id="find-annotation-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/app/controllers/annotations_controller.rb, line 132</span>
+132:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">find_annotation</span>
+133:     <span class="ruby-ivar">@annotation</span> = <span class="ruby-constant">Annotation</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:id</span>])
+134:   <span class="ruby-keyword kw">end</span></pre>
+					</div>
+					
+				</div>
+
+				
+			</div>
+
+		
+		</div>
+	
+
+	</div>
+
+
+	<div id="rdoc-debugging-section-dump" class="debugging-section">
+	
+		<p>Disabled; run with --debug to generate this.</p>
+	
+	</div>
+
+	<div id="validator-badges">
+		<p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+		<p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+			Rdoc Generator</a> 1.1.6</small>.</p>
+	</div>
+
+</body>
+</html>
+

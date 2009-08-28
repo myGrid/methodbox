@@ -1,0 +1,9 @@
+one:
+  status: MyString
+  person_id: 1  
+  assay_id: 1
+
+two:
+  status: MyString
+  person_id: 1  
+  assay_id: 1

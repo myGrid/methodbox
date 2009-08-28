@@ -1,0 +1,152 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  first_name: "quentin"
+  last_name: "jones"
+  email: "quentin@email.com"
+
+two:
+  id: 2
+  first_name: "aaron"
+  last_name: "spiggle"
+  email: "aaron@email.com"
+
+three:
+  id: 3
+  first_name: "no_user"
+  last_name: "smith"
+
+fred:  
+  first_name: "fred"
+  last_name: "blogs"
+
+no_first_name:
+  id: 6
+  last_name: "lastname"
+
+no_last_name:
+  id: 7        
+  first_name: "firstname"
+
+double_firstname:
+  id: 8        
+  first_name: "Fred David"
+  last_name: "Bloggs"
+
+double_lastname:
+  id: 9        
+  first_name: "Fred"
+  last_name: "Smith Jones"
+
+double_barrelled_lastname:
+  id: 10        
+  first_name: "Fred"
+  last_name: "Smith-Jones"
+
+cant_edit:
+  id: 11        
+  first_name: "Cant"
+  last_name: "Edit"
+
+can_edit:
+  id: 12
+  first_name: "Can"
+  last_name: "Edit"
+
+not_registered:
+  id: 13
+  first_name: "Fred"
+  email: "test@test.com"
+
+pal:
+  id: 14
+  first_name: "A Pal"
+  email: "test@test.com"
+  is_pal: true
+
+
+# ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
+
+person_for_owner_of_my_first_sop:
+  first_name: "OwnerOf"
+  last_name: "MyFirstSop"
+
+
+person_for_owner_of_fully_public_policy:
+  first_name: "OwnerOf"
+  last_name: "FullyPublicPolicy"
+
+
+person_for_owner_of_download_for_all_registered_users_policy:
+  first_name: "OwnerOf"
+  last_name: "DownloadForAllRegisteredUsersPolicy"
+
+
+person_for_owner_of_editing_for_all_sysmo_users_policy:
+  first_name: "OwnerOf"
+  last_name: "EditingForAllSysMOUsersPolicy"
+
+
+person_for_owner_of_custom_permissions_only_policy:
+  first_name: "OwnerOf"
+  last_name: "CustomPermissionsOnlyPolicy"
+
+
+random_userless_person:
+  first_name: "random"
+  last_name: "person"
+
+
+person_not_associated_with_any_projects:
+  first_name: "not"
+  last_name: "associated"
+
+
+person_to_associate_with_sops_owning_users:
+  first_name: "person"
+  last_name: "place_holder"
+
+
+person_for_test_user_only_in_whitelist:
+  first_name: "TestAccessor"
+  last_name: "OnlyInWhitelist"
+
+
+person_for_test_user_only_in_blacklist:
+  first_name: "TestAccessor"
+  last_name: "OnlyInBlacklist"
+
+
+person_for_sysmo_user_in_blacklist:
+  first_name: "SysMO-User"
+  last_name: "InBlacklist"
+
+
+person_for_sysmo_user_both_in_blacklist_and_whitelist:
+  first_name: "SysMO-User"
+  last_name: "InWhitelistAndBlacklist"
+
+
+person_for_random_registered_user_who_wants_to_access_different_things:
+  first_name: "Registered-User"
+  last_name: "WantsToAccessManyThingsAndHasSomePermissions"
+
+person_for_model_owner:
+  first_name: "Model"
+  last_name: "Owner"
+
+person_for_datafile_owner:
+  first_name: "Datafile"
+  last_name: "Owner"
+  email: "data_file_owner@email.com"
+
+modeller_person:
+  first_name: "Modeller"
+  disciplines: modeller,experimentalist
+
+person_without_group:
+  first_name: "Lonely"
+
+person_without_user:
+  first_name: "Userless"

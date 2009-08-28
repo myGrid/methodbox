@@ -1,0 +1,53 @@
+<%= javascript_include_tag "sharing.js" -%>
+
+<h1>New Survey</h1>
+
+<div class="show_basic">
+  <% form_tag({:action => :create}, :multipart => true) do -%>
+    <%= error_messages_for :survey -%>
+
+    <center>
+      <div style="width: 60%;">
+
+        <p>
+          <b>File to upload:&nbsp;</b>
+          <%= file_field :survey, :data -%>
+        </p>
+
+        <p style="margin-top: 1.5em;">
+          <b>Title:</b><br/>
+          <% survey_title_value = (params[:survey].blank? || params[:survey][:title].blank?) ? nil : params[:survey][:title] -%>
+          <%= text_field_tag 'survey[title]', survey_title_value, :style => "width: 100%;" -%>
+        </p>
+
+        <p style="margin-top: 0.5em;">
+          <b>Description:</b><br/>
+          <% survey_description_value = (params[:survey].blank? || params[:survey][:description].blank?) ? nil : params[:survey][:description] -%>
+          <%= text_area_tag 'survey[description]', survey_description_value, :style => "width: 100%;", :rows => 5 -%>
+        </p>
+
+        <%= render :partial => "assets/project_selector", :locals => { :resource_type => "Survey",   # this is only for presentation, not for any processing
+          :project_hash => current_user.generate_own_project_id_name_hash } -%>
+
+      </div>
+
+    </center>
+
+
+
+
+    <p style="margin: 2.5em 0 0 0;">
+      <%= render :partial => "assets/sharing_form" -%>
+    </p>
+
+    <p style="margin: 0;">
+      <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Survey",  # this is only for presentation, not for any processing
+        :existing_attributions => [],
+        :attribution_suggestions => Survey.get_all_as_json(current_user) } -%>
+    </p>
+
+    <p style="text-align: center; margin-top: 1.5em;">
+      <%= submit_tag "Upload and Save", :id => "survey_submit_btn", :onclick => "javascript: validateSurveyFields(true); return(false);" -%> or <%= link_to 'Cancel', surveys_path -%>
+    </p>
+  <% end -%>
+</div>

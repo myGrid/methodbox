@@ -1,0 +1,28 @@
+<%# this should be set by the caller, this is an extra check -%>
+<% odd_row ||= false -%>
+<% narrow_view ||= false -%>
+
+<table class="list_item">
+  <% @sorted_variables.each do |item| %>
+  <tr class="<%= odd_row ? "odd_row" : "even_row" -%>">
+    <td style="width: 125px;">
+      <p style="margin-top:0; padding-top:0; text-align: center;"><%= check_box_tag "entry_ids[]", item.id %></p>
+      <center><%#= contributor(resource.asset.contributor, true, 60) -%></center>
+    </td>
+
+    <td style="text-align: left;">
+      <p class="title">
+        <%= icon "survey", nil, nil, nil, '' -%>
+        <% title = h(item.value) -%>
+        <%= item.value -%>
+        <div class="fold"><div class="foldTitle">stuff</div><div class="foldContent">more stuff</div></div>
+      </p>
+
+      <%#*<p style="font-size:85%; margin-top: 0.3em; padding-top: 0;">%>
+      <%#*<b>Associated project: </b>%>
+      <%#= (resource.asset.project ? link_to(h(resource.asset.project.name), project_path(resource.asset.project.id)) : "<span class='none_text'>None</span>" ) -%>
+      <%#*</p>%>
+
+  </tr>
+  <% end %>
+</table>

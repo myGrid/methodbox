@@ -1,0 +1,20 @@
+<%#*if i could remember te conditional syntax - use curr_cycle if present otherwise use cycle("odd,even") then%>
+<%#*i would not need this view!%>
+<div class="<%= curr_cycle %>" id= "<%=item.name + item.survey_id.to_s -%>">
+  <table>
+    <tbody class="scrollContent">
+      <tr>
+        <td><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox' %>
+        </td><td> <%= link_to_remote(image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0), :url=> more_info_surveys_url(:curr_cycle => current_cycle, :div_id=>item.name + item.survey_id.to_s,:item_id => item.id))%>
+        </td>
+        <td>
+          <%= link_to(item.name, variable_path(item)) -%>
+        </td>
+        <td><%= item.value -%></td>
+        <%#*<td>%>
+<%#= Survey.find(item.survey_id).surveytype -%>
+<%#*</td>%>
+      <td><%= Survey.find(item.survey_id).year -%> </td></tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,83 @@
+<%= javascript_include_tag 'toggler.js' %>
+<%# form_remote_tag :url => search_variables_surveys_url do -%>
+<div  id= "<%=item.name + item.survey_id.to_s -%>">
+  <div class="<%= curr_cycle -%>">
+    <table>
+      <tbody class="scrollContent">
+        <tr>
+          <td><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox' %>
+          </td><td><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...", :alt=>"Hide details...", :border => 0), :url=> hide_info_surveys_url(:div_id=>item.name + item.survey_id.to_s,:item_id => item.id))%>
+          </td>
+          <td>
+            <%= link_to(item.name, variable_path(item)) -%>
+          </td><td><%= item.value -%></td>
+          <%#*<td>%>
+          <%#= Survey.find(item.survey_id).surveytype -%>
+          <%#*</td>%>
+        <td><%= Survey.find(item.survey_id).year -%> </td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="<%= curr_cycle -%>">
+    <table>
+      <tbody class="scrollContent">
+        <tr>
+          <td colspan="2"><a href="<%= Survey.find(item.survey_id).UKDA_summary%> ">UKDA Summary</a></td>
+          <td colspan="3"><a href="<%= Survey.find(item.survey_id).headline_report%> ">Headline report</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <b>Current tags:</b>
+    <% @item.title_counts.each do |tag|  %>
+      <%=  tag.name -%>
+    <% end %>
+  </div>
+
+  <div id="facebook" class="clearfix" style="width:690px;margin:auto;">
+
+    <div tabindex="-1" style="width:630px;margin:auto;" id="<%=item.name + item.survey_id.to_s -%>_expertise_ids" class="clearfix tokenizer" onclick="$('<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_input').focus();">
+      <span class="tokenizer_stretcher">^_^</span>
+      <span class="tab_stop"><input type="text" id="<%=item.name + item.survey_id.to_s -%>_variable_hidden_input" tabindex="-1" ></span>
+
+      <div id="<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_display" class="tokenizer_input">
+        <input type="text" size="1" tabindex="" id="<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_input" />
+      </div>
+
+    </div>
+
+    <%= image_submit_tag('famfamfam_silk/disk.png', :alt=>'Save tags', :title=>'Save tags', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = '#{item.survey_id.to_s}';Form.getInputs(this.form, null,'variable_name')[0].value = '#{item.name}';Form.getInputs(this.form, null,'variable_identifier')[0].value = '#{item.id.to_s}';") -%>
+
+    <%#*<div style="display:inline;">%>
+    <%#= image_tag('famfamfam_silk/disk.png', :alt=>'Save tags', :title=>'Save tags')  %>
+    <%#*</div>%>
+    <div id="<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_populate" class="clearfix autocomplete typeahead_list" style="width: 600px; height: auto; overflow-y: hidden;display:none">
+      <div class="typeahead_message">Enter tags for this variable</div>
+    </div>
+
+
+
+
+  </div>
+
+</div>
+<%# end %>
+<script type="text/javascript">
+<%#*var prepopulate_with =%>
+<%#= get_all_annotations_for_variable_with_current_user(item) %>
+  var prepopulate_with = <%= Array.new.to_json %>
+  var variable_list = <%= get_all_annotations_for_variable(item) %>
+  var variable_autocompleter_id='<%=item.name + item.survey_id.to_s -%>_variable_autocompleter'
+  var variable_autocompleter = new Autocompleter.LocalAdvanced(
+  variable_autocompleter_id, '<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_input', '<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_display', '<%=item.name + item.survey_id.to_s -%>_variable_autocomplete_populate', variable_list, prepopulate_with, {
+    frequency: 0.1,
+    updateElement: addAction,
+    search_field: "name",
+    id_field: "id",
+    validation_type: "any"
+  });
+  var hidden_input = new HiddenInput('<%=item.name + item.survey_id.to_s -%>_variable_hidden_input',variable_autocompleter);
+
+  autocompleters[variable_autocompleter_id] = variable_autocompleter;
+</script>

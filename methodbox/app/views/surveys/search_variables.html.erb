@@ -1,0 +1,72 @@
+<%= javascript_include_tag 'toggler.js' %>
+
+<%= stylesheet_link_tag "scrolltable" %>
+
+
+
+<%#*<div class="show_basic">%>
+<%# if SOLR_ENABLED && logged_in? && current_user.person %>
+
+<%# form_remote_tag(:update => "table", :url => '/surveys/search_variables' ) do -%>
+<%#= text_field_tag :search_query, @search_query %>
+<%#= select_tag :search_type, options_for_select(search_type_options,@search_type)  %>
+<%#= submit_tag "Find variables"  %>
+<%# end -%>
+<%# end %>
+<%#*</div>%>
+<% unless @sorted_variables.empty? -%>
+ 
+  <% form_tag('/surveys/search_variables') do -%>
+    <%#= hidden_field_tag 'survey_list', @survey_list %>
+    <% @survey_list.each do |val| %>
+      <%= hidden_field_tag "survey_list[]", val %>
+    <% end %>
+    <%= text_field_tag :search_query, @search_query %>
+    <%#= select_tag :search_type, options_for_select(search_type_options,@search_type)  %>
+    <%= submit_tag 'Search variables' %>
+    <%= submit_tag 'Select variables', :name => 'submit'%><%= submit_tag 'Reset variable selection', :name => 'submit'%>
+    <%= hidden_field_tag 'search_query', @search_query %>
+    <div id="tableContainer" class="tableContainer">
+      <table class="scrollTable" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <thead class="fixedHeader">
+
+          <tr><th></th><th <%= sort_td_class_helper "variable" %>>
+              <%= sort_link_helper("Variable", "variable", @search_query, @survey_list) %>
+            </th><th <%= sort_td_class_helper "description" %>>
+              <%= sort_link_helper("Description", "description", @search_query, @survey_list) %>
+            </th><th <%= sort_td_class_helper "survey" %>>
+              <%= sort_link_helper("Survey", "survey", @search_query, @survey_list) %>
+            </th><th <%= sort_td_class_helper "year" %>>
+              <%= sort_link_helper("Year", "year", @search_query, @survey_list) %>
+          </th></tr>
+        </thead>
+
+        <tbody class="scrollContent"  overflow="auto">
+          <% @sorted_variables.each do |item| %>
+            <tr id= "<%=item.name + item.survey_id.to_s -%>" class="<%= cycle("even","odd") %>">
+              <td><%= check_box_tag "variable_ids[]", item.id %>
+              <span onclick="javascript:Toggle('<%=item.name + item.survey_id.to_s -%>');">
+                <img src="/images/folds/unfold.png" id="<%=item.name + item.survey_id.to_s %>_Img"/></span>
+                </td>
+              <td>
+                <%= item.name -%>
+              </td><td><%= item.value -%></td><td><%= Survey.find(item.survey_id).surveytype -%> </td>
+            <td><%= Survey.find(item.survey_id).year -%> </td></tr>
+           
+            <tr id="<%=item.name + item.survey_id.to_s -%>_child">
+              <td colspan="5">blah blah blah <%=item.name -%></td>
+              </tr>
+            <%#*<tr><td colspan="5"><div class="fold"><div class="foldTitle">Info:</div>%>
+            <%#*<div class="foldPlainText" style="display:none;">blah blah</div>%>
+            <%#*</div>%>
+            <%#*</td></tr>%>
+
+          <% end %>
+
+        </tbody>
+
+      </table>
+    </div>
+
+  <% end %>
+<% end %>

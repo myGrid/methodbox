@@ -1,0 +1,25 @@
+<h1> Administration </h1>
+<div style="padding-left:2em;">
+  <h2>Create things ...</h2>
+  <p>
+    <%= link_to "Create an Institution", new_institution_path %>
+    <br/>
+    <%= link_to "Create a Project",new_project_path %>
+    <br/>
+    <%= link_to "Create a Profile", new_person_path %>
+  </p>
+</div>
+
+<div style="padding-left:2em;">
+
+  <%= render :partial=>"users_details",:locals=>{:people=>Person.pals,:title=>"Official Sysmo PALS" } -%>
+
+  <%= render :partial=>"users_details",:locals=>{:users=>User.without_profile,:title=>"Users without profiles" } -%>
+  
+  <%= render :partial=>"users_details",:locals=>{:users=>User.not_activated,:title=>"Non activated users" } -%>
+
+  <%= render :partial=>"users_details",:locals=>{:users=>Person.without_group.registered.collect{|p| p.user},:title=>"People not in groups" } -%>
+
+<%= render :partial=>"users_details",:locals=>{:users=>User.admins,:title=>"Admin Users" } -%>
+
+</div>

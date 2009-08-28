@@ -1,0 +1,26 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# for info on 'load_blob_data' see: http://techpolesen.blogspot.com/2007/04/rails-fixture-tips.html
+# or http://www.realityforge.org/articles/2006/04/06/loading-binary-data-into-rails-fixtures
+<%
+  def load_blob_data(name)
+    filename = "#{RAILS_ROOT}/test/fixtures/files/#{name}"
+    data = File.open(filename,'rb').read
+    "!binary | #{[data].pack('m').gsub(/\n/,"\n    ")}\n"
+  end
+%>
+
+one:
+  id: 1
+  data: <%= load_blob_data('file_picture.png') %>
+  
+  
+# ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
+
+content_blob_with_little_file:
+  data: <%= load_blob_data('little_file.txt') %>
+
+teusink_blob:
+  data: <%= load_blob_data('Teusink.xml') %>
+
+picture_blob:
+  data: <%= load_blob_data('file_picture.png') %>

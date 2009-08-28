@@ -1,0 +1,91 @@
+<% truncate_length_for_boxes = 22 -%>
+
+<ul class="sectionIcons">
+  <% if Authorization.is_authorized?("manage", nil, @script, current_user) -%>
+    <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Manage Method') -%></li>
+  <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) -%>
+    <%# this is not owner, but current user can edit -%>
+    <li><%= icon('edit', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
+  <% end -%>
+
+  <% if Authorization.is_authorized?("destroy", nil, @script, current_user) -%>
+    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Method') -%></li>
+  <% end -%>
+
+  <% if Authorization.is_authorized?("download", nil, @script, current_user) -%>
+    <li><%= icon('download', download_script_url, "Download Method", nil, "Download Method") -%></li>
+  <% else -%>
+    <li>
+      <li>
+        <%= render :partial=>"assets/request_resource",:locals=>{:resource=>@script} %>
+      </li>
+    </li>
+  <% end -%>
+</ul>
+
+<h1 class="contribution_title">Method: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
+
+<%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
+
+
+<div class="show_basic">
+  <div class="main_content_left_box">
+    <div class="box_about_actor">
+      <p>
+        <b>Title:</b>
+        <span class="title"><%=h @script.title -%></span>
+      </p>
+
+      <p>
+        <b>File name:</b>
+        <%=h @script.original_filename -%>
+      </p>
+
+      <p>
+        <b>Format:</b>
+        <%=h @script.content_type -%>
+      </p>
+
+      <%#*<p>%>
+      <%#*<b>Organism:</b>%>
+      <%# if @script.organism -%>
+      <%#=organism_link_to @script.organism -%>
+      <%# else -%>
+      <%#*<span class="none_text">Unknown</span>%>
+      <%# end -%>
+      <%#*</p>%>
+
+      <br/>
+
+      <p>
+        <b>Description</b>
+        <% unless @script.description.blank? -%>
+          <div class="box_standout">
+            <%= simple_format(white_list(@script.description)) -%>
+          </div>
+        <% else -%>
+          <p class="none_text">
+            No description
+          </p>
+        <% end -%>
+      </p>
+
+
+
+
+    </div>
+  </div>
+  </div>
+
+  <div class="main_content_right_box">
+    <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @script } -%>
+    <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @script, :attributed_to => Authorization.authorize_collection("show", @script.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
+  </div>
+
+  <div style="clear:both;">
+
+
+
+
+    
+  </div>

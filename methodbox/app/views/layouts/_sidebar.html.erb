@@ -1,0 +1,19 @@
+<% if logged_in? -%>
+  <%#= render :partial => "gadgets/new_object_gadget" -%>
+
+  <%= render :partial => "gadgets/who_am_i" -%>
+  <div id="cart">
+    <%= render :partial => "surveys/cart" ,:object => @cart%>
+  </div>
+  <%#= render :partial=>"gadgets/favourites"  -%>
+<% else -%>
+  <%= render :partial => "gadgets/sign_in" -%>
+<% end -%>
+
+<%= render :partial=>"gadgets/tag_cloud_gadget", :object=>Person.expertise_counts, :locals=>{:type=>"expertise",:title=>"Expertise"} %>
+<%= render :partial=>"gadgets/search_gadget" %>
+
+<%#= render :partial=>"gadgets/tag_cloud_gadget", :object=>Person.tool_counts, :locals=>{:type=>"tools",:title=>"Tools and Techniques"} %>
+<%#= render :partial=>"gadgets/tag_cloud_gadget", :object=>Project.organism_counts, :locals=>{:type=>"organisms",:title=>"Studies"} %>
+
+

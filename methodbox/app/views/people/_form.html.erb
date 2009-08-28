@@ -1,0 +1,105 @@
+<%= javascript_include_tag "people.js" %>
+
+<%= f.error_messages %>
+
+<h2>Personal Information & Contact Details</h2>
+
+<table style="width: 100%;" class="box_simple">
+  <tr>
+    <td style="width: 45%;">
+      <center>
+        <div style="width: 90%;">
+          <p>
+            <%= f.label :first_name -%><br />
+            <%= f.text_field :first_name, :style => "width: 100%;" -%>
+          </p>
+
+          <p>
+            <%= f.label :last_name %><br />
+            <%= f.text_field :last_name, :style => "width: 100%;" %>
+          </p>
+
+          <p>
+            <%= f.label :email %><br />
+            <%= f.text_field :email, :style => "width: 100%;" %>
+          </p>
+        </div>
+      </center>
+    </td>
+    <td style="width: 45%;">
+      <center>
+        <div style="width: 90%">
+          <p>
+            <%= f.label :phone %><br />
+            <%= f.text_field :phone, :style => "width: 100%;" %>
+          </p>
+
+          <%#*<p>%>
+            <%#= f.label :skype_name %><br />
+            <%#= f.text_field :skype_name, :style => "width: 100%;" %>
+          <%#*</p>%>
+
+          <p>
+            <%= f.label :web_page %><br />
+            <%= f.text_field :web_page, :style => "width: 100%;" %>
+          </p>
+
+
+
+
+
+        </div>
+      </center>
+    </td>
+  </tr>
+</table>
+
+<br/>
+<% if person %>
+  <div class="fold">
+    <div class="foldTitle">Knowledge and expertise</div>
+    <div class="foldContent">
+      <%#= render :partial=>"people/discipline_select",:locals=>{:f=>f} %>
+
+      <%#= render :partial => "select_tools", :locals => {:person => (person ? person : Person.new) } -%>
+      <%= render :partial => "select_expertise", :locals => {:person => (person ? person : Person.new) } -%>
+
+    </div>
+  </div>
+  
+<h2>Description about myself</h2>
+<p>  
+  <%= f.text_area :description, :class=>"description", :rows => 8, :style => "width: 100%;" -%>
+</p>
+<br/>
+
+
+
+  <%#= render :partial=>"roles",:locals=>{:editable=>true} -%>
+
+<% end %>
+
+
+<%# show avatar selection only when the project exists AND when current user is allowed to edit it -%>
+<% if person && (mine?(person) || person.can_be_edited_by?(current_user)) -%>
+  <div class="fold">
+    <div class="foldTitle">Personal picture</div>
+    <div class="foldContent" style="display:none;">
+      <%= render :partial => "avatars/selector_hlist", :locals => { :avatar_for_instance => person, :form_instance => f } -%>
+    </div>
+  </div>
+<% end -%>
+
+
+<% if current_user.is_admin? -%>
+
+  <h2 style="margin-top: 1.5em;">Choose Project / Institution&nbsp;&nbsp;&nbsp;<span class="admin_warning">(This section is visible only to admins)</span></h2>
+  <%= render :partial => "work_groups", :locals=> { :person => (person ? person : Person.new) } -%>
+
+ 
+<% end -%>
+
+<p style="text-align: center; margin-top: 1.5em;">
+  <%= f.submit(person ? "Update" : "Create") -%>
+  or <%= link_to 'Cancel', (person ? person_path(person.id) : people_path) -%>
+</p>

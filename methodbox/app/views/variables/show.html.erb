@@ -1,0 +1,60 @@
+<ul class="sectionIcons">
+  <li><%= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%></li>
+</ul>
+<h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
+<div class="show_basic">
+  <div class="main_content_left_box">
+    <div class="box_about_actor">
+      <p>
+        <b>Title:</b>
+        <span class="title"><%=h @variable.name -%></span>
+      </p>
+      <br/>
+
+      <p>
+        <b>Description</b>
+        <% unless @variable.value.blank? -%>
+          <div class="box_standout">
+            <%= simple_format(white_list(@variable.value)) -%>
+          </div>
+        <% else -%>
+          <p class="none_text">
+            No description
+          </p>
+        <% end -%>
+      </p>
+      <p>
+        <b>From Survey:</b>
+        <div class="box_standout">
+          <%= Survey.find(@variable.survey_id).surveytype + " " + Survey.find(@variable.survey_id).year -%>
+        </div>
+      </p>
+
+    </div>
+    <p>
+      <b>User added notes:</b>
+      <div class="box_standout">
+        More info to come
+      </div>
+    </p>
+    <p>
+      <b>Tags:</b>
+      <div class="tags_smaller">
+        <div class="hTagcloud">
+          <div class="popularity">
+            <% tag_cloud @tag_array, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
+              <%#=  link_to_remote tag.name,:anchor=>tag.id, :url => { :action => "search_for_tags", :id => tag.id }%>
+              <%=  link_to_remote tag.name, :url =>search_for_tags_variable_url(:tag_id=>tag.id) %>
+
+              <%#= link_to tag.name, :class => css_class -%>
+            <% end -%>
+
+          </div>
+        </div>
+      </div>
+    </p>
+    <div id="tag_search">
+    </div>
+
+  </div>
+</div>

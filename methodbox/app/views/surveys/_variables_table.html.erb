@@ -1,0 +1,31 @@
+<div class="headerContainer">
+  <%= hidden_field_tag 'tag_button', 'tag' %>
+  <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
+  <%= hidden_field_tag 'variable_name', 'variable_name' %>
+  <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
+  <table>
+    <thead class="fixedHeader">
+
+      <tr><th></th><th></th><th <%= sort_td_class_helper "variable" %>>
+          <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, @sorted_variables) %>
+        </th><th <%= sort_td_class_helper "description" %>>
+          <%= sort_link_helper("Description", "description", @search_query, @survey_list, @sorted_variables) %>
+        </th>
+        <%#*<th%>
+        <%#= sort_td_class_helper "survey" %>
+        <%#*>%>
+        <%#= sort_link_helper("Survey", "survey", @search_query, @survey_list, @sorted_variables) %>
+        <%#*</th>%>
+        <th <%= sort_td_class_helper "year" %>>
+          <%= sort_link_helper("Year", "year", @search_query, @survey_list, @sorted_variables) %>
+      </th></tr>
+    </thead>
+  </table>
+</div>
+<div id="tableContainer" class="tableContainer">
+  <% @sorted_variables.each do |item| %>
+    <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
+
+  <% end %>
+
+</div>

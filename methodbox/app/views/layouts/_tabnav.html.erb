@@ -1,0 +1,29 @@
+<% if logged_in? && !current_user.person.nil? %>
+  <div>
+    <ul class="tabnav">
+
+      <!-- People tab -->
+      <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>>
+        <%= link_to "People", people_url -%>
+      </li>
+
+      <!-- Projects tab -->
+      <%#*<li%>
+<%#= (["projects"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>
+      <%#*>%>
+        <%#= link_to "Projects", projects_url -%>
+      <%#*</li>%>
+
+      <!-- Methods tab -->
+      <li <%= (["scripts"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+        <%= link_to "Methods", scripts_url -%>
+      </li>
+
+      <!-- Surveys tab -->
+      <li <%= (["surveys"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+        <%= link_to "Data Sources", surveys_url -%>
+      </li>
+
+    </ul>
+  </div>
+<% end  %>
