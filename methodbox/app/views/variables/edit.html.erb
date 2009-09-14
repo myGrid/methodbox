@@ -26,17 +26,17 @@
         <p>
           <b>Add new tags:</b>
 
-          <div id="facebook" class="clearfix" style="width:690px;margin:auto;">
+		 <div id="facebook" class="clearfix" style="width:670px;margin:auto;">
 
-            <div tabindex="-1" style="width:690px;margin:auto;" id="<%=@variable.name + @variable.survey_id.to_s -%>_expertise_ids" class="clearfix tokenizer" onclick="$('<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input').focus();">
-              <span class="tokenizer_stretcher">^_^</span>
-              <span class="tab_stop"><input type="text" id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_hidden_input" tabindex="-1" ></span>
+		    <div tabindex="-1" style="width:630px;margin:auto;" id="<%=@variable.name + @variable.survey_id.to_s -%>_expertise_ids" class="clearfix tokenizer" onclick="$('<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input').focus();">
+		      <span class="tokenizer_stretcher">^_^</span>
+		      <span class="tab_stop"><input type="text" id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_hidden_input" tabindex="-1" ></span>
 
-              <div id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_display" class="tokenizer_input">
-                <input type="text" size="1" tabindex="" id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input" />
-              </div>
+		      <div id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_display" class="tokenizer_input">
+		        <input type="text" size="1" tabindex="" id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_input" />
+		      </div>
 
-            </div>
+		    </div>
             <%#= image_submit_tag('famfamfam_silk/disk.png', :alt=>'Save tags', :title=>'Save tags') -%>
 
             <div id="<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocomplete_populate" class="clearfix autocomplete typeahead_list" style="width: 600px; height: auto; overflow-y: hidden;display:none">
@@ -85,7 +85,8 @@
   </div>
 
 <script type="text/javascript">
-  var prepopulate_with = <%=Array.new.to_json %>
+
+  var prepopulate_with = <%= Array.new.to_json %>
   var variable_list = <%= get_all_annotations_for_variable(@variable) %>
   var variable_autocompleter_id='<%=@variable.name + @variable.survey_id.to_s -%>_variable_autocompleter'
   var variable_autocompleter = new Autocompleter.LocalAdvanced(

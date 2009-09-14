@@ -53,7 +53,7 @@
             <div class="popularity">
               <b>|</b>
               <% @tag_array.each do |tag| %>
-                <%= link_to tag.name, search_for_tags_variable_url(:variable=>tag.name), :title=>"Search for other variables with tag " + tag.name -%>
+                <%= link_to tag.name, variables_url(:variable=>tag.name), :title=>"Search for other variables with tag " + tag.name -%>
 <b>|</b>
                 <%# tag_cloud @tag_array, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
 
