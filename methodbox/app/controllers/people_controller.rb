@@ -58,6 +58,7 @@ class PeopleController < ApplicationController
   # GET /people/1
   # GET /people/1.xml
   def show
+    find_cart
     @person = Person.find(params[:id])
     #    check each archive to see if it is complete or not
     archives = Csvarchive.find_all_by_person_id(params[:id])

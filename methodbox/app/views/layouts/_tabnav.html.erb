@@ -24,6 +24,11 @@
         <%= link_to "Data Sources", surveys_url -%>
       </li>
 
+      <!-- Archives tab -->
+      <li <%= (["csvarchives"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+        <%= link_to "CSV Archives", csvarchives_url -%>
+      </li>
+
     </ul>
   </div>
 <% end  %>

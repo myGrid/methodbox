@@ -8,6 +8,27 @@ class VariablesController < ApplicationController
   end
 
   def update
+    find_variable
+    respond_to do |format|
+      format.html { redirect_to variable_path(@variable) }
+    end
+  end
+
+  def watch
+    puts "watching or stop"
+    find_variable
+    if !Person.find(current_user.id).watched_variables.any?{|var| var.variable_id == @variable.id}
+      #      user wants to watch a variable
+      puts "watching " + @variable.id.to_s
+      person = Person.find(current_user.person_id)
+      person.watched_variables.create(:variable_id => @variable.id)
+    else
+      #      stop watching variable
+      puts "stop watching " + @variable.id.to_s
+      person = Person.find(current_user.person_id)
+      watched = person.watched_variables.find(:all, :conditions => "variable_id=" + @variable.id.to_s)
+      WatchedVariable.delete(watched)
+    end
     respond_to do |format|
       format.html { redirect_to variable_path(@variable) }
     end
@@ -40,8 +61,8 @@ class VariablesController < ApplicationController
     @tag = Tag.find(params[:tag_id])
     puts "search_for_tags " + params[:id]
     render :update, :status=>:created do |page|
-    page.replace_html "tag_search", :partial=>"variables/search_for_tags"
-  end
+      page.replace_html "tag_search", :partial=>"variables/search_for_tags"
+    end
   end
 
 end

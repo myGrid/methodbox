@@ -2,6 +2,10 @@ require 'acts_as_editable'
 
 class Person < ActiveRecord::Base
 
+  has_many :watched_variables
+
+  has_many :variables, :through => :watched_variables
+
   acts_as_tagger
 
   acts_as_annotation_source

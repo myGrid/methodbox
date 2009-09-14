@@ -12,7 +12,7 @@
         <%= render(:partial => "surveys/cart_item") %>
       </div>
       <%= hidden_field_tag 'update_button', 'Download' %>
-      <%= submit_tag('Download selected', {:id=>"download_selected", :name=>'_update_button', :onclick => "Form.getInputs(this.form, null, 'update_button')[0].value = 'Download'"})%>
+      <%= submit_tag('Create CSV Archive', {:id=>"download_selected", :name=>'_update_button', :onclick => "Form.getInputs(this.form, null, 'update_button')[0].value = 'Download'"})%>
       <%= submit_tag('Remove selected', {:id=>"remove_selected", :name=>'_update_button', :onclick => "Form.getInputs(this.form, null, 'update_button')[0].value = 'Remove'"})%>
     <% end %>
   </div>
@@ -26,10 +26,10 @@
   <%#*</div>%>
 
 
-  <% form_remote_tag :id => "download_all", :loading => "$('archive_linker').hide();$('send_message').value = 'Creating CSV file...';$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').value = 'Download all';$('send_message').enable();$('csv_download_spinner').hide();", :url => { :action => "download_all_variables"} do -%>
+  <% form_remote_tag :id => "download_all", :loading => "$('archive_linker').hide();$('send_message').value = 'Creating CSV file...';$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').value = 'Create CSV Archive';$('send_message').enable();$('csv_download_spinner').hide();", :url => { :action => "download_all_variables"} do -%>
 
     <%#*<img alt="spinner" id="spinner2" src="/images/spinner.gif" style="display:none;vertical-align:middle;" />%>
-    <%= submit_tag('Download all', :name=>'send_message_button', :id=>"send_message") -%>
+    <%= submit_tag('Create CSV Archive', :name=>'send_message_button', :id=>"send_message") -%>
   <% end -%>
 
   <%= image_tag method_to_icon_filename("spinner"), :id => "csv_download_spinner", :alt=>"loading...", :title=>"loading...", :style => "display: none; vertical-align: middle;" -%>

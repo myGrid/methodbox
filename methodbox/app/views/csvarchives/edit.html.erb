@@ -53,10 +53,7 @@
       <%#*</p>%>
     <%# end -%>
 
-    <p style="text-align: center;">
-      <%= f.submit "Update", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(false); return(false);"  -%> or <%= link_to "Cancel", csvarchive_path(@archive) -%>
-    </p>
-  <% end %>
+ 
       <% if current_user_authorized_to_manage -%>
       <p style="margin: 2.5em 0 0 0;">
         <%= render :partial => "assets/sharing_form" -%>
@@ -65,7 +62,11 @@
       <p style="margin: 0;">
         <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "CSV Archive",  # this is only for presentation, not for any processing so you can change it safely if required
           :existing_attributions => Authorization.authorize_collection("show", @archive.attributions_objects, current_user),
-          :attribution_suggestions => Script.get_all_as_json(current_user) } -%>
+          :attribution_suggestions => Method.get_all_as_json(current_user) } -%>
       </p>
     <% end -%>
+       <p style="text-align: center;">
+      <%= f.submit "Update", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(false); return(false);"  -%> or <%= link_to "Cancel", csvarchive_path(@archive) -%>
+    </p>
+  <% end %>
 </div>

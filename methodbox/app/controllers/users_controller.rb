@@ -6,8 +6,14 @@ class UsersController < ApplicationController
   
   # render new.rhtml
   def new
-    @user=User.new
-    @user.person=Person.new
+    if !REGISTRATION_CLOSED
+      @user=User.new
+      @user.person=Person.new
+    else
+      flash[:error] = "Registration of new accounts is currently closed"
+      format.html { redirect_to(:controller => "session", :action => "new") }
+    end
+
   end
 
   def create
@@ -68,13 +74,13 @@ class UsersController < ApplicationController
         flash[:error] = "Invalid password reset code"
         format.html { redirect_to(:controller => "session", :action => "new") }
       end
-    end 
+    end
   end
 
-  def forgot_password    
+  def forgot_password
     if request.get?
       # forgot_password.rhtml
-    elsif request.post?      
+    elsif request.post?
       user = User.find_by_login(params[:login])
 
       respond_to do |format|
@@ -100,10 +106,10 @@ class UsersController < ApplicationController
     render :action=>:edit, :layout=>"main"
   end
   
-  def update    
+  def update
     @user = User.find(params[:id])
     
-    person=Person.find(params[:user][:person_id]) unless (params[:user][:person_id]).nil?        
+    person=Person.find(params[:user][:person_id]) unless (params[:user][:person_id]).nil?
     
     @user.person=person if !person.nil?
     
@@ -125,9 +131,9 @@ class UsersController < ApplicationController
           format.html { redirect_to :action=>"activation_required" }
         else
           flash[:notice]="Your account details have been updated"
-          format.html { redirect_to person_path(@user.person) } 
-        end        
-      else        
+          format.html { redirect_to person_path(@user.person) }
+        end
+      else
         format.html { render :action => 'edit' }
       end
     end

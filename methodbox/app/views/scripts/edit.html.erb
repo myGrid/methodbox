@@ -4,8 +4,8 @@
 
 
 <ul class="sectionIcons">
-  <li><%= icon('Method', script_path(@script), 'Return to Method', nil, 'Return to Method') -%></li>
-  <li><%= icon('Methods', scripts_path, 'View all Methods', nil, 'View all Methods') -%></li>
+  <li><%= icon('script', script_path(@script), 'Return to Method', nil, 'Return to Method') -%></li>
+  <li><%= icon('scripts', scripts_path, 'View all Methods', nil, 'View all Methods') -%></li>
 </ul>
 
 <h1>Editing Script: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
@@ -54,7 +54,7 @@
     <% end -%>
 
     <p style="text-align: center;">
-      <%= f.submit "Update", :id => "Script_submit_btn", :onclick => "javascript: validateScriptFields(false); return(false);"  -%> or <%= link_to "Cancel", script_path(@script) -%>
+      <%= f.submit "Update", :id => "script_submit_btn", :onclick => "javascript: validateScriptFields(false); return(false);"  -%> or <%= link_to "Cancel", script_path(@script) -%>
     </p>
   <% end %>
 </div>

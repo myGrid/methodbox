@@ -1,5 +1,12 @@
 <ul class="sectionIcons">
+  <% if !Person.find(current_user.id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
+    <li><%= icon('watch', watch_variable_path(@variable), nil, nil, 'Watch variable') -%></li>
+  <% else %>
+    <li><%= icon('stopwatch', watch_variable_path(@variable), nil, nil, 'Stop watching variable') -%></li>
+
+  <% end %>
   <li><%= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%></li>
+
 </ul>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
 <div class="show_basic">
@@ -38,21 +45,39 @@
       </div>
     </p>
     <p>
-      <b>Tags:</b>
-      <div class="tags_smaller">
-        <div class="hTagcloud">
-          <div class="popularity">
-            <% tag_cloud @tag_array, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
-              <%#=  link_to_remote tag.name,:anchor=>tag.id, :url => { :action => "search_for_tags", :id => tag.id }%>
-              <%=  link_to_remote tag.name, :url =>search_for_tags_variable_url(:tag_id=>tag.id) %>
+      <% unless @tag_array.empty? %>
+        <b>Tags:</b>
 
-              <%#= link_to tag.name, :class => css_class -%>
-            <% end -%>
+        <div class="tags_smaller">
+          <div class="hTagcloud">
+            <div class="popularity">
+              <b>|</b>
+              <% @tag_array.each do |tag| %>
+                <%= link_to tag.name, search_for_tags_variable_url(:variable=>tag.name), :title=>"Search for other variables with tag " + tag.name -%>
+<b>|</b>
+                <%# tag_cloud @tag_array, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
 
+                <%#=  link_to_remote tag.name,:anchor=>tag.id, :url => { :action => "search_for_tags", :id => tag.id }%>
+                <%# if show_tag?(tag) -%>
+                <%#
+                hide_tag=!show_tags.include?(tag)
+                tag_class="#{css_class}"
+                tag_class << " #{hidden_class}" if hide_tag
+                style= hide_tag ? "display:none;" : ""  #has to be set as a style rather than in CSS for javascript to work
+                %>
+                <%#= link_for_tag tag,:type=>"variable",:truncate_length=>40, :class => tag_class,:style=>"#{style}" -%>
+
+                <%# end -%>
+              <% end -%>
+
+            </div>
           </div>
         </div>
-      </div>
+      <% else %>
+        <b>Tags: </b>none
+      <% end %>
     </p>
+
     <div id="tag_search">
     </div>
 

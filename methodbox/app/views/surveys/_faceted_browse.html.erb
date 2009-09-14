@@ -20,7 +20,7 @@
     <% end %>
     <table style="background-color:#ACCBE0;" width="100%">
       <tr><td>
-<%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year'")%>
+<%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
 <%#= image_submit_tag('famfamfam_silk/cart_add.png', :value=>'Add selected variables to cart')%>
 </td></tr>
       <tr><td> Select:

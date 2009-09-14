@@ -1,6 +1,6 @@
 <%= javascript_include_tag "sharing.js" -%>
 
-<h1>New Method</h1>
+<h1>New Script</h1>
 
 <div class="show_basic">
   <% form_tag({:action => :create}, :multipart => true) do -%>
@@ -16,7 +16,7 @@
 		    <p style="margin-top: 1.5em;">
 			  	<b>Title:</b><font style="color: #FF0000;">*</font><br/>
 					<% script_title_value = (params[:script].blank? || params[:script][:title].blank?) ? nil : params[:script][:title] -%>
-					<%= text_field_tag 'script[title]', script_title_value, :style => "width: 100%;" -%>      
+					<%= text_field_tag 'script[title]', script_title_value, :style => "width: 100%;" -%>
 			  </p>
 
 		    <p style="margin-top: 0.5em;">

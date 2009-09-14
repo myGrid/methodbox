@@ -31,7 +31,16 @@ module ApplicationHelper
     #    logger.info(new_array.to_json)
     #    return new_array.to_json
     puts tag_array
-    return tag_array.to_json
+    #    return tag_array.to_json
+    return Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id,'name'=>t.name}}.to_json
+
+  end
+
+  def get_all_annotations_for_variables
+    variables = Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id}}
+    puts "tags: " + variables.to_json
+    return variables.to_json
+
   end
 
 
@@ -82,7 +91,7 @@ module ApplicationHelper
     #FIXME: make these discovered automatically.
     #FIXME: very bad method name
     #[Model,DataFile,Sop,Study,Assay,Investigation]
-    ["Script","Survey","Study"]
+    ["Method","Survey","Study"]
 
   end
 
@@ -160,6 +169,10 @@ module ApplicationHelper
   
   def method_to_icon_filename(method)
     case (method.to_s)
+    when "watch"
+      return "famfamfam_silk/camera_add.png"
+    when "stopwatch"
+      return "famfamfam_silk/camera_delete.png"
     when "refresh"
       return "famfamfam_silk/arrow_refresh_small.png"
     when "arrow_up"
@@ -274,6 +287,10 @@ module ApplicationHelper
       "folds/fold.png"
     when "collapse"
       "folds/unfold.png"
+    when "script"
+      return "famfamfam_silk/page.png"
+    when "scripts"
+      return "famfamfam_silk/page_copy.png"
     else
       return nil
     end
@@ -527,6 +544,9 @@ module ApplicationHelper
     end
     if (options[:type]==:organisms)
       link=projects_url(:organisms=>tag.name)
+    end
+    if (options[:type]==:variable)
+      link=people_url(:variable=>tag.name)
     end
     link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>tooltip_title_attrib(tag.name)
   end

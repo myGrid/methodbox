@@ -9,7 +9,7 @@
   <% end -%>
 
   <% if Authorization.is_authorized?("destroy", nil, @script, current_user) -%>
-    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Method') -%></li>
+    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :script => :delete }, 'Delete Script') -%></li>
   <% end -%>
 
   <% if Authorization.is_authorized?("download", nil, @script, current_user) -%>
@@ -23,7 +23,7 @@
   <% end -%>
 </ul>
 
-<h1 class="contribution_title">Method: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
+<h1 class="contribution_title">Script: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
 
 <%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
 

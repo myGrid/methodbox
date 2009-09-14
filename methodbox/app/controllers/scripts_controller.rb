@@ -1,9 +1,9 @@
 class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
-
+  before_filter :login_required
   before_filter :find_scripts, :only => [ :index ]
   before_filter :find_cart
-  before_filter :find_script_auth, :except => [ :index, :new, :create,:script_preview_ajax ]
+  before_filter :find_script_auth, :except => [ :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
@@ -62,10 +62,10 @@ class ScriptsController < ApplicationController
   def new
     respond_to do |format|
       #if Authorization.is_member?(current_user.person_id, nil, nil)
-        format.html # new.html.erb
+      format.html # new.html.erb
       #else
-        #flash[:error] = "You are not authorized to upload new Scripts. Only members of known projects, institutions or work groups are allowed to create new content."
-        #format.html { redirect_to scripts_path }
+      #flash[:error] = "You are not authorized to upload new Scripts. Only members of known projects, institutions or work groups are allowed to create new content."
+      #format.html { redirect_to scripts_path }
       #end
     end
   end
@@ -126,7 +126,7 @@ class ScriptsController < ApplicationController
           Relationship.create_or_update_attributions(@script, params[:attributions])
 
           if policy_err_msg.blank?
-#            flash[:notice] = 'Script was successfully uploaded and saved.'
+            #            flash[:notice] = 'Script was successfully uploaded and saved.'
             format.html { redirect_to script_path(@script) }
           else
             flash[:notice] = "Script was successfully created. However some problems occurred, please see these below.</br></br><span style='color: red;'>" + policy_err_msg + "</span>"
@@ -260,14 +260,14 @@ class ScriptsController < ApplicationController
       # 2) this is "edit" action - SOP exists, but policy wasn't attached to it;
       #    (also, Script wasn't attached to a project or that project didn't have a default policy) --
       #    hence, try to obtain a default policy for the contributor (i.e. owner of the Script) OR system default
-#      projects = current_user.person.projects
-#      if projects.length == 1 && (proj_default = projects[0].default_policy)
-#        policy = proj_default
-#        policy_type = "project"
-#      else
-        policy = Policy.default(current_user)
-        policy_type = "project"
-#      end
+      #      projects = current_user.person.projects
+      #      if projects.length == 1 && (proj_default = projects[0].default_policy)
+      #        policy = proj_default
+      #        policy_type = "project"
+      #      else
+      policy = Policy.default(current_user)
+      policy_type = "project"
+      #      end
     end
 
     # set the parameters

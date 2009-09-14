@@ -69,6 +69,7 @@ class Policy < ActiveRecord::Base
     
     # PROCESS THE POLICY FIRST
     unless resource.asset.policy
+      puts "creating new policy"
       #last_saved_policy = Policy._default(current_user, nil) # second parameter ensures that this policy is not applied anywhere
       
       

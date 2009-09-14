@@ -6,13 +6,21 @@
 
   <%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
   <% if @archive.complete -%>
+<% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
     <li><%= icon('download', download_csvarchive_url, "Download CSV file", nil, "Download CSV file") -%></li>
+<% end %>
   <% elsif @archive.failure %>
+<% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
     <%= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
+<% end %>
   <% else %>
+<% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
     <li><B>Not yet available for download</B></li>
+<% end %>
   <% end %>
+<% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>
   <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
+<% end %>
 </ul>
 
 <h1 class="contribution_title">CSV Archive: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
@@ -54,7 +62,7 @@
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
 
     <table style="background-color:#ACCBE0;" width="100%">
-      <tr><td><%= submit_tag 'Add selected variables to cart'%></td></tr>
+      <tr><td><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%></td></tr>
       <tr><td> Select:
           <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
           ,&nbsp
