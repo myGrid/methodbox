@@ -1,0 +1,54 @@
+<%= javascript_include_tag "sharing.js" -%>
+
+<h1>New CSV Archive</h1>
+
+<div class="show_basic">
+  <% form_tag({:action => :create}, :multipart => true) do -%>
+    <%= error_messages_for :archive -%>
+
+    <%#= hidden_field_tag 'var_hash', params[:var_hash] %>
+    <% params[:all_variables_array].each do |val| %>
+      <%= hidden_field_tag "all_variables_array[]", val %>
+    <% end %>
+
+    <center>
+      <div style="width: 90%;">
+
+        <p style="margin-top: 1.5em;">
+          <b>Title:</b><font style="color: #FF0000;">*</font><br/>
+          <% archive_title_value = (params[:archive].blank? || params[:archive][:title].blank?) ? nil : params[:archive][:title] -%>
+          <%= text_field_tag 'archive[title]', archive_title_value, :style => "width: 100%;" -%>
+        </p>
+
+        <p style="margin-top: 0.5em;">
+          <b>Description:</b><br/>
+          <% archive_description_value = (params[:archive].blank? || params[:archive][:description].blank?) ? nil : params[:archive][:description] -%>
+          <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
+        </p>
+
+      </div>
+    </center>
+
+    <center>
+      <div style="width: 90%;">
+
+        <p style="margin: 2.5em 0 0 0;">
+          <%= render :partial => "assets/sharing_form" -%>
+        </p>
+
+        <p style="margin: 0;">
+          <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "CSV Archive",  # this is only for presentation, not for any processing
+            :existing_attributions => [],
+            :attribution_suggestions => Csvarchive.get_all_as_json(current_user) } -%>
+        </p>
+
+        <p style="text-align: center; margin-top: 1.5em;">
+          <%= submit_tag "Save and create archive", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(true); return(false);" -%> or <%= link_to 'Cancel', csvarchives_path -%>
+        </p>
+      <% end -%>
+
+    </div>
+  </center>
+
+
+</div>
