@@ -2,6 +2,25 @@ class VariablesController < ApplicationController
 
   before_filter :login_required
 
+
+  # GET /variable
+  # GET /variable.xml
+  def index
+
+    if (!params[:variable].nil?)
+      @tag = params[:variable]
+      @variables = Variable.tagged_with(@tag, :on=>:title)
+    else
+      @variables = Variable.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name)
+    end
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @variables.to_xml}
+    end
+    
+  end
+  
   def edit
     find_variable
     @all_tags = @variable.title_counts

@@ -1,0 +1,34 @@
+<% variable=resource_list_item -%>
+
+<% truncate_projects_institutions_length = 25 -%>
+
+<div class="list_items_container">
+  <table class="list_item">
+    <tr>
+
+      <td class="item_details">
+        <p class="name">
+          <%= link_to(variable.name, variable_path(variable)) -%>
+        </p>
+
+        <div class="box_standout">
+          <%= variable.value %>
+        </div>
+
+          <p class="email">
+            <label>Survey: </label>
+            <%= Survey.find(variable.survey_id).title %>
+          </p>
+
+          <p class="web_page">
+            <label>Year:</label>
+            <%= Survey.find(variable.survey_id).year  %>
+          </p>
+
+      </td>
+
+    </tr>
+  </table>
+
+
+</div>

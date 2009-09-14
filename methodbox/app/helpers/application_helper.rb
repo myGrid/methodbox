@@ -546,7 +546,7 @@ module ApplicationHelper
       link=projects_url(:organisms=>tag.name)
     end
     if (options[:type]==:variable)
-      link=people_url(:variable=>tag.name)
+      link=variables_url(:variable=>tag.name)
     end
     link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>tooltip_title_attrib(tag.name)
   end
