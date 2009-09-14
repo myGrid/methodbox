@@ -1,24 +1,23 @@
-# SQLite version 3.x
-#   gem install sqlite3-ruby (not necessary on OS X Leopard)
+#MySQL
 development:
   adapter: mysql
-  database: methodbox_development
-  username: ian
-  password: mysqlthr@sh(r2
+  database: obelab_development
+  username: obeuser
+  password: devel
   socket: /var/mysql/mysql.sock
 
 test:
   adapter: mysql
-  database: methodbox_test
-  username: ian
-  password: mysqlthr@sh(r2
+  database: obelab_test
+  username: obeuser
+  password: devel
   socket: /var/mysql/mysql.sock
 
 production:
   adapter: mysql
-  database: methodbox_production
-  username: ian
-  password: mysqlthr@sh(r2
+  database: obelab_production
+  username: obeuser
+  password: devel
   socket: /var/mysql/mysql.sock
 
 # SQLite version 3.x
