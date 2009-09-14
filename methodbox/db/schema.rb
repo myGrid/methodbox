@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090824144628) do
+ActiveRecord::Schema.define(:version => 20090903131503) do
 
   create_table "annotation_attributes", :force => true do |t|
     t.string   "name",       :default => "", :null => false
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(:version => 20090824144628) do
     t.string   "url"
     t.boolean  "complete"
     t.boolean  "failure"
+    t.string   "contributor_type"
+    t.integer  "contributor_id"
   end
 
   create_table "favourite_group_memberships", :force => true do |t|
@@ -186,6 +188,16 @@ ActiveRecord::Schema.define(:version => 20090824144628) do
     t.text     "description"
     t.integer  "avatar_id"
     t.integer  "default_policy_id"
+  end
+
+  create_table "relationships", :force => true do |t|
+    t.string   "subject_type", :default => "", :null => false
+    t.integer  "subject_id",                   :null => false
+    t.string   "predicate",    :default => "", :null => false
+    t.string   "object_type",  :default => "", :null => false
+    t.integer  "object_id",                    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "scripts", :force => true do |t|
@@ -282,6 +294,13 @@ ActiveRecord::Schema.define(:version => 20090824144628) do
     t.integer  "survey_id"
     t.string   "label"
     t.integer  "csvarchive_id"
+  end
+
+  create_table "watched_variables", :force => true do |t|
+    t.integer  "person_id"
+    t.integer  "variable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
