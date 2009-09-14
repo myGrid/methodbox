@@ -28,9 +28,9 @@ ActionController::Routing::Routes.draw do |map|
   
 #  map.resources :assays
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get}
 
-  map.resources :scripts
+  map.resources :methods
 
   map.resources :assets,:member=>{:request_resource=>:post}
 
