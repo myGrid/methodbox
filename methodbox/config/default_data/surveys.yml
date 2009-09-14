@@ -77,3 +77,83 @@ hse2007:
   UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=6112
   headline_report: http://www.ic.nhs.uk/statistics-and-data-collections/health-and-lifestyles-related-surveys/health-survey-for-england/health-survey-for-england-2007:-healthly-lifestyles:-knowledge-attitudes-and-behaviour-%5Bns%5D
   original_filename: HSE2007.tab
+  
+hse1991-1992:
+    id: 9
+    title: HSE1991-1992
+    surveytype: HSE
+    description: Cardio-vascular disease and associated risk factors
+    year: 1991-1992
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3238
+    headline_report: 
+    original_filename: HSE1991-1992.tab
+    
+hse1993:
+    id: 10
+    title: HSE1993
+    surveytype: HSE
+    description: Cardio-vascular disease and associated risk factors
+    year: 1993
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3316
+    headline_report: 
+    original_filename: HSE1993.tab
+    
+hse1994:
+    id: 11
+    title: HSE1994
+    surveytype: HSE
+    description: Cardio-vascular disease and associated risk factors
+    year: 1994
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3640
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4001552
+    original_filename: HSE1994.tab
+    
+hse1995:
+    id: 12
+    title: HSE1995
+    surveytype: HSE
+    description: Asthma, accidents and disability
+    year: 1995
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3796
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015202
+    original_filename: HSE1995.tab
+    
+hse1996:
+    id: 13
+    title: HSE1996
+    surveytype: HSE
+    description: Respiratory and other atopic conditions (asthma and asthma-related symptoms, hay fever and eczema), lung function, non-fatal accidents and health state measures.
+    year: 1996
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3886
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4001554
+    original_filename: HSE1996.tab
+   
+hse1997:
+    id: 14
+    title: HSE1997
+    surveytype: HSE
+    description: Health of young people aged 2-24 years
+    year: 1997
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3979
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015503
+    original_filename: HSE1997.tab
+
+hse1998:
+    id: 15
+    title: HSE1998
+    surveytype: HSE
+    description: Cardio-vsacular disease and associated risk factors
+    year: 1998
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4150
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/Publications/PublicationsStatistics/DH_4009101
+    original_filename: HSE1998.tab
+    
+hse1999:
+    id: 16
+    title: HSE1999
+    surveytype: HSE
+    description: Health of Ethnic Minorities
+    year: 1999
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4365
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015530
+    original_filename: HSE1999.tab   
