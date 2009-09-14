@@ -1,6 +1,7 @@
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
-<% form_tag :url => update_variable_url do -%>
   <div class="show_basic">
+	<% form_for(@variable) do |f| %>
+	    <%= f.error_messages %>
     <div class="main_content_left_box">
       <div class="box_about_actor">
         <p>
@@ -75,12 +76,13 @@
 
       </div>
       <br/>
-      <%=  submit_tag 'Update variable' -%>
+     <p style="text-align: center;">
+      <%= f.submit "Update", :id => "variable_submit_btn" -%> or <%= link_to "Cancel", variable_path(@variable) -%>
+    </p>
+  <% end %>
     </div>
 
   </div>
-
-<% end %>
 
 <script type="text/javascript">
   var prepopulate_with = <%=Array.new.to_json %>
