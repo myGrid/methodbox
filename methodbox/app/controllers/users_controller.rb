@@ -11,7 +11,12 @@ class UsersController < ApplicationController
       @user.person=Person.new
       format.html { redirect_to(:controller => "session", :action => "new") }
     else
-      flash.now[:error] = "Registration of new accounts is currently closed"
+      flash[:error] = "Registration of new accounts is currently closed"
+      self.current_user.forget_me if logged_in?
+      cookies.delete :auth_token
+      reset_session
+  #    flash[:notice] = "You have been logged out."
+      redirect_back_or_default('/')
     end
     
   end
