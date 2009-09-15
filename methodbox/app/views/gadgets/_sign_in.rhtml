@@ -1,6 +1,50 @@
 <% unless logged_in? -%>
+<div>
+	<!-- <div> -->
+<div class="myexperiment_gadget" style="width:350px;float:left;display:inline;">
+	<!-- <div> -->
+  <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
+    
+  <div class="header">
+    <p>About</p>
+  </div>
+  
+  <div class="contents">
+			
+			<div>
+	  	<p style="text-align:left;">MethodBox enables you to <%= link_to "browse and download datasets", surveys_url -%>, share <%= link_to "methods and scripts", scripts_url -%>, find 
+<%= link_to "researchers", people_url -%> with similar interests and share your knowledge.</p>
 
-<div class="myexperiment_gadget">
+	  </div>
+  </div>
+  
+  <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
+</div>
+
+<div class="myexperiment_gadget" style="width:350px;float:right;display:inline;">
+	<!-- <div> -->
+  <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
+    
+  <div class="header">
+    <p>Who?</p>
+  </div>
+  
+  <div class="contents">
+    
+			
+			<div>
+	  	<p style="text-align:left;"> MethodBox is brought to you by a team from the <a href = "http://www.manchester.ac.uk">University of Manchester</a> in the UK, led by <a href="http://www.cs.man.ac.uk/~/carole">Carole Goble</a> and <a href="http://www.manchester.ac.uk/research/Buchan/">Iain Buchan</a>.
+	  	</p>
+	    <p style="text-align:left;">MethodBox is part of the <a href="http://www.mygrid.org.uk">myGrid consortium</a>, which brought you the <a href="http://www.mygrid.org.uk/taverna">Taverna Workflow Workbench</a> for creating and executing scientific workflows, <a href="http://www.myexperiment.org">myExperiment</a> for sharing workflows and <a href="http://www.biocatalogue.org">Bio-catalogue</a> for curating life science web-services.</p>	
+	  </div>
+
+  </div>
+  
+  <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
+</div>
+
+<div class="myexperiment_gadget" style="margin-left:20px;margin-right:20px;width:190px">
+	<!-- <div> -->
   <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
     
   <div class="header">
@@ -52,6 +96,7 @@
   </div>
   
   <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
+</div>
 </div>
 
 <% end -%>

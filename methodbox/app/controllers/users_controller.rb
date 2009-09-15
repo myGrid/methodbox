@@ -9,11 +9,11 @@ class UsersController < ApplicationController
     if !REGISTRATION_CLOSED
       @user=User.new
       @user.person=Person.new
-    else
-      flash[:error] = "Registration of new accounts is currently closed"
       format.html { redirect_to(:controller => "session", :action => "new") }
+    else
+      flash.now[:error] = "Registration of new accounts is currently closed"
     end
-
+    
   end
 
   def create
