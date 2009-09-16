@@ -18,17 +18,16 @@
     <% @survey_list.each do |val| %>
       <%= hidden_field_tag "survey_list[]", val %>
     <% end %>
-    <table style="background-color:#ACCBE0;" width="100%">
-      <tr><td>
-<%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
-<%#= image_submit_tag('famfamfam_silk/cart_add.png', :value=>'Add selected variables to cart')%>
-</td></tr>
-      <tr><td> Select:
+
+ <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;" width="100%">
+      <div><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
+	</div><br/>
+	<div>Select:
           <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
           ,&nbsp
           <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-      </td></tr>
-    </table>
+    </div>
+	</div>
 
     <%#= text_field_tag :search_query, @search_query %>
     <%#= select_tag :search_type, options_for_select(search_type_options,@search_type)  %>
@@ -45,14 +44,15 @@
     </div>
     <%#*</div>%>
     <br/>
-    <table style="background-color:#ACCBE0;" width="100%">
-      <tr><td><%= submit_tag 'Add selected variables to cart'%></td></tr>
-      <tr><td> Select:
-          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-          ,&nbsp
-          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-      </td></tr>
-    </table>
+    <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;" width="100%">
+	      <div><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
+		</div><br/>
+		<div>Select:
+	          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+	          ,&nbsp
+	          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+	    </div>
+		</div>
   <% end %>
 <% end %>
 <%#*<script type="text/javascript">%>
