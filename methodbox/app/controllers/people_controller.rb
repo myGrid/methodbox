@@ -25,6 +25,7 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
   def index
+    find_cart
 
     if (!params[:expertise].nil?)
       @expertise=params[:expertise]
