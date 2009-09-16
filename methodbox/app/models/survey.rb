@@ -1,5 +1,4 @@
 require 'acts_as_resource'
-require 'acts_as_resource'
 
 class Survey < ActiveRecord::Base
 

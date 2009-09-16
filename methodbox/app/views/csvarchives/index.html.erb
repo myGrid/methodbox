@@ -7,7 +7,7 @@
 <% else %>
 <p>There are no CSV archives available to view.  To create one add <%= link_to "survey variables", surveys_path -%> to your cart and then create one from all or a subset of these variables</p>
 <% end %>
-<% if @scripts.public_methods.include?("page_count") %>
+<% if @archives.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @archives } -%>
 <% end %>
