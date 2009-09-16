@@ -1,7 +1,7 @@
 class Mailer < ActionMailer::Base
   helper UsersHelper
 
-  NOREPLY_SENDER="no-reply@sysmo-db.org"
+  NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
 
   def admin_emails
     begin      
@@ -14,7 +14,7 @@ class Mailer < ActionMailer::Base
 
   def request_resource(user,resource,base_host)
 
-    subject "A Sysmo Member requested a protected file: #{resource.title}"
+    subject "A MethodBox requested a protected file: #{resource.title}"
     recipients resource.contributor.person.email_with_name
     from NOREPLY_SENDER
     reply_to user.person.email_with_name
@@ -24,7 +24,7 @@ class Mailer < ActionMailer::Base
   end
 
   def signup(user,base_host)
-    subject     'Sysmo SEEK account activation'
+    subject     'MethodBox account activation'
     recipients  user.person.email_with_name
     from        NOREPLY_SENDER
     sent_on     Time.now
@@ -33,7 +33,7 @@ class Mailer < ActionMailer::Base
   end
 
   def forgot_password(user,base_host)
-    subject    'Sysmo SEEK - Password reset'
+    subject    'MethodBox - Password reset'
     recipients user.person.email_with_name
     from       NOREPLY_SENDER
     sent_on    Time.now
@@ -42,7 +42,7 @@ class Mailer < ActionMailer::Base
   end
 
   def welcome(user,base_host)
-    subject    'Welcome to Sysmo SEEK'
+    subject    'Welcome to MethodBox'
     recipients user.person.email_with_name
     from       NOREPLY_SENDER
     sent_on    Time.now
@@ -52,7 +52,7 @@ class Mailer < ActionMailer::Base
 
   def contact_admin_new_user_no_profile(details,user,base_host)
     
-    subject    'Sysmo Member signed up'
+    subject    'MethodBox Member signed up'
     recipients admin_emails
     from       NOREPLY_SENDER
     sent_on    Time.now
