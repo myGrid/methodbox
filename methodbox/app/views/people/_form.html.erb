@@ -93,8 +93,8 @@
 
 <% if current_user.is_admin? -%>
 
-  <h2 style="margin-top: 1.5em;">Choose Project / Institution&nbsp;&nbsp;&nbsp;<span class="admin_warning">(This section is visible only to admins)</span></h2>
-  <%= render :partial => "work_groups", :locals=> { :person => (person ? person : Person.new) } -%>
+  <%#=<h2 style="margin-top: 1.5em;">Choose Project / Institution&nbsp;&nbsp;&nbsp;<span class="admin_warning">(This section is visible only to admins)</span></h2>%>
+  <%#= render :partial => "work_groups", :locals=> { :person => (person ? person : Person.new) } -%>
 
  
 <% end -%>
