@@ -36,3 +36,23 @@ SerializeMap.0=/Volumes/Data/datasets/
 Basically, where it should save completed zip files to, where it should load any source csv tab survey data files from and where it should serialize its requests when processing the files (in case of server problems).
 
 You can start this app in a tomcat container (although we have had some xml processing issues) or using jetty with mvn -Djetty.port=2500 jetty:run
+
+Setting up email:
+
+You need to set EMAIL_ENABLED=true in environment_local.rb and also set ACTIVATION_REQUIRED=true in the appropriate file in /environments.  If you want new users to join then set REGISTRATION_CLOSED=false in environment_local.  You then need to add the ActivationMailer config to the environment file 
+eg
+ActionMailer::Base.delivery_method = :smtp
+ActionMailer::Base.smtp_settings = {
+  :address => "smtp.gmail.com",
+  :port => 587,
+  :domain => "mydomain.org",
+  :authentication => :plain,
+  :user_name => "me",
+  :password => "password"
+}
+This setup is for TLS/SSL using gmail, it's a lot easier with non-authenticated SMTP.
+
+SOLR setup:
+
+Set SOLR_ENABLED to true in the appropriate environment file.  Don't forget to run the SOLR server with rake solr:start and stop with rake solr:stop.  SOLR sometimes complains when starting that certain directories or pid files are missing, just create the directories as necessary.  Note that when SOLR bails out this way then you cannot stop with rake solr:stop but it will still have nicked port 8983.  Use lsof -i:8983 or similar to find the process number and kill it off.
+ 
