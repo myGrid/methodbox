@@ -56,3 +56,6 @@ SOLR setup:
 
 Set SOLR_ENABLED to true in the appropriate environment file.  Don't forget to run the SOLR server with rake solr:start and stop with rake solr:stop.  SOLR sometimes complains when starting that certain directories or pid files are missing, just create the directories as necessary.  Note that when SOLR bails out this way then you cannot stop with rake solr:stop but it will still have nicked port 8983.  Use lsof -i:8983 or similar to find the process number and kill it off.
  
+Some handy tips:
+
+If you want to set up your db for non development use then add RAILS_ENV="production" (or test) to the end of your rake db:migrate command
