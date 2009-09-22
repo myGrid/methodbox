@@ -7,7 +7,7 @@
 <div class="fold">
   <div class="foldTitle"><em style="margin:auto"><%= image_tag("famfamfam_silk/cart.png", :border => 0) -%></em></div>
   <div class="foldContent" style="display:none;">
-    <% form_remote_tag :url => { :action => "deal_with_selected"},:name=>'submitter' ,:loading => "$('archive_linker').hide();$('download_selected').disable();$('remove_selected').disable();$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').enable();$('download_selected').enable();$('remove_selected').enable();$('csv_download_spinner').hide();" do -%>
+    <% form_remote_tag :url => { :action => "deal_with_selected", :controller => "cart"},:name=>'submitter' ,:loading => "$('archive_linker').hide();$('download_selected').disable();$('remove_selected').disable();$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').enable();$('download_selected').enable();$('remove_selected').enable();$('csv_download_spinner').hide();" do -%>
       <div id="cart-contents-inner">
         <%= render(:partial => "surveys/cart_item") %>
       </div>
@@ -26,7 +26,7 @@
   <%#*</div>%>
 
 
-  <% form_remote_tag :id => "download_all", :loading => "$('archive_linker').hide();$('send_message').value = 'Creating CSV file...';$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').value = 'Create CSV Archive';$('send_message').enable();$('csv_download_spinner').hide();", :url => { :action => "download_all_variables"} do -%>
+  <% form_remote_tag :id => "download_all", :loading => "$('archive_linker').hide();$('send_message').value = 'Creating CSV file...';$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').value = 'Create CSV Archive';$('send_message').enable();$('csv_download_spinner').hide();", :url => { :action => "download_all_variables", :controller => "cart"} do -%>
 
     <%#*<img alt="spinner" id="spinner2" src="/images/spinner.gif" style="display:none;vertical-align:middle;" />%>
     <%= submit_tag('Create CSV Archive', :name=>'send_message_button', :id=>"send_message") -%>
