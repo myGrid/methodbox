@@ -7,7 +7,7 @@ require 'xml'
 namespace :obesity do
   desc "load metadata from xml"
   task :load_metadata  => :environment do
-    parser = XML::Parser.file('/Users/Ian/obesity_data/2007/descxml.xml')
+    parser = XML::Parser.file('/Users/Ian/downloads/metadata-HSE-2006-v3a.xml')
     doc = parser.parse
 
     nodes = doc.find('//metadata/variable')
@@ -16,16 +16,43 @@ namespace :obesity do
       variable = Variable.new
       namenode = node.find('child::name')
       namecontent = namenode.first.content
-      print namecontent
+      print "NAME: " + namecontent
       variable.name = namecontent
 
       descnode = node.find('child::description')
       desccontent = descnode.first.content
-      print desccontent
+      print "DESC: " + desccontent
       variable.value = desccontent
-
-      variable.survey_id = 8;
-
+      
+       catnode = node.find('child::category')
+        catcontent = catnode.first.content
+        print "CAT: " + catcontent
+        variable.category = desccontent
+        
+      dernode = node.find('child::derivation')
+      dercontent = dernode.first
+      
+      dertype = dercontent.find('child::type')
+      dertypecontent = dertype.first.content
+      variable.dertype = dertypecontent
+      print "TYPE: " + dertypecontent
+      
+      dermethod = dercontent.find('child::method')
+      if dermethod.first != nil
+      dermethodcontent = dermethod.first.content
+      variable.dermethod = dermethodcontent
+      print "METHOD: " + dermethodcontent
+    else
+      print "METHOD: NIL"
+    end
+      
+      infonode = node.find('child::information')
+      infocontent = infonode.first.content
+      variable.info = infocontent
+      print "INFO: " + infocontent
+      
+      variable.survey_id = 7;
+      
       variable.save
       #  infonode = node.find('child::information')
       #  if infonode.length>=1
