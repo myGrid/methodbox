@@ -19,7 +19,7 @@
       <br/>
 
       <p>
-        <b>Description</b>
+        <b>Description:</b>
         <% unless @variable.value.blank? -%>
           <div class="box_standout">
             <%= simple_format(white_list(@variable.value)) -%>
@@ -30,20 +30,69 @@
           </p>
         <% end -%>
       </p>
+
+	 <p>
+        <b>Category:</b>
+        <% unless @variable.category.blank? -%>
+          <div class="box_standout">
+            <%= simple_format(white_list(@variable.category)) -%>
+          </div>
+        <% else -%>
+          <p class="none_text">
+            No category
+          </p>
+        <% end -%>
+      </p>
+	 <p>
+        <b>Variable source:</b>
+        <% unless @variable.dertype.blank? -%>
+          <div class="box_standout">
+            <%= simple_format(white_list(@variable.dertype)) -%>
+          </div>
+        <% else -%>
+          <p class="none_text">
+            No source
+          </p>
+        <% end -%>
+      </p>
+	 <p>
+        <b>Derivation method:</b>
+        <% unless @variable.dermethod.blank? -%>
+          <div class="box_standout">
+            <%= simple_format(white_list(@variable.dermethod)) -%>
+          </div>
+        <% else -%>
+          <p class="none_text">
+            No method
+          </p>
+        <% end -%>
+      </p>
+	 <p>
+        <b>Allowed values:</b>
+        <% unless @variable.info.blank? -%>
+          <div class="box_standout">
+            <%= simple_format(white_list(@variable.info)) -%>
+          </div>
+        <% else -%>
+          <p class="none_text">
+            No allowed values
+          </p>
+        <% end -%>
+      </p>
       <p>
-        <b>From Survey:</b>
+        <b>Survey year:</b>
         <div class="box_standout">
           <%= Survey.find(@variable.survey_id).surveytype + " " + Survey.find(@variable.survey_id).year -%>
         </div>
       </p>
 
     </div>
-    <p>
-      <b>User added notes:</b>
-      <div class="box_standout">
-        More info to come
-      </div>
-    </p>
+    <!-- <p>
+            <b>User added notes:</b>
+            <div class="box_standout">
+              More info to come
+            </div>
+          </p> -->
     <p>
       <% unless @tag_array.empty? %>
         <b>Tags:</b>
