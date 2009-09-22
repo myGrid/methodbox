@@ -27,7 +27,7 @@ namespace :obesity do
        catnode = node.find('child::category')
         catcontent = catnode.first.content
         print "CAT: " + catcontent
-        variable.category = desccontent
+        variable.category = catcontent
         
       dernode = node.find('child::derivation')
       dercontent = dernode.first
