@@ -166,7 +166,7 @@ class CsvarchivesController < ApplicationController
       params[:archive][:last_used_at] = Time.now
       #      @archive.content_blob = ContentBlob.new(:data => file.body)
       params[:archive][:content_type] = "application/zip"
-      params[:archive][:person_id] = current_user.id
+      params[:archive][:person_id] = User.find(current_user.id).person
       params[:archive][:variables] = all_variables_array
       params[:archive][:contributor_type] = "User"
       params[:archive][:contributor_id] = current_user.id
