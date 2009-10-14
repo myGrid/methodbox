@@ -45,7 +45,13 @@
         <% end -%>
       </div>
 
-      <p style="font-size:85%;"><b>Format: </b><%= h(resource.content_type) -%></p>
+      <p style="font-size:85%;">  <b>Type:</b>
+		<% unless resource.method_type == "Other" -%>
+        <%=h resource.method_type -%>
+		<% else -%>
+		<%=h resource.content_type -%>
+		<% end -%>
+      </p>
     </td>
 
     <td class="actions" style="width: 80px;">

@@ -99,6 +99,7 @@ class ScriptsController < ApplicationController
       # prepare some extra metadata to store in Script instance
       params[:script][:contributor_type] = "User"
       params[:script][:contributor_id] = current_user.id
+      params[:script][:method_type] = params[:method_type]
 
       # store properties and contents of the file temporarily and remove the latter from params[],
       # so that when saving main object params[] wouldn't contain the binary data anymore
@@ -148,7 +149,7 @@ class ScriptsController < ApplicationController
   def update
     # remove protected columns (including a "link" to content blob - actual data cannot be updated!)
     if params[:script]
-      [:contributor_id, :contributor_type, :original_filename, :content_type, :content_blob_id, :created_at, :updated_at, :last_used_at].each do |column_name|
+      [:contributor_id, :contributor_type, :original_filename, :content_type, :content_blob_id, :created_at, :updated_at, :last_used_at,:method_type].each do |column_name|
         params[:script].delete(column_name)
       end
 
@@ -161,6 +162,7 @@ class ScriptsController < ApplicationController
       # Script on the other hand is merely the last user to edit it)
       params[:script][:contributor_type] = current_user.class.name
       params[:script][:contributor_id] = current_user.id
+      params[:script][:method_type] = params[:method_type]
     end
 
     respond_to do |format|

@@ -40,10 +40,13 @@
         <b>File name:</b>
         <%=h @script.original_filename -%>
       </p>
-
-      <p>
-        <b>Format:</b>
-        <%=h @script.content_type -%>
+	<p>
+        <b>Type:</b>
+		<% unless @script.method_type == "Other" -%>
+        <%=h @script.method_type -%>
+		<% else -%>
+		<%=h @script.content_type -%>
+		<% end -%>
       </p>
 
       <%#*<p>%>

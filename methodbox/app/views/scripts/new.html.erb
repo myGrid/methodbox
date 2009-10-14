@@ -24,6 +24,10 @@
 					<% script_description_value = (params[:script].blank? || params[:script][:description].blank?) ? nil : params[:script][:description] -%>
 					<%= text_area_tag 'script[description]', script_description_value, :style => "width: 100%;", :rows => 5 -%>
 		    </p>
+			<p style="margin-top: 0.5em;">
+		    	<b>Type:</b>
+		<%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
+		</p>
 
 	 			<%= render :partial => "assets/project_selector", :locals => { :resource_type => "Method",   # this is only for presentation, not for any processing
                                                                        :project_hash => current_user.generate_own_project_id_name_hash } -%>
@@ -32,10 +36,6 @@
 
     <center>
       <div style="width: 90%;">
-        <!--<p>
-          <b>File to upload:&nbsp;</b>
-          <%= file_field :script, :data -%>
-        </p>-->
 
 		<p style="margin: 2.5em 0 0 0;">
   		<%= render :partial => "assets/sharing_form" -%>

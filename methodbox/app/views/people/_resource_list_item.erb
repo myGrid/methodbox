@@ -28,13 +28,6 @@
           <%= truncate(text_or_not_specified(person.description, :description => true), :length=>300) %>
         </div>
 
-        <% unless person.email.nil? or person.email.empty? %>
-          <p class="email">
-            <label>Email: </label>
-            <%= mail_to h(person.email) %>
-          </p>
-        <% end  %>
-
         <% unless person.web_page.nil? or person.web_page.empty? %>
           <p class="web_page">
             <label>Web page:</label>

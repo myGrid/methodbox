@@ -25,6 +25,11 @@
           <b>Description:</b><br/>
           <%= f.text_area :description, :style => "width: 100%;", :rows => 5 -%>
         </p>
+	    </p>
+		<p style="margin-top: 0.5em;">
+	    	<b>Type:</b>
+	<%= select_tag :method_type, options_for_select(method_type_options, @script.method_type)  %>
+	</p>
 
         <%# only the owner should get to see this option (ability to reload defaults remain in 'edit' action, but project selector is disabled) -%>
         <% if current_user_authorized_to_manage -%>
