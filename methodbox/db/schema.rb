@@ -9,10 +9,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090903131503) do
+ActiveRecord::Schema.define(:version => 20091016124604) do
+
+  create_table "activity_limits", :force => true do |t|
+    t.string   "contributor_type", :null => false
+    t.integer  "contributor_id",   :null => false
+    t.string   "limit_feature",    :null => false
+    t.integer  "limit_max"
+    t.integer  "limit_frequency"
+    t.integer  "current_count",    :null => false
+    t.datetime "reset_after"
+    t.datetime "promote_after"
+  end
 
   create_table "annotation_attributes", :force => true do |t|
-    t.string   "name",       :default => "", :null => false
+    t.string   "name",       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -20,8 +31,8 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
   add_index "annotation_attributes", ["name"], :name => "index_annotation_attributes_on_name"
 
   create_table "annotation_value_seeds", :force => true do |t|
-    t.integer  "attribute_id",                 :null => false
-    t.string   "value",        :default => "", :null => false
+    t.integer  "attribute_id", :null => false
+    t.string   "value",        :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -29,16 +40,16 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
   add_index "annotation_value_seeds", ["attribute_id"], :name => "index_annotation_value_seeds_on_attribute_id"
 
   create_table "annotation_versions", :force => true do |t|
-    t.integer  "annotation_id",                                    :null => false
-    t.integer  "version",                                          :null => false
+    t.integer  "annotation_id",                    :null => false
+    t.integer  "version",                          :null => false
     t.integer  "version_creator_id"
-    t.string   "source_type",                      :default => "", :null => false
-    t.integer  "source_id",                                        :null => false
-    t.string   "annotatable_type",   :limit => 50, :default => "", :null => false
-    t.integer  "annotatable_id",                                   :null => false
-    t.integer  "attribute_id",                                     :null => false
-    t.text     "value",                                            :null => false
-    t.string   "value_type",         :limit => 50, :default => "", :null => false
+    t.string   "source_type",                      :null => false
+    t.integer  "source_id",                        :null => false
+    t.string   "annotatable_type",   :limit => 50, :null => false
+    t.integer  "annotatable_id",                   :null => false
+    t.integer  "attribute_id",                     :null => false
+    t.text     "value",                            :null => false
+    t.string   "value_type",         :limit => 50, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -46,14 +57,14 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
   add_index "annotation_versions", ["annotation_id"], :name => "index_annotation_versions_on_annotation_id"
 
   create_table "annotations", :force => true do |t|
-    t.string   "source_type",                      :default => "", :null => false
-    t.integer  "source_id",                                        :null => false
-    t.string   "annotatable_type",   :limit => 50, :default => "", :null => false
-    t.integer  "annotatable_id",                                   :null => false
-    t.integer  "attribute_id",                                     :null => false
-    t.text     "value",                                            :null => false
-    t.string   "value_type",         :limit => 50, :default => "", :null => false
-    t.integer  "version",                                          :null => false
+    t.string   "source_type",                      :null => false
+    t.integer  "source_id",                        :null => false
+    t.string   "annotatable_type",   :limit => 50, :null => false
+    t.integer  "annotatable_id",                   :null => false
+    t.integer  "attribute_id",                     :null => false
+    t.text     "value",                            :null => false
+    t.string   "value_type",         :limit => 50, :null => false
+    t.integer  "version",                          :null => false
     t.integer  "version_creator_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -142,6 +153,19 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
     t.integer "role_id"
   end
 
+  create_table "messages", :force => true do |t|
+    t.integer  "from"
+    t.integer  "to"
+    t.string   "subject"
+    t.text     "body"
+    t.integer  "reply_id"
+    t.datetime "created_at"
+    t.datetime "read_at"
+    t.text     "body_html"
+    t.boolean  "deleted_by_sender",    :default => false
+    t.boolean  "deleted_by_recipient", :default => false
+  end
+
   create_table "people", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -153,8 +177,9 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
     t.string   "web_page"
     t.text     "description"
     t.integer  "avatar_id"
-    t.integer  "status_id",   :default => 0
-    t.boolean  "is_pal",      :default => false
+    t.integer  "status_id",          :default => 0
+    t.boolean  "is_pal",             :default => false
+    t.boolean  "send_notifications", :default => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -191,11 +216,11 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
   end
 
   create_table "relationships", :force => true do |t|
-    t.string   "subject_type", :default => "", :null => false
-    t.integer  "subject_id",                   :null => false
-    t.string   "predicate",    :default => "", :null => false
-    t.string   "object_type",  :default => "", :null => false
-    t.integer  "object_id",                    :null => false
+    t.string   "subject_type", :null => false
+    t.integer  "subject_id",   :null => false
+    t.string   "predicate",    :null => false
+    t.string   "object_type",  :null => false
+    t.integer  "object_id",    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -212,10 +237,11 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
     t.integer  "content_blob_id"
     t.datetime "last_used_at"
     t.string   "original_filename"
+    t.string   "method_type"
   end
 
   create_table "sessions", :force => true do |t|
-    t.string   "session_id", :default => "", :null => false
+    t.string   "session_id", :null => false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -294,6 +320,10 @@ ActiveRecord::Schema.define(:version => 20090903131503) do
     t.integer  "survey_id"
     t.string   "label"
     t.integer  "csvarchive_id"
+    t.string   "category"
+    t.string   "dertype"
+    t.string   "dermethod"
+    t.string   "info"
   end
 
   create_table "watched_variables", :force => true do |t|
