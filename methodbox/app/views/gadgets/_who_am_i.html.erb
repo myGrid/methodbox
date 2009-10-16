@@ -17,6 +17,10 @@
 						<small>[ <%= link_to "edit", edit_person_path(current_user.person) -%> ]</small>
 					</span>
 				</li>
+				<li>
+				  	<%= icon "profile", messages_path, nil, nil, "&nbsp;My Messages" %>
+					
+					</li>
 	      <li><%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %></li>
 			</ul>
 		</div>

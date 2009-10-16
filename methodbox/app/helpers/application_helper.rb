@@ -35,6 +35,10 @@ module ApplicationHelper
     return Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id,'name'=>t.name}}.to_json
 
   end
+  
+  def login_identity_reminder(user)
+    return "Your username is: #{user.name}"     if user.name
+  end
 
   def get_all_annotations_for_variables
     variables = Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id}}
@@ -342,6 +346,12 @@ module ApplicationHelper
     return list_item
   end
   
+  def delete_image(style=nil, tooltip="Delete")
+    return image_tag("famfamfam_silk/cross.png",
+              :title => "header=[] body=[#{tooltip}] cssheader=[boxoverTooltipHeader] cssbody=[boxoverTooltipBody] delay=[200]",
+              :style => style)
+  end
+  
   
   def contributor(contributor, avatar=false, size=100, you_text=false)
     return nil unless contributor
@@ -371,9 +381,35 @@ module ApplicationHelper
       return nil
     end
   end
+  
+  # is exactly the same as icon, apart from that the front part of the url was already completely
+  # generated before and is passed in as a parameter (this helps to get links with complex javascript in
+  # 'onclick' field) - so need to add closing </a> tag in the relevant place
+  def icon_no_link_processing(method, url=nil, alt=nil, label=method.humanize)
 
+    if (label == 'Destroy')
+      label = 'Delete';
+    end
+
+    return nil unless (filename = method_to_icon_filename(method.downcase))
+   
+    # if method.to_s == "info"
+    # make into cool javascript div thing!
+   
+    image_options = alt ? { :alt => alt } : { :alt => method.humanize }
+    img_tag = image_tag(filename, image_options)
+   
+    inner = img_tag;
+    inner = "#{img_tag} #{label}" unless label == nil
+
+    if (url)
+      inner = url + inner + "</a>"
+    end
+
+    return '<span class="icon">' + inner + '</span>';
+  end
   
-  
+    
   
   # A generic method to produce avatars for entities of all kinds.
   #

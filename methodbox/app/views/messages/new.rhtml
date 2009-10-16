@@ -1,0 +1,34 @@
+<% @message.to = params[:user_id] if params[:user_id] -%>
+
+<h1><%= params[:reply_id] ? h("Reply to Message") : h("New Message") %></h1>
+
+<%= error_messages_for :message %>
+
+<center>
+	<div class="box_form" style="width: 400px; text-align: left;">
+		<% form_for(:message, :url => messages_path) do |f| %>
+	    <% if @message.to %>
+				<p style="text-align: center;"><b>To</b></p>
+	      <center><%= render :partial => "users/avatar", :locals => { :user => @message.to } %></center>
+	      <%= f.hidden_field :to %>
+	    <% else %>
+			<p><b>To</b></p>
+			  <% # sending message to the user themself is not allowed -> exclude current user from the 'to' list -%>
+	      <%= select(:message, :to, Person.find(:all, :conditions => ["id <> ?", User.find(current_user.id).person_id], :order => "last_name ASC").collect {|u| [u.first_name + " " +  u.last_name, u.id ] }, { :include_blank => false }, :style => "width: 390px;") %>
+	    <% end %>
+		
+		  <p><b>Subject</b></p>
+		  <%= f.text_field :subject, :style => "width: 390px;" %>
+		
+		  <p><b>Message</b></p>
+		  <%= f.text_area :body, :rows => 12, :style => "width: 390px;" %>
+			
+			<br/><br>
+		
+    	<center><%= submit_tag "Send Message", :disable_with => "Sending..." %></center>
+		  
+		  <%= f.hidden_field :from %>
+		  <%= f.hidden_field :reply_id %>
+		<% end %>
+	</div>
+</center>

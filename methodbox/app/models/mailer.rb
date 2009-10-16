@@ -3,6 +3,19 @@ class Mailer < ActionMailer::Base
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
 
+  def new_message(message, base_host)
+    recipients Person.find(message.to).email
+    from NOREPLY_SENDER
+    subject "#{Person.find(message.from).name} has sent you a message"
+    sent_on    Time.now
+    body :name => Person.find(message.to).name,
+         :from_name => Person.find(message.from).name,
+         :subject => message.subject,
+         :message_id => message.id,
+         :target => Person.find(message.to),
+         :host=>base_host
+  end
+  
   def admin_emails
     begin      
       User.admins.map { |a| a.person.email_with_name }

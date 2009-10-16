@@ -23,6 +23,7 @@
             <%= f.label :email %><br />
             <%= f.text_field :email, :style => "width: 100%;" %>
           </p>
+
         </div>
       </center>
     </td>
@@ -43,6 +44,11 @@
             <%= f.label :web_page %><br />
             <%= f.text_field :web_page, :style => "width: 100%;" %>
           </p>
+			<p>
+			<%= f.label :Send_email_notifications %>
+			<%= check_box('person','send_notifications') -%>
+			
+			</p>
 
 
 
