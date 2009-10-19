@@ -13,8 +13,7 @@
 	  <li><%= icon('messages_outbox_no_arrow', sent_messages_path, "Return to Sent Messages", nil, 'Return to Sent Messages') -%></li>
   <% end -%>
 	<li>
-	  <% complex_delete_url = "<a href=\"#{message_path(@message)}\" onclick=\"if (confirm('Are you sure you want to delete this message?')) { var f = document.createElement('form'); f.style.display = 'none'; this.parentNode.appendChild(f); f.method = 'POST'; f.action = this.href;var m = document.createElement('input'); m.setAttribute('type', 'hidden'); m.setAttribute('name', '_method'); m.setAttribute('value', 'delete'); f.appendChild(m);var n = document.createElement('input'); n.setAttribute('type', 'hidden'); n.setAttribute('name', 'deleted_from'); n.setAttribute('value', '#{@message_folder}'); f.appendChild(n); f.submit(); };return false;\">" -%>
-		<%= icon_no_link_processing('message_delete', complex_delete_url, nil, 'Delete this Message') %>
+<%= icon "destroy", message_path(@message), "Delete this Message", { :confirm => 'Are you sure?', :method => :delete }, "Delete this Message" -%>
 	</li>
 </ul>
 
@@ -44,7 +43,7 @@
 		<p class="subject">
 			<%=h @message.subject %>
 		</p>
-		<p><b>Sent: </b><%=datetime @message.created_at %></p>
+		<p><b>Sent: </b><%=@message.created_at %></p>
 	</div>
 	
 	<div class="clearer">&nbsp;</div>
@@ -54,7 +53,7 @@
 	<p><b>Message</b></p>
 	<div class="message">
 		<% unless @message.body.blank? %>
-			<%= @message.body_html %>
+			<%= @message.body %>
 		<% else %>
 			<p class="none_text">No message body</p>
 		<% end %>

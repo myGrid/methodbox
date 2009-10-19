@@ -64,7 +64,7 @@ class MessagesController < ApplicationController
     else
       # message is found, and is not deleted by current_user -> show the message;
       # mark message as read if it is viewed by the receiver
-      @message.read! if @message.to.to_i == Person.find(current_user.id).person_id.to_i
+      @message.read! if @message.to.to_i == User.find(current_user.id).person_id.to_i
         
       @message_folder = message_folder
       respond_to do |format|
