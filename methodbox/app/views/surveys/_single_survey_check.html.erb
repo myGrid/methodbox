@@ -1,0 +1,10 @@
+<% unless collection.empty? -%>
+  <%#*<div width="100%">%>
+    <ul class="survey">
+      <% collection.each do |item| -%>
+        <li><%= check_box_tag "entry_ids[]", item.id,false, :class=>'survey_checkbox'  %> <%= item.title -%></li>
+      <% end -%>
+    </ul>
+  <%#*</div>%>
+<% end -%>
+
