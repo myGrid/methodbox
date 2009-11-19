@@ -1,0 +1,26 @@
+/* 
+Document   : survey_ul
+Created on : Nov 18, 2009, 4:20:21 PM
+Author     : Ian
+Description:
+Flowing layout for ul & li tags
+*/
+
+/* 
+TODO customize this sample style
+Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+ul.survey {
+    margin-left: 0px;
+    padding-left: 0px;
+    float:left;
+    list-style: none;
+    width: 100%;
+    /*border-bottom: 1px dashed #000;*/
+}
+ul.survey li {
+    float: left;
+}
+
+.clear {clear:both;}
