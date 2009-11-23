@@ -24,7 +24,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }
 
 
-  map.resources :surveys, :member => {:download => :get}, :collection => {:add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get }  do |survey|
+  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get }  do |survey|
     
   end
 
