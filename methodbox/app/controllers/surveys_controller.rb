@@ -4,7 +4,7 @@ class SurveysController < ApplicationController
 
   before_filter :find_cart
 
-  before_filter :find_surveys, :only => [ :index ]
+  before_filter :find_surveys, :only => [ :index, :search_variables ]
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
@@ -36,7 +36,7 @@ def search_variables
   
   #    items_per_page = 10
   @search_query = params[:search_query]
-  @survey_list = params[:survey_list]
+  @selected_surveys = Array.new(params[:entry_ids])
   #    logger.info("length " + @survey_list.size)
   #    @search_query||=""
 
@@ -47,9 +47,10 @@ def search_variables
   @variables = @results.docs
   @sorted_variables = Array.new
   @variables.each do |item|
-    @survey_list.each do |ids|
+    @selected_surveys.each do |ids|
       if item.survey_id.to_s== ids
         logger.info("Found " + item.name + ", from Survey " + item.survey_id.to_s)
+        puts "Found " + item.name + ", from Survey " + item.survey_id.to_s
         @sorted_variables.push(item)
         break
       end
@@ -77,11 +78,11 @@ def search_variables
     @sorted_variables = @sorted_variables.sort_by { |m| Survey.find(m.survey_id).year }.reverse
   end
   render :update, :status=>:created do |page|
-    page.replace_html "table", :partial=>"surveys/faceted_browse"
+    page.replace_html "table", :partial=>"surveys/variables_table"
   end
-  # respond_to do |format|
-  #   format.html
-  # end
+#   respond_to do |format|
+#     format.html
+#   end
 end
 
 def sort_variables
