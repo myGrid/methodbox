@@ -1,29 +1,20 @@
-<div class="headerContainer">
   <%= hidden_field_tag 'tag_button', 'tag' %>
   <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
   <%= hidden_field_tag 'variable_name', 'variable_name' %>
   <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
   <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
-  <table>
-    <thead class="fixedHeader">
 
-      <tr><th></th><th></th><th <%= sort_td_class_helper "variable" %>>
-          <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, @sorted_variables) %>
-        </th><th <%= sort_td_class_helper "description" %>>
-          <%= sort_link_helper("Description", "description", @search_query, @survey_list, @sorted_variables) %>
-        </th>
-        <%#*<th%>
-        <%#= sort_td_class_helper "survey" %>
-        <%#*>%>
-        <%#= sort_link_helper("Survey", "survey", @search_query, @survey_list, @sorted_variables) %>
-        <%#*</th>%>
-        <th <%= sort_td_class_helper "year" %>>
-          <%= sort_link_helper("Year", "year", @search_query, @survey_list, @sorted_variables) %>
-      </th></tr>
-    </thead>
-  </table>
+<div class="faux_table_header_container">
+    <ul class="faux_table">
+      <li id="faux_table_header"><div class="head1">&nbsp</div><div
+        class="head2">&nbsp</div><div class="head3">
+<%= sort_link_helper("Variable", "variable", @search_query, @survey_list, @sorted_variables) %></div><div class="head4">
+          <%= sort_link_helper("Description", "description", @search_query, @survey_list, @sorted_variables) %></div><div class="head5">
+          <%= sort_link_helper("Survey", "survey", @search_query, @survey_list, @sorted_variables) %></div><div class="head6">
+          <%= sort_link_helper("Year", "year", @search_query, @survey_list, @sorted_variables) %></div></li>
+    </ul>
 </div>
-<div id="tableContainer" class="tableContainer">
+<div id="tableContainer" class="faux_table_container">
   <% @sorted_variables.each do |item| %>
     <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
 

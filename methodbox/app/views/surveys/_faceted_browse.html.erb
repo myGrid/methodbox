@@ -1,4 +1,4 @@
-<%= stylesheet_link_tag "scrolltable" %>
+<%#= stylesheet_link_tag "scrolltable" %>
 
 
 <%#*<div class="show_basic">%>
@@ -15,7 +15,7 @@
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
     <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
     <%#= hidden_field_tag 'survey_array', @survey_list %>
-    <% @survey_list.each do |val| %>
+    <% @selected_surveys.each do |val| %>
       <%= hidden_field_tag "survey_list[]", val %>
     <% end %>
 

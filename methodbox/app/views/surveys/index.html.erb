@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
 <ul class="sectionIcons">
   <!--<li><%#= icon "new", new_survey_path, "Upload New Survey", nil, "Upload New Survey" %></li>-->
   <!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
@@ -6,10 +7,10 @@
 <div class="show_basic">
   <div id="survey_selector">
     <%# form_remote_tag(:update => "table", :url => '/surveys/view_variables',:complete =>"Element.toggle('survey_selector');Element.toggle('variable_selector')") do -%>
-    <% form_tag('/surveys/view_variables') do -%>
+    <% form_remote_tag :url => search_variables_surveys_url do -%>
       <b>Select one or more surveys to search</b><br/><br/>
       <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;" width="100%">
-        <div><%= submit_tag 'Search selected surveys' %>
+        <div><%= text_field_tag :search_query, @search_query %><%= submit_tag 'Search selected surveys' %>
         </div><br/>
         <div>Select:
           <%= link_to_function 'All', "$$('input.survey_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
@@ -23,34 +24,14 @@
 
       <% if @surveys.public_methods.include?("page_count") %>
         <!-- only do the page links if the collection supports it -->
-        <%= render :partial => "layouts/paginate", :locals => { :collection => @surveys } -%>
+        <%#= render :partial => "layouts/paginate", :locals => { :collection => @surveys } -%>
       <% end %>
 
       <%#= render :partial => "assets/resource_list", :locals => { :collection => @surveys, :authorization_for_showing_already_done=>true } %>
-      <%= render :partial => "single_survey_check", :locals => { :collection => @surveys, :authorization_for_showing_already_done=>true }  %>
+      <%= render :partial => "single_survey_check", :locals => { :collection => @surveys, :selected => Array.new, :authorization_for_showing_already_done=>true }  %>
       <br class="clear"/><br/>
-      <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;" width="100%">
-        <div><%= submit_tag 'Search selected surveys' %>
-        </div><br/>
-        <div>Select:
-          <%= link_to_function 'All', "$$('input.survey_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-          ,&nbsp
-          <%= link_to_function 'None', "$$('input.survey_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-          ,&nbsp
-          <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
-
-        </div>
-      </div>
+      <div id="table"></div>
     <% end -%>
   </div>
 </div>
-<%#*<div class="fold" id="variable_selector" style="display:none;">%>
-<%#*<div class="foldTitle">Variables for selected Data Sets</div>%>
-<%#*<div class="foldContent">%>
-<%#*<div class="show_basic">%>
-<%#*<div id="table">%>
-<%#= render :partial => "view_variables", :locals => { :collection => @variables } %>
-<%#*</div>%>
-<%#*</div>%>
-<%#*</div>%>
-<%#*</div>%>
+
