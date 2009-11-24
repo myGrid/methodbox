@@ -21,6 +21,8 @@ ul.survey {
 }
 ul.survey li {
     float: left;
+    padding-left: 0em;
+    padding-right: 1em;
 }
 
 .clear {clear:both;}
