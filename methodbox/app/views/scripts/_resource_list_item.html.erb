@@ -46,11 +46,15 @@
       </div>
 
       <p style="font-size:85%;">  <b>Type:</b>
-		<% unless resource.method_type == "Other" -%>
-        <%=h resource.method_type -%>
-		<% else -%>
-		<%=h resource.content_type -%>
-		<% end -%>
+        <% if resource.method_type == nil %>
+          <%=h resource.content_type -%>
+          <% else -%>
+          <% unless resource.method_type == "Other" -%>
+            <%=h resource.method_type -%>
+          <% else -%>
+            <%=h resource.content_type -%>
+          <% end -%>
+        <% end -%>
       </p>
     </td>
 
