@@ -4,6 +4,44 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
   <head>
+    <style type="text/css">
+      .spiffy{display:block}
+      .spiffy *{
+        display:block;
+        height:1px;
+        font-size:.01em;
+        overflow:hidden;
+        background:#1B619B}
+      .spiffy1{
+        margin-left:3px;
+        margin-right:3px;
+        padding-left:1px;
+        padding-right:1px;
+        border-left:1px solid #9cbbd4;
+        border-right:1px solid #9cbbd4;
+        background:#5488b4}
+      .spiffy2{
+        margin-left:1px;
+        margin-right:1px;
+        padding-right:1px;
+        padding-left:1px;
+        border-left:1px solid #e8eff5;
+        border-right:1px solid #e8eff5;
+        background:#467fae}
+      .spiffy3{
+        margin-left:1px;
+        margin-right:1px;
+        border-left:1px solid #467fae;
+        border-right:1px solid #467fae;}
+      .spiffy4{
+        border-left:1px solid #9cbbd4;
+        border-right:1px solid #9cbbd4}
+      .spiffy5{
+        border-left:1px solid #5488b4;
+        border-right:1px solid #5488b4}
+      .spiffyfg{
+        background:#1B619B}
+    </style>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <title><%= page_title controller.controller_name, controller.action_name %></title>
 
@@ -16,7 +54,7 @@
         $(element).innerHTML=<%= "'"+image_tag("ajax-loader.gif")+"'" -%> ;
       }
     </script>
-    
+
   </head>
 
 
@@ -29,8 +67,15 @@
         </div>
         <br/>
         <%= render :partial=>"layouts/tabnav" %>
-        <div id="myexp_searchbar" style="background-image:url(/images/searchbar-flare.png);">
-          <%#= render :partial=>"search/search_bar" %>
+        <%#*<div id="myexp_searchbar" style="background-image:url(/images/searchbar-flare.png);">%>
+        <%#= render :partial=>"search/search_bar" %>
+        <%#*</div>%>
+        <div>
+          <b class="spiffy"><b class="spiffy1"><b></b></b><b class="spiffy2"><b></b></b><b class="spiffy3"></b><b class="spiffy4"></b><b class="spiffy5"></b></b>
+          <div style="background:#1B619B; height:30px">
+          </div>
+          <%#*<b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>%>
+
         </div>
       </div>
       <div id="bd">
