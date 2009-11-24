@@ -27,8 +27,11 @@ class Asset < ActiveRecord::Base
       end
       
       res = asset.resource
-      results[res.class.name] = [] unless results[res.class.name]
-      results[res.class.name] << res
+      if res != nil
+        puts res.class.name + " id: " + res.id.to_s + " asset: " + asset.id.to_s
+        results[res.class.name] = [] unless results[res.class.name]
+        results[res.class.name] << res
+      end
     end
     
     return results
@@ -52,8 +55,8 @@ class Asset < ActiveRecord::Base
   # checks if c_utor is the owner of this asset
   def owner?(c_utor)
     case self.contributor_type
-      when "User"
-        return (self.contributor_id == c_utor.id && self.contributor_type == c_utor.class.name)
+    when "User"
+      return (self.contributor_id == c_utor.id && self.contributor_type == c_utor.class.name)
       # TODO some new types of "contributors" may be added at some point - this is to cater for that in future
       # when "Network"
       #   return self.contributor.owner?(c_utor.id) if self.contributor_type.to_s
