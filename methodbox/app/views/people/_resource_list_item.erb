@@ -24,7 +24,7 @@
           <%= person_name.blank? ? "<span class='none_text'>Unknown</span>" : link_to(person_name, person_path(person)) -%>
         </p>
 
-        <div class="box_standout">
+        <div class="box_standout" style="background-color:#FFFFFF">
           <%= truncate(text_or_not_specified(person.description, :description => true), :length=>300) %>
         </div>
 
