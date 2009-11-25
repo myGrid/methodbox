@@ -27,11 +27,12 @@
         <%#= render :partial => "layouts/paginate", :locals => { :collection => @surveys } -%>
       <% end %>
 
-      <%#= render :partial => "assets/resource_list", :locals => { :collection => @surveys, :authorization_for_showing_already_done=>true } %>
-      <%= render :partial => "single_survey_check", :locals => { :collection => @surveys, :selected => Array.new, :authorization_for_showing_already_done=>true }  %>
-      <br class="clear"/><br/>
-      <div id="table"></div>
+    <%#= render :partial => "assets/resource_list", :locals => { :collection => @surveys, :authorization_for_showing_already_done=>true } %>
+    <%= render :partial => "single_survey_check", :locals => { :collection => @surveys, :selected => Array.new, :authorization_for_showing_already_done=>true }  %>
     <% end -%>
+  <br class="clear"/><br/>
+    <div id="table"></div>
+
   </div>
 </div>
 
