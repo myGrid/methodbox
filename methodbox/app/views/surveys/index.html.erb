@@ -17,7 +17,7 @@
           ,&nbsp
           <%= link_to_function 'None', "$$('input.survey_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
           ,&nbsp
-          <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+          <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { { checkbox.checked = !checkbox.checked } });" %>
         </div>
       </div><br/><br/>
 
