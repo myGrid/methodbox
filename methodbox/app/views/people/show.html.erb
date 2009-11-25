@@ -1,107 +1,115 @@
 <% drag_id=model_to_drag_id @person %>
+<div class="tabber">
+  <div id="person_tab" class="tabbertab">
+    <h3>
+ <% if mine?(@person) -%>
+   Me
+   <% else -%>
+<%= "#{@person.name}" -%>
 
-<h1><%= h @person.name -%></h1>
+<% end %>
+</h3>
+<%#*<h1>%>
+<%#= h @person.name -%>
+    <%#*</h1>%>
 
-<div class="show_basic">
+    <div class="show_basic">
 
-  <div class="main_content_left_box">
-    <div class="box_about_actor">
+      <div class="main_content_left_box">
+        <div class="box_about_actor">
 
-      <p>
-        <b>Name:</b> <%= h @person.name %>
-      </p>
+          <p>
+            <b>Name:</b> <%= h @person.name %>
+          </p>
 
-      <% if mine?(@person) -%>
-        <p>
-          <b>Login name :</b> <%= h @person.user.login %> <span class='none_text'>(Only visible to you)</span>
-        </p>
-        <%#*<p>%>
-          <%#*<b>ID :</b>%>
-<%#= @person.id %>
-          <%#*<span class='none_text'>(Only visible to you)</span>%>
-        <%#*</p>%>
-      <% end %>
-
-
+          <% if mine?(@person) -%>
+            <p>
+              <b>Login name :</b> <%= h @person.user.login %> <span class='none_text'>(Only visible to you)</span>
+            </p>
+            <%#*<p>%>
+            <%#*<b>ID :</b>%>
+            <%#= @person.id %>
+            <%#*<span class='none_text'>(Only visible to you)</span>%>
+            <%#*</p>%>
+          <% end %>
 
 
-      <!--<p>
+
+
+          <!--<p>
         <b>Disciplines:</b> <%#= discipline_list(@person) %>
       </p>-->
 
-      <p>
-        <%= render :partial=>"areas_of_expertise", :locals => {:person=>@person}  %>
-      </p>
+          <p>
+            <%= render :partial=>"areas_of_expertise", :locals => {:person=>@person}  %>
+          </p>
 
-    <p>
-      <% if mine?(@person) || @person.can_be_edited_by?(current_user) -%>
-  <ul class="sectionIcons" style="text-align:left;">
-    <li><%= icon('edit', edit_person_path(@person), "Edit Person Profile", nil, 'Edit Profile') -%></li>
+          <p>
+            <% if mine?(@person) || @person.can_be_edited_by?(current_user) -%>
+              <ul class="sectionIcons" style="text-align:left;">
+                <li><%= icon('edit', edit_person_path(@person), "Edit Person Profile", nil, 'Edit Profile') -%></li>
 
-    <% if mine?(@person) -%>
-      <li>
-        <%= icon "lock", url_for({:controller=>:users, :action=>:edit, :id=>@person.user}), "Change password", nil, "Change password" -%>
-      </li>
-    <% end -%>
+                <% if mine?(@person) -%>
+                  <li>
+                    <%= icon "lock", url_for({:controller=>:users, :action=>:edit, :id=>@person.user}), "Change password", nil, "Change password" -%>
+                  </li>
+                <% end -%>
 
-    <% if current_user.is_admin? -%>
-      <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
-    <% end -%>
-  </ul>
-<% end %>
-    </p>
-    </div>
+                <% if current_user.is_admin? -%>
+                  <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
+                <% end -%>
+              </ul>
+            <% end %>
+          </p>
+        </div>
 
-  </div>
-
-
-
-
-  <div class="main_content_right_box">
-    <%= render :partial => "layouts/contribution_section_box_avatar", :locals => { :object => @person, :drag_id => drag_id } -%>
-  </div>
-
-  <div style="clear:both;">
-    <br/>
-    <hr/>
-
-    <p>
-      <b>About me:</b>
-      <div id="description" class="box_standout">
-        <%= text_or_not_specified(@person.description, :description=>true) %>
       </div>
-    </p>
-
-    <br/>
-
-    <%= render :partial=>"people/contact_details" %>
-
-    <%#= render :partial=>"people/roles",:locals=>{:editable=>false} %>
-
-    <%# get, classify and authorize all assets for this person's user (assets belong to users, not people!) -%>
-    <% persons_asset_hash = (@person.user ? Asset.classify_and_authorize(@person.user.assets, true, current_user) : {}) -%>
-    <%# persons_asset_hash.merge!(classify_for_tabs(@person.projects)) %>
-    <%# persons_asset_hash.merge!(classify_for_tabs(@person.institutions)) %>
-    <% persons_asset_hash.merge!(classify_for_tabs(@person.csvarchives)) %>
-    <%= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@person.name,:item_hash=>persons_asset_hash} %>
-    
-
-    <%# show the following section only to admins and only if the @person has an associated "user", which is not an admin itself - -%>
-    <%# this is because it's not needed then: admins can see everything anyway -%>
-    <% if current_user.is_admin?  -%>
-      <h3 class="admin_warning" style="margin-top: 2.5em;">Access Rights Information - Only Visible to Admins</h3>
-      <ul>
-        <%= "<li>This person is a SysMo-DB PAL<li>" if @person.is_pal?  %>
-        <% if @person.user -%>
-          <li>Editing <b>projects</b>, where this person is involved: <%= @person.user.can_edit_projects ? "<span class='allowed_text'>allowed</span>" : "<span class='denied_text'>denied</span>" -%></li>
-          <li>Editing <b>institutions</b>, where this person works with: <%= @person.user.can_edit_institutions ? "<span class='allowed_text'>allowed</span>" : "<span class='denied_text'>denied</span>" -%></li>
-        <% else -%>
-          <li class="none_text">No "user" instance detected for this person. User has not registered yet.</li>
-        <% end -%>
-      </ul>
-    <% end -%>
 
 
+
+
+      <div class="main_content_right_box">
+        <%= render :partial => "layouts/contribution_section_box_avatar", :locals => { :object => @person, :drag_id => drag_id } -%>
+      </div>
+
+      <div style="clear:both;">
+        <br/>
+        <hr/>
+
+        <p>
+          <b>About me:</b>
+          <div id="description" class="box_standout">
+            <%= text_or_not_specified(@person.description, :description=>true) %>
+          </div>
+        </p>
+
+        <br/>
+
+        <%= render :partial=>"people/contact_details" %>
+
+        <%#= render :partial=>"people/roles",:locals=>{:editable=>false} %>
+
+        <%# get, classify and authorize all assets for this person's user (assets belong to users, not people!) -%>
+        <% persons_asset_hash = (@person.user ? Asset.classify_and_authorize(@person.user.assets, true, current_user) : {}) -%>
+        <%# persons_asset_hash.merge!(classify_for_tabs(@person.projects)) %>
+        <%# persons_asset_hash.merge!(classify_for_tabs(@person.institutions)) %>
+        <% persons_asset_hash.merge!(classify_for_tabs(@person.csvarchives)) %>
+        <%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@person.name,:item_hash=>persons_asset_hash} %>
+
+      </div>
+
+    </div>
   </div>
-
+  <% unless persons_asset_hash.empty? -%>
+    <% persons_asset_hash.each_key do |resource_type| -%>
+      <% visible_resource_type = resource_type.titleize.pluralize -%>
+      <% visible_resource_type = "SOPs" if visible_resource_type=="Sops" %>
+      <% unless (resources = persons_asset_hash[resource_type]).nil? || resources.empty? -%>
+        <div id="<%= resource_type.downcase.pluralize -%>" class="tabbertab">
+          <h3><%= "#{visible_resource_type} (#{resources.length})" -%></h3>
+          <%= render :partial => "assets/resource_list", :locals => { :collection => resources, :narrow_view => true, :authorization_for_showing_already_done => true } -%>
+        </div>
+      <% end -%>
+    <% end -%>
+  <% end -%>
 </div>
