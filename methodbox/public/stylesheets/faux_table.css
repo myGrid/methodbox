@@ -52,6 +52,7 @@ li div {
     width: 150px;
 }
 .col4 {
+    white-space:normal;
     width: 340px;
 }
 .col5 {
