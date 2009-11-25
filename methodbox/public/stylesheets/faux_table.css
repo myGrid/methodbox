@@ -1,69 +1,80 @@
 div.faux_table_container {
     border:1px solid #996633;
-    clear:both;
-    height:510px;
+
+    height:550px;
     overflow:auto;
-    width:720px;
+    width:700px;
     text-align:left;
     margin:auto;
 }
 div.faux_table_header_container {
-	border:1px solid #996633;
-	clear:both;
-	width:720px;
-	margin:auto;
-	background-color: #ACCBE0;
+    border:1px solid #996633;
+
+    width:700px;
+    margin:auto;
+    background-color: #ACCBE0;
 }
 
 ul.faux_table {
-  float: left;
-  width: 100%;
-  list-style: none;
-  padding-left: 0;
-  margin-left: 0px;
-  margin: 0;
+    float: left;
+    width: 100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
 }
+* html ul.faux_table {
+    display: inline;
+}
+
 ul.faux_table li {
     float: left;
 }
 
+* html ul.faux_table li {
+    display: inline;
+}
 li div {
-  float: left;
+    float: left;
+}
+
+* html li div {
+    display: inline;
 }
 
 .col1 {
-  width: 25px;
+    width: 25px;
 }
 .col2 {
-  width: 25px;
+    width: 25px;
 }
 .col3 {
-  width: 150px;
+    width: 150px;
 }
 .col4 {
-  width: 350px;
+    width: 340px;
 }
 .col5 {
-  width: 75px;
+    width: 65px;
 }
 .col6 {
-  width: 59px;
+    width: 50px;
 }
 .head1 {
-  width: 25px;
+    width: 25px;
 }
 .head2 {
-  width: 25px;
+    width: 25px;
 }
 .head3 {
-  width: 150px;
+    width: 150px;
 }
 .head4 {
-  width: 350px;
+    width: 340px;
 }
 .head5 {
-  width: 75px;
+    width: 65px;
 }
 .head6 {
-  width: 75px;
+    width: 75px;
 }
