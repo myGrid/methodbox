@@ -97,24 +97,24 @@ def sort_variables
 
   case params['sort']
   when "variable"
-    @sorted_variables = @unsorted_vars.sort_by { |m| m.name }
+    @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
   when "description"   then "description"
-    @sorted_variables = @unsorted_vars.sort_by { |m| m.value }
+    @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
   when "survey" then "survey"
-    @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype }
+    @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype.upcase }
   when "year" then "year"
     @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }
   when "variable_reverse"  then "variable DESC"
-    @sorted_variables = @unsorted_vars.sort_by { |m| m.name }.reverse
+    @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
   when "description_reverse"   then "description DESC"
-    @sorted_variables = @unsorted_vars.sort_by { |m| m.value }.reverse
+    @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
   when "survey_reverse" then "survey DESC"
-    @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype }.reverse
+    @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype.upcase }.reverse
   when "year_reverse" then "year DESC"
     @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }.reverse
   end
   render :update, :status=>:created do |page|
-    page.replace_html "variablesTable", :partial=>"surveys/variables_table"
+    page.replace_html "table", :partial=>"surveys/variables_table"
   end
 end
 
