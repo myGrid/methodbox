@@ -27,9 +27,9 @@
   <div id="expertise_tag_suggestions" style="font-size: 93%; color: #333333;  text-align: center; margin-top: 0.5em; padding: 0.3em;">
     <div id="expertise_select_tags" class="hTagcloud">
       <div class="popularity">
-        <% unless @tags_expertise.blank? -%>
+        <% unless @tags_expertise.blank? -%><b>|</b>
           <% tag_cloud @tags_expertise, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
-            <%= link_to tag.name, "javascript:addExpertiseListTag(#{tag.id});", :class => css_class -%>
+            <%= link_to tag.name, "javascript:addExpertiseListTag(#{tag.id});", :class => css_class -%><b>|</b>
           <% end -%>
         <% end -%>
       </div>
