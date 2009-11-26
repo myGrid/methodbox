@@ -136,8 +136,9 @@ class ApplicationController < ActionController::Base
 
   def add_to_cart
 
-    if params[:year_of_survey]=="survey_year" && params[:watch_variable]=="false"
+#    if params[:year_of_survey]=="survey_year" && params[:watch_variable]=="false"
       #    @cart = find_cart
+      @selected_surveys = params[:survey_list]
       @variable_list = Array.new(params[:variable_ids])
 
       @variable_list.each do |var|
@@ -150,101 +151,102 @@ class ApplicationController < ActionController::Base
         page.replace_html "cart-total", :partial=>"surveys/cart_total"
       end
       
-    elsif params[:watch_variable]=="false"
-      varname = params[:variable_name]
-      varid = params[:variable_identifier]
-      variable = Variable.find(varid)
-      curr_tags = variable.title_list
-
-      surveyyear = params[:year_of_survey]
-      @all_tags_array = Array.new
-      param = varname+ surveyyear+'_variable_autocompleter_unrecognized_items'
-      #      param2 = varname +surveyyear +'_variable_autocompleter_selected_ids'
-      taghash = params[param]
-      #      oldtaghash = params[param2]
-      #      if oldtaghash != nil
-      #        oldtaghash.each do |oldtag|
-      #          @all_tags_array.push(Tag.find(oldtag).name)
-      #        end
-      
-
-      if taghash != nil
-        if !taghash.empty?
-          
-          taghash.each do |tag|
-            @all_tags_array.push(tag.to_s)
-            #            data = {"tag"=>[tag.to_s]}
-            #            variable = Variable.find(varid)
-            #            variable.create_annotations(data,person)
-            puts "new tag: " + tag
-          end
-          
-        
-          
-        end
-      
-      end
-      
-# cope with new tags that have been added by clicking on the suggestions box
-
-      param1 = varname+ surveyyear+'_variable_autocompleter_selected_ids'
-      taghash2 = params[param1]
-      
-
-      if taghash2 != nil
-        if !taghash2.empty?
-          
-          taghash2.each do |tag|
-            ntag = Tag.find(tag)
-            @all_tags_array.push(ntag.name)
-            #            data = {"tag"=>[tag.to_s]}
-            #            variable = Variable.find(varid)
-            #            variable.create_annotations(data,person)
-            puts "new tag: " + tag
-          end
-          
-        
-          
-        end
-      
-      end
-
-      str = ""
-      #        puts "curr user " + current_user.id.to_s
-      #        person = Person.find(current_user.id)
-      @all_tags_array.each do |newtag|
-        str =str + newtag +","
-      end
-      curr_tags = variable.title_list
-      curr_tags.each do |tag|
-        str = str + tag + ","
-      end
-
-      puts "tagged with " + str
-      variable.title_list = str
-      variable.save_tags
-      render :update, :status=>:created do |page|
-         
-      end
-    elsif params[:watch_variable]=="true"
-      #      user wants to watch a variable
-      puts "watching " + params[:variable_identifier]
-      var = Variable.find(params[:variable_identifier])
-      person = Person.find(current_user.person_id)
-      person.watched_variables.create(:variable_id => var.id)
-
-      render :update, :status=>:created do |page|
-      end
-    else
-      #      stop watching variable
-      puts "stop watching " + params[:variable_identifier].to_s
-      var = Variable.find(params[:variable_identifier])
-      person = Person.find(current_user.person_id)
-      watched = person.watched_variables.find(:all, :conditions => "variable_id=" + var.id.to_s)
-      WatchedVariable.delete(watched)
-      render :update, :status=>:created do |page|
-      end
-    end
+#    elsif params[:watch_variable]=="false"
+#      varname = params[:variable_name]
+#      varid = params[:variable_identifier]
+#      variable = Variable.find(varid)
+#      curr_tags = variable.title_list
+#
+#      surveyyear = params[:year_of_survey]
+#      @all_tags_array = Array.new
+#      param = varname+ surveyyear+'_variable_autocompleter_unrecognized_items'
+#      #      param2 = varname +surveyyear +'_variable_autocompleter_selected_ids'
+#      taghash = params[param]
+#      #      oldtaghash = params[param2]
+#      #      if oldtaghash != nil
+#      #        oldtaghash.each do |oldtag|
+#      #          @all_tags_array.push(Tag.find(oldtag).name)
+#      #        end
+#
+#
+#      if taghash != nil
+#        if !taghash.empty?
+#
+#          taghash.each do |tag|
+#            @all_tags_array.push(tag.to_s)
+#            #            data = {"tag"=>[tag.to_s]}
+#            #            variable = Variable.find(varid)
+#            #            variable.create_annotations(data,person)
+#            puts "new tag: " + tag
+#          end
+#
+#
+#
+#        end
+#
+#      end
+#
+#      # cope with new tags that have been added by clicking on the suggestions box
+#
+#      param1 = varname+ surveyyear+'_variable_autocompleter_selected_ids'
+#      taghash2 = params[param1]
+#
+#
+#      if taghash2 != nil
+#        if !taghash2.empty?
+#
+#          taghash2.each do |tag|
+#            ntag = Tag.find(tag)
+#            @all_tags_array.push(ntag.name)
+#            #            data = {"tag"=>[tag.to_s]}
+#            #            variable = Variable.find(varid)
+#            #            variable.create_annotations(data,person)
+#            puts "new tag: " + tag
+#          end
+#
+#
+#
+#        end
+#
+#      end
+#
+#      str = ""
+#      #        puts "curr user " + current_user.id.to_s
+#      #        person = Person.find(current_user.id)
+#      @all_tags_array.each do |newtag|
+#        str =str + newtag +","
+#      end
+#      curr_tags = variable.title_list
+#      curr_tags.each do |tag|
+#        str = str + tag + ","
+#      end
+#
+#      puts "tagged with " + str
+#      variable.title_list = str
+#      variable.save_tags
+#      render :update, :status=>:created do |page|
+#
+#      end
+#      #remove the watch variable stuff for the moment
+#      #    elsif params[:watch_variable]=="true"
+#      #      #      user wants to watch a variable
+#      #      puts "watching " + params[:variable_identifier]
+#      #      var = Variable.find(params[:variable_identifier])
+#      #      person = Person.find(current_user.person_id)
+#      #      person.watched_variables.create(:variable_id => var.id)
+#      #
+#      #      render :update, :status=>:created do |page|
+#      #      end
+#      #    else
+#      #      #      stop watching variable
+#      #      puts "stop watching " + params[:variable_identifier].to_s
+#      #      var = Variable.find(params[:variable_identifier])
+#      #      person = Person.find(current_user.person_id)
+#      #      watched = person.watched_variables.find(:all, :conditions => "variable_id=" + var.id.to_s)
+#      #      WatchedVariable.delete(watched)
+##      render :update, :status=>:created do |page|
+##      end
+#    end
 
   end
   def empty_cart
