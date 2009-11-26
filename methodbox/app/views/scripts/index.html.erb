@@ -1,7 +1,16 @@
+<div style="padding-left:7px;"><% form_tag '/search/' do -%>
+  <%= hidden_field_tag 'search_type', 'methods' %>
+  <%= text_field_tag :search_query, @search_query %>
+  <%= submit_tag "Search"  %>
+<% end  -%>
+</div>
 <ul class="sectionIcons">
-	<li><%= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %></li>
-	<!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
+  <li><%= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %></li>
+  <!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
 </ul>
+
+<%#= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %>
+
 
 <% if @scripts.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
