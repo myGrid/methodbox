@@ -6,13 +6,13 @@
 
 <div class="fold">
   <div class="foldTitle"><em style="margin:auto"><%= image_tag("famfamfam_silk/cart.png", :border => 0) -%></em></div>
-  <div class="foldContent" style="display:none;">
+  <div class="foldContent" style="display:none;padding:0;">
     <% form_remote_tag :url => { :action => "deal_with_selected", :controller => "cart"},:name=>'submitter' ,:loading => "$('archive_linker').hide();$('download_selected').disable();$('remove_selected').disable();$('send_message').disable();$('csv_download_spinner').show();",:loaded => "$('archive_linker').show();$('send_message').enable();$('download_selected').enable();$('remove_selected').enable();$('csv_download_spinner').hide();" do -%>
-      <div id="cart-contents-inner">
+      <div id="cart-contents-inner" style="text-align:left;">
         <%= render(:partial => "surveys/cart_item") %>
       </div>
       <%= hidden_field_tag 'update_button', 'Download' %>
-      <%= submit_tag('Create CSV Archive', {:id=>"download_selected", :name=>'_update_button', :onclick => "Form.getInputs(this.form, null, 'update_button')[0].value = 'Download'"})%>
+      <%#= submit_tag('Create CSV Archive', {:id=>"download_selected", :name=>'_update_button', :onclick => "Form.getInputs(this.form, null, 'update_button')[0].value = 'Download'"})%>
       <%= submit_tag('Remove selected', {:id=>"remove_selected", :name=>'_update_button', :onclick => "Form.getInputs(this.form, null, 'update_button')[0].value = 'Remove'"})%>
     <% end %>
   </div>
