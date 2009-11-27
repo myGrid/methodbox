@@ -1,0 +1,21 @@
+<% size ||= 100 -%>
+<% you_string ||= "" -%>
+<% if user.kind_of? Fixnum then user = Person.find(user) end -%>
+<div style="text-align:center; width: <%= size+6 %>px; line-height: 1.2em; padding: 0.2em 0;">
+	<%= avatar(user, size) %>
+	<span style="display:block;margin-top:2px;text-align:center;">
+	
+		
+		<% if not user.name =~ /[ ]/ %>
+		  <%= name user, size/6 %>
+		<% else %>
+			 <% person_name = h(user.name) -%>
+	          <%= person_name.blank? ? "<span class='none_text'>Unknown</span>" : link_to(person_name, person_path(user)) -%>
+		<% end %>
+		
+		<% unless you_string.blank? %>
+		  <%= you_string -%>
+		<% end %>
+		
+	</span>
+</div>
