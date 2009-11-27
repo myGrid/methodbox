@@ -49,7 +49,7 @@
     <p>
       <b>Description</b>
       <% unless @archive.description.blank? -%>
-        <div class="box_standout">
+        <div class="box_standout" style="background-color:#FFFFFF;">
           <%= simple_format(white_list(@archive.description)) -%>
         </div>
       <% else -%>
