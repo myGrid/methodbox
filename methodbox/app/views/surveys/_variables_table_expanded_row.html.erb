@@ -12,35 +12,57 @@
     </ul>
   </div>
   <div class="<%= curr_cycle -%>">
-    <div style="width:680px;margin:auto;">View the <a href="<%= Survey.find(item.survey_id).UKDA_summary%> ">UKDA Summary</a> or <a href="<%= Survey.find(item.survey_id).headline_report%> ">Headline report</a> for <%= link_to(Survey.find(item.survey_id).title, survey_path(Survey.find(item.survey_id))) -%></div>
+    <% if item.dertype != nil -%>
+      <div style="width:680px;margin:auto;">Derivation type: <%= item.dertype -%></div>
+    <% else -%>
+      <div style="width:680px;margin:auto;">No derivation recorded for this variable</div>
+    <% end -%>
   </div>
-  <br/>
-  <div style="width:680px;margin:auto;">
-    <% unless item.title_counts.empty? %>
-      <b>Tags: </b>
-
-
-      <b>|</b>
-      <% item.title_counts.each do |tag| %>
-        <%= link_to tag.name, variables_url(:variable=>tag.name), :title=>"Search for other variables with tag " + tag.name -%>
-        <b>|</b>
-      <% end -%>
-
-
-
-    <% else %>
-      <b>Tags: </b>none
-    <% end %>
+  <div class="<%= curr_cycle -%>">
+    <% if item.dermethod != nil -%>
+      <div style="width:680px;margin:auto;">Derivation method:</div>
+      <div style="width:680px;margin:auto;border-style:inset;"><%=  item.dermethod -%></div>
+    <% else -%>
+      <div style="width:680px;margin:auto;">No derivation method recorded for this variable</div>
+    <% end -%>
   </div>
-  <br/>
-  <div style="width:680px;margin:auto;">
-    <% if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == item.id} %>
-      <%= image_submit_tag('famfamfam_silk/camera_add.png', :alt=> 'Watch variable', :title=>'Watch variable', :onclick=>"Form.getInputs(this.form, null,'variable_identifier')[0].value = '#{item.id.to_s}';Form.getInputs(this.form, null,'watch_variable')[0].value = 'true';Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year'") -%>
-    <% else %>
-      <%= image_submit_tag('famfamfam_silk/camera_delete.png', :alt=> 'Stop watching variable', :title=>'Stop watching variable', :onclick=>"Form.getInputs(this.form, null,'variable_identifier')[0].value = '#{item.id.to_s}';Form.getInputs(this.form, null,'watch_variable')[0].value = 'delete';Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year'") -%>
-      <i> You are watching this variable</i>
-    </div>
 
-  <% end %>
+  <div class="<%= curr_cycle -%>">
+    <% if item.info != nil -%>
+      <div style="width:680px;margin:auto;">Value information:</div>
+      <div style="width:680px;margin:auto;border-style:inset;"><%= item.info -%></div>
+    <% else -%>
+      <div style="width:680px;margin:auto;">No value information recorded for this variable</div>
+    <% end -%>
+  </div>
+  
+  <br/>
+  <%#*<div style="width:680px;margin:auto;">%>
+    <%# unless item.title_counts.empty? %>
+      <%#*<b>Tags: </b>%>
+
+
+      <%#*<b>|</b>%>
+      <%# item.title_counts.each do |tag| %>
+        <%#= link_to tag.name, variables_url(:variable=>tag.name), :title=>"Search for other variables with tag " + tag.name -%>
+        <%#*<b>|</b>%>
+      <%# end -%>
+
+
+
+    <%# else %>
+      <%#*<b>Tags: </b>none%>
+    <%# end %>
+  <%#*</div>%>
+  <br/>
+  <%#*<div style="width:680px;margin:auto;">%>
+    <%# if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == item.id} %>
+      <%#= image_submit_tag('famfamfam_silk/camera_add.png', :alt=> 'Watch variable', :title=>'Watch variable', :onclick=>"Form.getInputs(this.form, null,'variable_identifier')[0].value = '#{item.id.to_s}';Form.getInputs(this.form, null,'watch_variable')[0].value = 'true';Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year'") -%>
+    <%# else %>
+      <%#= image_submit_tag('famfamfam_silk/camera_delete.png', :alt=> 'Stop watching variable', :title=>'Stop watching variable', :onclick=>"Form.getInputs(this.form, null,'variable_identifier')[0].value = '#{item.id.to_s}';Form.getInputs(this.form, null,'watch_variable')[0].value = 'delete';Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year'") -%>
+      <%#*<i> You are watching this variable</i>%>
+    <%#*</div>%>
+
+  <%# end %>
 
 </div>
