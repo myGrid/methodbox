@@ -1,3 +1,8 @@
+require 'uuidtools'
+require 'zip/zip'
+require 'zip/zipfilesystem'
+
+
 class CsvarchivesController < ApplicationController
 
   before_filter :login_required
@@ -21,26 +26,26 @@ class CsvarchivesController < ApplicationController
     @archives=Authorization.authorize_collection("show",@archives,current_user)
     @archives.each do |item|
       if !item.complete
-         http = Net::HTTP.new('localhost',25000)
-          http.read_timeout=6000
-          puts 'sending get request to csv server for file ' + item.filename
-#          response = http.get('/eos/download/' + item.filename)
-          response = http.get(CSV_SERVER_PATH + '/download/' + item.filename)
-          if response.response.class == Net::HTTPOK
-            puts 'response 1'
-            if response.content_type == 'application/zip'
-              item.update_attributes(:complete => true)
+        http = Net::HTTP.new('localhost',25000)
+        http.read_timeout=6000
+        puts 'sending get request to csv server for file ' + item.filename
+        #          response = http.get('/eos/download/' + item.filename)
+        response = http.get(CSV_SERVER_PATH + '/download/' + item.filename)
+        if response.response.class == Net::HTTPOK
+          puts 'response 1'
+          if response.content_type == 'application/zip'
+            item.update_attributes(:complete => true)
 
-            end
-          elsif response.response.class == Net::HTTPInternalServerError
-
-            logger.info( 'archive creation failed ' + item.object_id.to_s)
-            item.update_attributes(:failure => true)
-            flash[:error] = "Server reports that CSV archive creation for "  + link_to(item.title, csvarchive_path(:id=>item.id)) + " failed, it is recommended that you recreate it"
-            #        respond_to do |format|
-            #          format.html { redirect_to csvarchive_path(@archive) }
-            #        end
           end
+        elsif response.response.class == Net::HTTPInternalServerError
+
+          logger.info( 'archive creation failed ' + item.object_id.to_s)
+          item.update_attributes(:failure => true)
+          flash[:error] = "Server reports that CSV archive creation for "  + link_to(item.title, csvarchive_path(:id=>item.id)) + " failed, it is recommended that you recreate it"
+          #        respond_to do |format|
+          #          format.html { redirect_to csvarchive_path(@archive) }
+          #        end
+        end
       end
     end
     respond_to do |format|
@@ -55,12 +60,12 @@ class CsvarchivesController < ApplicationController
     find_archive
     #    set_parameters_for_sharing_form
     check_available
-#    http = Net::HTTP.new('localhost', 25000)
+    #    http = Net::HTTP.new('localhost', 25000)
     http = Net::HTTP.new(CSV_SERVER_LOCATION,CSV_SERVER_PORT.to_i)
     http.read_timeout=6000
     puts 'sending get request to csv server for file ' + @archive.filename
     if @archive.complete
-#      response = http.get('/eos/download/' + @archive.filename)
+      #      response = http.get('/eos/download/' + @archive.filename)
       response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
       if response.response.class == Net::HTTPOK
         if response.content_type == 'application/zip'
@@ -146,7 +151,7 @@ class CsvarchivesController < ApplicationController
 
     http = Net::HTTP.new('localhost',25000)
     http.read_timeout=6000
-#    response = http.post('/eos/download', doc.to_s)
+    #    response = http.post('/eos/download', doc.to_s)
     puts doc.to_s
     response = http.post(CSV_SERVER_PATH + '/download/', doc.to_s)
     if response.response.class == Net::HTTPOK
@@ -182,6 +187,99 @@ class CsvarchivesController < ApplicationController
     end
     
   
+
+    respond_to do |format|
+
+      format.html { redirect_to csvarchive_path(@archive) }
+
+    end
+  end
+
+  def new_create
+
+    #     send the csv parse request to the server and get the job id back
+    #a hash, each key is a particular survey, the value is the variable
+    #      also store all the variables in an array to add to the archive object
+    #      variable_hash = Hash.new
+    all_variables_array = Array.new
+    variable_hash = Hash.new
+    params[:all_variables_array].each do |var|
+      puts "downloading " + var.to_s
+      variable = Variable.find(var)
+      if (!variable_hash.has_key?(variable.survey_id))
+        variable_hash[variable.survey_id] = Array.new
+      end
+      variable_hash[variable.survey_id].push(var)
+      all_variables_array.push(Variable.find(var))
+      #        variable_hash[var] = get_variable(var)
+      #        logger.info("Would have downloaded: " + var.to_s)
+    end
+    file_uuid = UUIDTools::UUID.random_create.to_s
+    puts "uuid is " + file_uuid.to_s
+    params[:archive][:filename] = file_uuid
+    params[:archive][:complete] = false
+    params[:archive][:last_used_at] = Time.now
+    #      @archive.content_blob = ContentBlob.new(:data => file.body)
+    params[:archive][:content_type] = "application/zip"
+    params[:archive][:person_id] = User.find(current_user.id).person.id
+    params[:archive][:variables] = all_variables_array
+    params[:archive][:contributor_type] = "User"
+    params[:archive][:contributor_id] = current_user.id
+    @archive = Csvarchive.new(params[:archive])
+    @archive.save
+
+    policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
+
+    # update attributions
+    Relationship.create_or_update_attributions(@archive, params[:attributions])
+    puts "policy error: " + policy_err_msg
+
+    #Process the archive in a separate thread
+    Thread.new() do
+      puts "starting thread"
+      file_names = Array.new
+      variable_hash.each_key do |key|
+      puts "processing " + key
+        dataset_name= Survey.find(key).original_filename
+        puts "looking for " + Survey.find(key).original_filename
+        infile = File.open(CSV_FILE_PATH + FILE::SEPARATOR + dataset_name)
+        puts "opened file"
+        uuid = UUIDTools::UUID.random_create.to_s
+        csv_file_name = Survey.find(key).name + "_" + uuid + ".csv"
+        puts "new csv file is " + csv_file_name
+        file_names.push(csv_file_name)
+        outfile= File.new(NEW_CSV_FILE_PATH + FILE::SEPARATOR + csv_file_name)
+        puts "full path is " + outfile
+        i=0
+        pos = Array.new
+        csv_arr = Array.new
+        CSVScan.scan(infile) { |row| line = FCSV.parse(row[0], :col_sep => "\t"); new_row = Array.new; if i==0: variable_hash[key].each {|var| pos.push(line[0].rindex(var))} end; i=i+1; pos.each {|col| val = line[0][col];new_row.push(val)}; csv_arr.push(new_row)}
+        puts "scanned file"
+        infile.close
+        FasterCSV.open(outfile, "w") do |csv_file| csv_arr.each {|csv| csv_file << csv} end
+        puts "created new file"
+        outfile.close
+      end
+      #create the zip file
+
+      zip_file_name = File.join(RAILS_ROOT,"filestore", "csv_files", file_uuid + ".zip")
+      puts "zip file will be " + zip_file_name
+      
+      Zip::ZipFile.open(zip_file_name, Zip::ZipFile::CREATE) {
+        |zipfile|
+        file_names.each {
+          |file_name|
+          puts "adding file to zip " + file_name
+          zipfile.add(file_name, NEW_CSV_FILE_PATH + FILE::SEPARATOR + file_name + ".csv")
+          puts "added"
+
+        }
+      }
+      
+      #the csv has been parsed and the new archive is complete
+      @archive.complete = true
+      @archive.save
+    end
 
     respond_to do |format|
 
@@ -259,26 +357,26 @@ class CsvarchivesController < ApplicationController
 
   def check_available
     if !@archive.complete
-      http = Net::HTTP.new('localhost',25000)
-      http.read_timeout=6000
-      puts 'sending get request to csv server for file ' + @archive.filename
-#      response = http.get('/eos/download/' + @archive.filename)
-      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
-      if response.response.class == Net::HTTPOK
-        puts 'response 1'
-        if response.content_type == 'application/zip'
-          @archive.update_attributes(:complete => true)
-
-        end
-      elsif response.response.class == Net::HTTPInternalServerError
-
-        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
-        @archive.update_attributes(:failure => true)
-        flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
-        #        respond_to do |format|
-        #          format.html { redirect_to csvarchive_path(@archive) }
-        #        end
-      end
+#      http = Net::HTTP.new('localhost',25000)
+#      http.read_timeout=6000
+#      puts 'sending get request to csv server for file ' + @archive.filename
+#      #      response = http.get('/eos/download/' + @archive.filename)
+#      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
+#      if response.response.class == Net::HTTPOK
+#        puts 'response 1'
+#        if response.content_type == 'application/zip'
+#          @archive.update_attributes(:complete => true)
+#
+#        end
+#      elsif response.response.class == Net::HTTPInternalServerError
+#
+#        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
+#        @archive.update_attributes(:failure => true)
+#        flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
+#        #        respond_to do |format|
+#        #          format.html { redirect_to csvarchive_path(@archive) }
+#        #        end
+#      end
     end
   end
 
