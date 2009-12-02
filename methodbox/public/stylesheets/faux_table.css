@@ -1,6 +1,5 @@
 div.faux_table_container {
     border:1px solid #996633;
-
     height:550px;
     overflow:auto;
     width:700px;
@@ -9,13 +8,21 @@ div.faux_table_container {
 }
 div.faux_table_header_container {
     border:1px solid #996633;
-
     width:700px;
     margin:auto;
     background-color: #ACCBE0;
 }
 
-ul.faux_table {
+ul.faux_table_odd {
+    float: left;
+    width: 100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
+    background-color: #EEEEEE;
+}
+ul.faux_table_even {
     float: left;
     width: 100%;
     list-style: none;
@@ -23,15 +30,25 @@ ul.faux_table {
     margin-left: 0px;
     margin: 0;
 }
-* html ul.faux_table {
+
+* html ul.faux_table_odd {
+    display: inline;
+}
+* html ul.faux_table_even {
     display: inline;
 }
 
-ul.faux_table li {
+ul.faux_table_odd li {
+    float: left;
+}
+ul.faux_table_even li {
     float: left;
 }
 
-* html ul.faux_table li {
+* html ul.faux_table_odd li {
+    display: inline;
+}
+* html ul.faux_table_even li {
     display: inline;
 }
 li div {
