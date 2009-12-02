@@ -4,7 +4,7 @@
 
       <!-- People tab -->
       <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>>
-        <%= link_to "People", people_url -%>
+        <%= link_to "People", people_url, :title=> "Who's who in the method box?"-%>
       </li>
 
       <!-- Projects tab -->
@@ -16,17 +16,17 @@
 
       <!-- Methods tab -->
       <li <%= (["scripts"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Methods", scripts_url -%>
+        <%= link_to "Methods & Scripts", scripts_url,:title=>"Advice and scripts for data cleaning and statistical analysis"-%>
       </li>
 
       <!-- Surveys tab -->
       <li <%= (["surveys"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Data Sources", surveys_url -%>
+        <%= link_to "Data Sources", surveys_url, :title=>"Archived surveys and other sources of data for research" -%>
       </li>
 
       <!-- Archives tab -->
       <li <%= (["csvarchives"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "CSV Archives", csvarchives_url -%>
+        <%= link_to "Data Extracts", csvarchives_url,:title=>"Data extracts created by users from the source data" -%>
       </li>
 
     </ul>
