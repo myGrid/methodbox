@@ -1,27 +1,33 @@
 <% truncate_length_for_boxes = 22 -%>
 
-<ul class="sectionIcons">
-  <%# if Authorization.is_authorized?("manage", nil, @survey, current_user) -%>
-  <li><%#= icon('manage', edit_survey_path(@survey), nil, nil, 'Manage Survey') -%></li>
-  <%# elsif Authorization.is_authorized?("edit", nil, @survey, current_user) -%>
-  <%# this is not owner, but current user can edit -%>
-  <li><%#= icon('edit', edit_survey_path(@survey), nil, nil, 'Edit Survey') -%></li>
-  <%# end -%>
+<%#*<ul class="sectionIcons">%>
+<%# if Authorization.is_authorized?("manage", nil, @survey, current_user) -%>
+<%#*<li>%>
+<%#= icon('manage', edit_survey_path(@survey), nil, nil, 'Manage Survey') -%>
+<%#*</li>%>
+<%# elsif Authorization.is_authorized?("edit", nil, @survey, current_user) -%>
+<%# this is not owner, but current user can edit -%>
+<%#*<li>%>
+<%#= icon('edit', edit_survey_path(@survey), nil, nil, 'Edit Survey') -%>
+<%#*</li>%>
+<%# end -%>
 
-  <%# if Authorization.is_authorized?("destroy", nil, @survey, current_user) -%>
-  <%#*<li><%= icon('destroy', survey_path(@survey), nil, { :confirm => 'This deletes the Survey and all metadata. Are you sure?', :method => :delete }, 'Delete Survey')
-  <%# end -%>
+<%# if Authorization.is_authorized?("destroy", nil, @survey, current_user) -%>
+<%#*<li><%= icon('destroy', survey_path(@survey), nil, { :confirm => 'This deletes the Survey and all metadata. Are you sure?', :method => :delete }, 'Delete Survey')
+<%# end -%>
 
-  <%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
-  <li><%= icon('download', download_survey_url, "Download Survey", nil, "Download Survey") -%></li>
-  <%# else -%>
-  <%#*<li>%>
-  <%#*<li>%>
-  <%#= render :partial=>"assets/request_resource",:locals=>{:resource=>@survey} %>
-  <%#*</li>%>
-  <%#*</li>%>
-  <%# end -%>
-</ul>
+<%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
+<%#*<li>%>
+<%#= icon('download', download_survey_url, "Download Survey", nil, "Download Survey") -%>
+<%#*</li>%>
+<%# else -%>
+<%#*<li>%>
+<%#*<li>%>
+<%#= render :partial=>"assets/request_resource",:locals=>{:resource=>@survey} %>
+<%#*</li>%>
+<%#*</li>%>
+<%# end -%>
+<%#*</ul>%>
 
 <h1 class="contribution_title">Survey: <%= link_to(h(@survey.title), survey_path(@survey)) -%></h1>
 
@@ -35,7 +41,11 @@
         <b>Title:</b>
         <span class="title"><%=h @survey.title -%></span>
       </p>
-
+      <p>
+        <b>Type:</b>
+        <%=h @survey.surveytype -%>
+      </p>
+      
       <%#*<p>%>
       <%#*<b>File name:</b>%>
       <%#=h @survey.original_filename -%>
@@ -55,7 +65,7 @@
       <%# end -%>
       <%#*</p>%>
 
-      <br/>
+      <%#*<br/>%>
 
       <p>
         <b>Description</b>
