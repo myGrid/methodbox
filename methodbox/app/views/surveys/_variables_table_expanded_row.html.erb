@@ -1,38 +1,39 @@
 <%= javascript_include_tag 'toggler.js' %>
 
-<div  id= "<%=item.name + item.survey_id.to_s -%>">
-  <div class="<%= curr_cycle -%>">
-    <ul class="faux_table">
+<div id= "<%=item.name + item.survey_id.to_s -%>">
+  <div>
+    <ul class="faux_table<%= curr_cycle -%>">
       <li><div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox' %></div>
-        <div class="col2"><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...", :alt=>"Hide details...", :border => 0), :url=> hide_info_surveys_url(:div_id=>item.name + item.survey_id.to_s,:item_id => item.id))%></div>
+        <div class="col2"><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...", :alt=>"Hide details...", :border => 0), :url=> hide_info_surveys_url(:curr_cycle => curr_cycle, :div_id=>item.name + item.survey_id.to_s,:item_id => item.id))%></div>
         <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
         <div class="col4"><%= item.value -%></div>
         <div class="col5"><%= Survey.find(item.survey_id).surveytype -%></div>
       <div class="col6"><%= Survey.find(item.survey_id).year -%> </div></li>
     </ul>
   </div>
-  <div class="<%= curr_cycle -%>">
+  <div>
     <% if item.dertype != nil -%>
-      <div style="width:680px;margin:auto;">Derivation type: <%= item.dertype -%></div>
+      <div style="width:660px;margin:auto;">Derivation type: <%= item.dertype -%></div>
     <% else -%>
-      <div style="width:680px;margin:auto;">No derivation recorded for this variable</div>
+      <div style="width:660px;margin:auto;color:red;">No derivation recorded for this variable</div>
     <% end -%>
   </div>
-  <div class="<%= curr_cycle -%>">
+  <br/>
+  <div>
     <% if item.dermethod != nil -%>
-      <div style="width:680px;margin:auto;">Derivation method:</div>
-      <div style="width:680px;margin:auto;border-style:inset;"><%=  item.dermethod -%></div>
+      <div style="width:660px;margin:auto;">Derivation method:</div>
+      <div style="width:660px;margin:auto;border:0.2em solid #ACCBE0"><pre><%=  item.dermethod -%></pre></div>
     <% else -%>
-      <div style="width:680px;margin:auto;">No derivation method recorded for this variable</div>
+      <div style="width:660px;margin:auto;color:red;">No derivation method recorded for this variable</div>
     <% end -%>
   </div>
-
-  <div class="<%= curr_cycle -%>">
+  <br/>
+  <div>
     <% if item.info != nil -%>
-      <div style="width:680px;margin:auto;">Value information:</div>
-      <div style="width:680px;margin:auto;border-style:inset;"><%= item.info -%></div>
+      <div style="width:660px;margin:auto;">Value information:</div>
+      <div style="width:660px;margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
     <% else -%>
-      <div style="width:680px;margin:auto;">No value information recorded for this variable</div>
+      <div style="width:660px;margin:auto;color:red;">No value information recorded for this variable</div>
     <% end -%>
   </div>
   
