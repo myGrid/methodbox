@@ -23,8 +23,8 @@ class CsvarchivesController < ApplicationController
   end
 
   def index
-    @archives=Authorization.authorize_collection("show",@archives,current_user)
-    @archives.each do |item|
+    @all_archives.results =Authorization.authorize_collection("show",@all_archives.results,current_user)
+    @all_archives.results.each do |item|
       if !item.complete
         http = Net::HTTP.new('localhost',25000)
         http.read_timeout=6000
@@ -48,9 +48,10 @@ class CsvarchivesController < ApplicationController
         end
       end
     end
+
     respond_to do |format|
       format.html # index.html.erb
-      format.xml { render :xml=>@archives}
+      format.xml { render :xml=>@my_archives, :xml=>@all_archives}
     end
   end
 
@@ -239,7 +240,7 @@ class CsvarchivesController < ApplicationController
       puts "starting thread"
       file_names = Array.new
       variable_hash.each_key do |key|
-      puts "processing " + key
+        puts "processing " + key
         dataset_name= Survey.find(key).original_filename
         puts "looking for " + Survey.find(key).original_filename
         infile = File.open(CSV_FILE_PATH + FILE::SEPARATOR + dataset_name)
@@ -291,10 +292,12 @@ class CsvarchivesController < ApplicationController
   protected
   
   def find_archives
-    found = Csvarchive.find(:all,
-      :order => "title")
-
-    @archives = found
+    @my_page = params[:my_page]
+    @all_page = params[:all_page]
+    @my_archives = Csvarchive.find(:all,
+      :order => "title",:conditions=>"person_id=" + current_user.person_id.to_s, :page=>{:size=>default_items_per_page,:current=>params[:my_page]})
+    @all_archives = Csvarchive.find(:all,
+      :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:all_page]})
   end
 
   private
@@ -357,26 +360,26 @@ class CsvarchivesController < ApplicationController
 
   def check_available
     if !@archive.complete
-#      http = Net::HTTP.new('localhost',25000)
-#      http.read_timeout=6000
-#      puts 'sending get request to csv server for file ' + @archive.filename
-#      #      response = http.get('/eos/download/' + @archive.filename)
-#      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
-#      if response.response.class == Net::HTTPOK
-#        puts 'response 1'
-#        if response.content_type == 'application/zip'
-#          @archive.update_attributes(:complete => true)
-#
-#        end
-#      elsif response.response.class == Net::HTTPInternalServerError
-#
-#        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
-#        @archive.update_attributes(:failure => true)
-#        flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
-#        #        respond_to do |format|
-#        #          format.html { redirect_to csvarchive_path(@archive) }
-#        #        end
-#      end
+      #      http = Net::HTTP.new('localhost',25000)
+      #      http.read_timeout=6000
+      #      puts 'sending get request to csv server for file ' + @archive.filename
+      #      #      response = http.get('/eos/download/' + @archive.filename)
+      #      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
+      #      if response.response.class == Net::HTTPOK
+      #        puts 'response 1'
+      #        if response.content_type == 'application/zip'
+      #          @archive.update_attributes(:complete => true)
+      #
+      #        end
+      #      elsif response.response.class == Net::HTTPInternalServerError
+      #
+      #        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
+      #        @archive.update_attributes(:failure => true)
+      #        flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
+      #        #        respond_to do |format|
+      #        #          format.html { redirect_to csvarchive_path(@archive) }
+      #        #        end
+      #      end
     end
   end
 
