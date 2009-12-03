@@ -32,22 +32,25 @@
         <% end -%>
       </div>
       <p style="font-size: 85%; margin-top: 0.4em;">
-        <% if resource.complete -%>
-          <% if Authorization.is_authorized?("download", nil, resource, current_user) -%>
-            <%= icon "download", download_csvarchive_path(resource) -%>
-          <% end %>
-          <%#= icon('download', nil, nil, nil) -%>
-          <%#*<a href="http://localhost:25000/eos/download/%>
-          <%#= resource.filename %>
-          <%#*">%>
-          <%#*Download CSV file%>
-          <%#*</a>%>
-        <% elsif resource.failure %>
-          <li><B STYLE="color:red;">Failed to create!</B></li>
-          <%= button_to_remote "Recreate CSV archive", :url => {:controller => "csvarchives", :action => "recreate", :id => resource.id} %>
-        <% else %>
-          <li><B>Not yet available for download</B></li>
+        <%# if resource.complete -%>
+        <% if !resource.failure && Authorization.is_authorized?("download", nil, resource, current_user) -%>
+          <%= icon "download", download_csvarchive_path(resource) -%>
         <% end %>
+        <% if resource.failure -%>
+          <span class="title" style="color:red;"><%=h "Not available due to errors, please re-create" -%></span>
+        <% end -%>
+        <%#= icon('download', nil, nil, nil) -%>
+        <%#*<a href="http://localhost:25000/eos/download/%>
+        <%#= resource.filename %>
+        <%#*">%>
+        <%#*Download CSV file%>
+        <%#*</a>%>
+        <%# elsif resource.failure %>
+        <%#*<li><B STYLE="color:red;">Failed to create!</B></li>%>
+        <%#= button_to_remote "Recreate CSV archive", :url => {:controller => "csvarchives", :action => "recreate", :id => resource.id} %>
+        <%# else %>
+        <%#*<li><B>Not yet available for download</B></li>%>
+        <%# end %>
       </p>
       <p style="font-size: 85%; margin-top: 0.4em;">
         <b>Created:</b>
@@ -63,9 +66,9 @@
     </td>
     <td class="actions" style="width: 80px;">
       <%= icon "show", csvarchive_path(resource), nil, nil, "View" -%>
-      <% if Authorization.is_authorized?("download", nil, resource, current_user) && resource.complete -%>
-        <%= icon "download", download_csvarchive_path(resource) -%>
-      <% end -%>
+      <%# if Authorization.is_authorized?("download", nil, resource, current_user) && resource.complete -%>
+      <%#= icon "download", download_csvarchive_path(resource) -%>
+      <%# end -%>
       <% if Authorization.is_authorized?("manage", nil, resource, current_user) -%>
         <%= icon "manage", edit_csvarchive_path(resource), nil, nil, "Manage" -%>
       <% elsif Authorization.is_authorized?("edit", nil, resource, current_user) -%>
