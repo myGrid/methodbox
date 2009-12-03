@@ -385,7 +385,49 @@ class CsvarchivesController < ApplicationController
     if response.response.class == Net::HTTPOK
       if response.content_type == 'application/zip'
         logger.info( 'file ready, archive id ' + @archive.object_id.to_s)
-        send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
+        uuid = UUIDTools::UUID.random_create.to_s
+        #create directory and zip file for the archive
+        File.makedirs(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename)
+        uf = File.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip","w")
+        uf.write(response.body)
+        uf.close
+        variable_hash = Hash.new
+        @archive.variables.each do |var|
+          puts "downloading " + var.to_s
+          variable = Variable.find(var)
+          if (!variable_hash.has_key?(variable.survey_id))
+            variable_hash[variable.survey_id] = Array.new
+          end
+          variable_hash[variable.survey_id].push(var)
+          #        variable_hash[var] = get_variable(var)
+          #        logger.info("Would have downloaded: " + var.to_s)
+        end
+        metadata = String.new
+        variable_hash.each_key do |key|
+          metadata << "\n" + Survey.find(key).title + "\n---------------"
+          variable_hash[key].each do |var|
+            metadata << "\nName: " + var.name
+            metadata << "\nLabel: " + var.value
+            if var.category!= nil
+              metadata << "\nCategory: " + var.category
+            end
+            if var.dertype!= nil
+              metadata << "\nDerivation Type: " + var.dertype
+            end
+            if  var.dermethod!= nil
+              metadata << "\nDerivation Method: " + var.dermethod
+            end
+            if var.info!=nil
+              metadata << "\nValue Information: " + var.info
+            end
+            metadata << "\n---------------"
+          end
+          metadata << "\n\n\n---------------\n---------------"
+        end
+        Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts metadata}}
+        send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + ".zip", :content_type => @archive.content_type, :disposition => 'attachment'
+
+        #        send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
       end
       #      elsif response.response.class == Net::HTTPInternalServerError
       #
