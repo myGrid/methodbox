@@ -24,30 +24,30 @@ class CsvarchivesController < ApplicationController
 
   def index
     @all_archives.results =Authorization.authorize_collection("show",@all_archives.results,current_user)
-    @all_archives.results.each do |item|
-      if !item.complete
-        http = Net::HTTP.new('localhost',25000)
-        http.read_timeout=6000
-        puts 'sending get request to csv server for file ' + item.filename
-        #          response = http.get('/eos/download/' + item.filename)
-        response = http.get(CSV_SERVER_PATH + '/download/' + item.filename)
-        if response.response.class == Net::HTTPOK
-          puts 'response 1'
-          if response.content_type == 'application/zip'
-            item.update_attributes(:complete => true)
-
-          end
-        elsif response.response.class == Net::HTTPInternalServerError
-
-          logger.info( 'archive creation failed ' + item.object_id.to_s)
-          item.update_attributes(:failure => true)
-          flash[:error] = "Server reports that CSV archive creation for "  + link_to(item.title, csvarchive_path(:id=>item.id)) + " failed, it is recommended that you recreate it"
-          #        respond_to do |format|
-          #          format.html { redirect_to csvarchive_path(@archive) }
-          #        end
-        end
-      end
-    end
+    #    @all_archives.results.each do |item|
+    #      if !item.complete
+    #        http = Net::HTTP.new('localhost',25000)
+    #        http.read_timeout=6000
+    #        puts 'sending get request to csv server for file ' + item.filename
+    #        #          response = http.get('/eos/download/' + item.filename)
+    #        response = http.get(CSV_SERVER_PATH + '/download/' + item.filename)
+    #        if response.response.class == Net::HTTPOK
+    #          puts 'response 1'
+    #          if response.content_type == 'application/zip'
+    #            item.update_attributes(:complete => true)
+    #
+    #          end
+    #        elsif response.response.class == Net::HTTPInternalServerError
+    #
+    #          logger.info( 'archive creation failed ' + item.object_id.to_s)
+    #          item.update_attributes(:failure => true)
+    #          flash[:error] = "Server reports that CSV archive creation for "  + link_to(item.title, csvarchive_path(:id=>item.id)) + " failed, it is recommended that you recreate it"
+    #          #        respond_to do |format|
+    #          #          format.html { redirect_to csvarchive_path(@archive) }
+    #          #        end
+    #        end
+    #      end
+    #    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -59,38 +59,29 @@ class CsvarchivesController < ApplicationController
   def download
     #    no security here
     find_archive
-    #    set_parameters_for_sharing_form
-    check_available
-    #    http = Net::HTTP.new('localhost', 25000)
-    http = Net::HTTP.new(CSV_SERVER_LOCATION,CSV_SERVER_PORT.to_i)
-    http.read_timeout=6000
-    puts 'sending get request to csv server for file ' + @archive.filename
-    if @archive.complete
-      #      response = http.get('/eos/download/' + @archive.filename)
-      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
-      if response.response.class == Net::HTTPOK
-        if response.content_type == 'application/zip'
-          logger.info( 'file ready, archive id ' + @archive.object_id.to_s)
-          send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
-        end
-        #      elsif response.response.class == Net::HTTPInternalServerError
-        #
-        #        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
-        #        @archive.update_attributes(:failure => true)
-        #        render :update, :status=>:created do |page|
-        #          page.redirect_to(:controller => 'csvarchives', :action => 'show', :id=>@archive.id)
-        #        end
-      end
-    end
 
-    @archive.last_used_at = Time.now
+    if @archive.complete
+      retrieve_archive_from_server
+    else
+      check_available
+      if @archive.complete
+        retrieve_archive_from_server
+      else
+        flash[:notice] = "Your data extract is not yet ready for download, please check later"
+        respond_to do |format|
+          format.html { redirect_to csvarchive_path(@archive) }
+        end
+      end
+      
+    end
 
   end
 
   def show
     find_archive
-    set_parameters_for_sharing_form
     check_available
+    set_parameters_for_sharing_form
+    #    check_available
     @sorted_variables = @archive.variables
     respond_to do |format|
       format.html # show.html.erb
@@ -360,30 +351,57 @@ class CsvarchivesController < ApplicationController
 
   def check_available
     if !@archive.complete
-      #      http = Net::HTTP.new('localhost',25000)
-      #      http.read_timeout=6000
-      #      puts 'sending get request to csv server for file ' + @archive.filename
-      #      #      response = http.get('/eos/download/' + @archive.filename)
-      #      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
-      #      if response.response.class == Net::HTTPOK
-      #        puts 'response 1'
-      #        if response.content_type == 'application/zip'
-      #          @archive.update_attributes(:complete => true)
-      #
-      #        end
-      #      elsif response.response.class == Net::HTTPInternalServerError
-      #
-      #        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
-      #        @archive.update_attributes(:failure => true)
-      #        flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
-      #        #        respond_to do |format|
-      #        #          format.html { redirect_to csvarchive_path(@archive) }
-      #        #        end
-      #      end
+      http = Net::HTTP.new('localhost',25000)
+      http.read_timeout=6000
+      puts 'sending get request to csv server for file ' + @archive.filename
+      #      response = http.get('/eos/download/' + @archive.filename)
+      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
+      if response.response.class == Net::HTTPOK
+        if response.content_type == 'application/zip'
+          @archive.update_attributes(:complete => true)
+      
+        end
+        #            elsif response.response.class == Net::HTTPInternalServerError
+        #
+        #              logger.info( 'archive creation failed ' + @archive.object_id.to_s)
+        #              @archive.update_attributes(:failure => true)
+        #              flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
+        #        respond_to do |format|
+        #          format.html { redirect_to csvarchive_path(@archive) }
+        #        end
+      end
     end
   end
 
   def find_archive
     @archive = Csvarchive.find(params[:id])
   end
+
+  def retrieve_archive_from_server
+    puts 'sending get request to csv server for file ' + @archive.filename
+    http = Net::HTTP.new(CSV_SERVER_LOCATION,CSV_SERVER_PORT.to_i)
+    http.read_timeout=6000
+    response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
+    if response.response.class == Net::HTTPOK
+      if response.content_type == 'application/zip'
+        logger.info( 'file ready, archive id ' + @archive.object_id.to_s)
+        send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
+      end
+      #      elsif response.response.class == Net::HTTPInternalServerError
+      #
+      #        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
+      #        @archive.update_attributes(:failure => true)
+      #        render :update, :status=>:created do |page|
+      #          page.redirect_to(:controller => 'csvarchives', :action => 'show', :id=>@archive.id)
+      #        end
+    else
+      @archive.failure = true
+      @archive.save
+      flash[:error] = "This data extract is no longer available for download. You are recommended to re-create it"
+      respond_to do |format|
+        format.html { redirect_to csvarchive_path(@archive) }
+      end
+    end
+  end
+
 end
