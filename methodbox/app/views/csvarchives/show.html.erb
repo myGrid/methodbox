@@ -7,19 +7,15 @@
 <ul class="sectionIcons">
 
   <%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
-  <% if @archive.complete -%>
-    <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-      <li><%= icon('download', download_csvarchive_url, "Download CSV file", nil, "Download CSV file") -%></li>
-    <% end %>
-  <% elsif @archive.failure %>
-    <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-      <%= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
-    <% end %>
-  <% else %>
-    <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-      <li style="font-size:200%;"><B>The archive is still being processed and will be available for download later.  Press refresh or re-visit this page to check for availability</B></li><br/><br/>
-    <% end %>
-  <% end %>
+  <%#*always show edit button, the controller will flash a message if not available%>
+  <% if !@archive.failure && Authorization.is_authorized?("download", nil, @archive, current_user) -%>
+    <li><%= icon('download', download_csvarchive_url, "Download CSV file", nil, "Download CSV file") -%></li>
+  <% end -%>
+  <%# elsif @archive.failure %>
+  <%# if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
+  <%#= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
+  <%# end %>
+  <%# else %>
   <% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>
     <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
   <% end %>
@@ -57,6 +53,19 @@
           No description
         </p>
       <% end -%>
+      <br/>
+      <b>Status:</b>
+      <% if @archive.complete && !@archive.failure%>
+        <span class="title"><%=h "ready for download" -%></span>
+        <%# elsif @archive.failure-%>
+        <%#*<span class="title" style="color:red;">%>
+        <%#=h "Not available due to errors - please recreate" -%>
+        <%#*</span>%>
+      <% elsif @archive.failure -%>
+        <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>
+      <% else -%>
+        <span class="title"><%=h "Unknown: click on the download button to check" -%></span>
+      <% end -%>
     </p>
     <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
     <%#*</div>%>
@@ -64,7 +73,7 @@
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
 
     <br/>
-    <div id="variablesTable">
+    <div id="table">
       <%= render :partial => "surveys/variables_table" %>
     </div>
     <br/>
@@ -78,7 +87,7 @@
           <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
           ,&nbsp
           <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
-        
+
       </td></tr>
     </table>
 
