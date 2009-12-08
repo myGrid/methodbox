@@ -642,6 +642,34 @@ module ApplicationHelper
       #:title => tooltip_title_attrib("Opens a popup window, where you can create a new favourite<br/>group, add people to it and set individual access rights.") }  #options[:tooltip_text]
     )
   end
+
+    # ========================================
+  # Code to help with remembering which tab
+  # the user was in after redirects etc.
+  # ----------------------------------------
+
+  # Note: the implementation of this method means that when it is used
+  # it also resets the param to "false", thus the remembering of a tab is
+  # only done in the one (current) request.
+  # If more control than that is required (ie: being able to configure how long tab is remembered for),
+  # then split into 2 different methods.
+#  def get_and_reset_use_tab_cookie_param_value
+#    #logger.info ""
+#    #logger.info "get_and_reset_use_tab_cookie_param_value called; before - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
+#    #logger.info ""
+#
+#    value = session[:use_tab_cookie]
+#    value = value.blank? ? false : value
+#
+#    session[:use_tab_cookie] = false
+#
+#    #logger.info ""
+#    #logger.info "get_and_reset_use_tab_cookie_param_value called; after - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
+#    #logger.info ""
+#
+#    return value
+#  end
+
   
   private  
   PAGE_TITLES={"home"=>"Home", "projects"=>"Projects","institutions"=>"Institutions", "people"=>"People","sessions"=>"Login","users"=>"Signup","search"=>"Search","experiments"=>"Experiments","sops"=>"Sops","models"=>"Models","experiments"=>"Experiments","data_files"=>"Data"}
