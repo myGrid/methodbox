@@ -23,6 +23,8 @@ ul.survey li {
     float: left;
     padding-left: 0em;
     padding-right: 1em;
+    width: 12em;
+    margin: 0;
 }
 
 .clear {clear:both;}
