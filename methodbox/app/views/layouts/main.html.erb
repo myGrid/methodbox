@@ -65,6 +65,7 @@
         <div id="header">
           <%= render :partial=>"layouts/header" %>
         </div>
+        <%#= render :partial => "layouts/head_tabber_pre" %>
         <br/>
         <%= render :partial=>"layouts/tabnav" %>
         <%#*<div id="myexp_searchbar" style="background-image:url(/images/searchbar-flare.png);">%>
@@ -103,13 +104,23 @@
 
           </div>
         </div>
-        <div id="myexp_sidebar" class="yui-b" style="background-color:#1B619B">
+        <%#*<div id="myexp_sidebar" class="yui-b" style="background-color:#1B619B;">%>
+        <div class="yui-b" style="background-color:#FFFFFF;padding:5px;">
+
           <%= render :partial => "layouts/sidebar" %>
         </div>
       </div>
-      <div id="ft">
-        <%= render :partial=>"layouts/footer" %>
+      <div>
+        <div style="background:#1B619B; height:30px">
+        </div>
+        <b class="spiffy"><b class="spiffy5"><b></b></b><b class="spiffy4"><b></b></b><b class="spiffy3"></b><b class="spiffy2"></b><b class="spiffy1"></b></b>
+
+        <%#*<b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>%>
+
       </div>
+      <%#*<div id="ft">%>
+      <%#= render :partial=>"layouts/footer" %>
+      <%#*</div>%>
 
     </div>
 
