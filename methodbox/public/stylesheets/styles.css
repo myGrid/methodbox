@@ -42,7 +42,7 @@
 }
 
 #header {
-    padding-top: 1em;
+    padding-top: 0.25em;
     text-align:right;
 }
 
@@ -78,6 +78,8 @@
 
 .list_items_container{
     padding-left: 7px;
+    padding-right: 7px;
+    padding-bottom:7px;
 }
 
 table.list_item {
@@ -336,6 +338,7 @@ But do not hide them in the print stylesheet!
 --------------------------------------------------*/
 .tabberlive .tabbertabhide {
     display: none;
+
 }
 
 /*--------------------------------------------------
@@ -347,6 +350,7 @@ But do not hide them in the print stylesheet!
 
 .tabberlive {
     margin-top: 1em;
+    padding-bottom:5px;
 }
 
 /*--------------------------------------------------
@@ -357,7 +361,7 @@ ul.tabbernav
 {
     margin: 0;
     padding: 3px 0;
-    border-bottom: 1px solid #CCC;
+    /*border-bottom: 1px solid #CCC;*/
     font-weight: bold;
     font-size: 108%;
 }
@@ -407,6 +411,7 @@ Add style only after the tabber interface is set up (.tabberlive)
 --------------------------------------------------*/
 .tabberlive .tabbertab {
     margin-right: 0.3em;
+    border:1px solid #CCCCCC;
 
 }
 
