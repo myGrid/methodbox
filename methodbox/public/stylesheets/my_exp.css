@@ -299,15 +299,15 @@ li {
 .tabnav li a {
 	padding: 3px 8px;
 	margin-left: 1px;
-	border-top: 1px solid #BBBBBB;
-	border-left: 1px solid #BBBBBB;
-	border-right: 1px solid #BBBBBB;
-	border-bottom: 1px solid transparent;
+	/*border-top: 1px solid #BBBBBB;*/
+	/*border-left: 1px solid #BBBBBB;*/
+	/*border-right: 1px solid #BBBBBB;*/
+	/*border-bottom: 1px solid transparent;*/
 	text-decoration: none;
-	background-image: url('/images/tab-bg-light-blue.png');
-	background-position: top;
-	background-repeat: repeat-x;
-	background-color: #ACCBE0;
+	/*background-image: url('/images/tab-bg-light-blue.png');*/
+	/*background-position: top;*/
+	/*background-repeat: repeat-x;*/
+	background-color: #1B619B;
 }
 
 .tabnav li a:link {
@@ -315,7 +315,8 @@ li {
 }
 
 .tabnav li a:visited {
-	color: #333333;
+	/*color: #333333;*/
+        color: #FFFFFF;
 }
 
 .tabnav li a:hover {
@@ -324,9 +325,10 @@ li {
 }
 
 .tabnav li#selected_tabnav a {
-	background-color: #1B619B;
+	/*background-color: #ACCBE0;*/
+        background-color: #FFFFFF;
 	background-image: none;
-	color: #FFFFFF;
+	color: #333333;
 }
 
 /* end css tabs nav */ 
