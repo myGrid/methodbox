@@ -1,6 +1,9 @@
-<div style="width:100%;float:right;display:inline;padding-right:20px;margin-bottom:-20px;">
-   <%= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50),
-          root_path %>
+<%#*<div style="width:100%;float:right;display:inline;padding-right:30px;margin-bottom:-20px;">%>
+  <div>
+    <%= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;padding-left:10px;"),root_path %>
+  <font style="font-size:2em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox</font>
+<%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;"),root_path %>
+
 </div>
 
 <%# if RAILS_ENV=="development" && false -%>

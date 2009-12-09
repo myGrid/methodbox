@@ -1,6 +1,6 @@
 <% if logged_in? && !current_user.person.nil? %>
-  <div>
-    <ul class="tabnav">
+  <div style="background:#1B619B; height:24px;">
+    <ul class="tabnav" style="margin-left:165px;">
 
       <!-- People tab -->
       <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>>

@@ -59,29 +59,35 @@
 
 
   <body>
+        
+    <div id="doc2" class="yui-t2" style="min-height:750px;">
+      <%#*<div class="yui-b" style="background-color:#FFFFFF;padding:5px;float:left;">%>
 
-    <div id="doc2" class="yui-t2">
+          <%#= render :partial => "layouts/sidebar" %>
+        <%#*</div>%>
       <div id="hd">
-        <div id="header">
+        <div id="header" style="text-align:left;padding-bottom:0.25em;">
           <%= render :partial=>"layouts/header" %>
         </div>
         <%#= render :partial => "layouts/head_tabber_pre" %>
-        <br/>
+        <%#*<br/>%>
         <%= render :partial=>"layouts/tabnav" %>
         <%#*<div id="myexp_searchbar" style="background-image:url(/images/searchbar-flare.png);">%>
         <%#= render :partial=>"search/search_bar" %>
         <%#*</div>%>
-        <div>
-          <b class="spiffy"><b class="spiffy1"><b></b></b><b class="spiffy2"><b></b></b><b class="spiffy3"></b><b class="spiffy4"></b><b class="spiffy5"></b></b>
-          <div style="background:#1B619B; height:30px">
-          </div>
+        <%#*<div>%>
+          <%#*<b class="spiffy"><b class="spiffy1"><b></b></b><b class="spiffy2"><b></b></b><b class="spiffy3"></b><b class="spiffy4"></b><b class="spiffy5"></b></b>%>
+          <%#*<div style="background:#1B619B; height:25px;margin-top:-27px;">%>
+          <%#*</div>%>
+          <%#*<b class="spiffy"><b class="spiffy5"><b></b></b><b class="spiffy4"><b></b></b><b class="spiffy3"></b><b class="spiffy2"></b><b class="spiffy1"></b></b>%>
+
           <%#*<b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>%>
 
-        </div>
+        <%#*</div>%>
       </div>
       <div id="bd">
         <div id="yui-main">
-          <div class="yui-b">
+          <div class="yui-b" style="margin-right:1em;">
 
             <%# applying styling to error / notice messages -%>
             <% if flash[:error] %>
@@ -104,21 +110,23 @@
 
           </div>
         </div>
-        <%#*<div id="myexp_sidebar" class="yui-b" style="background-color:#1B619B;">%>
-        <div class="yui-b" style="background-color:#FFFFFF;padding:5px;">
+        <div id="myexp_sidebar" class="yui-b" style="background-color:#FFFFFF;padding:0.5em;">
+        <%#*<div class="yui-b" style="background-color:#FFFFFF;padding:5px;">%>
 
           <%= render :partial => "layouts/sidebar" %>
         </div>
       </div>
-      <div>
-        <div style="background:#1B619B; height:30px">
-        </div>
-        <b class="spiffy"><b class="spiffy5"><b></b></b><b class="spiffy4"><b></b></b><b class="spiffy3"></b><b class="spiffy2"></b><b class="spiffy1"></b></b>
+      <%#*<div>%>
+        <%#*<div style="background:#1B619B; height:30px">%>
+        <%#*</div>%>
+        <%#*<b class="spiffy"><b class="spiffy5"><b></b></b><b class="spiffy4"><b></b></b><b class="spiffy3"></b><b class="spiffy2"></b><b class="spiffy1"></b></b>%>
 
         <%#*<b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>%>
-
+<div id="ft" style="margin:0;margin-top:5px;">
+      <%= render :partial=>"layouts/footer" %>
       </div>
-      <%#*<div id="ft">%>
+      </div>
+    <%#*<div id="ft" style="margin:0;">%>
       <%#= render :partial=>"layouts/footer" %>
       <%#*</div>%>
 
