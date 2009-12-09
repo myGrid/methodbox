@@ -2,15 +2,29 @@ div.faux_table_container {
     border:1px solid #996633;
     height:550px;
     overflow:auto;
-    width:700px;
+    /* Stop the horizontal bar from appearing*/
+    overflow-x:hidden;
+    /*width:700px;*/
+    width:100%;
     text-align:left;
     margin:auto;
+    float:left;
 }
 div.faux_table_header_container {
     border:1px solid #996633;
-    width:700px;
+    /*width:700px;*/
+    width:100%;
     margin:auto;
     background-color: #ACCBE0;
+    float:left;
+}
+ul.faux_table_header_container {
+    float: left;
+    width: 100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
 }
 
 ul.faux_table_odd {
@@ -39,9 +53,11 @@ ul.faux_table_even {
 }
 
 ul.faux_table_odd li {
+    width:100%;
     float: left;
 }
 ul.faux_table_even li {
+    width:100%;
     float: left;
 }
 
@@ -60,39 +76,97 @@ li div {
 }
 
 .col1 {
-    width: 25px;
+    /*min-width: 25px;*/
+    width:5%;
 }
 .col2 {
-    width: 25px;
+    /*min-width: 25px;*/
+    width:5%;
 }
 .col3 {
-    width: 150px;
+    /*min-width: 150px;*/
+    width:20%;
 }
 .col4 {
     white-space:normal;
-    width: 340px;
+    /*min-width: 340px;*/
+    width:50%;
 }
 .col5 {
-    width: 65px;
+    /*min-width: 65px;*/
+    width:10%;
 }
 .col6 {
-    width: 50px;
+    /*min-width: 50px;*/
+    /* Remember the scroll bar needs space*/
+    width:5%;
 }
 .head1 {
-    width: 25px;
+    /*min-width: 25px;*/
+    width:5%;
 }
 .head2 {
-    width: 25px;
+    /*min-width: 25px;*/
+    width:5%;
 }
 .head3 {
-    width: 150px;
+    /*min-width: 150px;*/
+    width:20%;
 }
 .head4 {
-    width: 340px;
+    /*min-width: 340px;*/
+    width:50%;
 }
 .head5 {
-    width: 65px;
+    /*min-width: 65px;*/
+    width:10%;
 }
 .head6 {
+    /*min-width: 75px;*/
+    width:10%;
+}
+* html div.faux_table_container {
+    width:700px;
+    float:none;
+}
+* html div.faux_table_header_container {
+    width:700px;
+    float:none;
+}
+
+* html .col1 {
+    width: 25px;
+}
+* html .col2 {
+    width: 25px;
+}
+* html .col3 {
+    width: 150px;
+}
+* html .col4 {
+    width: 340px;
+}
+* html .col5 {
+    width: 65px;
+}
+* html .col6 {
+    width: 50px;
+}
+* html .head1 {
+    width: 25px;
+}
+* html .head2 {
+    width: 25px;
+}
+* html .head3 {
+    width: 150px;
+}
+* html .head4 {
+    width: 340px;
+}
+* html .head5 {
+    width: 65px;
+}
+* html .head6 {
     width: 75px;
 }
