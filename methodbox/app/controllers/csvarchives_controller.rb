@@ -79,6 +79,7 @@ class CsvarchivesController < ApplicationController
 
   def show
     find_archive
+    #    switch on if using web service
     check_available
     set_parameters_for_sharing_form
     #    check_available
@@ -129,7 +130,9 @@ class CsvarchivesController < ApplicationController
     doc = XML::Document.new()
     doc.root = XML::Node.new('Datasets')
     root = doc.root
-
+    root << mail = XML::Node.new('Email')
+    mail << User.find(current_user.id).person.email
+    
     variable_hash.each_key do |key|
 
       root << dataset = XML::Node.new('Dataset')
@@ -234,13 +237,13 @@ class CsvarchivesController < ApplicationController
         puts "processing " + key
         dataset_name= Survey.find(key).original_filename
         puts "looking for " + Survey.find(key).original_filename
-        infile = File.open(CSV_FILE_PATH + FILE::SEPARATOR + dataset_name)
+        infile = File.open(CSV_FILE_PATH + "/" + dataset_name)
         puts "opened file"
         uuid = UUIDTools::UUID.random_create.to_s
         csv_file_name = Survey.find(key).name + "_" + uuid + ".csv"
         puts "new csv file is " + csv_file_name
         file_names.push(csv_file_name)
-        outfile= File.new(NEW_CSV_FILE_PATH + FILE::SEPARATOR + csv_file_name)
+        outfile= File.new(NEW_CSV_FILE_PATH + "/" + csv_file_name)
         puts "full path is " + outfile
         i=0
         pos = Array.new
@@ -262,7 +265,7 @@ class CsvarchivesController < ApplicationController
         file_names.each {
           |file_name|
           puts "adding file to zip " + file_name
-          zipfile.add(file_name, NEW_CSV_FILE_PATH + FILE::SEPARATOR + file_name + ".csv")
+          zipfile.add(file_name, NEW_CSV_FILE_PATH + "/" + file_name + ".csv")
           puts "added"
 
         }
