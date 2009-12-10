@@ -1,18 +1,18 @@
 <% unless logged_in? -%>
 <div>
 	<!-- <div> -->
-<div class="myexperiment_gadget" style="width:350px;float:left;display:inline;padding-left:2em;">
+<div class="myexperiment_gadget" style="width:35%;float:left;display:inline;padding-left:1.75em;">
 	<!-- <div> -->
   <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
     
   <div class="header">
-    <p>About</p>
+    <p style="font-size:1.75em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">About</p>
   </div>
   
   <div class="contents">
 			
 			<div>
-	  	<p style="text-align:left;">MethodBox enables you to browse and download datasets, share methods and scripts, find fellow researchers with similar interests and share your knowledge.</p>
+	  	<p style="text-align:left;font-size:1.5em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox enables you to browse and download datasets, share methods and scripts, find fellow researchers with similar interests and share your knowledge.</p>
 
 	  </div>
   </div>
@@ -20,21 +20,21 @@
   <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
 </div>
 
-<div class="myexperiment_gadget" style="width:350px;float:right;display:inline;padding-right:2em;">
+<div class="myexperiment_gadget" style="width:35%;float:right;display:inline;padding-right:1.75em;">
 	<!-- <div> -->
   <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
     
   <div class="header">
-    <p>Who?</p>
+    <p style="font-size:1.75em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Who?</p>
   </div>
   
   <div class="contents">
     
 			
 			<div>
-	  	<p style="text-align:left;"> MethodBox is brought to you by a team from the <a href = "http://www.manchester.ac.uk">University of Manchester</a> in the UK, led by <a href="http://www.cs.man.ac.uk/~/carole">Carole Goble</a> and <a href="http://www.manchester.ac.uk/research/Buchan/">Iain Buchan</a>.
+	  	<p style="text-align:left;font-size:1.5em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;"> MethodBox is brought to you by a team from the <a href = "http://www.manchester.ac.uk">University of Manchester</a> in the UK, led by <a href="http://www.cs.man.ac.uk/~/carole">Carole Goble</a> and <a href="http://www.manchester.ac.uk/research/Buchan/">Iain Buchan</a>.
 	  	</p>
-	    <p style="text-align:left;">MethodBox is part of the <a href="http://www.mygrid.org.uk">myGrid consortium</a>, which brought you the <a href="http://www.mygrid.org.uk/taverna">Taverna Workflow Workbench</a> for creating and executing scientific workflows, <a href="http://www.myexperiment.org">myExperiment</a> for sharing workflows and <a href="http://www.biocatalogue.org">Bio-catalogue</a> for curating life science web-services.</p>	
+	    <p style="text-align:left;font-size:1.5em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox is part of the <a href="http://www.mygrid.org.uk">myGrid consortium</a>, which brought you the <a href="http://www.mygrid.org.uk/taverna">Taverna Workflow Workbench</a> for creating and executing scientific workflows, <a href="http://www.myexperiment.org">myExperiment</a> for sharing workflows and <a href="http://www.biocatalogue.org">Bio-catalogue</a> for curating life science web-services.</p>
 	  </div>
 
   </div>
@@ -42,12 +42,12 @@
   <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
 </div>
 
-<div class="myexperiment_gadget" style="margin-left:20px;margin-right:20px;width:190px">
+<div class="myexperiment_gadget" style="width:20%">
 	<!-- <div> -->
   <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
     
   <div class="header">
-    <p>Log in / Register</p>
+    <p style="font-size:1.75em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Log in / Register</p>
   </div>
   
   <div class="contents">
@@ -57,20 +57,20 @@
       <%= hidden_field_tag "called_from[id]", params[:id] -%>
 			
 			<div class="box1">
-	  	<p class="label">
+	  	<p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
           Login:
 	  	</p>
 	    <p>
        	  <%= text_field_tag 'login', nil, :class => 'field', :style => "width: 140px;" %>
 	    </p>
-        <p class="label">
+        <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
 	      Password:
 	    </p>
 	  	<p>
       	  <%= password_field_tag 'password', nil, :class => 'field', :style => "width: 140px;" %>
 	  	</p>
 	  	
-		<p class="label">
+		<p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
       	  Remember me: <%= check_box_tag 'remember_me' %>
         </p>
 
@@ -83,17 +83,17 @@
 	  
     <% end %>
     <% if !REGISTRATION_CLOSED -%>
-    <p style="margin-top: 0.6em; line-height: 1.3em; font-size: 93%;">
+    <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
       <b>Need an account?</b><br />
       <b><%= link_to "Sign up", signup_url %></b>
     </p>
 <% else -%>
-<p style="margin-top: 0.6em; line-height: 1.3em; font-size: 93%;">
+<p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
   <b>New user registration is currently closed</b>
 </p>
 <% end -%>
     <br/>
-    <p style="margin-top: 0.6em; line-height: 1.3em; font-size: 83%;">
+    <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
       <b><%= link_to "Forgotten password?", forgot_password_url %></b>
     </p>
 
