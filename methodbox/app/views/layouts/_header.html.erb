@@ -1,10 +1,13 @@
 <%#*<div style="width:100%;float:right;display:inline;padding-right:30px;margin-bottom:-20px;">%>
-  <div>
+  <%#*<div>%>
     <%= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;padding-left:10px;"),root_path %>
   <font style="font-size:2em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox</font>
 <%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;"),root_path %>
-
+  <div style="float:right;padding-right:2em;padding-top:2em;">
+    <%#= @search_query="Enter search here" -%>
+<%= render :partial=>"search/search_bar" -%>
 </div>
+<%#*</div>%>
 
 <%# if RAILS_ENV=="development" && false -%>
   <%#*<table><tr><td>%>
