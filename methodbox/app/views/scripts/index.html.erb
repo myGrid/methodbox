@@ -1,10 +1,10 @@
-<div><div style="padding-left:7px;float:left;"><% form_tag '/search/' do -%>
+<div><div style="padding-left:7px;float:left;width:50%"><% form_tag '/search/' do -%>
   <%= hidden_field_tag 'search_type', 'methods' -%>
   <%= text_field_tag :search_query, @search_query -%>
   <%= submit_tag "Search" ,:title=> "Enter a term and click to search all methods and scripts"-%>
 <% end  -%>
 </div>
-<ul class="sectionIcons">
+<ul class="sectionIcons" style="text-align:left;">
   <li><%= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %></li>
   <!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
 </ul>

@@ -10,7 +10,7 @@ class ScriptsController < ApplicationController
 
   # GET /script
   def index
-    @scripts=Authorization.authorize_collection("show",@scripts,current_user)
+    @scripts.results=Authorization.authorize_collection("show",@scripts.results,current_user)
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@scripts}
@@ -202,8 +202,10 @@ class ScriptsController < ApplicationController
   protected
 
   def find_scripts
-    found = Script.find(:all,
-      :order => "title")
+     found = Script.find(:all,
+      :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
+#    found = Script.find(:all,
+#      :order => "title")
 
     # this is only to make sure that actual binary data isn't sent if download is not
     # allowed - this is to increase security & speed of page rendering;
