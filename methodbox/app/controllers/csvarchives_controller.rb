@@ -132,6 +132,9 @@ class CsvarchivesController < ApplicationController
     root = doc.root
     root << mail = XML::Node.new('Email')
     mail << User.find(current_user.id).person.email
+
+    root << filename = XML::Node.new('Filename')
+    filename << params[:archive][:title]
     
     variable_hash.each_key do |key|
 
