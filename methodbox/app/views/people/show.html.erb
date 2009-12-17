@@ -2,16 +2,16 @@
 <div class="tabber">
   <div id="person_tab" class="tabbertab">
     <h3>
- <% if mine?(@person) -%>
-   Me
-   <% else -%>
-<%= "#{@person.name}" -%>
+      <% if mine?(@person) -%>
+        Me
+      <% else -%>
+        <%= "#{@person.name}" -%>
 
-<% end %>
-</h3>
+      <% end %>
+    </h3>
 <%#*<h1>%>
 <%#= h @person.name -%>
-    <%#*</h1>%>
+<%#*</h1>%>
 
     <div class="show_basic">
 
@@ -26,11 +26,11 @@
             <p>
               <b>Login name :</b> <%= h @person.user.login %> <span class='none_text'>(Only visible to you)</span>
             </p>
-            <%#*<p>%>
-            <%#*<b>ID :</b>%>
-            <%#= @person.id %>
-            <%#*<span class='none_text'>(Only visible to you)</span>%>
-            <%#*</p>%>
+  <%#*<p>%>
+  <%#*<b>ID :</b>%>
+  <%#= @person.id %>
+  <%#*<span class='none_text'>(Only visible to you)</span>%>
+  <%#*</p>%>
           <% end %>
 
 
@@ -46,20 +46,21 @@
 
           <p>
             <% if mine?(@person) || @person.can_be_edited_by?(current_user) -%>
-              <ul class="sectionIcons" style="text-align:left;">
-                <li><%= icon('edit', edit_person_path(@person), "Edit Person Profile", nil, 'Edit Profile') -%></li>
+            <ul class="sectionIcons" style="text-align:left;">
+              <li><%= icon('edit', edit_person_path(@person), "Edit Person Profile", nil, 'Edit Profile') -%></li>
 
-                <% if mine?(@person) -%>
-                  <li>
-                    <%= icon "lock", url_for({:controller=>:users, :action=>:edit, :id=>@person.user}), "Change password", nil, "Change password" -%>
-                  </li>
-                <% end -%>
+              <% if mine?(@person) -%>
+                <li>
+                  <%= icon "lock", url_for({:controller=>:users, :action=>:edit, :id=>@person.user}), "Change password", nil, "Change password" -%>
+                </li>
+              <% end -%>
 
-                <% if current_user.is_admin? -%>
-                  <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
-                <% end -%>
-              </ul>
-            <% end %>
+              <% if current_user.is_admin? -%>
+                <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
+                </li>
+              <% end -%>
+            </ul>
+          <% end %>
           </p>
         </div>
 
@@ -78,23 +79,23 @@
 
         <p>
           <b>About me:</b>
-          <div id="description" class="box_standout" style="background-color:#FFFFFF;">
-            <%= text_or_not_specified(@person.description, :description=>true) %>
-          </div>
+        <div id="description" class="box_standout" style="background-color:#FFFFFF;">
+          <%= text_or_not_specified(@person.description, :description=>true) %>
+        </div>
         </p>
 
         <br/>
 
         <%= render :partial=>"people/contact_details" %>
 
-        <%#= render :partial=>"people/roles",:locals=>{:editable=>false} %>
+<%#= render :partial=>"people/roles",:locals=>{:editable=>false} %>
 
-        <%# get, classify and authorize all assets for this person's user (assets belong to users, not people!) -%>
+<%# get, classify and authorize all assets for this person's user (assets belong to users, not people!) -%>
         <% persons_asset_hash = (@person.user ? Asset.classify_and_authorize(@person.user.assets, true, current_user) : {}) -%>
-        <%# persons_asset_hash.merge!(classify_for_tabs(@person.projects)) %>
-        <%# persons_asset_hash.merge!(classify_for_tabs(@person.institutions)) %>
+<%# persons_asset_hash.merge!(classify_for_tabs(@person.projects)) %>
+<%# persons_asset_hash.merge!(classify_for_tabs(@person.institutions)) %>
         <% persons_asset_hash.merge!(classify_for_tabs(@person.csvarchives)) %>
-        <%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@person.name,:item_hash=>persons_asset_hash} %>
+<%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@person.name,:item_hash=>persons_asset_hash} %>
 
       </div>
 
