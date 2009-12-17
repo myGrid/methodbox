@@ -7,7 +7,12 @@
     </div>
     <% if mine?(@person) -%>
       <div id="email">
-        <p><label for="email">Email:</label> <%= text_or_not_specified(@person.email, :email=>true) %></p>
+        <p><label for="email">Email:</label> <%= text_or_not_specified(@person.email, :email=>true) %>
+        <% if @person.send_notifications -%>Notifications on
+          <% else -%>
+          Notifications off
+          <% end -%>
+        </p>
       </div>
 
       <div id="phone">
