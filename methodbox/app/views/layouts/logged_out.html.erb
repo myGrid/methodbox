@@ -60,14 +60,16 @@
       </script>
     </head>
 
-    <body>
+    <body style="background-color:#EFDED2;">
 
-      <div id="doc2" class="yui-t2">
+      <div id="doc3" class="yui-t2">
         <div id="hd">
-          <div id="header" style="text-align:left;padding-bottom:0.25em;margin-bottom:4em;">
+          <div id="header" style="background-color:#ACCBE0;">
             <%= render :partial=>"layouts/header" %>
         </div>
-        <div style="background:#1B619B; height:24px;"></div>
+           <div style="background:#1B619B;height:25px;background-image: url(<%= image_path("searchbar-flare.png") -%>) ;background-position: center;background-repeat: no-repeat;">
+  </div>
+        <%#*<div style="background:#1B619B; height:24px;"></div>%>
 <%#*<div id="myexp_searchbar">%>
 <%#= render :partial=>"search/search_bar" %>
 <%#*</div>%>
@@ -80,7 +82,7 @@
 <%#*</div>%>
       </div>
       <div id="bd" style="min-height:45em">
-        <div id="yui-main">
+        <div id="yui-main" style="min-height:750px;">
 <%# applying styling to error / notice messages -%>
           <% if flash[:error] %>
             <div id="error_flash" class="box_standout" style="color: red; font-weight: bold; margin: 0.8em 0.8em; line-height: 1.4;">

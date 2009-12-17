@@ -1,44 +1,44 @@
 <%#*<div style="width:100%;float:right;display:inline;padding-right:30px;margin-bottom:-20px;">%>
-  <%#*<div>%>
-<div style="float:left;">
-    <%= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;padding-left:5px;"),root_path %>
-  <font style="font-size:2em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox</font>
+<div style="height:50px;">
+  <div style="float:left;">
+    <%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"padding-left:5px;"),root_path %>
+<%#*<font style="font-size:2em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox</font>%>
 <%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;"),root_path %>
+  </div>
+  <div style="float:right;padding-top:50px;">
+<%#= @search_query="Enter search here" -%>
+    <%= render :partial=>"search/search_bar" -%>
+  </div>
 </div>
-  <div style="float:right;padding-right:2em;padding-top:2em;">
-    <%#= @search_query="Enter search here" -%>
-<%= render :partial=>"search/search_bar" -%>
-</div>
-<%#*</div>%>
 
 <%# if RAILS_ENV=="development" && false -%>
-  <%#*<table><tr><td>%>
-        <%#*<h1 style="color:red;">Development Mode</h1>%>
-      <%#*</td><td>%>
-        <%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox"),
-          root_path %>
-      <%#*</td>%>
-    <%#*</tr>%>
-  <%#*</table>%>
+<%#*<table><tr><td>%>
+<%#*<h1 style="color:red;">Development Mode</h1>%>
+<%#*</td><td>%>
+<%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox"),
+root_path %>
+<%#*</td>%>
+<%#*</tr>%>
+<%#*</table>%>
 <%# else -%>
 <%#*<table width="100%">%>
 
-  <%#*<tr>%>
-    <%#*<td style="text-align:center; ">%>
-      <%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50),
-    root_path %>
-      
-    <%#*</td>%>
-    <%#*<td>%>
-       <%#*<p id="header_text" style="background-color: #ACCBE0;padding-top:1em;padding-bottom:1em;margin:0;">Look inside the <b>METHOD BOX</b>. Find and share <b>datasets</b>, <b>methods</b> and <b>know-how</b>. Making <b>best practice</b> your practice%>
-      <%#*</p>%>
-    <%#*</td>%>
-    <%#*<!--<td style="text-align:right;">%>
-      <%#= link_to image_tag("eLab3.gif",:alt=>"eLab",:title=>"eLab"),root_path %>
-    <%#*</td>-->%>
+<%#*<tr>%>
+<%#*<td style="text-align:center; ">%>
+<%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50),
+root_path %>
 
-  <%#*</tr>%>
+<%#*</td>%>
+<%#*<td>%>
+<%#*<p id="header_text" style="background-color: #ACCBE0;padding-top:1em;padding-bottom:1em;margin:0;">Look inside the <b>METHOD BOX</b>. Find and share <b>datasets</b>, <b>methods</b> and <b>know-how</b>. Making <b>best practice</b> your practice%>
+<%#*</p>%>
+<%#*</td>%>
+<%#*<!--<td style="text-align:right;">%>
+<%#= link_to image_tag("eLab3.gif",:alt=>"eLab",:title=>"eLab"),root_path %>
+<%#*</td>-->%>
+
+<%#*</tr>%>
 <%#*</table>%>
 
-  
+
 <%# end -%>
