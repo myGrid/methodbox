@@ -76,7 +76,11 @@
 			
 			<input <%= 'checked="checked"' if @sharing_mode == Policy::PRIVATE %> id="sharing_scope_<%= Policy::PRIVATE -%>" name="sharing[sharing_scope]"
             value="<%= Policy::PRIVATE -%>" type="radio" onclick="javascript:setSharingElementVisibility(<%= Policy::PRIVATE -%>);" />
-        - Keep this <%= @resource_type -%> private.
+        - Keep this <% if @resource_type=="Script" -%>
+                Method
+                <% else -%>
+                <%= @resource_type -%>
+                <% end -%> private.
 		</label></p>
 		
 		
