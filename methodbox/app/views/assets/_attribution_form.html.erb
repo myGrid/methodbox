@@ -29,11 +29,14 @@
 
   <div id="attributions_fold_content" class="foldContent" style="display: block;">
 
-    <div class="box_infotext">
-      <p>
-        Here you can record attributions to other <%= resource_type_attributed_to_types -%> if any were used in creation of this <%= resource_type -%>.
-      </p>
-    </div>
+    <%#*<div class="box_infotext">%>
+      <%#*<p>%>
+        <%#*Here you can record attributions to other%>
+<%#= resource_type_attributed_to_types -%>
+        <%#*if any were used in creation of this%>
+<%#= resource_type -%>.
+      <%#*</p>%>
+    <%#*</div>%>
 
     <p style="font-weight: bold; margin-top: 1.5em;">
       If this <%= resource_type %> is based on any existing <%= resource_type_attributed_to_types -%>, please list them below
@@ -56,7 +59,7 @@
         <tr>
           <td>
             <div tabindex="-1" id="ids" class="clearfix tokenizer" onclick="$('attributions_autocomplete_input').focus();" style="width: 400px;">
-              <span class="tokenizer_stretcher">^_^</span><span class="tab_stop"><input type="text" id="attributions_hidden_input" tabindex="-1" ></span>
+              <span class="tokenizer_stretcher">^_^</span><span class="tab_stop"><input type="text" id="attributions_hidden_input" tabindex="-1"/></span>
 
               <div id="attributions_autocomplete_display" class="tokenizer_input">
                 <input type="text" size="1" tabindex="" id="attributions_autocomplete_input" />
