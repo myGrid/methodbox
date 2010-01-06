@@ -1169,7 +1169,7 @@ function validateScriptFields(is_new_file) {
   if(is_new_file) {
       if (!(/^\w/.test($('script_title').value))){
           alert("File name is not valid, please use letters, numbers or underscore only");
-	    $('script_data').focus();
+	    $('script_title').focus();
 	    return(false);
       }
 	  if($('script_data').value.length == 0) {
@@ -1203,7 +1203,7 @@ function validateArchiveFields(is_new_file) {
 //	}
 if (!(/^\w/.test($('archive_title').value))){
           alert("File name is not valid, please use letters, numbers or underscore only");
-	    $('script_data').focus();
+	    $('archive_title').focus();
 	    return(false);
       }
   // other tests are applicable to both editing and creating new SOP
