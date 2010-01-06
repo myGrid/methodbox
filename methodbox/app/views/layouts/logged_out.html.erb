@@ -62,7 +62,7 @@
 
     <body style="background-color:#EFDED2;">
 
-      <div id="doc3" class="yui-t2">
+      <div id="doc4" class="yui-t2">
         <div id="hd">
           <div id="header" style="background-color:#ACCBE0;">
             <%= render :partial=>"layouts/header" %>
@@ -82,7 +82,8 @@
 <%#*</div>%>
       </div>
       <div id="bd">
-        <div id="yui-main" style="min-height:40em;min-width:70em;">
+        <div id="yui-main">
+          <div style="min-height:40em;min-width:70em;">
 <%# applying styling to error / notice messages -%>
           <% if flash[:error] %>
             <div id="error_flash" class="box_standout" style="color: red; font-weight: bold; margin: 0.8em 0.8em; line-height: 1.4;">
@@ -101,6 +102,7 @@
 
 <%# main content part of every page -%>
           <%= yield :layout %>
+        </div>
         </div>
       </div>
       <div id="ft" style="margin:0;margin-top:5px;">

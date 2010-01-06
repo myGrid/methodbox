@@ -61,7 +61,7 @@
 
   <body style="background-color:#EFDED2;">
         
-    <div id="doc3" class="yui-t2">
+    <div id="doc4" class="yui-t2">
       <%#*<div class="yui-b" style="background-color:#FFFFFF;padding:5px;float:left;">%>
 
           <%#= render :partial => "layouts/sidebar" %>
@@ -87,7 +87,7 @@
         <%#*</div>%>
       </div>
       <div id="bd">
-        <div id="yui-main" style="min-height: 60em;">
+        <div id="yui-main">
           <div class="yui-b">
 
             <%# applying styling to error / notice messages -%>
@@ -111,10 +111,11 @@
 
           </div>
         </div>
-        <div id="myexp_sidebar" class="yui-b" style="background-color:#FFFFFF;padding:0.5em;">
-        <%#*<div class="yui-b" style="background-color:#FFFFFF;padding:5px;">%>
-
+        <%#*<div id="myexp_sidebar" class="yui-b" style="background-color:#FFFFFF;padding:0.5em;">%>
+        <div class="yui-b">
+          <div id="myexp_sidebar" style="background-color:#FFFFFF;padding:0.5em;">
           <%= render :partial => "layouts/sidebar" %>
+          </div>
         </div>
       </div>
       <%#*<div>%>
