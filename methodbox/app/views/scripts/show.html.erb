@@ -72,7 +72,18 @@
           </p>
         <% end -%>
       </p>
+      <br/>
+<b>Linked with Archive(s):</b>
+      <% if !@archives.empty? -%>
 
+<% @archives.each do |archive| -%>
+  <%= link_to(archive.title, csvarchive_path(archive)) -%>
+  <% end -%>
+      <% else -%>
+      None
+      <% end -%>
+      <br/>
+      <br/>
 
 
 
