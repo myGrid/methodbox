@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091016124604) do
+ActiveRecord::Schema.define(:version => 20100108152526) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -225,6 +225,13 @@ ActiveRecord::Schema.define(:version => 20091016124604) do
     t.datetime "updated_at"
   end
 
+  create_table "script_lists", :force => true do |t|
+    t.integer  "csvarchive_id"
+    t.integer  "script_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
@@ -322,8 +329,8 @@ ActiveRecord::Schema.define(:version => 20091016124604) do
     t.integer  "csvarchive_id"
     t.string   "category"
     t.string   "dertype"
-    t.string   "dermethod"
-    t.string   "info"
+    t.text     "dermethod"
+    t.text     "info"
   end
 
   create_table "watched_variables", :force => true do |t|
