@@ -37,6 +37,8 @@ class ScriptsController < ApplicationController
     # store timestamp of the previous last usage
     @last_used_before_now = @script.last_used_at
 
+    @archives = @script.csvarchives
+
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
     @script.last_used_at = Time.now
