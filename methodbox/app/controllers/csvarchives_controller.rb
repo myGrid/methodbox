@@ -10,6 +10,8 @@ class CsvarchivesController < ApplicationController
 
   def new
     set_parameters_for_sharing_form
+    @scripts = Script.find(:all)
+    @scripts=Authorization.authorize_collection("show",@scripts,current_user)
   end
 
   def recreate
@@ -84,6 +86,7 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     #    check_available
     @sorted_variables = @archive.variables
+    @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@archives}
@@ -163,7 +166,12 @@ class CsvarchivesController < ApplicationController
       root = xmldoc.root
       @jobid = root.child.to_s
 
-      
+      #only one script at the moment, change to many in future and can be none
+      if params[:script][:id] != ""
+        all_scripts_array = Array.new
+        all_scripts_array.push(Script.find(params[:script][:id]))
+        params[:archive][:scripts] = all_scripts_array
+      end
       params[:archive][:filename] = @jobid
       params[:archive][:complete] = false
       params[:archive][:last_used_at] = Time.now
@@ -173,6 +181,7 @@ class CsvarchivesController < ApplicationController
       params[:archive][:variables] = all_variables_array
       params[:archive][:contributor_type] = "User"
       params[:archive][:contributor_id] = current_user.id
+      
       @archive = Csvarchive.new(params[:archive])
       @archive.save
       
