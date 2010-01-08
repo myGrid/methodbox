@@ -4,6 +4,8 @@ class Script < ActiveRecord::Base
 
   acts_as_resource
 
+  has_many :csvarchives, :through => :script_lists
+
   acts_as_solr(:fields=>[:description,:title]) if SOLR_ENABLED
 
   validates_presence_of :title

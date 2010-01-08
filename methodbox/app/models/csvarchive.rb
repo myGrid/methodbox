@@ -5,6 +5,10 @@ class Csvarchive < ActiveRecord::Base
   acts_as_resource
 
   has_many :variable_lists
+  
+  has_many :script_lists
+
+  has_many :scripts, :through => :script_lists
 
   has_many :variables, :through => :variable_lists
 
