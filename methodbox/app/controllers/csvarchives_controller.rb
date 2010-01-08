@@ -151,7 +151,7 @@ class CsvarchivesController < ApplicationController
     http.read_timeout=6000
     #    response = http.post('/eos/download', doc.to_s)
     puts doc.to_s
-    response = http.post(CSV_SERVER_PATH + '/download/', doc.to_s)
+    response = http.post(CSV_SERVER_PATH + '/download', doc.to_s)
     if response.response.class == Net::HTTPOK
       xmlstring = String.new
       response.body.each do |str|
