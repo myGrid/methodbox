@@ -54,6 +54,17 @@
         </p>
       <% end -%>
       <br/>
+      <b>Linked with Script(s):</b>
+      <% if !@scripts.empty? -%>
+
+<% @scripts.each do |script| -%> 
+  <%= link_to(script.title, script_path(script)) -%>
+  <% end -%>
+      <% else -%>
+      None
+      <% end -%>
+      <br/>
+      <br/>
       <b>Status:</b>
       <% if @archive.complete && !@archive.failure%>
         <span class="title"><%=h "ready for download" -%></span>

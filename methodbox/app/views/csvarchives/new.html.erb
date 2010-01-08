@@ -25,7 +25,10 @@
           <% archive_description_value = (params[:archive].blank? || params[:archive][:description].blank?) ? nil : params[:archive][:description] -%>
           <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
-
+        <p>
+          <b>Link with script:</b>
+          <%= collection_select(:script, :id, @scripts, :id, :title, options ={:prompt => "Select a script"}) -%>
+        </p>
       </div>
     </center>
 
