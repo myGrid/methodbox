@@ -16,13 +16,13 @@
 
         <p style="margin-top: 1.5em;">
           <b>Title:</b><font style="color: #FF0000;">*</font><br/>
-          <% archive_title_value = (params[:archive].blank? || params[:archive][:title].blank?) ? nil : params[:archive][:title] -%>
+          <% archive_title_value = (params[:title].blank?) ? nil : params[:title] -%>
           <%= text_field_tag 'archive[title]', archive_title_value, :style => "width: 100%;" -%>
         </p>
 
         <p style="margin-top: 0.5em;">
           <b>Description:</b><br/>
-          <% archive_description_value = (params[:archive].blank? || params[:archive][:description].blank?) ? nil : params[:archive][:description] -%>
+          <% archive_description_value = (params[:description].blank?) ? nil : params[:description] -%>
           <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
         <p>
