@@ -33,9 +33,20 @@ class SurveysController < ApplicationController
 end
 
 def search_variables
-  
+
+  begin
   #    items_per_page = 10
-  @search_query = params[:search_query]
+#  if (params[:search_query]== "" || params[:entry_ids]== nil)
+#respond_to do |format|
+#      flash.now[:notice] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+#      format.html {
+#        render :action => :index
+#      }
+#    end
+#
+#  else
+
+  @search_query = params[:survey_search_query]
   @selected_surveys = Array.new(params[:entry_ids])
   #    logger.info("length " + @survey_list.size)
   #    @search_query||=""
@@ -83,10 +94,24 @@ def search_variables
 #   respond_to do |format|
 #     format.html
 #   end
+#end
+  rescue
+    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+    render :update do |page|
+    page.reload_flash_error
+#page.replace_html "survey_flash_error" , :partial => "layouts/flash_error",:locals=>{:error_message=>@error_message}
+#page.show "error_flash"
+#    page.visual_effect :highlight, 'error_flash'
+#flash.discard
+    end
+#    redirect_to :action => index
+#    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+#        render :action => :index
+  end
 end
 
 def sort_variables
-  @search_query = params[:search_query]
+  @search_query = params[:survey_search_query]
   @survey_list = params[:survey_list]
     
   @sorted_variables = params[:sorted_variables]
