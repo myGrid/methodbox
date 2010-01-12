@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   
   helper :all # include all helpers, all the time
   layout "main"
+  after_filter :discard_flash_if_xhr
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -331,6 +332,12 @@ class ApplicationController < ActionController::Base
     cookies.delete :auth_token
     session[:user_id]=nil
     session[:cart] = nil
+  end
+
+  protected
+
+  def discard_flash_if_xhr
+    flash.discard if request.xhr?
   end
   
   private
