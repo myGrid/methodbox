@@ -114,6 +114,8 @@ class CsvarchivesController < ApplicationController
     #a hash, each key is a particular survey, the value is the variable
     #      also store all the variables in an array to add to the archive object
     #      variable_hash = Hash.new
+    existing_arcs = Csvarchive.find(:all, :conditions=>"title='" + params[:archive][:title] + "' and person_id=" + User.find(current_user).person_id.to_s)
+    if existing_arcs.empty?
     all_variables_array = Array.new
     variable_hash = Hash.new
     params[:all_variables_array].each do |var|
@@ -200,6 +202,13 @@ class CsvarchivesController < ApplicationController
       format.html { redirect_to csvarchive_path(@archive) }
 
     end
+    else
+#      respond_to do |format|
+
+      flash[:error] = "You already have an archive with such a title"
+  redirect_to(:controller => "csvarchives", :action => "new", :all_variables_array => params[:all_variables_array],:title =>params[:archive][:title], :description => params[:archive][:description])
+#    end
+  end
   end
 
   def new_create
