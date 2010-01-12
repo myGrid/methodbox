@@ -5,6 +5,10 @@ require_dependency File.join(Rails.root, 'vendor', 'plugins', 'annotations', 'li
 module ApplicationHelper
   include TagsHelper
 
+  def reload_flash_error
+  page.replace "error_flash", :partial => 'layouts/flash_error'
+end
+
   def get_all_annotations_for_variable_with_current_user(variable)
     #    var = Variable.find(variable)
     logger.info("annotations for " + variable.to_s)
