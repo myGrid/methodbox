@@ -1,3 +1,7 @@
+#Use for loading xml based metadata for a dataset.  Can be used to reload metadata file
+#even if the database already has variables for that survey.  Change the survey_id to
+#match the appropriate year and the parser to load the correct xml file
+
 require 'rubygems'
 require 'rake'
 require 'model_execution'
@@ -7,9 +11,9 @@ require 'xml'
 namespace :obesity do
   desc "load metadata from xml"
   task :load_metadata  => :environment do
-    parser = XML::Parser.file('/Users/Ian/scratch/HSE05.xml')
+    parser = XML::Parser.file('/Users/Ian/scratch/HSE2006-01-21.xml')
     doc = parser.parse
-    survey_id = 6
+    survey_id = 7
     nodes = doc.find('//metadata/variable')
 
     nodes.each do |node|
