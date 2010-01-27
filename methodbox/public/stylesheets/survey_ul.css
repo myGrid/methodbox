@@ -11,6 +11,18 @@ TODO customize this sample style
 Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
+/*div.click_box_div:hover {
+background-color: yellow;
+}
+
+li.click_box a:hover {
+background-color:#FF0066;
+}
+
+.click_box span.click_box_title {
+    display: block;
+}*/
+
 ul.survey {
     margin-left: 0px;
     padding-left: 0px;
@@ -28,3 +40,67 @@ ul.survey li {
 }
 
 .clear {clear:both;}
+
+.cssnav
+{
+    position: relative;
+    font-family: arial, helvetica, sans-serif;
+    /*background: url('/images/overbtn.jpg') no-repeat;*/
+    background-color: gray;
+    border: 2px outset;
+    white-space: nowrap;
+    display: block;
+    width: 150px;
+    height: 35px;
+    margin: 0;
+    padding: 0;
+}
+
+.cssnav a
+{
+    display: block;
+    color: #000000;
+    font-size: 11px;
+    width: 150px;
+    height: 35px;
+    display: block;
+    float: left;
+    color: black;
+    text-decoration: none;
+}
+
+.cssnav img
+{
+    /*width: 211px;*/
+    /*height: 44px;*/
+    /*border: 0*/
+}
+
+* html a:hover
+{
+    visibility:visible
+}
+
+/*.cssnav a:hover img
+{
+visibility:hidden
+}*/
+.cssnav a:hover
+{
+    background-color: silver;
+    /*border: 2px inset;*/
+}
+
+.cssnav span
+{
+    font-size: 1.5em;
+    font-weight: bold;
+    position: absolute;
+    left: 50px;
+    top: 7px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+
