@@ -1,14 +1,36 @@
 <%#*<div style="width:100%;float:right;display:inline;padding-right:30px;margin-bottom:-20px;">%>
-<div style="height:50px;">
-  <div style="float:left;">
+<div style="position:relative; height:4em;">
+  <div style="position:absolute;top: 0.25em;left:0.5em">
     <%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"padding-left:5px;"),root_path %>
 <%#*<font style="font-size:2em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox</font>%>
 <%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;"),root_path %>
   </div>
-  <div style="float:right;padding-top:50px;">
+  <% if logged_in? -%>
+  <div style="position:absolute;top:0.25em;right:0.5em;">
+
+<%#= icon "profile", person_path(current_user.person), nil, nil, "&nbsp;My Profile" %>
+    <table><tr><td> <%= link_to (image_tag avatar_url(current_user.person, current_user.person.avatar_id, 40) ,:alt=> current_user.person.name, :class=>"framed",:title=>current_user.person.name),person_path(current_user.person) -%></td><td><%= icon "profile", messages_path, nil, nil, "&nbsp;My Messages" %></td><td> <%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %></td></tr>
+    </table>
+    <%#= avatar(current_user.person, 40) -%>
+<%#*<span style="color: #666666; margin-left: 0.1em;">%>
+<%#*<small>[%>
+<%#= link_to "edit", edit_person_path(current_user.person) -%>
+<%#*]</small>%>
+<%#*</span>%>
+    <%#*<ul class="gadget_list" style="list-style-type:none;"%>
+      <%#*<li>%>
+        <%#= icon "profile", messages_path, nil, nil, "&nbsp;My Messages" %>
+      <%#*</li>%>
+      <%#*<li>%>
+        <%#= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %>
+      <%#*</li>%>
+    <%#*</ul>%>
+  </div>
+  <div style="position:absolute;bottom:-1.75em;right:0.5em;">
 <%#= @search_query="Enter search here" -%>
     <%= render :partial=>"search/search_bar" -%>
   </div>
+  <% end -%>
 </div>
 
 <%# if RAILS_ENV=="development" && false -%>

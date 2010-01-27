@@ -61,7 +61,7 @@
 
   <body style="background-color:#EFDED2;">
         
-    <div id="doc4" class="yui-t2">
+    <div id="doc4" class="yui-t7" style="background-color:#FFFFFF">
       <%#*<div class="yui-b" style="background-color:#FFFFFF;padding:5px;float:left;">%>
 
           <%#= render :partial => "layouts/sidebar" %>
@@ -86,9 +86,10 @@
 
         <%#*</div>%>
       </div>
-      <div id="bd">
+      <div id="bd" style="min-height:700px;margin: 1em;">
         <div id="yui-main">
-          <div class="yui-b">
+          <%#*<div class="yui-b">%>
+            <%#*<div>%>
 
             <%# applying styling to error / notice messages -%>
             <%# if flash[:error] %>
@@ -113,13 +114,13 @@
             <%= yield :layout %>
 
           </div>
-        </div>
+        <%#*</div>%>
         <%#*<div id="myexp_sidebar" class="yui-b" style="background-color:#FFFFFF;padding:0.5em;">%>
-        <div class="yui-b">
-          <div id="myexp_sidebar" style="background-color:#FFFFFF;padding:0.5em;">
-          <%= render :partial => "layouts/sidebar" %>
-          </div>
-        </div>
+        <%#*<div class="yui-b">%>
+          <%#*<div id="myexp_sidebar" style="background-color:#FFFFFF;padding:0.5em;">%>
+          <%#= render :partial => "layouts/sidebar" %>
+          <%#*</div>%>
+        <%#*</div>%>
       </div>
       <%#*<div>%>
         <%#*<div style="background:#1B619B; height:30px">%>
@@ -127,7 +128,7 @@
         <%#*<b class="spiffy"><b class="spiffy5"><b></b></b><b class="spiffy4"><b></b></b><b class="spiffy3"></b><b class="spiffy2"></b><b class="spiffy1"></b></b>%>
 
         <%#*<b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>%>
-<div id="ft" style="margin:0;margin-top:5px;">
+<div id="ft" style="margin:0;">
       <%= render :partial=>"layouts/footer" %>
       </div>
       </div>
