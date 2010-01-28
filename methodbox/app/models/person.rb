@@ -5,6 +5,7 @@ class Person < ActiveRecord::Base
   has_many :watched_variables
 
   has_many :variables, :through => :watched_variables
+  has_many :variable_links
 
   acts_as_tagger
 
