@@ -1,5 +1,5 @@
 <ul class="sectionIcons">
-  <% if !Person.find(current_user.id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
+  <% if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
     <li><%= icon('watch', watch_variable_path(@variable), nil, nil, 'Watch variable') -%></li>
   <% else %>
     <li><%= icon('stopwatch', watch_variable_path(@variable), nil, nil, 'Stop watching variable') -%></li>
