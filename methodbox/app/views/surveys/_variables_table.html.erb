@@ -11,9 +11,9 @@
       <%= hidden_field_tag "survey_list[]", val %>
     <% end %>
   <% end %>
-  <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;" width="100%">
+  <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:900px;">
     <div><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
-    </div><br/>
+    <%= submit_tag 'Link selected variables',:id => "link_variables_button" %></div><br/>
     <div>Select:
       <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
       ,&nbsp
