@@ -17,6 +17,8 @@ class Csvarchive < ActiveRecord::Base
 
   belongs_to :person
 
+  acts_as_solr(:fields=>[:title,:description]) if SOLR_ENABLED
+
   def self.get_all_as_json(user)
     all_archives = Csvarchive.find(:all, :order => "ID asc")
     archives_with_contributors = all_archives.collect{ |m|
