@@ -5,7 +5,7 @@ div.faux_table_container {
     /* Stop the horizontal bar from appearing*/
     overflow-x:hidden;
     /*width:700px;*/
-    width:100%;
+    width:900px;
     text-align:left;
     margin:auto;
     float:left;
@@ -13,14 +13,14 @@ div.faux_table_container {
 div.faux_table_header_container {
     border:1px solid #996633;
     /*width:700px;*/
-    width:100%;
+    width:900px;
     margin:auto;
     background-color: #ACCBE0;
     float:left;
 }
 ul.faux_table_header_container {
     float: left;
-    width: 100%;
+    width: 900px;
     list-style: none;
     padding-left: 0;
     margin-left: 0px;
@@ -29,7 +29,7 @@ ul.faux_table_header_container {
 
 ul.faux_table_odd {
     float: left;
-    width: 100%;
+    width: 900px;
     list-style: none;
     padding-left: 0;
     margin-left: 0px;
@@ -38,7 +38,7 @@ ul.faux_table_odd {
 }
 ul.faux_table_even {
     float: left;
-    width: 100%;
+    width: 900px;
     list-style: none;
     padding-left: 0;
     margin-left: 0px;
@@ -53,11 +53,11 @@ ul.faux_table_even {
 }
 
 ul.faux_table_odd li {
-    width:100%;
+    width:900px;
     float: left;
 }
 ul.faux_table_even li {
-    width:100%;
+    width:900px;
     float: left;
 }
 
@@ -77,53 +77,54 @@ li div {
 
 .col1 {
     /*min-width: 25px;*/
-    width:5%;
+    width:25px;
 }
 .col2 {
     /*min-width: 25px;*/
-    width:5%;
+    width:25px;
 }
 .col3 {
     /*min-width: 150px;*/
-    width:20%;
+    width:175px;
 }
 .col4 {
     white-space:normal;
     /*min-width: 340px;*/
-    width:50%;
+    width:500px;
 }
 .col5 {
     /*min-width: 65px;*/
-    width:10%;
+    width:75px;
 }
 .col6 {
     /*min-width: 50px;*/
     /* Remember the scroll bar needs space*/
-    width:5%;
+    width:50px;
 }
+
 .head1 {
     /*min-width: 25px;*/
-    width:5%;
+    width:25px;
 }
 .head2 {
     /*min-width: 25px;*/
-    width:5%;
+    width:25px;
 }
 .head3 {
     /*min-width: 150px;*/
-    width:20%;
+    width:175px;
 }
 .head4 {
     /*min-width: 340px;*/
-    width:50%;
+    width:500px;
 }
 .head5 {
     /*min-width: 65px;*/
-    width:10%;
+    width:75px;
 }
 .head6 {
     /*min-width: 75px;*/
-    width:10%;
+    width:50px;
 }
 * html div.faux_table_container {
     width:700px;
