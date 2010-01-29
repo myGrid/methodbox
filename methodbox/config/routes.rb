@@ -21,7 +21,8 @@ ActionController::Routing::Routes.draw do |map|
   #  map.resources :studies
 
   # messages
-  map.resources :cart
+   # page for cart
+  map.cart '/cart/', :controller=>'cart',:action=>'show'
 
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }
 
