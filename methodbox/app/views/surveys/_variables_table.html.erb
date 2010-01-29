@@ -4,6 +4,7 @@
 <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
 <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
 <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
+<%= hidden_field_tag 'submit', 'add' %>
   <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
   <%#= hidden_field_tag 'survey_array', @survey_list %>
   <% if @selected_surveys!=nil %>
@@ -12,8 +13,9 @@
     <% end %>
   <% end %>
   <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:900px;">
-    <div><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
-    <%= submit_tag 'Link selected variables',:id => "link_variables_button" %></div><br/>
+    <div><%= submit_tag'Add selected variables to cart', :name=>"_submit",:src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%></div>
+    <div><%= text_field_tag :link_variables_text, @link_reason %><%= submit_tag 'Link selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%></div>
+    <br/>
     <div>Select:
       <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
       ,&nbsp
