@@ -1,7 +1,7 @@
 class CartController < ApplicationController
 
   before_filter :login_required
-#  before_filter :find_archives, :only => [ :index ]
+  #  before_filter :find_archives, :only => [ :index ]
 
   def show
     @sorted_variables = Array.new
@@ -12,11 +12,32 @@ class CartController < ApplicationController
   end
 
   def remove_from_cart
-    
+    case params[:submit]
+    when "remove_variables"
+    @var_list = params[:variable_ids]
+    unless @var_list.empty?
+      @var_list.each do |var|
+        puts "delete" + var
+        session[:cart].remove_variable(var)
+      end
+    end
+
+     @sorted_variables = Array.new
+    session[:cart].items.each do |item|
+      var = Variable.find(item)
+      @sorted_variables.push(var)
+    end
+
+    render :update, :status=>:created do |page|
+      page.replace_html "table_container", :partial=>"table"
+    end
+    when "create_archive"
+      download_all_variables
+    end
   end
 
   def index
-     respond_to do |format|
+    respond_to do |format|
       format.html # index.html.erb
       format.xml 
     end
