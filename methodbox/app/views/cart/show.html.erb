@@ -1,0 +1,48 @@
+<%= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
+<%= hidden_field_tag 'tag_button', 'tag' %>
+<%= hidden_field_tag 'year_of_survey', 'survey_year' %>
+<%= hidden_field_tag 'variable_name', 'variable_name' %>
+<%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
+<%= hidden_field_tag 'watch_variable', 'watch_variable' %>
+<div class="show_basic" style="padding-right: 2em;">
+<% form_remote_tag :url => { :action => "remove_from_cart"} do -%>
+  <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
+  <%#= hidden_field_tag 'survey_array', @survey_list %>
+  <%# if @selected_surveys!=nil %>
+  <%# @selected_surveys.each do |val| %>
+  <%#= hidden_field_tag "survey_list[]", val %>
+  <%# end %>
+  <%# end %>
+  <div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
+    <div><%= submit_tag('Remove selected variables from cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
+    </div><br/>
+    <div>Select:
+      <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+      ,&nbsp
+      <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+      ,&nbsp
+      <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+
+    </div>
+  </div>
+  <br/>
+  <br/>
+  <div class="faux_table_header_container">
+    <ul class="faux_table" style="background-color: #ACCBE0;">
+      <li id="faux_table_header" style="background-color: #ACCBE0;"><div class="head1">&nbsp</div><div
+          class="head2">&nbsp</div><div class="head3">
+          <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, @sorted_variables) %></div><div class="head4">
+          <%= sort_link_helper("Description", "description", @search_query, @survey_list, @sorted_variables) %></div><div class="head5">
+          <%= sort_link_helper("Survey", "survey", @search_query, @survey_list, @sorted_variables) %></div><div class="head6">
+          <%= sort_link_helper("Year", "year", @search_query, @survey_list, @sorted_variables) %></div></li>
+    </ul>
+  </div>
+  <div id="tableContainer" class="faux_table_container">
+    <% @sorted_variables.each do |item| %>
+      <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
+
+    <% end %>
+  <% end -%>
+</div>
+</div>
