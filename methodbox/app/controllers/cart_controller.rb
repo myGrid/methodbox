@@ -1,7 +1,26 @@
 class CartController < ApplicationController
 
   before_filter :login_required
-  before_filter :find_archives, :only => [ :index ]
+#  before_filter :find_archives, :only => [ :index ]
+
+  def show
+    @sorted_variables = Array.new
+    session[:cart].items.each do |item|
+      var = Variable.find(item)
+      @sorted_variables.push(var)
+    end
+  end
+
+  def remove_from_cart
+    
+  end
+
+  def index
+     respond_to do |format|
+      format.html # index.html.erb
+      format.xml 
+    end
+  end
 
   def deal_with_selected
     #        logger.info("commit: " + params[:myHiddenField])
