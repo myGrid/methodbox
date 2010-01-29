@@ -19,12 +19,23 @@
           <%#*<li class="click_box"><a href=""><span class="click_box_title">Variable Cart box</span></a></li>%>
         <%#*</div>%>
 
-        <div class="cssnav" style="position: absolute; top:1em; right:1em;">
-<a href="http://www.URL.com" title="Go to my variable cart">
+        <%#*<div class="cssnav" style="position: absolute; top:1em; right:1em;">%>
+<%#*<a href="http://www.URL.com" title="Go to my variable cart">%>
   <%#*<img src="/images/downbtn.jpg" alt="Alternative text" />%>
-  <%= image_tag("famfamfam_silk/cart.png", :border => 0,:height => '32', :width => '32') -%>
-  <span><%= session[:cart].items.size -%> variables</span></a>
-</div>
+  <%#= image_tag("famfamfam_silk/cart.png", :border => 0,:height => '32', :width => '32') -%>
+  <%#*<span>%>
+<%#= session[:cart].items.size -%> 
+        <%#*variables%>
+  <%#*</span></a>%>
+<%#*</div>%>
+        <div id="cart_button"style="position: absolute; top:1em; right:1em;">
+              <%= render :partial => "cart_button" -%>
+        </div>
+        <%#*<ul class="sectionIcons" style="position: absolute; top:1em; right:1em;">%>
+              <%#*<li>%>
+<%#= icon('edit', cart_path, "View Cart", nil, session[:cart].items.size.to_s + " Variables") -%>
+              <%#*</li>%>
+        <%#*</ul>%>
 
         <%#*<br/>%>
         <div style="position: absolute; bottom:1em; left:1em;">Select:
