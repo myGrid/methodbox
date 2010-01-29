@@ -177,7 +177,10 @@ class ApplicationController < ActionController::Base
 
       render :update, :status=>:created do |page|
         #        TODO flash the cart
-        #        page.replace_html "cart-contents-inner", :partial=>"surveys/cart_item"
+#                page[:cart_button].reload
+                page.replace_html "cart_button", :partial=>"surveys/cart_button"
+                page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
+#                page.visual_effect :highlight, 'cart_button' ,:duration => 1
         #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
       end
     end
