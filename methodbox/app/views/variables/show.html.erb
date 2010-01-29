@@ -6,7 +6,7 @@
 
   <% end %>
   <li><%= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%></li>
-
+<li><%= icon('add_to_cart', add_to_cart_variable_path(@variable), "Add Variable to Cart", {:method => :post}, 'Add Variable to Cart') -%></li>
 </ul>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
 <div class="show_basic">
@@ -21,69 +21,92 @@
       <p>
         <b>Description:</b>
         <% unless @variable.value.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@variable.value)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No description
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@variable.value)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
       </p>
 
-	 <p>
+      <p>
         <b>Category:</b>
         <% unless @variable.category.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@variable.category)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No category
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@variable.category)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No category
+        </p>
+      <% end -%>
       </p>
-	 <p>
+      <p>
         <b>Variable source:</b>
         <% unless @variable.dertype.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@variable.dertype)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No source
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@variable.dertype)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No source
+        </p>
+      <% end -%>
       </p>
-	 <p>
+      <p>
         <b>Derivation method:</b>
         <% unless @variable.dermethod.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@variable.dermethod)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No method
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@variable.dermethod)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No method
+        </p>
+      <% end -%>
       </p>
-	 <p>
+      <p>
         <b>Allowed values:</b>
         <% unless @variable.info.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@variable.info)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No allowed values
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@variable.info)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No allowed values
+        </p>
+      <% end -%>
       </p>
       <p>
         <b>Survey year:</b>
+      <div class="box_standout">
+        <%= Survey.find(@variable.survey_id).surveytype + " " + Survey.find(@variable.survey_id).year -%>
+      </div>
+      </p>
+      <p>
+        <% if !@variable.variable_links.empty? -%>
+          <b>Linked by:</b>
         <div class="box_standout">
-          <%= Survey.find(@variable.survey_id).surveytype + " " + Survey.find(@variable.survey_id).year -%>
+          <% @variable.variable_links.each do |link| -%>
+            <%=  link_to(link.description, variable_link_path(link)) -%>
+          <% end -%>
         </div>
+        <b>Linked to variables:</b>
+        <div class="box_standout">
+          <% @variable.variable_links.each do |link| -%>
+            <% link.variables.each do |var| -%>
+              <% if @variable.id != var.id -%>
+                <%= link_to(var.name, variable_path(var))-%>
+              <% end -%>
+            <% end -%>
+          <% end -%>
+        </div>
+
+      <% else -%>
+        <b>No links recorded for this variable</b>
+      <% end -%>
       </p>
 
     </div>
@@ -93,39 +116,6 @@
               More info to come
             </div>
           </p> -->
-    <p>
-      <% unless @tag_array.empty? %>
-        <b>Tags:</b>
-
-        <div class="tags_smaller">
-          <div class="hTagcloud">
-            <div class="popularity">
-              <b>|</b>
-              <% @tag_array.each do |tag| %>
-                <%= link_to tag.name, variables_url(:variable=>tag.name), :title=>"Search for other variables with tag " + tag.name -%>
-<b>|</b>
-                <%# tag_cloud @tag_array, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
-
-                <%#=  link_to_remote tag.name,:anchor=>tag.id, :url => { :action => "search_for_tags", :id => tag.id }%>
-                <%# if show_tag?(tag) -%>
-                <%#
-                hide_tag=!show_tags.include?(tag)
-                tag_class="#{css_class}"
-                tag_class << " #{hidden_class}" if hide_tag
-                style= hide_tag ? "display:none;" : ""  #has to be set as a style rather than in CSS for javascript to work
-                %>
-                <%#= link_for_tag tag,:type=>"variable",:truncate_length=>40, :class => tag_class,:style=>"#{style}" -%>
-
-                <%# end -%>
-              <% end -%>
-
-            </div>
-          </div>
-        </div>
-      <% else %>
-        <b>Tags: </b>none
-      <% end %>
-    </p>
 
     <div id="tag_search">
     </div>
