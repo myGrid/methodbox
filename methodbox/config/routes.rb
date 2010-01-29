@@ -24,6 +24,8 @@ ActionController::Routing::Routes.draw do |map|
    # page for cart
   map.cart '/cart/', :controller=>'cart',:action=>'show'
 
+  map.resources :variable_links
+
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }
 
 
@@ -35,7 +37,7 @@ ActionController::Routing::Routes.draw do |map|
   
   #  map.resources :assays
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get}, :collection =>{:search => :post}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post}, :collection =>{:search => :post}
 
   map.resources :methods
 
