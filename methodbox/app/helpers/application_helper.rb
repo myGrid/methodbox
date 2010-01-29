@@ -6,8 +6,8 @@ module ApplicationHelper
   include TagsHelper
 
   def reload_flash_error
-  page.replace "error_flash", :partial => 'layouts/flash_error'
-end
+    page.replace "error_flash", :partial => 'layouts/flash_error'
+  end
 
   def get_all_annotations_for_variable_with_current_user(variable)
     #    var = Variable.find(variable)
@@ -177,6 +177,10 @@ end
   
   def method_to_icon_filename(method)
     case (method.to_s)
+    when "add_to_cart"
+      return "famfamfam_silk/add.png"
+    when "cart"
+      return "famfamfam_silk/cart.png"
     when "watch"
       return "famfamfam_silk/camera_add.png"
     when "stopwatch"
@@ -352,8 +356,8 @@ end
   
   def delete_image(style=nil, tooltip="Delete")
     return image_tag("famfamfam_silk/cross.png",
-              :title => "header=[] body=[#{tooltip}] cssheader=[boxoverTooltipHeader] cssbody=[boxoverTooltipBody] delay=[200]",
-              :style => style)
+      :title => "header=[] body=[#{tooltip}] cssheader=[boxoverTooltipHeader] cssbody=[boxoverTooltipBody] delay=[200]",
+      :style => style)
   end
   
   
@@ -647,7 +651,7 @@ end
     )
   end
 
-    # ========================================
+  # ========================================
   # Code to help with remembering which tab
   # the user was in after redirects etc.
   # ----------------------------------------
@@ -657,22 +661,22 @@ end
   # only done in the one (current) request.
   # If more control than that is required (ie: being able to configure how long tab is remembered for),
   # then split into 2 different methods.
-#  def get_and_reset_use_tab_cookie_param_value
-#    #logger.info ""
-#    #logger.info "get_and_reset_use_tab_cookie_param_value called; before - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
-#    #logger.info ""
-#
-#    value = session[:use_tab_cookie]
-#    value = value.blank? ? false : value
-#
-#    session[:use_tab_cookie] = false
-#
-#    #logger.info ""
-#    #logger.info "get_and_reset_use_tab_cookie_param_value called; after - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
-#    #logger.info ""
-#
-#    return value
-#  end
+  #  def get_and_reset_use_tab_cookie_param_value
+  #    #logger.info ""
+  #    #logger.info "get_and_reset_use_tab_cookie_param_value called; before - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
+  #    #logger.info ""
+  #
+  #    value = session[:use_tab_cookie]
+  #    value = value.blank? ? false : value
+  #
+  #    session[:use_tab_cookie] = false
+  #
+  #    #logger.info ""
+  #    #logger.info "get_and_reset_use_tab_cookie_param_value called; after - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
+  #    #logger.info ""
+  #
+  #    return value
+  #  end
 
   
   private  
