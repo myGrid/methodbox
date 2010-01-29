@@ -1,0 +1,26 @@
+<h1 class="contribution_title">Variable Link</h1>
+<div class="show_basic">
+  <div class="main_content_left_box">
+    <div class="box_about_actor">
+      <p>
+        <b>Description:</b>
+        <span class="title"><%= @link.description -%></span>
+      </p>
+
+      <p>
+        <b>Created by:</b>
+        <span class="title"><%=link_to(h(Person.find(@link.person_id).name), person_path(@link.person_id)) -%></span>
+      </p>
+
+      <p>
+        <b>Contains Variables:</b>
+      <div class="box_standout">
+        <% @link.variables.each do |var| -%>
+          <%= link_to(var.name, variable_path(var))-%>
+        <% end -%>
+      </div>
+      </p>
+
+    </div>
+  </div>
+</div>
