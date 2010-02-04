@@ -90,13 +90,17 @@ li div {
 .col4 {
     white-space:normal;
     /*min-width: 340px;*/
-    width:500px;
+    width:400px;
 }
 .col5 {
+    white-space:normal;
+    width:100px;
+}
+.col6 {
     /*min-width: 65px;*/
     width:75px;
 }
-.col6 {
+.col7 {
     /*min-width: 50px;*/
     /* Remember the scroll bar needs space*/
     width:50px;
@@ -116,13 +120,16 @@ li div {
 }
 .head4 {
     /*min-width: 340px;*/
-    width:500px;
+    width:400px;
 }
 .head5 {
+    width:100px;
+}
+.head6 {
     /*min-width: 65px;*/
     width:75px;
 }
-.head6 {
+.head7 {
     /*min-width: 75px;*/
     width:50px;
 }
@@ -145,12 +152,15 @@ li div {
     width: 150px;
 }
 * html .col4 {
-    width: 340px;
+    width: 300px;
 }
 * html .col5 {
-    width: 65px;
+    width: 40px;
 }
 * html .col6 {
+    width: 65px;
+}
+* html .col7 {
     width: 50px;
 }
 * html .head1 {
@@ -163,11 +173,14 @@ li div {
     width: 150px;
 }
 * html .head4 {
-    width: 340px;
+    width: 300px;
 }
 * html .head5 {
-    width: 65px;
+    width: 40px;
 }
 * html .head6 {
+    width: 65px;
+}
+* html .head7 {
     width: 75px;
 }
