@@ -35,7 +35,7 @@
         <b>Category:</b>
         <% unless @variable.category.blank? -%>
         <div class="box_standout">
-          <%= simple_format(white_list(@variable.category)) -%>
+          <%= link_to(@variable.category, by_category_variables_url(:category=>@variable.category),:title=>"Show all variables with this category") -%>
         </div>
       <% else -%>
         <p class="none_text">
@@ -80,9 +80,9 @@
       <% end -%>
       </p>
       <p>
-        <b>Survey year:</b>
+        <b>Survey:</b>
       <div class="box_standout">
-        <%= Survey.find(@variable.survey_id).surveytype + " " + Survey.find(@variable.survey_id).year -%>
+        <%= link_to(Survey.find(@variable.survey_id).surveytype + " " + Survey.find(@variable.survey_id).year, survey_url(Survey.find(@variable.survey_id))) -%>
       </div>
       </p>
       <p>
