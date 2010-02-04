@@ -147,7 +147,8 @@ class SurveysController < ApplicationController
       @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }.reverse
     end
     render :update, :status=>:created do |page|
-      page.replace_html "table", :partial=>"surveys/variables_table"
+      page.replace_html "table_header", :partial=>"surveys/table_header"
+      page.replace_html "table_container", :partial=>"surveys/table"
     end
   end
 
