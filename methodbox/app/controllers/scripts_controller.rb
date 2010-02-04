@@ -62,6 +62,8 @@ class ScriptsController < ApplicationController
   # GET /scripts/new
   #No auth check for loading new scripts, login is enough
   def new
+        @archives = Csvarchive.find(:all)
+    @archives=Authorization.authorize_collection("show",@archives,current_user)
     respond_to do |format|
       #if Authorization.is_member?(current_user.person_id, nil, nil)
       format.html # new.html.erb
@@ -96,6 +98,12 @@ class ScriptsController < ApplicationController
         }
       end
     else
+
+       if params[:archive][:id] != ""
+        all_archives_array = Array.new
+        all_archives_array.push(Csvarchive.find(params[:archive][:id]))
+        params[:script][:csvarchives] = all_archives_array
+      end
       # create new Script and content blob - non-empty file was selected
 
       # prepare some extra metadata to store in Script instance
