@@ -37,7 +37,7 @@ ActionController::Routing::Routes.draw do |map|
   
   #  map.resources :assays
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post}, :collection =>{:search => :post}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post}
 
   map.resources :methods
 
