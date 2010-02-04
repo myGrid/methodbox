@@ -3,6 +3,11 @@ class VariablesController < ApplicationController
   before_filter :login_required
 
 
+  def by_category
+    @category = params[:category]
+    @sorted_variables = Variable.find(:all, :conditions=>"category='" + params[:category] + "'")
+  end
+
   # GET /variable
   # GET /variable.xml
   def index
@@ -34,6 +39,25 @@ class VariablesController < ApplicationController
     respond_to do |format|
       flash[:notice] = "Variable has been added to the cart"
       format.html { redirect_to variable_path(@variable) }
+    end
+
+  end
+
+  def add_multiple_to_cart
+    @variable_list = Array.new(params[:variable_ids])
+
+    @variable_list.each do |var|
+      variable = Variable.find(var)
+      session[:cart].add_variable(variable.id)
+    end
+
+    render :update, :status=>:created do |page|
+      #        TODO flash the cart
+      #                page[:cart_button].reload
+      page.replace_html "cart_button", :partial=>"surveys/cart_button"
+      page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
+      #                page.visual_effect :highlight, 'cart_button' ,:duration => 1
+      #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
     end
 
   end
