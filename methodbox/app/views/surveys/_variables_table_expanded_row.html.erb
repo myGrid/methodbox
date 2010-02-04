@@ -11,6 +11,14 @@
         <div class="col6"><%= Survey.find(item.survey_id).year -%> </div></li>
     </ul>
   </div>
+    <div>
+    <% if item.category != nil -%>
+      <div style="width:875px;margin:auto;">Category: <%= item.category -%></div>
+    <% else -%>
+      <div style="width:875px;margin:auto;color:red;">No category recorded for this variable</div>
+    <% end -%>
+  </div>
+  <br/>
   <div>
     <% if item.dertype != nil -%>
       <div style="width:875px;margin:auto;">Derivation type: <%= item.dertype -%></div>
