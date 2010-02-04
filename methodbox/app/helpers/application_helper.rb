@@ -452,8 +452,8 @@ module ApplicationHelper
       unless url
         url = eval("#{object.class.name.downcase}_url(#{object.id})")
       end
-      
-      return link_to(img, url, :title => tooltip_title_attrib(tooltip_text))
+       return link_to(img, url, :title => tooltip_text)
+#      return link_to(img, url, :title => tooltip_title_attrib(tooltip_text))
     end
   end
   
