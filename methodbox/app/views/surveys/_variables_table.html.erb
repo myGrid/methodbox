@@ -27,32 +27,14 @@
   </div>
   <br/>
   <br/>
-  <div class="faux_table_header_container">
-    <ul class="faux_table" style="background-color: #ACCBE0;">
-      <li id="faux_table_header" style="background-color: #ACCBE0;"><div class="head1">&nbsp</div><div
-          class="head2">&nbsp</div>
-        <div class="head3">
-        <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, @sorted_variables) %>
-        </div>
-        <div class="head4">
-        <%= sort_link_helper("Description", "description", @search_query, @survey_list, @sorted_variables) %>
-        </div>
-        <div class="head5">
-        <%= sort_link_helper("Category", "category", @search_query, @survey_list, @sorted_variables) %>
-        </div>
-        <div class="head6">
-        <%= sort_link_helper("Survey", "survey", @search_query, @survey_list, @sorted_variables) %>
-        </div>
-        <div class="head7">
-        <%= sort_link_helper("Year", "year", @search_query, @survey_list, @sorted_variables) %>
-        </div>
-      </li>
-    </ul>
+  <div id="table_header" class="faux_table_header_container">
+    <%= render :partial => "table_header" -%>
   </div>
-  <div id="tableContainer" class="faux_table_container">
-    <% @sorted_variables.each do |item| %>
-      <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
+  <div id="table_container" class="faux_table_container">
+     <%= render :partial => "table" -%>
+    <%# @sorted_variables.each do |item| %>
+      <%#= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
 
-    <% end %>
+    <%# end %>
   <% end -%>
 </div>

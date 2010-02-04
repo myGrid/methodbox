@@ -1,0 +1,4 @@
+<% @sorted_variables.each do |item| %>
+  <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
+
+<% end %>
