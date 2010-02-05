@@ -85,22 +85,26 @@ li div {
 }
 .col3 {
     /*min-width: 150px;*/
-    width:175px;
+    width:165px;
 }
 .col4 {
     white-space:normal;
     /*min-width: 340px;*/
-    width:400px;
+    width:360px;
 }
 .col5 {
     white-space:normal;
-    width:100px;
+    width:90px;
 }
 .col6 {
     /*min-width: 65px;*/
-    width:75px;
+    width:65px;
 }
 .col7 {
+    /*min-width: 65px;*/
+    width:70px;
+}
+.col8 {
     /*min-width: 50px;*/
     /* Remember the scroll bar needs space*/
     width:50px;
@@ -116,33 +120,37 @@ li div {
 }
 .head3 {
     /*min-width: 150px;*/
-    width:175px;
+    width:165px;
 }
 .head4 {
     /*min-width: 340px;*/
-    width:400px;
+    width:360px;
 }
 .head5 {
-    width:100px;
+    width:90px;
 }
 .head6 {
     /*min-width: 65px;*/
-    width:75px;
+    width:65px;
 }
 .head7 {
+    /*min-width: 65px;*/
+    width:70px;
+}
+.head8 {
     /*min-width: 75px;*/
     width:50px;
 }
 * html div.faux_table_container {
-    width:700px;
+    /*width:700px;*/
     float:none;
 }
 * html div.faux_table_header_container {
-    width:700px;
+    /*width:700px;*/
     float:none;
 }
 
-* html .col1 {
+/** html .col1 {
     width: 25px;
 }
 * html .col2 {
@@ -160,7 +168,7 @@ li div {
 * html .col6 {
     width: 65px;
 }
-* html .col7 {
+* html .col8 {
     width: 50px;
 }
 * html .head1 {
@@ -181,6 +189,6 @@ li div {
 * html .head6 {
     width: 65px;
 }
-* html .head7 {
+* html .head8 {
     width: 75px;
-}
+}*/
