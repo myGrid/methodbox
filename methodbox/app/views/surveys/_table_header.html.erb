@@ -1,5 +1,6 @@
 <ul class="faux_table" style="background-color: #ACCBE0;">
-  <li id="faux_table_header" style="background-color: #ACCBE0;"><div class="head1">&nbsp</div><div
+  <li id="faux_table_header" style="background-color: #ACCBE0;">
+    <div class="head1">&nbsp</div><div
       class="head2">&nbsp</div>
     <div class="head3">
       <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, @sorted_variables) %>
@@ -14,6 +15,9 @@
       <%= sort_link_helper("Survey", "survey", @search_query, @survey_list, @sorted_variables) %>
     </div>
     <div class="head7">
+      <%= sort_link_helper("Dataset", "dataset", @search_query, @survey_list, @sorted_variables) %>
+    </div>
+    <div class="head8">
       <%= sort_link_helper("Year", "year", @search_query, @survey_list, @sorted_variables) %>
     </div>
   </li>

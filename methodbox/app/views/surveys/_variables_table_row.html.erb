@@ -1,12 +1,13 @@
 
-<div id= "<%=item.name + item.survey_id.to_s -%>">
+<div id= "<%=item.name + item.dataset_id.to_s -%>">
   <ul class="faux_table<%= cycle("_even","_odd") %>">
     <li><div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox' %></div>
-      <div class="col2"><%= link_to_remote(image_tag("folds/unfold.png", :title=>"More details...",:alt=>"More details...", :border => 0), :url=> more_info_surveys_url(:curr_cycle => current_cycle, :div_id=>item.name + item.survey_id.to_s,:item_id => item.id))%></div>
+      <div class="col2"><%= link_to_remote(image_tag("folds/unfold.png", :title=>"More details...",:alt=>"More details...", :border => 0), :url=> more_info_surveys_url(:curr_cycle => current_cycle, :div_id=>item.name + item.dataset_id.to_s,:item_id => item.id))%></div>
       <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
       <div class="col4"><%= item.value -%></div>
       <div class="col5"><%= link_to(item.category, by_category_variables_url(:category=>item.category),:title=>"Show all variables with this category") -%></div>
-      <div class="col6"><%= Survey.find(item.survey_id).surveytype -%></div>
-    <div class="col7"><%= Survey.find(item.survey_id).year -%> </div></li>
+      <div class="col6"><%= Dataset.find(item.dataset_id).survey.surveytype -%></div>
+      <div class="col7"><%= Dataset.find(item.dataset_id).name -%></div>
+    <div class="col8"><%= Dataset.find(item.dataset_id).survey.year -%> </div></li>
   </ul>
 </div>

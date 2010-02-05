@@ -17,12 +17,12 @@
 
           <p class="email">
             <label>Survey: </label>
-            <%= Survey.find(variable.survey_id).title %>
+            <%= Dataset.find(variable.dataset_id).survey.title %>
           </p>
 
           <p class="web_page">
             <label>Year:</label>
-            <%= Survey.find(variable.survey_id).year  %>
+            <%= Dataset.find(variable.dataset_id).survey.year  %>
           </p>
 
       </td>
