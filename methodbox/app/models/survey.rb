@@ -3,8 +3,8 @@ require 'acts_as_resource'
 class Survey < ActiveRecord::Base
 
   acts_as_resource
-  
-  has_many :variables
+
+  has_many :datasets
   
   acts_as_solr(:fields=>[:description,:title,:year,:surveytype]) if SOLR_ENABLED
 
