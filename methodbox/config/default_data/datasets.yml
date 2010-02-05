@@ -1,0 +1,251 @@
+hse1991-1:
+  id: 1
+  name: 3238
+  filename: 3238.tab
+  description: Individual population statistics for 1991 & 1992
+  survey_id: 9
+
+hse1993:
+  id: 2
+  name: 3316
+  filename: 3316.tab
+  description: Individual population statistics for 1993
+  survey_id: 10
+
+hse1994-1:
+  id: 3
+  name: hse94ai2nd
+  filename: hse94ai2nd.tab
+  description: Individual population statistics for 1991 & 1992
+  survey_id: 11
+
+hse1994-2:
+  id: 4
+  name: hse94ah
+  filename: hse94ah.tab
+  description: Household statistics for 1991 & 1992
+  survey_id: 11
+  
+hse1994-3:
+  id: 5
+  name: hse94ap
+  filename: hse94ap.tab
+  description: N/A
+  survey_id: 11
+
+hse1995-1:
+  id: 6
+  name: hse95ah.tab
+  filename: hse95ah.tab
+  description: Household statistics for 1995
+  survey_id: 12
+
+hse1995-2:
+  id: 7
+  name: hse95ai2nd
+  filename: hse95ai2nd.tab
+  description: Individual population statistics for 1995
+  survey_id: 12
+
+hse1995-3:
+  id: 8
+  name: hse95p
+  filename: hse95p.tab
+  description: N/A
+  survey_id: 12
+
+hse1996-1:
+  id: 9
+  name: hse96bind
+  filename: hse96bind.tab
+  description: Individual population statistics for 1996
+  survey_id: 13
+
+hse1996-2:
+  id: 10
+  name: hse96ah
+  filename: hse96ah.tab
+  description: Household statistics for 1996
+  survey_id: 13
+
+hse1996-3:
+  id: 11
+  name: hse96ap
+  filename: hse96ap.tab
+  description: N/A
+  survey_id: 13
+
+hse1997-1:
+  id: 12
+  name: hse97ah
+  filename: hse97ah.tab
+  description: Household statistics for 1997
+  survey_id: 14
+
+hse1997-2:
+  id: 13
+  name: hse97ai
+  filename: hse97ai.tab
+  description: Individual population statistics for 1997
+  survey_id: 14
+
+hse1997-3:
+  id: 14
+  name: hse97ap
+  filename: hse97ap
+  description: N/A
+  survey_id: 14
+
+hse1998-1:
+  id: 15
+  name: hse98ai
+  filename: hse98ai.tab
+  description: Individual population statistics for 1998
+  survey_id: 15
+
+hse1998-2:
+  id: 16
+  name: hse98ah
+  filename: hse98ah.tab
+  description: Household statistics for 1998
+  survey_id: 15
+
+hse1999-1:
+  id: 17
+  name: hse99gp3
+  filename: hse99gp3.tab
+  description: Individual population statistics for 1999
+  survey_id: 16
+
+hse1999-2:
+  id: 18
+  name: hse99ah3
+  filename: hse99ah3.tab
+  description: Household statistics for 1999
+  survey_id: 16
+
+hse1999-3:
+  id: 19
+  name: hse99et3
+  filename: hse99et3.tab
+  description: Ethnic boost for 1999
+  survey_id: 16
+  
+hse2000-1:
+  id: 20
+  name: hse00ai
+  filename: hse00ai.tab
+  description: Individual population statistics for 2000
+  survey_id: 1
+
+hse2000-2:
+  id: 21
+  name: hse00ah
+  filename: hse00ah.tab
+  description: Household statistics for 2000
+  survey_id: 1
+    
+hse2001-1:
+  id: 22
+  name: hse01ai
+  filename: hse01ai.tab
+  description: Individual population statistics for 2001
+  survey_id: 2
+
+hse2001-2:
+  id: 23
+  name: hse01ah
+  filename: hse01ah.tab
+  description: Household statistics for 2001
+  survey_id: 2
+
+hse2002-1:
+  id: 24
+  name: hse02ai
+  filename: hse02ai.tab
+  description: Individual population statistics for 2002
+  survey_id: 3
+
+hse2002-2:
+  id: 25
+  name: hse02ah
+  filename: hse02ah.tab
+  description: Household statistics for 2002
+  survey_id: 3
+    
+hse2003-1:
+  id: 26
+  name: hse03ai
+  filename: hse03ai.tab
+  description: Individual population statistics for 2003
+  survey_id: 4
+
+hse2003-2:
+  id: 27
+  name: hse03ah
+  filename: hse03ah.tab
+  description: Household statistics for 2003
+  survey_id: 4
+    
+hse2004-1:
+  id: 28
+  name: hse04gpa
+  filename: hse04gpa.tab
+  description: Individual population statistics for 2004
+  survey_id: 5
+
+hse2004-2:
+  id: 29
+  name: hse04ah
+  filename: hse04ah.tab
+  description: Household statistics for 2004
+  survey_id: 5
+
+hse2004-3:
+  id: 30
+  name: hse04etha
+  filename: hse04etha.tab
+  description: Ethnic boost sample for 2004
+  survey_id: 5
+   
+hse2005-1:
+  id: 31
+  name: hse05ai
+  filename: hse05ai.tab
+  description: Individual population statistics for 2005
+  survey_id: 6
+
+hse2005-2:
+  id: 32
+  name: hse05ah
+  filename: hse05ah.tab
+  description: Household statistics for 2005
+  survey_id: 6
+
+hse2006-1:
+  id: 33
+  name: hse06ai
+  filename: hseo6ai.tab
+  description: Individual population statistics for 2006
+  survey_id: 7
+
+hse2006-2:
+  id: 34
+  name: hse06ah
+  filename: hseo6ah.tab
+  description: Household statistics for 2006
+  survey_id: 7
+    
+hse2007-1:
+  id: 35
+  name: hse07ai
+  filename: hse07ai.tab
+  description: Individual population statistics for 2007
+  survey_id: 8
+
+hse2007-2:
+  id: 36
+  name: hse07ah
+  filename: hse07ah.tab
+  description: Household statistics for 2007
+  survey_id: 8
