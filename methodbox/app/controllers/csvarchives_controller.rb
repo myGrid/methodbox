@@ -121,10 +121,10 @@ class CsvarchivesController < ApplicationController
     params[:all_variables_array].each do |var|
       puts "downloading " + var.to_s
       variable = Variable.find(var)
-      if (!variable_hash.has_key?(variable.survey_id))
-        variable_hash[variable.survey_id] = Array.new
+      if (!variable_hash.has_key?(variable.dataset_id))
+        variable_hash[variable.dataset_id] = Array.new
       end
-      variable_hash[variable.survey_id].push(var)
+      variable_hash[variable.dataset_id].push(var)
       all_variables_array.push(Variable.find(var))
       #        variable_hash[var] = get_variable(var)
       #        logger.info("Would have downloaded: " + var.to_s)
@@ -144,7 +144,7 @@ class CsvarchivesController < ApplicationController
     variable_hash.each_key do |key|
 
       root << dataset = XML::Node.new('Dataset')
-      dataset['name']= Survey.find(key).original_filename
+      dataset['name']= Dataset.find(key).filename
       dataset << variables = XML::Node.new('Variables')
       variable_hash[key].each do |var|
         variables << variable = XML::Node.new('Variable')
@@ -419,16 +419,17 @@ class CsvarchivesController < ApplicationController
         @archive.variables.each do |var|
           puts "downloading " + var.to_s
           variable = Variable.find(var)
-          if (!variable_hash.has_key?(variable.survey_id))
-            variable_hash[variable.survey_id] = Array.new
+          if (!variable_hash.has_key?(variable.dataset_id))
+            variable_hash[variable.dataset_id] = Array.new
           end
-          variable_hash[variable.survey_id].push(var)
+          variable_hash[variable.dataset_id].push(var)
           #        variable_hash[var] = get_variable(var)
           #        logger.info("Would have downloaded: " + var.to_s)
         end
         metadata = String.new
         variable_hash.each_key do |key|
-          metadata << "\n" + Survey.find(key).title + "\n---------------"
+          metadata << "\n" + Dataset.find(key).survey.title + "\n---------------"
+          metadata << "\n" + Dataset.find(key).name + "\n---------------"
           variable_hash[key].each do |var|
             metadata << "\nName: " + var.name
             metadata << "\nLabel: " + var.value

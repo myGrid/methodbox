@@ -59,9 +59,9 @@ class SurveysController < ApplicationController
       @sorted_variables = Array.new
       @variables.each do |item|
         @selected_surveys.each do |ids|
-          if item.survey_id.to_s== ids
-            logger.info("Found " + item.name + ", from Survey " + item.survey_id.to_s)
-            puts "Found " + item.name + ", from Survey " + item.survey_id.to_s
+          if Dataset.find(item.dataset_id).survey.id.to_s == ids
+            logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+            puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
             @sorted_variables.push(item)
             break
           end
@@ -127,24 +127,28 @@ class SurveysController < ApplicationController
     case params['sort']
     when "variable"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
+    when "dataset"
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }
     when "description"   then "description"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
     when "category"   then "category"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }
     when "survey" then "survey"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype.upcase }
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
     when "year" then "year"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
     when "variable_reverse"  then "variable DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
     when "category_reverse"   then "category DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }.reverse
     when "description_reverse"   then "description DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
+    when "dataset_reverse"   then "dataset DESC"
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
     when "survey_reverse" then "survey DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype.upcase }.reverse
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
     when "year_reverse" then "year DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }.reverse
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
     end
     render :update, :status=>:created do |page|
       page.replace_html "table_header", :partial=>"surveys/table_header"
