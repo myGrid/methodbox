@@ -225,14 +225,14 @@ hse2005-2:
 hse2006-1:
   id: 33
   name: hse06ai
-  filename: hseo6ai.tab
+  filename: hse06ai.tab
   description: Individual population statistics for 2006
   survey_id: 7
 
 hse2006-2:
   id: 34
   name: hse06ah
-  filename: hseo6ah.tab
+  filename: hse06ah.tab
   description: Household statistics for 2006
   survey_id: 7
     
