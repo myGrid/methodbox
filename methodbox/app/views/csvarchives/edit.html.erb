@@ -62,7 +62,7 @@
       <p style="margin: 0;">
         <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "CSV Archive",  # this is only for presentation, not for any processing so you can change it safely if required
           :existing_attributions => Authorization.authorize_collection("show", @archive.attributions_objects, current_user),
-          :attribution_suggestions => Method.get_all_as_json(current_user) } -%>
+          :attribution_suggestions => Csvarchive.get_all_as_json(current_user) } -%>
       </p>
     <% end -%>
        <p style="text-align: center;">
