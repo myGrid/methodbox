@@ -135,10 +135,10 @@ class CartController < ApplicationController
       session[:cart].items.each do |var|
         puts "downloading " + var.to_s
         variable = Variable.find(var)
-        if (!@variable_hash.has_key?(variable.survey_id))
-          @variable_hash[variable.survey_id] = Array.new
+        if (!@variable_hash.has_key?(variable.dataset_id))
+          @variable_hash[variable.dataset_id] = Array.new
         end
-        @variable_hash[variable.survey_id].push(var)
+        @variable_hash[variable.dataset_id].push(var)
         @all_variables_array.push(Variable.find(var))
         #        variable_hash[var] = get_variable(var)
         #        logger.info("Would have downloaded: " + var.to_s)
