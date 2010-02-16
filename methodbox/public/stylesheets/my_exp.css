@@ -298,6 +298,7 @@ li {
 }
 
 .tabnav li a {
+        color: #FFFFFF;
 	padding: 3px 8px;
 	margin-left: 1px;
 	/*border-top: 1px solid #BBBBBB;*/
@@ -311,9 +312,9 @@ li {
 	background-color: #1B619B;
 }
 
-.tabnav li a:link {
+/*.tabnav li a:link {
 	color: #333333;
-}
+}*/
 
 .tabnav li a:visited {
 	/*color: #333333;*/
