@@ -1,14 +1,34 @@
-<% unless collection.empty? -%>
-  <%#*<div width="100%">%>
-  <ul class="survey">
-    <% collection.each do |item| -%>
-      <li><%= check_box_tag "entry_ids[]", item.id,(selected.include?(item) &&
-          {:checked => 'checked'}), :class=>'survey_checkbox'  %> <%= link_to(item.title, survey_path(item)) -%></li>
-    <% end -%>
-    <% selected.each do |item| -%>
+<%#= stylesheet_link_tag 'survey_ul_2'%>
+<%# unless key.nil? -%>
+<%#*<div width="100%">%>
+<div class="hlist">
+<%#*<ul class="survey">%>
+  <ul>
+  <% @survey_hash[key].each do |item| -%>
+    <li>
+      <b class="spiffy"><b class="spiffy1"><b></b></b><b class="spiffy2"><b></b></b><b class="spiffy3"></b><b class="spiffy4"></b><b class="spiffy5"></b></b>
+      <div class="survey_box">
 
-    <% end -%>
-  </ul>
-  <%#*</div>%>
-<% end -%>
+        <p style="padding-left:5px;">
+          <%= link_to(item.title, survey_path(item)) -%>
+        </p>
+  <%#*<ul>%>
+  <%#*<li>%>
+  <%#*</li>%>
+        <% item.datasets.each do |dataset| -%>
+          <p style="padding-left:5px;">
+            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}), :class=>'survey_checkbox'  %>
+            <%= link_to(dataset.name, dataset_path(dataset)) -%>
+          </p>
+          <%#*<br/>%>
+        <% end -%>
+  <%#*</ul>%>
+
+      </div>
+      <b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>
+    </li>
+  <% end -%>
+</ul>
+</div>
+<%# end -%>
 
