@@ -22,6 +22,9 @@ class SearchController < ApplicationController
     when("methods")
       @results = Script.multi_solr_search(downcase_query, :limit=>100, :models=>[Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
       @results = select_authorised @results
+    when("data extracts")
+      @results = Csvarchive.multi_solr_search(downcase_query, :limit=>100, :models=>[Csvarchive]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      @results = select_authorised @results
       #    when ("sops")
       #      @results = Sop.multi_solr_search(downcase_query, :limit=>100, :models=>[Sop]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
       #    when ("studies")
@@ -40,6 +43,7 @@ class SearchController < ApplicationController
       @results = @results + Script.multi_solr_search(downcase_query, :limit=>100, :models=>[Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
       @results = select_authorised @results
       @results = @results + Survey.multi_solr_search(downcase_query, :limit=>100, :models=>[Survey]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      @results = @results + Csvarchive.multi_solr_search(downcase_query, :limit=>100, :models=>[Csvarchive]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
 
       #      @results = Person.multi_solr_search(downcase_query, :limit=>100, :models=>[Person, Survey, Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
     end
