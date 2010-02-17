@@ -2,6 +2,7 @@ class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
   before_filter :login_required
   before_filter :find_scripts, :only => [ :index ]
+  before_filter :find_archives, :only => [ :new, :edit ]
   before_filter :find_cart
   before_filter :find_script_auth, :except => [ :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
 
@@ -62,8 +63,8 @@ class ScriptsController < ApplicationController
   # GET /scripts/new
   #No auth check for loading new scripts, login is enough
   def new
-        @archives = Csvarchive.find(:all)
-    @archives=Authorization.authorize_collection("show",@archives,current_user)
+#    @archives = Csvarchive.find(:all)
+#    @archives=Authorization.authorize_collection("show",@archives,current_user)
     respond_to do |format|
       #if Authorization.is_member?(current_user.person_id, nil, nil)
       format.html # new.html.erb
@@ -99,7 +100,7 @@ class ScriptsController < ApplicationController
       end
     else
 
-       if params[:archive][:id] != ""
+      if params[:archive][:id] != ""
         all_archives_array = Array.new
         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
         params[:script][:csvarchives] = all_archives_array
@@ -212,10 +213,10 @@ class ScriptsController < ApplicationController
   protected
 
   def find_scripts
-     found = Script.find(:all,
+    found = Script.find(:all,
       :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
-#    found = Script.find(:all,
-#      :order => "title")
+    #    found = Script.find(:all,
+    #      :order => "title")
 
     # this is only to make sure that actual binary data isn't sent if download is not
     # allowed - this is to increase security & speed of page rendering;
@@ -225,6 +226,11 @@ class ScriptsController < ApplicationController
     end
 
     @scripts = found
+  end
+
+  def find_archives
+    @archives = Csvarchive.find(:all)
+    @archives=Authorization.authorize_collection("show",@archives,current_user)
   end
 
 
