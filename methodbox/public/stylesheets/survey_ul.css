@@ -23,20 +23,86 @@ background-color:#FF0066;
     display: block;
 }*/
 
+.hlist {
+ width: 100%;
+ margin: 0;
+ padding: 1em;
+}
+
+div.hlist ul{
+ margin: 0;
+}
+
+div.hlist li{
+ list-style: none;
+ margin: 0.2em;
+ display: -moz-inline-box; /* firefox pre v3 */
+ display: inline-block;
+ vertical-align: top;
+ margin: 0.5em 0.2em;
+ #display: inline; /* ie7 */
+ _display: inline; /* ie4 ie5 ie6 */
+}
+
+/*.hlist li {
+ #display: inline;  ie7 
+ _display: inline;  ie4 ie5 ie6 
+}*/
+
 ul.survey {
     margin-left: 0px;
     padding-left: 0px;
     float:left;
     list-style: none;
     width: 100%;
-    /*border-bottom: 1px dashed #000;*/
+    border: 1px solid #CCC;
+    overflow: auto;
 }
 ul.survey li {
     float: left;
-    padding-left: 0em;
-    padding-right: 1em;
-    width: 12em;
+    /*padding-left: 0em;*/
+    /*margin: 5px;*/
+    padding: 1em;
+    /*width: 8em;*/
     margin: 0;
+}
+
+/*div .survey_type_box {
+    border: 1px solid black;
+}*/
+
+div .survey_box {
+    border: none;
+    width: 125px;
+}
+
+.survey_box {
+    /*margin: 5px;*/
+    /*padding: 5px;*/
+    background-color: #CCC;
+    /*border: 1px solid black;*/
+}
+
+.survey_box ul {
+    margin-left: 0px;
+    padding-left: 0px;
+    /*float:left;*/
+    list-style: none;
+    width: 150px;
+    /*border-bottom: 1px dashed #000;*/
+}
+
+/*ul.survey_box li {
+    padding: 0px;
+}*/
+
+
+.survey_box li {
+    float: left;
+    padding: 0px;
+    /*padding-right: 1em;*/
+    /*width: 12em;*/
+    margin: 0px;
 }
 
 .clear {clear:both;}
@@ -101,6 +167,53 @@ visibility:hidden
     margin: 0px;
     padding: 0px;
     cursor: pointer;
+}
+
+.spiffy{
+    display:block;
+    width: 125px;
+}
+.spiffy *{
+    display:block;
+    height:1px;
+    font-size:.01em;
+    overflow:hidden;
+    background:#CCC;
+}
+.spiffy1{
+    margin-left:3px;
+    margin-right:3px;
+    padding-left:1px;
+    padding-right:1px;
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+    background:#CCC;
+}
+.spiffy2{
+    margin-left:1px;
+    margin-right:1px;
+    padding-right:1px;
+    padding-left:1px;
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+    background:#CCC;
+}
+.spiffy3{
+    margin-left:1px;
+    margin-right:1px;
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+}
+.spiffy4{
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+}
+.spiffy5{
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+}
+.spiffyfg{
+    background:#CCC;
 }
 
 
