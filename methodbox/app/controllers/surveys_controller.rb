@@ -115,14 +115,20 @@ class SurveysController < ApplicationController
       #   end
       #end
     rescue
-      flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-      render :update do |page|
-        page.reload_flash_error
-        #page.replace_html "survey_flash_error" , :partial => "layouts/flash_error",:locals=>{:error_message=>@error_message}
-        #page.show "error_flash"
-        #    page.visual_effect :highlight, 'error_flash'
-        #flash.discard
+      respond_to do |format|
+        format.html {
+          flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+          redirect_to :action => "index"
+        }
       end
+      #      render :update do |page|
+      #      render :action => index
+      #         page.reload_flash_error
+      #page.replace_html "survey_flash_error" , :partial => "layouts/flash_error",:locals=>{:error_message=>@error_message}
+      #page.show "error_flash"
+      #    page.visual_effect :highlight, 'error_flash'
+      #flash.discard
+      #      end
       #    redirect_to :action => index
       #    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
       #        render :action => :index
