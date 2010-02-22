@@ -4,7 +4,7 @@
   <% if Authorization.is_authorized?("manage", nil, @script, current_user) -%>
     <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Manage Method') -%></li>
   <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) -%>
-    <%# this is not owner, but current user can edit -%>
+  <%# this is not owner, but current user can edit -%>
     <li><%= icon('edit', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
   <% end -%>
 
@@ -16,11 +16,11 @@
     <li><%= icon('download', download_script_url, "Download Method", nil, "Download Method") -%></li>
   <% else -%>
     <li>
-      <li>
-        <%= render :partial=>"assets/request_resource",:locals=>{:resource=>@script} %>
-      </li>
+    <li>
+      <%= render :partial=>"assets/request_resource",:locals=>{:resource=>@script} %>
     </li>
-  <% end -%>
+  </li>
+<% end -%>
 </ul>
 
 <h1 class="contribution_title">Script: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
@@ -40,66 +40,76 @@
         <b>File name:</b>
         <%=h @script.original_filename -%>
       </p>
-	<p>
+      <p>
         <b>Type:</b>
-		<% unless @script.method_type == "Other" -%>
-        <%=h @script.method_type -%>
-		<% else -%>
-		<%=h @script.content_type -%>
-		<% end -%>
+        <% unless @script.method_type == "Other" -%>
+          <%=h @script.method_type -%>
+        <% else -%>
+          <%=h @script.content_type -%>
+        <% end -%>
       </p>
 
-      <%#*<p>%>
-      <%#*<b>Organism:</b>%>
-      <%# if @script.organism -%>
-      <%#=organism_link_to @script.organism -%>
-      <%# else -%>
-      <%#*<span class="none_text">Unknown</span>%>
-      <%# end -%>
-      <%#*</p>%>
+<%#*<p>%>
+<%#*<b>Organism:</b>%>
+<%# if @script.organism -%>
+<%#=organism_link_to @script.organism -%>
+<%# else -%>
+<%#*<span class="none_text">Unknown</span>%>
+<%# end -%>
+<%#*</p>%>
 
       <br/>
 
       <p>
         <b>Description</b>
         <% unless @script.description.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@script.description)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No description
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@script.description)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
       </p>
       <br/>
-<b>Linked with Archive(s):</b>
+      <b>Linked with Archive(s):</b>
       <% if !@archives.empty? -%>
 
-<% @archives.each do |archive| -%>
-  <%= link_to(archive.title, csvarchive_path(archive)) -%>
-  <% end -%>
+        <% @archives.each do |archive| -%>
+          <%= link_to(archive.title, csvarchive_path(archive)) -%>
+        <% end -%>
       <% else -%>
-      None
+        None
+      <% end -%>
+      <br/>
+      <br/>
+      <b>Linked with Survey(s):</b>
+      <% if !@surveys.empty? -%>
+
+        <% @surveys.each do |survey| -%>
+          <%= link_to(survey.title, survey_path(survey)) -%>
+        <% end -%>
+      <% else -%>
+        None
       <% end -%>
       <br/>
       <br/>
 
 
-
     </div>
   </div>
-  </div>
+</div>
 
-  <div class="main_content_right_box">
-    <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @script } -%>
-    <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @script, :attributed_to => Authorization.authorize_collection("show", @script.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
-  </div>
+<div class="main_content_right_box">
+  <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @script } -%>
+  <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @script, :attributed_to => Authorization.authorize_collection("show", @script.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
+</div>
 
-  <div style="clear:both;">
-
-
+<div style="clear:both;">
 
 
-    
-  </div>
+
+
+
+</div>
