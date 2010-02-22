@@ -26,8 +26,12 @@
           <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
         <p>
-          <b>Link with script:</b>
-          <%= collection_select(:script, :id, @scripts, :id, :title, options ={:prompt => "Select a script"}) -%>
+          <b>Link with Method/Script:</b>
+          <%= collection_select(:script, :id, @scripts, :id, :title, options ={:prompt => "Select a Method/Script"}) -%>
+        </p>
+         <p>
+          <b>Link with Survey:</b>
+          <%= collection_select(:survey, :id, @surveys, :id, :title, options ={:prompt => "Select a Survey"}) -%>
         </p>
       </div>
     </center>
