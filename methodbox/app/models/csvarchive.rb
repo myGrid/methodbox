@@ -6,11 +6,15 @@ class Csvarchive < ActiveRecord::Base
 
   has_many :variable_lists
   
+  has_many :variables, :through => :variable_lists
+
   has_many :script_lists
 
   has_many :scripts, :through => :script_lists
 
-  has_many :variables, :through => :variable_lists
+  has_many :survey_lists
+
+  has_many :surveys, :through => :survey_lists
 
   belongs_to :content_blob,
     :dependent => :destroy
