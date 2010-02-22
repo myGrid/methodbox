@@ -12,6 +12,8 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     @scripts = Script.find(:all)
     @scripts=Authorization.authorize_collection("show",@scripts,current_user)
+    @surveys = Survey.find(:all)
+#    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
 
   def recreate
@@ -173,6 +175,11 @@ class CsvarchivesController < ApplicationController
         all_scripts_array = Array.new
         all_scripts_array.push(Script.find(params[:script][:id]))
         params[:archive][:scripts] = all_scripts_array
+      end
+       if params[:survey][:id] != ""
+        all_surveys_array = Array.new
+        all_surveys_array.push(Survey.find(params[:survey][:id]))
+        params[:archive][:surveys] = all_surveys_array
       end
       params[:archive][:filename] = @jobid
       params[:archive][:complete] = false
