@@ -24,12 +24,14 @@ ActionController::Routing::Routes.draw do |map|
    # page for cart
   map.cart '/cart/', :controller=>'cart',:action=>'show'
 
+  map.resources :datasets
+
   map.resources :variable_links
 
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }
 
 
-  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :post }  do |survey|
+  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post}  do |survey|
     
   end
 
