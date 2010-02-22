@@ -18,3 +18,9 @@ function checkTrueOrFalse() {
         }
     });
 }
+
+function uncheckAll() {
+    $$('input.variable_checkbox').each(function(checkbox) {
+            checkBoxSelected[checkbox.value] = false;
+    });
+}
