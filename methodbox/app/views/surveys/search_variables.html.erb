@@ -1,38 +1,35 @@
+<%= javascript_include_tag "checkbox_update.js" -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
-<%= hidden_field_tag 'tag_button', 'tag' %>
-<%= hidden_field_tag 'year_of_survey', 'survey_year' %>
-<%= hidden_field_tag 'variable_name', 'variable_name' %>
-<%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
-<%= hidden_field_tag 'watch_variable', 'watch_variable' %>
-<% @link_reason="Enter reason for linking" unless @link_reason -%>
+<% form_remote_tag :url => { :action => "add_to_cart"} do -%>
+  <div class="show_basic" style="padding-right: 2em;">
+    <h2>Browse the table, select some variables, link similar ones together and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.</h2><br/>
 
-<div class="show_basic" style="padding-right: 2em;">
-  <h2>Browse the table, select some variables, link similar ones together and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.</h2><br/>
-
-  <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:80px;">
-    <% form_tag :url => { :action => "search_variables"} do -%>
+    <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:80px;">
       <div style="position: absolute; ;top:1em;left:1em">
+        <%= hidden_field_tag 'tag_button', 'tag' %>
+        <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
+        <%= hidden_field_tag 'variable_name', 'variable_name' %>
+        <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
+        <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
+        <% @link_reason="Enter reason for linking" unless @link_reason -%>
+
         <%= text_field_tag :survey_search_query, @survey_search_query %>
-        <%= submit_tag 'Search selected surveys again',:id => "search_button" %>
+        <%= submit_tag 'Search selected surveys again',:id => "search_button",:name=>"_submit", :id => "search_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'search';" %>
       </div>
-      <% if @selected_surveys!=nil %>
-        <% @selected_surveys.each do |val| %>
-          <%= hidden_field_tag "entry_ids[]", val %>
-        <% end %>
-      <% end %>
-    <% end -%>
-    <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
       <%= hidden_field_tag 'submit', 'add' %>
-  <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
-  <%#= hidden_field_tag 'survey_array', @survey_list %>
       <% if @selected_surveys!=nil %>
         <% @selected_surveys.each do |val| %>
           <%= hidden_field_tag "survey_list[]", val %>
         <% end %>
       <% end %>
-      <div style="position: absolute; bottom:2.2em; left:1em;"><%= submit_tag'Add selected variables to cart', :name=>"_submit",:src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%></div>
-      <div style="position: absolute; bottom:1em; right:1em;"><%= text_field_tag :link_variables_text, @link_reason %><%= submit_tag 'Link selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%></div>
+      <div style="position: absolute; bottom:2.2em; left:1em;">
+        <%= submit_tag'Add selected variables to cart', :name=>"_submit",:src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%>
+      </div>
+      <div style="position: absolute; bottom:1em; right:1em;">
+        <%= text_field_tag :link_variables_text, @link_reason %>
+        <%= submit_tag 'Link selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%>
+      </div>
       <br/>
       <div style="position: absolute; bottom:1em; left:1em;">Select:
         <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
@@ -52,11 +49,7 @@
       <%= render :partial => "table_header" -%>
     </div>
     <div id="table_container" class="faux_table_container">
-      <%= render :partial => "table" -%>
-  <%# @sorted_variables.each do |item| %>
-  <%#= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
-
-  <%# end %>
-    <% end -%>
+      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables}-%>
+    </div>
   </div>
-</div>
+<% end -%>
