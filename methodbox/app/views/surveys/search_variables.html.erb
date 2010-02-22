@@ -15,7 +15,7 @@
         <% @link_reason="Enter reason for linking" unless @link_reason -%>
 
         <%= text_field_tag :survey_search_query, @survey_search_query %>
-        <%= submit_tag 'Search selected surveys again',:id => "search_button",:name=>"_submit", :id => "search_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'search';" %>
+        <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'search';" %>
       </div>
       <%= hidden_field_tag 'submit', 'add' %>
       <% if @selected_surveys!=nil %>
@@ -53,3 +53,9 @@
     </div>
   </div>
 <% end -%>
+
+<script type="text/javascript">
+  document.observe('dom:loaded', function() {
+    uncheckAll();
+  });
+</script>
