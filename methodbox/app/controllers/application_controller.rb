@@ -177,11 +177,40 @@ class ApplicationController < ActionController::Base
 
       render :update, :status=>:created do |page|
         #        TODO flash the cart
-#                page[:cart_button].reload
-                page.replace_html "cart_button", :partial=>"surveys/cart_button"
-                page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
-#                page.visual_effect :highlight, 'cart_button' ,:duration => 1
+        #                page[:cart_button].reload
+        page.replace_html "cart_button", :partial=>"surveys/cart_button"
+        page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
+        #                page.visual_effect :highlight, 'cart_button' ,:duration => 1
         #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
+      end
+
+    when "search"
+      @survey_search_query = params[:survey_search_query]
+      @selected_surveys = Array.new(params[:survey_list])
+      #    logger.info("length " + @survey_list.size)
+      #    @search_query||=""
+
+      downcase_query = @survey_search_query.downcase
+      logger.info("Search for: " + downcase_query)
+
+      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
+      @variables = @results.docs
+      @sorted_variables = Array.new
+      @variables.each do |item|
+        @selected_surveys.each do |ids|
+          if Dataset.find(item.dataset_id).id.to_s == ids
+            logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+            puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+            @sorted_variables.push(item)
+            break
+          end
+        end
+        @all_variables = @sorted_variables
+
+      end
+      render :update, :status=>:created do |page|
+        page.replace_html "table_header", :partial=>"surveys/table_header"
+        page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
       end
     end
 
