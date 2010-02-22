@@ -211,7 +211,14 @@ class ApplicationController < ActionController::Base
       render :update, :status=>:created do |page|
         page.replace_html "table_header", :partial=>"surveys/table_header"
         page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
+        #if any of the checkboxes had been selected then uncheck them by calling the javascript function
+        page << "uncheckAll();"
       end
+      #      respond_to do |format|
+      #puts "doing some rendering"
+      #       format.html { redirect_to search_variables_surveys_path }
+      #       puts "done it"
+      #      end
     end
 
     #    if params[:year_of_survey]=="survey_year" && params[:watch_variable]=="false"
