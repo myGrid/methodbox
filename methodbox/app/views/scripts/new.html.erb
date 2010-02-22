@@ -6,58 +6,62 @@
   <% form_tag({:action => :create}, :multipart => true) do -%>
     <%= error_messages_for :script -%>
 
-	  <center>
-	  	<div style="width: 90%;">
-	  		<p>
-			    <b>File to upload:&nbsp;</b>
-			    <%= file_field :script, :data -%>
-			  </p>
+    <center>
+      <div style="width: 90%;">
+        <p>
+          <b>File to upload:&nbsp;</b>
+          <%= file_field :script, :data -%>
+        </p>
 
-		    <p style="margin-top: 1.5em;">
-			  	<b>Title:</b><font style="color: #FF0000;">*</font><br/>
-					<% script_title_value = (params[:script].blank? || params[:script][:title].blank?) ? nil : params[:script][:title] -%>
-					<%= text_field_tag 'script[title]', script_title_value, :style => "width: 100%;" -%>
-			  </p>
+        <p style="margin-top: 1.5em;">
+          <b>Title:</b><font style="color: #FF0000;">*</font><br/>
+          <% script_title_value = (params[:script].blank? || params[:script][:title].blank?) ? nil : params[:script][:title] -%>
+          <%= text_field_tag 'script[title]', script_title_value, :style => "width: 100%;" -%>
+        </p>
 
-		    <p style="margin-top: 0.5em;">
-		    	<b>Description:</b><br/>
-					<% script_description_value = (params[:script].blank? || params[:script][:description].blank?) ? nil : params[:script][:description] -%>
-					<%= text_area_tag 'script[description]', script_description_value, :style => "width: 100%;", :rows => 5 -%>
-		    </p>
-                            <p>
-          <b>Link with variable archive:</b>
+        <p style="margin-top: 0.5em;">
+          <b>Description:</b><br/>
+          <% script_description_value = (params[:script].blank? || params[:script][:description].blank?) ? nil : params[:script][:description] -%>
+          <%= text_area_tag 'script[description]', script_description_value, :style => "width: 100%;", :rows => 5 -%>
+        </p>
+        <p>
+          <b>Link with a Data Extract:</b>
           <%= collection_select(:archive, :id, @archives, :id, :title, options ={:prompt => "Select an archive"}) -%>
         </p>
-			<p style="margin-top: 0.5em;">
-		    	<b>Type:</b>
-		<%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
-		</p>
+        <p>
+          <b>Link with a Survey:</b>
+          <%= collection_select(:survey, :id, @surveys, :id, :title, options ={:prompt => "Select a Survey"}) -%>
+        </p>
+        <p style="margin-top: 0.5em;">
+          <b>Type:</b>
+          <%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
+        </p>
 
-	 			<%= render :partial => "assets/project_selector", :locals => { :resource_type => "Method",   # this is only for presentation, not for any processing
-                                                                       :project_hash => current_user.generate_own_project_id_name_hash } -%>
-	  	</div>
-		</center>
+        <%= render :partial => "assets/project_selector", :locals => { :resource_type => "Method",   # this is only for presentation, not for any processing
+          :project_hash => current_user.generate_own_project_id_name_hash } -%>
+      </div>
+    </center>
 
     <center>
       <div style="width: 90%;">
 
-		<p style="margin: 2.5em 0 0 0;">
-  		<%= render :partial => "assets/sharing_form" -%>
-		</p>
+        <p style="margin: 2.5em 0 0 0;">
+          <%= render :partial => "assets/sharing_form" -%>
+        </p>
 
-		<p style="margin: 0;">
-		  <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Method",  # this is only for presentation, not for any processing
-                                                                     :existing_attributions => [],
-                                                                     :attribution_suggestions => Script.get_all_as_json(current_user) } -%>
-		</p>
+        <p style="margin: 0;">
+          <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Method",  # this is only for presentation, not for any processing
+            :existing_attributions => [],
+            :attribution_suggestions => Script.get_all_as_json(current_user) } -%>
+        </p>
 
-	  <p style="text-align: center; margin-top: 1.5em;">
-	    <%= submit_tag "Upload and Save", :id => "script_submit_btn", :onclick => "javascript: validateScriptFields(true); return(false);" -%> or <%= link_to 'Cancel', scripts_path -%>
-	  </p>
-	<% end -%>
-
-      </div>
-    </center>
-
+        <p style="text-align: center; margin-top: 1.5em;">
+          <%= submit_tag "Upload and Save", :id => "script_submit_btn", :onclick => "javascript: validateScriptFields(true); return(false);" -%> or <%= link_to 'Cancel', scripts_path -%>
+        </p>
+      <% end -%>
 
     </div>
+  </center>
+
+
+</div>
