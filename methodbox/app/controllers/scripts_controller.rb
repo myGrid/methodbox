@@ -2,7 +2,7 @@ class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
   before_filter :login_required
   before_filter :find_scripts, :only => [ :index ]
-  before_filter :find_archives, :only => [ :new, :edit ]
+  before_filter :find_archives, :find_surveys, :only => [ :new, :edit ]
   before_filter :find_cart
   before_filter :find_script_auth, :except => [ :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
 
@@ -39,6 +39,7 @@ class ScriptsController < ApplicationController
     @last_used_before_now = @script.last_used_at
 
     @archives = @script.csvarchives
+    @surveys = @script.surveys
 
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
@@ -63,8 +64,8 @@ class ScriptsController < ApplicationController
   # GET /scripts/new
   #No auth check for loading new scripts, login is enough
   def new
-#    @archives = Csvarchive.find(:all)
-#    @archives=Authorization.authorize_collection("show",@archives,current_user)
+    #    @archives = Csvarchive.find(:all)
+    #    @archives=Authorization.authorize_collection("show",@archives,current_user)
     respond_to do |format|
       #if Authorization.is_member?(current_user.person_id, nil, nil)
       format.html # new.html.erb
@@ -104,6 +105,12 @@ class ScriptsController < ApplicationController
         all_archives_array = Array.new
         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
         params[:script][:csvarchives] = all_archives_array
+      end
+
+      if params[:survey][:id] != ""
+        all_surveys_array = Array.new
+        all_surveys_array.push(Survey.find(params[:survey][:id]))
+        params[:script][:surveys] = all_surveys_array
       end
       # create new Script and content blob - non-empty file was selected
 
@@ -231,6 +238,11 @@ class ScriptsController < ApplicationController
   def find_archives
     @archives = Csvarchive.find(:all)
     @archives=Authorization.authorize_collection("show",@archives,current_user)
+  end
+
+  def find_surveys
+    @surveys = Survey.find(:all)
+    #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
 
 
