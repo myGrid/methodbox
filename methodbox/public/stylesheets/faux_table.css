@@ -150,6 +150,12 @@ li div {
     float:none;
 }
 
+div .dataset_check_box {
+    border: none;
+    padding:0.25em;
+    width: 60px;
+}
+
 /** html .col1 {
     width: 25px;
 }
