@@ -45,46 +45,70 @@
         <b>Type:</b>
         <%=h @survey.surveytype -%>
       </p>
-      
-      <%#*<p>%>
-      <%#*<b>File name:</b>%>
-      <%#=h @survey.original_filename -%>
-      <%#*</p>%>
 
-      <%#*<p>%>
-      <%#*<b>Format:</b>%>
-      <%#=h @survey.content_type -%>
-      <%#*</p>%>
+<%#*<p>%>
+<%#*<b>File name:</b>%>
+<%#=h @survey.original_filename -%>
+<%#*</p>%>
 
-      <%#*<p>%>
-      <%#*<b>Organism:</b>%>
-      <%# if @survey.organism -%>
-      <%#=organism_link_to @survey.organism -%>
-      <%# else -%>
-      <%#*<span class="none_text">Unknown</span>%>
-      <%# end -%>
-      <%#*</p>%>
+<%#*<p>%>
+<%#*<b>Format:</b>%>
+<%#=h @survey.content_type -%>
+<%#*</p>%>
 
-      <%#*<br/>%>
+<%#*<p>%>
+<%#*<b>Organism:</b>%>
+<%# if @survey.organism -%>
+<%#=organism_link_to @survey.organism -%>
+<%# else -%>
+<%#*<span class="none_text">Unknown</span>%>
+<%# end -%>
+<%#*</p>%>
+
+<%#*<br/>%>
 
       <p>
         <b>Description</b>
         <% unless @survey.description.blank? -%>
-          <div class="box_standout">
-            <%= simple_format(white_list(@survey.description)) -%>
-          </div>
-        <% else -%>
-          <p class="none_text">
-            No description
-          </p>
-        <% end -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@survey.description)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
       </p>
+
+      <br/>
+      <b>Linked with Data Extracts(s):</b>
+      <% if !@survey.csvarchives.empty? -%>
+
+        <% @survey.csvarchives.each do |archive| -%>
+          <%= link_to(archive.title, csvarchive_path(archive)) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>
+      <br/>
+      <br/>
+      <b>Linked with Method(s)/Script(s):</b>
+      <% if !@survey.scripts.empty? -%>
+
+        <% @survey.scripts.each do |script| -%>
+          <%= link_to(script.title, script_path(script)) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>
+      <br/>
+      <br/>
       <p>
         <b>Further information</b>
-        <div class="box_standout">
-          <a href="<%= @survey.UKDA_summary%>">UKDA Summary</a><br/>
-          <a href="<%= @survey.headline_report%>">Headline Report</a>
-        </div>
+      <div class="box_standout">
+        <a href="<%= @survey.UKDA_summary%>">UKDA Summary</a><br/>
+        <a href="<%= @survey.headline_report%>">Headline Report</a>
+      </div>
       </p>
 
 
@@ -94,24 +118,24 @@
   </div>
 
   <div class="main_content_right_box">
-    <%#= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @survey } -%>
-    <%#= render :partial => "assets/resource_attributions_box", :locals => { :resource => @survey, :attributed_to => Authorization.authorize_collection("show", @survey.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
+<%#= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @survey } -%>
+<%#= render :partial => "assets/resource_attributions_box", :locals => { :resource => @survey, :attributed_to => Authorization.authorize_collection("show", @survey.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
   </div>
 
   <div style="clear:both;">
 
 
-    <%# get, classify and authorize all assets for this project -%>
-    <%# script_asset_hash = classify_for_tabs([@survey.asset.project]) -%>
+<%# get, classify and authorize all assets for this project -%>
+<%# script_asset_hash = classify_for_tabs([@survey.asset.project]) -%>
 
-    <%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@survey.title,:item_hash=>script_asset_hash} %>
+<%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@survey.title,:item_hash=>script_asset_hash} %>
 
   </div>
 
 
-  <%#*<div class="show_basic">%>
-  <%#= render :partial => "single_faceted_browse", :locals => { :resource => @survey } -%>
-  <%#*</div>%>
+<%#*<div class="show_basic">%>
+<%#= render :partial => "single_faceted_browse", :locals => { :resource => @survey } -%>
+<%#*</div>%>
 
 
 </div>
