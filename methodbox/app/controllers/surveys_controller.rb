@@ -42,9 +42,53 @@ class SurveysController < ApplicationController
     end
   end
 
+#  def hide_variables
+#    puts "hiding variables"
+#    variable_list = params[:sorted_variables]
+#    puts "original list: " + params[:sorted_variables].to_json
+#    puts "var list: " + variable_list.to_json
+#    @all_variables = params[:all_variables]
+#    current_datasets = params[:current_datasets]
+#    @all_datasets = params[:all_datasets]
+#    temp_variable_list = Array.new
+#    dataset_to_remove = params[:dataset_id]
+#    current_datasets.delete(dataset_to_remove)
+#    puts "removing dataset " + dataset_to_remove
+#    @sorted_variables = Array.new
+#    variable_list.each do |var|
+#      variable = Variable.find(var)
+#      puts "var: " + variable.id.to_s + " dataset: " + variable.dataset_id.to_s
+#      if !(variable.dataset_id.to_s == dataset_to_remove.to_s)
+#        puts "adding" + var.to_s
+#        @sorted_variables.push(variable)
+#      end
+#    end
+#    puts @sorted_variables.to_json
+##    temp_variable_list.each do |id|
+##      puts "adding " + id.to_s
+##      @sorted_variables.push(Variable.find(id))
+##    end
+##    puts "sorted var list: " + @sorted_variables.to_json
+#    @all_variables = variable_list
+#    @current_datasets = current_datasets
+#
+#    render :update, :status=>:created do |page|
+#      page.replace_html "dataset_checkbox_list", :partial => "surveys/dataset_checkbox_list",:locals=>{:current_datasets => @current_datasets, :all_variables => @all_variables, :sorted_variables => @sorted_variables, :all_datasets => @all_datasets}
+#      page.replace_html "table_header", :partial=>"surveys/table_header"
+#      page.replace_html "table_container", :partial=>"surveys/table", :locals => {:sorted_variables => @sorted_variables}
+#    end
+#  end
+
+#  def show_variables
+#    puts "showing variables"
+#    render :update, :status=>:created do |page|
+#      #      page.replace_html @div, :partial=>"surveys/variables_table_expanded_row",:locals=>{:curr_cycle=>@curr_cycle, :item => @item}
+#    end
+#  end
+
   def search_variables
 
-    begin
+#    begin
       #    items_per_page = 10
       #  if (params[:search_query]== "" || params[:entry_ids]== nil)
       #respond_to do |format|
@@ -58,6 +102,8 @@ class SurveysController < ApplicationController
 
       @survey_search_query = params[:survey_search_query]
       @selected_surveys = Array.new(params[:entry_ids])
+      @current_datasets = Array.new(params[:entry_ids])
+      @all_datasets = Array.new(params[:entry_ids])
       #    logger.info("length " + @survey_list.size)
       #    @search_query||=""
 
@@ -76,7 +122,7 @@ class SurveysController < ApplicationController
             break
           end
         end
-      
+      @all_variables = @sorted_variables
 
       end
 
@@ -114,13 +160,13 @@ class SurveysController < ApplicationController
       #     format.html
       #   end
       #end
-    rescue
-      respond_to do |format|
-        format.html {
-          flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-          redirect_to :action => "index"
-        }
-      end
+#    rescue
+#      respond_to do |format|
+#        format.html {
+#          flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+#          redirect_to :action => "index"
+#        }
+#      end
       #      render :update do |page|
       #      render :action => index
       #         page.reload_flash_error
@@ -132,7 +178,7 @@ class SurveysController < ApplicationController
       #    redirect_to :action => index
       #    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
       #        render :action => :index
-    end
+#    end
   end
 
   def sort_variables
@@ -173,7 +219,7 @@ class SurveysController < ApplicationController
     end
     render :update, :status=>:created do |page|
       page.replace_html "table_header", :partial=>"surveys/table_header"
-      page.replace_html "table_container", :partial=>"surveys/table"
+      page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
     end
   end
 
