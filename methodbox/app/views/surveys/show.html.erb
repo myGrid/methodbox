@@ -79,6 +79,17 @@
         </p>
       <% end -%>
       </p>
+      <p>
+        <b>Child Datasets:</b>
+        <% if !@survey.datasets.empty? -%>
+
+          <% @survey.datasets.each do |dataset| -%>
+            <%= link_to(h(dataset.name), dataset_path(dataset)) -%>
+          <% end -%>
+        <% else -%>
+          None
+        <% end -%>
+      </p>
 
       <br/>
       <b>Linked with Data Extracts(s):</b>
