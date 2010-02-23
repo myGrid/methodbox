@@ -191,28 +191,64 @@ class ApplicationController < ActionController::Base
       #    @search_query||=""
 
       downcase_query = @survey_search_query.downcase
-      logger.info("Search for: " + downcase_query)
+      search_terms = @survey_search_query.split(' ')
+      if search_terms.length > 1
+        downcase_query = @survey_search_query.downcase
+        search_terms.unshift(downcase_query)
+      end
+      temp_variables = Array.new
+      puts "searching for " + search_terms.to_s
+      search_terms.each do |term|
+        #      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
+        results = Variable.find_by_solr(term,:limit => 1000)
+        variables = results.docs
+        variables.each do |item|
+          @selected_surveys.each do |ids|
+            if Dataset.find(item.dataset_id).id.to_s == ids
+              logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+              puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+              temp_variables.push(item)
+              break
+            end
+          end
 
-      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
-      @variables = @results.docs
-      @sorted_variables = Array.new
-      @variables.each do |item|
-        @selected_surveys.each do |ids|
-          if Dataset.find(item.dataset_id).id.to_s == ids
-            logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-            puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
-            @sorted_variables.push(item)
-            break
+        end
+      end
+      @sorted_variables = temp_variables
+      case params[:add_results]
+      when "no"
+        render :update, :status=>:created do |page|
+          page.replace_html "table_header", :partial=>"surveys/table_header",:locals=>{:sorted_variables=>@sorted_variables}
+          page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
+          page.insert_html(:bottom, "table_container", :partial=>"surveys/add_variables_div")
+          #if any of the checkboxes had been selected then uncheck them by calling the javascript function
+          page << "uncheckAll();"
+        end
+      when "yes"
+        #remove any variables from the new search which were in the old search
+        remove_list = Array.new
+        current_variables = params[:variable_list]
+        @sorted_variables.each do |var|
+          current_variables.each do |current_var|
+            variable = Variable.find(current_var)
+            if var.id == variable.id
+              remove_list.push(var)
+              puts "match " + var.id.to_s + " " + variable.id.to_s
+              break
+            end
           end
         end
-        @all_variables = @sorted_variables
-
-      end
-      render :update, :status=>:created do |page|
-        page.replace_html "table_header", :partial=>"surveys/table_header"
-        page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
-        #if any of the checkboxes had been selected then uncheck them by calling the javascript function
-        page << "uncheckAll();"
+        remove_list.each do |var|
+          @sorted_variables.delete(var)
+        end
+        current_variables.concat(@sorted_variables)
+        render :update, :status=>:created do |page|
+          page.replace_html "table_header", :partial=>"surveys/table_header",:locals=>{:sorted_variables=>current_variables}
+          page.replace_html "sorted_variables_div", :partial=>"surveys/sorted_variables_div",:locals=>{:sorted_variables=>@sorted_variables}
+          page.insert_html(:before, "add_new_variables", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables})
+          #if any of the checkboxes had been selected then uncheck them by calling the javascript function
+          #          page << "uncheckAll();"
+        end
       end
       #      respond_to do |format|
       #puts "doing some rendering"
