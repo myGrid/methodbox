@@ -61,7 +61,7 @@
   </div>
   <div>
     <% if !item.variable_links.empty? -%>
-      <div style="width:875px;margin:auto;">Linked to:</div>
+      <div style="width:875px;margin:auto;">Grouped with:</div>
       <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;">
         <% item.variable_links.each do |link| -%>
           <% link.variables.each do |var| -%>
@@ -72,7 +72,7 @@
         <% end -%>
       </div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No links recorded for this variable</div>
+      <div style="width:875px;margin:auto;color:red;">No groupings recorded for this variable</div>
     <% end -%>
   </div>
   <br/>

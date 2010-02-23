@@ -5,8 +5,6 @@
 <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
 <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
 <%= hidden_field_tag 'submit', 'add' %>
-  <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
-  <%#= hidden_field_tag 'survey_array', @survey_list %>
   <% if @selected_surveys!=nil %>
     <% @selected_surveys.each do |val| %>
       <%= hidden_field_tag "survey_list[]", val %>

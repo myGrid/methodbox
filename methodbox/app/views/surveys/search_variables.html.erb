@@ -3,32 +3,43 @@
 <%= stylesheet_link_tag 'faux_table'%>
 <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
   <div class="show_basic" style="padding-right: 2em;">
-    <h2>Browse the table, select some variables, link similar ones together and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.</h2><br/>
+    <h2>Browse the table, select some variables, group similar ones together and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.</h2><br/>
 
-    <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:80px;">
+    <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:90px;">
       <div style="position: absolute; ;top:1em;left:1em">
         <%= hidden_field_tag 'tag_button', 'tag' %>
         <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
         <%= hidden_field_tag 'variable_name', 'variable_name' %>
         <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
         <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
-        <% @link_reason="Enter reason for linking" unless @link_reason -%>
+        <% @link_reason="Reason for grouping" unless @link_reason -%>
 
         <%= text_field_tag :survey_search_query, @survey_search_query %>
         <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'search';" %>
+  <%#= check_box_tag "append_search" -%>
+  <%#= label_tag 'append_search', 'Add search results to currrent table' -%>
+
       </div>
-      <%= hidden_field_tag 'submit', 'add' %>
+      <div style="position: absolute; bottom:3.7em; left:1em;">
+        Add results to current table?
+        <%= radio_button_tag 'add_results', 'yes', true -%>Yes
+        <%= radio_button_tag 'add_results', 'no', false -%>No
+      </div>
+      <%= hidden_field_tag 'submit', 'add' -%>
       <% if @selected_surveys!=nil %>
-        <% @selected_surveys.each do |val| %>
-          <%= hidden_field_tag "survey_list[]", val %>
-        <% end %>
-      <% end %>
+        <% @selected_surveys.each do |val| -%>
+          <%= hidden_field_tag "survey_list[]", val -%>
+        <% end -%>
+      <% end -%>
+      <div id="sorted_variables_div">
+        <%= render :partial => "sorted_variables_div", :locals=>{:sorted_variables => @sorted_variables}-%>
+      </div>
       <div style="position: absolute; bottom:2.2em; left:1em;">
         <%= submit_tag'Add selected variables to cart', :name=>"_submit",:src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%>
       </div>
       <div style="position: absolute; bottom:1em; right:1em;">
         <%= text_field_tag :link_variables_text, @link_reason %>
-        <%= submit_tag 'Link selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%>
+        <%= submit_tag 'Group selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%>
       </div>
       <br/>
       <div style="position: absolute; bottom:1em; left:1em;">Select:
@@ -46,10 +57,11 @@
     <br/>
     <br/>
     <div id="table_header" class="faux_table_header_container">
-      <%= render :partial => "table_header" -%>
+      <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
     <div id="table_container" class="faux_table_container">
-      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables}-%>
+      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables} -%>
+      <%= render :partial => "add_variables_div" -%>
     </div>
   </div>
 <% end -%>
