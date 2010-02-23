@@ -87,13 +87,13 @@
       </p>
       <p>
         <% if !@variable.variable_links.empty? -%>
-          <b>Linked by:</b>
+          <b>Grouped by:</b>
         <div class="box_standout">
           <% @variable.variable_links.each do |link| -%>
             <%=  link_to(link.description, variable_link_path(link)) -%>
           <% end -%>
         </div>
-        <b>Linked to variables:</b>
+        <b>Grouped with variables:</b>
         <div class="box_standout">
           <% @variable.variable_links.each do |link| -%>
             <% link.variables.each do |var| -%>
@@ -105,7 +105,7 @@
         </div>
 
       <% else -%>
-        <b>No links recorded for this variable</b>
+        <b>No groupings recorded for this variable</b>
       <% end -%>
       </p>
 
