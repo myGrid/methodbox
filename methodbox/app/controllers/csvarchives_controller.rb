@@ -88,6 +88,7 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     #    check_available
     @sorted_variables = @archive.variables
+    @surveys = @archive.surveys
     @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
     respond_to do |format|
       format.html # show.html.erb
