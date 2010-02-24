@@ -1,0 +1,66 @@
+<%# this should be set by the caller, this is an extra check -%>
+<% resource=resource_list_item %>
+<% odd_row ||= false -%>
+<% narrow_view ||= false -%>
+
+<table class="list_item">
+  <tr class="<%= odd_row ? "odd_row" : "even_row" -%>">
+<%#*<td style="width: 125px;">%>
+<%#*<center>%>
+<%#= contributor(resource.asset.contributor, true, 60) -%>
+<%#*</center>%>
+<%#*</td>%>
+
+    <td style="text-align: left;">
+      <p class="title">
+        <%= icon "dataset", nil, nil, nil, '' -%>
+        <%# title = h(resource.name) -%>
+        <%= link_to(resource.name, dataset_path(resource)) -%>
+      </p>
+<%#*<p style="font-size:85%; margin-top: 0.3em; padding-top: 0;">%>
+<%#*<b>Associated project: </b>%>
+<%#= (resource.asset.project ? link_to(h(resource.asset.project.name), project_path(resource.asset.project.id)) : "<span class='none_text'>None</span>" ) -%>
+<%#*</p>%>
+
+      <div class="desc" style="font-size: 85%;">
+        <% unless resource.description.blank? -%>
+          <%= truncate(white_list(resource.description), :length=>500) -%>
+        <% else -%>
+          <span class="none_text">No description</span>
+        <% end -%>
+      </div>
+
+<%#*<p style="font-size: 85%; margin-top: 0.4em;">%>
+<%#*<b>Created:</b>%>
+<%#= resource.created_at.strftime('%d/%m/%Y @ %H:%M:%S') -%>
+<%# unless resource.created_at == resource.updated_at -%>
+<%#= narrow_view ? "<br/>" : " | " -%>
+<%#*<b>Last updated:</b>%>
+<%#= resource.updated_at.strftime('%d/%m/%Y @ %H:%M:%S') -%>
+<%# end %>
+
+<%#*</p>%>
+
+
+
+<%#*<p style="font-size:85%;">%>
+<%#*<b>Format: </b>%>
+<%#= h(resource.content_type) -%>
+<%#*</p>%>
+      <p>
+        <b>Parent Survey:</b>
+        <%= link_to(h(Survey.find(resource.survey_id).title), survey_path(Survey.find(resource.survey_id))) -%>
+      </p>
+    </td>
+
+    <td class="actions" style="width: 80px;">
+      <%= icon "show", dataset_path(resource), nil, nil, "View" -%>
+<%# if Authorization.is_authorized?("download", nil, resource, current_user) -%>
+
+<%#= icon "download", download_survey_path(resource) -%>
+
+
+    </td>
+
+  </tr>
+</table>
