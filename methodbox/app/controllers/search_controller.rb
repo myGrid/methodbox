@@ -41,9 +41,9 @@ class SearchController < ApplicationController
       #slight fudge to allow all HSE datasets to come up since any users are already registered
       @results = Person.multi_solr_search(downcase_query, :limit=>100, :models=>[Person]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
       @results = @results + Script.multi_solr_search(downcase_query, :limit=>100, :models=>[Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      @results = @results + Csvarchive.multi_solr_search(downcase_query, :limit=>100, :models=>[Csvarchive]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
       @results = select_authorised @results
       @results = @results + Survey.multi_solr_search(downcase_query, :limit=>100, :models=>[Survey]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      @results = @results + Csvarchive.multi_solr_search(downcase_query, :limit=>100, :models=>[Csvarchive]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
 
       #      @results = Person.multi_solr_search(downcase_query, :limit=>100, :models=>[Person, Survey, Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
     end
