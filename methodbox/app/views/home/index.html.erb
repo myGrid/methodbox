@@ -1,56 +1,7 @@
-<div class="show_basic" style="position:relative;">
-  <div class="header" style="position: absolute;left: 150px;top: 225px;z-index: 30;">
-    <h2 style="font-size:1.75em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;width:600px;">Welcome to Methodbox. What would you like to do?</h2>
-  </div>
-  <div>
-    <div class="myexperiment_gadget" style="width:300px;position: absolute;left:50px;top: 30px;padding-right:1.75em;">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-      <div class="header">
-        <p style="font-size:1.25em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Browse Surveys</p>
-      </div>
-      <div class="contents" style="height:150px;">
-        <%= link_to image_tag("MethodBox_surveys_small.png", :size => "290x140", :alt=>"Help with browsing surveys", :title=>"Get help with browsing surveys and uploading new datasets", :mouseover => image_path("MethodBox_surveys_small_hover.png")), help_surveys_path -%>
-      </div>
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-
-    <div class="myexperiment_gadget" style="width:300px;position: absolute;right:50px;top: 30px;padding-right:1.75em;">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-      <div class="header">
-        <p style="font-size:1.25em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Find Variables</p>
-      </div>
-      <div class="contents" style="height:150px;">
-        <%= link_to image_tag("MethodBox_variables_small.png", :size => "290x140", :alt=>"Help with searching for variables", :title=>"Get help with searching surveys for variables", :mouseover => image_path("MethodBox_variables_small_hover.png")), help_variables_path -%>
-      </div>
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-  </div>
-  <br/>
-  <div>
-    <div class="myexperiment_gadget" style="width:300px;position: absolute;left:50px;top:310px;padding-right:1.75em;">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-      <div class="header">
-        <p style="font-size:1.25em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Share Knowledge</p>
-      </div>
-      <div class="contents" style="height:150px;">
-        <%= link_to image_tag("MethodBox_knowledge_small.png", :size => "290x140", :alt=>"Help with sharing knowledge", :title=>"Get help with sharing your knowledge and expertise", :mouseover => image_path("MethodBox_knowledge_small_hover.png")), help_scripts_path -%>
-      </div>
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-    <div class="myexperiment_gadget" style="width:300px;position: absolute;right:50px;top:310px;padding-right:1.75em;">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-      <div class="header">
-        <p style="font-size:1.25em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Download stuff</p>
-      </div>
-      <div class="contents" style="height:150px;">
-        <%= link_to image_tag("MethodBox_download_small.png", :size => "290x140", :alt=>"Help with downloading", :title=>"Get help with creating new data extracts and downloading things using methodbox", :mouseover => image_path("MethodBox_download_small_hover.png")), help_csvarchives_path -%>
-      </div>
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-  </div
-</div>
-
+<h2>The latest things inside the methodbox are show below</h2>
+<% if !@results.blank? %>
+  <% resource_hash = classify_for_tabs @results -%>
+  <%= render :partial => "assets/resource_listing_tabbed_by_class", :locals => { :asset_hash => resource_hash,
+    :narrow_view => true,
+    :authorization_already_done => true } -%>
+<% end %>
