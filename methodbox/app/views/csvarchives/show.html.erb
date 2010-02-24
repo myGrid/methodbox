@@ -6,16 +6,16 @@
 
 <ul class="sectionIcons">
 
-  <%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
-  <%#*always show edit button, the controller will flash a message if not available%>
+<%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
+<%#*always show edit button, the controller will flash a message if not available%>
   <% if !@archive.failure && Authorization.is_authorized?("download", nil, @archive, current_user) -%>
     <li><%= icon('download', download_csvarchive_url, "Download CSV file", nil, "Download CSV file") -%></li>
   <% end -%>
-  <%# elsif @archive.failure %>
-  <%# if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-  <%#= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
-  <%# end %>
-  <%# else %>
+<%# elsif @archive.failure %>
+<%# if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
+<%#= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
+<%# end %>
+<%# else %>
   <% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>
     <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
   <% end %>
@@ -26,17 +26,17 @@
 
 
 <div class="show_basic">
-  <%#*<div class="main_content_left_box">%>
+<%#*<div class="main_content_left_box">%>
   <div class="box_about_actor">
     <p>
       <b>Title:</b>
       <% unless @archive.title.blank? -%>
         <span class="title"><%=h @archive.title -%></span>
       <% else -%>
-        <p class="none_text">
-          No title
-        </p>
-      <% end -%>
+      <p class="none_text">
+        No title
+      </p>
+    <% end -%>
     </p>
 
 
@@ -45,41 +45,51 @@
     <p>
       <b>Description</b>
       <% unless @archive.description.blank? -%>
-        <div class="box_standout" style="background-color:#FFFFFF;">
-          <%= simple_format(white_list(@archive.description)) -%>
-        </div>
-      <% else -%>
-        <p class="none_text">
-          No description
-        </p>
-      <% end -%>
-      <br/>
-      <b>Linked with Script(s):</b>
-      <% if !@scripts.empty? -%>
+      <div class="box_standout" style="background-color:#FFFFFF;">
+        <%= simple_format(white_list(@archive.description)) -%>
+      </div>
+    <% else -%>
+      <p class="none_text">
+        No description
+      </p>
+    <% end -%>
+    <br/>
+    <b>Linked with Script(s):</b>
+    <% if !@scripts.empty? -%>
 
-<% @scripts.each do |script| -%> 
-  <%= link_to(script.title, script_path(script)) -%>
-  <% end -%>
-      <% else -%>
+      <% @scripts.each do |script| -%>
+        <%= link_to(script.title, script_path(script)) -%>
+      <% end -%>
+    <% else -%>
       None
+    <% end -%>
+    <br/>
+        <b>Linked with Survey(s):</b>
+    <% if !@surveys.empty? -%>
+
+      <% @surveys.each do |survey| -%>
+        <%= link_to(survey.title, survey_path(survey)) -%>
       <% end -%>
-      <br/>
-      <br/>
-      <b>Status:</b>
-      <% if @archive.complete && !@archive.failure%>
-        <span class="title"><%=h "ready for download" -%></span>
-        <%# elsif @archive.failure-%>
-        <%#*<span class="title" style="color:red;">%>
-        <%#=h "Not available due to errors - please recreate" -%>
-        <%#*</span>%>
-      <% elsif @archive.failure -%>
-        <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>
-      <% else -%>
-        <span class="title"><%=h "Unknown: click on the download button to check" -%></span>
-      <% end -%>
+    <% else -%>
+      None
+    <% end -%>
+    <br/>
+    <br/>
+    <b>Status:</b>
+    <% if @archive.complete && !@archive.failure%>
+      <span class="title"><%=h "ready for download" -%></span>
+  <%# elsif @archive.failure-%>
+  <%#*<span class="title" style="color:red;">%>
+  <%#=h "Not available due to errors - please recreate" -%>
+  <%#*</span>%>
+    <% elsif @archive.failure -%>
+      <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>
+    <% else -%>
+      <span class="title"><%=h "Unknown: click on the download button to check" -%></span>
+    <% end -%>
     </p>
     <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
-    <%#*</div>%>
+<%#*</div>%>
   </div>
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
 
@@ -95,14 +105,14 @@
           ,&nbsp
           <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
 
-      </td></tr>
+        </td></tr>
     </table>
     <br/>
-     <div id="table_header" class="faux_table_header_container">
-      <%= render :partial => "surveys/table_header" -%>
+    <div id="table_header" class="faux_table_header_container">
+      <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
     <div id="table_container" class="faux_table_container">
-      <%= render :partial => "surveys/table" -%>
+      <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables} -%>
 
     </div>
     <br/>
