@@ -31,17 +31,18 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }
 
 
-  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post}  do |survey|
-    
-  end
+  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get}
+#  do |survey|
+#
+#  end
 
-  map.resources :csvarchives, :member => {:download => :get}, :collection =>{:recreate => :post}
+  map.resources :csvarchives, :member => {:download => :get}, :collection =>{:recreate => :post, :help => :get}
   
   #  map.resources :assays
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get}
 
-  map.resources :methods
+#  map.resources :methods, :collection => {:help => :get}
 
   map.resources :assets,:member=>{:request_resource=>:post}
 
@@ -66,7 +67,7 @@ ActionController::Routing::Routes.draw do |map|
     person.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }
   end
 
-  map.resources :scripts, :member => { :download => :get }
+  map.resources :scripts, :member => { :download => :get }, :collection => {:help => :get}
 
   map.resources :projects,
     :collection => { :request_institutions => :get } do |project|
