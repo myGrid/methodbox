@@ -61,3 +61,11 @@ function clearList(name) {
         select.remove(select.options[0])
     }
 }
+
+//Ajax.Base.prototype.initialize = Ajax.Base.prototype.initialize.wrap(
+//   function(p, options){
+//     p(options);
+//     this.options.parameters = this.options.parameters || {};
+//     this.options.parameters.authenticity_token = window._token || '';
+//   }
+//);
