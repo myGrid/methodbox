@@ -2,6 +2,12 @@ class VariablesController < ApplicationController
 
   before_filter :login_required
 
+  def open_pdf
+    find_variable
+    type = Survey.find(Dataset.find(@variable.dataset_id).survey_id).surveytype.downcase
+    year = Survey.find(Dataset.find(@variable.dataset_id).survey_id).year
+    send_file(RAILS_ROOT + "/" + "filestore" + "/docs" + "/" + type + "/" + year + "/" + @variable.document + "#page=" + @variable.page, :type => 'application/pdf', :disposition => 'inline')
+  end
 
   def by_category
     @category = params[:category]
