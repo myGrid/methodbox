@@ -1,0 +1,30 @@
+/*
+    Document   : main_layout_extras
+    Created on : Mar 1, 2010, 11:24:00 AM
+    Author     : Ian
+    Description:
+        Style the main page and any other extra bits
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+#doc4 {
+    background-color:#FFFFFF;
+}
+#header {
+    background-color:#ACCBE0;
+}
+#bd {
+    min-height:550px;
+    margin: 1em;
+}
+#notice_flash {
+    color: green;
+    font-weight: bold;
+    margin: 0.8em 0.8em;
+    line-height: 1.4;
+}
+
