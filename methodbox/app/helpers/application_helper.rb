@@ -91,7 +91,7 @@ module ApplicationHelper
     #    html_options = {
     #      :title => "Sort this field"
     #    }
-    link_to_remote text, :title=>'Sort by this field',:url=> sort_variables_surveys_url(:sorted_variables=>sorted_variables, :search_query=>query, :survey_list => years, :sort => key)
+    link_to_remote text, :title=>'Sort by this field', :before => "Element.show('doing_stuff_spinner')",:success => "Element.hide('doing_stuff_spinner')", :url=> sort_variables_surveys_url(:sorted_variables=>sorted_variables, :search_query=>query, :survey_list => years, :sort => key)
   end
 
   #List of creatable model classes
