@@ -137,6 +137,9 @@ class ApplicationController < ActionController::Base
 
   def add_to_cart
 
+    @submit = params[:submit]
+#    req = "submit:\'"+@submit+ "\'"
+
     case params[:submit]
     when "link"
       @variable_list = Array.new(params[:variable_ids])
@@ -221,10 +224,14 @@ class ApplicationController < ActionController::Base
           page.replace_html "table_header", :partial=>"surveys/table_header",:locals=>{:sorted_variables=>@sorted_variables}
           page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
           page.insert_html(:bottom, "table_container", :partial=>"surveys/add_variables_div")
+#          page << %[dhtmlHistory.add("table_header", "new Ajax.Request('surveys/table_header', {asynchronous:false, evalScripts:true, method:'post'});")]
+          page << %[dhtmlHistory.add("add_results_no", "new Ajax.Request('add_to_cart', {asynchronous:false, evalScripts:true, method:'post', parameters:#{req}});")]
+
           #if any of the checkboxes had been selected then uncheck them by calling the javascript function
           page << "uncheckAll();"
         end
       when "yes"
+      #  request = "new Ajax.Request('add_to_cart', {asynchronous:false, evalScripts:true, method:'post', parameters:" +req + "});"
         #remove any variables from the new search which were in the old search
         remove_list = Array.new
         current_variables = params[:variable_list]
@@ -241,13 +248,32 @@ class ApplicationController < ActionController::Base
         remove_list.each do |var|
           @sorted_variables.delete(var)
         end
+        all_search_variables = Array.new
+        current_variables.each do |currvar|
+          all_search_variables.push(currvar)
+        end
+        @sorted_variables.each do |sortvar|
+          all_search_variables.push(sortvar.id.to_s)
+        end
         current_variables.concat(@sorted_variables)
+
+        puts "current variables: " + all_search_variables.to_json
+#         req = all_search_variables.to_json
+#        var_req = "variables:" + all_search_variables.to_json.to_s
+        var_req = "[{\'32653\':'a'},{\'32641\':'a'},{\'32648\':'a'}]"
+        begin
         render :update, :status=>:created do |page|
           page.replace_html "table_header", :partial=>"surveys/table_header",:locals=>{:sorted_variables=>current_variables}
           page.replace_html "sorted_variables_div", :partial=>"surveys/sorted_variables_div",:locals=>{:sorted_variables=>@sorted_variables}
           page.insert_html(:before, "add_new_variables", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables})
+#          page << %[dhtmlHistory.add("table_header", "new Ajax.Request('surveys/table_header', {asynchronous:false, evalScripts:true, method:'post'});")]
+          page << %[dhtmlHistory.add("add_results_yes", "new Ajax.Request('add_to_cart', {asynchronous:false, evalScripts:true, method:'post', parameters:{vars:#{var_req}} });")]
+#          page << %[dhtmlHistory.add("add_results_yes", #{request})]
           #if any of the checkboxes had been selected then uncheck them by calling the javascript function
           #          page << "uncheckAll();"
+        end
+        rescue
+          puts "error " + $!
         end
       end
       #      respond_to do |format|
