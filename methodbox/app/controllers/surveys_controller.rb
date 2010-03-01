@@ -88,105 +88,127 @@ class SurveysController < ApplicationController
 
   def search_variables
 
-    #    begin
-    #    items_per_page = 10
-    #  if (params[:search_query]== "" || params[:entry_ids]== nil)
-    #respond_to do |format|
-    #      flash.now[:notice] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-    #      format.html {
-    #        render :action => :index
-    #      }
-    #    end
-    #
-    #  else
+    begin
+      #    items_per_page = 10
+      #  if (params[:search_query]== "" || params[:entry_ids]== nil)
+      #respond_to do |format|
+      #      flash.now[:notice] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+      #      format.html {
+      #        render :action => :index
+      #      }
+      #    end
+      #
+      #  else
+#    case params['sort']
+#    when nil
+      @survey_search_query = params[:survey_search_query]
+      @selected_surveys = Array.new(params[:entry_ids])
+      @current_datasets = Array.new(params[:entry_ids])
+      @all_datasets = Array.new(params[:entry_ids])
+      #    logger.info("length " + @survey_list.size)
+      #    @search_query||=""
 
-    @survey_search_query = params[:survey_search_query]
-    @selected_surveys = Array.new(params[:entry_ids])
-    @current_datasets = Array.new(params[:entry_ids])
-    @all_datasets = Array.new(params[:entry_ids])
-    #    logger.info("length " + @survey_list.size)
-    #    @search_query||=""
-
-    search_terms = @survey_search_query.split(' ')
-    if search_terms.length > 1
-      downcase_query = @survey_search_query.downcase
-      search_terms.unshift(downcase_query)
-    end
-    puts "searching for " + search_terms.to_s
-    temp_variables = Array.new
-    search_terms.each do |term|
-      #      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
-      results = Variable.find_by_solr(term,:limit => 1000)
-      variables = results.docs
-      variables.each do |item|
-        @selected_surveys.each do |ids|
-          if Dataset.find(item.dataset_id).id.to_s == ids
-            logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-            puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
-            temp_variables.push(item)
-            break
-          end
-        end
-
+      search_terms = @survey_search_query.split(' ')
+      if search_terms.length > 1
+        downcase_query = @survey_search_query.downcase
+        search_terms.unshift(downcase_query)
       end
-    end
-    puts temp_variables.to_json
-    @sorted_variables = temp_variables
-    #      @all_variables = @sorted_variables
+      puts "searching for " + search_terms.to_s
+      temp_variables = Array.new
+      search_terms.each do |term|
+        #      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
+        results = Variable.find_by_solr(term,:limit => 1000)
+        variables = results.docs
+        variables.each do |item|
+          @selected_surveys.each do |ids|
+            if Dataset.find(item.dataset_id).id.to_s == ids
+              logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+              puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+              temp_variables.push(item)
+              break
+            end
+          end
 
-    case params['sort']
-    when "variable"
-      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
-    when "description"   then "description"
-      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
-    when "category"   then "category"
-      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }
-    when "survey" then "survey"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype.upcase }
-    when "year" then "year"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }
-    when "variable_reverse"  then "variable DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
-    when "category_reverse"   then "category DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }.reverse
-    when "description_reverse"   then "description DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
-    when "survey_reverse" then "survey DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).surveytype.upcase }.reverse
-    when "year_reverse" then "year DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Survey.find(m.survey_id).year }.reverse
+        end
+      end
+      puts temp_variables.to_json
+      @sorted_variables = temp_variables
+      #      @all_variables = @sorted_variables
+
+      case params['add_results']
+      when "yes"
+        new_variables = Array.new
+        current_variables = params[:variable_list]
+        current_variables.each do |var|
+          v = Variable.find(var)
+          new_variables.push(v)
+        end
+        @sorted_variables.each do |var|
+          new_variables.push(var)
+        end
+        @sorted_variables = new_variables
+      when "no"
+        #don't have to do anything
+      end
+
+#    when "variable"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
+#    when "dataset"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }
+#    when "description"   then "description"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
+#    when "category"   then "category"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }
+#    when "survey" then "survey"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
+#    when "year" then "year"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
+#    when "variable_reverse"  then "variable DESC"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
+#    when "category_reverse"   then "category DESC"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }.reverse
+#    when "description_reverse"   then "description DESC"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
+#    when "dataset_reverse"   then "dataset DESC"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
+#    when "survey_reverse" then "survey DESC"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
+#    when "year_reverse" then "year DESC"
+#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
+#    end
+
+      respond_to do |format|
+        logger.info("rendering survey search")
+        format.html
+        format.xml
+      end
+      #    render :update, :status=>:created do |page|
+      #      page.replace_html "table", :partial=>"surveys/variables_table"
+      #    end
+      #   respond_to do |format|
+      #     format.html
+      #   end
+      #end
+    rescue
+      puts "Searching failed: " + $!
+      respond_to do |format|
+        format.html {
+          flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+          redirect_to :action => "index"
+        }
+      end
+      #      render :update do |page|
+      #      render :action => index
+      #         page.reload_flash_error
+      #page.replace_html "survey_flash_error" , :partial => "layouts/flash_error",:locals=>{:error_message=>@error_message}
+      #page.show "error_flash"
+      #    page.visual_effect :highlight, 'error_flash'
+      #flash.discard
+      #      end
+      #    redirect_to :action => index
+      #    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+      #        render :action => :index
     end
-    respond_to do |format|
-      logger.info("rendering survey search")
-      format.html
-      format.xml
-    end
-    #    render :update, :status=>:created do |page|
-    #      page.replace_html "table", :partial=>"surveys/variables_table"
-    #    end
-    #   respond_to do |format|
-    #     format.html
-    #   end
-    #end
-    #    rescue
-    #      respond_to do |format|
-    #        format.html {
-    #          flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-    #          redirect_to :action => "index"
-    #        }
-    #      end
-    #      render :update do |page|
-    #      render :action => index
-    #         page.reload_flash_error
-    #page.replace_html "survey_flash_error" , :partial => "layouts/flash_error",:locals=>{:error_message=>@error_message}
-    #page.show "error_flash"
-    #    page.visual_effect :highlight, 'error_flash'
-    #flash.discard
-    #      end
-    #    redirect_to :action => index
-    #    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-    #        render :action => :index
-    #    end
   end
 
   def sort_variables
