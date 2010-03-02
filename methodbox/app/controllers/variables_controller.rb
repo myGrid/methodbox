@@ -6,7 +6,7 @@ class VariablesController < ApplicationController
     find_variable
     type = Survey.find(Dataset.find(@variable.dataset_id).survey_id).surveytype.downcase
     year = Survey.find(Dataset.find(@variable.dataset_id).survey_id).year
-    send_file(RAILS_ROOT + "/" + "filestore" + "/docs" + "/" + type + "/" + year + "/" + @variable.document + "#page=" + @variable.page, :type => 'application/pdf', :disposition => 'inline')
+    send_file(RAILS_ROOT + "/" + "filestore" + "/docs" + "/" + type + "/" + year + "/" + @variable.document, :type => 'application/pdf', :disposition => 'inline')
   end
 
   def by_category
