@@ -6,7 +6,7 @@
 
   <% end %>
   <li><%= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%></li>
-<li><%= icon('add_to_cart', add_to_cart_variable_path(@variable), "Add Variable to Cart", {:method => :post}, 'Add Variable to Cart') -%></li>
+  <li><%= icon('add_to_cart', add_to_cart_variable_path(@variable), "Add Variable to Cart", {:method => :post}, 'Add Variable to Cart') -%></li>
 </ul>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
 <div class="show_basic">
@@ -27,6 +27,18 @@
       <% else -%>
         <p class="none_text">
           No description
+        </p>
+      <% end -%>
+      </p>
+      <p>
+        <b>Documentation:</b>
+        <% unless @variable.document.blank? -%>
+        <div class="box_standout">
+          <%= link_to(@variable.document + ", page " + @variable.page, open_pdf_variable_url(@variable) + "#page=" + @variable.page,:title=>"Open the PDF document with information about this variable") -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No category
         </p>
       <% end -%>
       </p>
