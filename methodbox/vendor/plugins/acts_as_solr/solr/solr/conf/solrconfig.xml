@@ -55,7 +55,7 @@
          This defeats the locking mechanism that allows multiple
          processes to safely access a lucene index, and should be
          used with care. -->
-    <unlockOnStartup>false</unlockOnStartup>
+    <unlockOnStartup>true</unlockOnStartup>
   </mainIndex>
 
   <!-- the default high-performance update handler -->
