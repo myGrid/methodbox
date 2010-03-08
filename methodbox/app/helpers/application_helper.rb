@@ -189,6 +189,8 @@ module ApplicationHelper
       return "famfamfam_silk/arrow_refresh_small.png"
     when "arrow_up"
       return "famfamfam_silk/arrow_up.png"
+    when "arrow_left", "previous"
+      return "famfamfam_silk/arrow_left.png"
     when "arrow_down"
       return "famfamfam_silk/arrow_down.png"
     when "arrow_right", "next"
@@ -452,8 +454,8 @@ module ApplicationHelper
       unless url
         url = eval("#{object.class.name.downcase}_url(#{object.id})")
       end
-       return link_to(img, url, :title => tooltip_text)
-#      return link_to(img, url, :title => tooltip_title_attrib(tooltip_text))
+      return link_to(img, url, :title => tooltip_text)
+      #      return link_to(img, url, :title => tooltip_title_attrib(tooltip_text))
     end
   end
   
