@@ -4,7 +4,7 @@ class ScriptsController < ApplicationController
   before_filter :find_scripts, :only => [ :index ]
   before_filter :find_archives, :find_surveys, :only => [ :new, :edit ]
   before_filter :find_cart
-  before_filter :find_script_auth, :except => [ :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
+  before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
