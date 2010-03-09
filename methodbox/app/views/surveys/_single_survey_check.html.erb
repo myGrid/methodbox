@@ -16,9 +16,9 @@
   <%#*<li>%>
   <%#*</li>%>
         <% item.datasets.each do |dataset| -%>
-          <p style="padding-left:5px;">
+          <p style="padding-left:5px;white-space: normal;">
             <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}), :class=>'survey_checkbox'  %>
-            <%= link_to(dataset.name, dataset_path(dataset)) -%>
+            <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= dataset.description-%>
           </p>
           <%#*<br/>%>
         <% end -%>
