@@ -16,26 +16,26 @@ hse1994-1:
   id: 3
   name: hse94ai2nd
   filename: hse94ai2nd.tab
-  description: Individual population statistics for 1991 & 1992
+  description: Individual population statistics for 1994
   survey_id: 3
 
 hse1994-2:
   id: 4
   name: hse94ah
   filename: hse94ah.tab
-  description: Household statistics for 1991 & 1992
+  description: Household statistics for 1994
   survey_id: 3
   
 hse1994-3:
   id: 5
   name: hse94ap
   filename: hse94ap.tab
-  description: Proxy statistics for 1991 & 1992
+  description: Proxy statistics for 1994
   survey_id: 3
 
 hse1995-1:
   id: 6
-  name: hse95ah.tab
+  name: hse95ah
   filename: hse95ah.tab
   description: Household statistics for 1995
   survey_id: 4
