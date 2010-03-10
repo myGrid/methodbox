@@ -3,14 +3,16 @@
 <%= javascript_include_tag 'toggler.js' %>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
-
 <ul class="sectionIcons">
-
+  <%= hidden_field_tag "format_type", "csv" -%>
 <%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
 <%#*always show edit button, the controller will flash a message if not available%>
-  <% if !@archive.failure && Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-    <li><%= icon('download', download_csvarchive_url, "Download CSV file", nil, "Download CSV file") -%></li>
+  <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
+    <%# if !@archive.failure && Authorization.is_authorized?("download", nil, @archive, current_user) -%>
+
+  <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button"}, "Download extract as:") -%></li>
   <% end -%>
+  <%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
 <%# elsif @archive.failure %>
 <%# if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
 <%#= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
@@ -21,7 +23,7 @@
   <% end %>
 </ul>
 
-<h1 class="contribution_title">CSV Archive: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
+<h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
 
 
 
@@ -64,7 +66,7 @@
       None
     <% end -%>
     <br/>
-        <b>Linked with Survey(s):</b>
+    <b>Linked with Survey(s):</b>
     <% if !@surveys.empty? -%>
 
       <% @surveys.each do |survey| -%>
@@ -120,3 +122,10 @@
   <% end %>
 
 </div>
+<script type="text/javascript">
+  function changeURL(value) {
+    URL = document.getElementById("download_button").href;
+    URL = "<%= download_csvarchive_url -%>" + "?type=" + value;
+    document.getElementById("download_button").href = URL;
+  }
+</script>
