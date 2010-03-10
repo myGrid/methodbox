@@ -1,5 +1,9 @@
 module CsvarchiveHelper
 
+  def download_type_options
+    ["CSV","SPSS","Stata"]
+  end
+
   def set_parameters_for_sharing_form
     logger.info "setting sharing for archive from helper"
     policy = nil
