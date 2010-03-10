@@ -63,6 +63,7 @@ class CsvarchivesController < ApplicationController
   def download
     #    no security here
     find_archive
+    puts "type is " + params[:type]
 
     if @archive.complete
       retrieve_archive_from_server
@@ -373,7 +374,7 @@ class CsvarchivesController < ApplicationController
     @use_blacklist = (policy.use_blacklist == true || policy.use_blacklist == 1)
 
     # ..other
-    @resource_type = "CSV Archive"
+    @resource_type = "Data Extract"
     @favourite_groups = current_user.favourite_groups
 
     @all_people_as_json = Person.get_all_as_json
@@ -387,7 +388,7 @@ class CsvarchivesController < ApplicationController
       http.read_timeout=6000
       puts 'sending get request to csv server for file ' + @archive.filename
       #      response = http.get('/eos/download/' + @archive.filename)
-      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
+      response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename+ '?type=CSV')
       if response.response.class == Net::HTTPOK
         if response.content_type == 'application/zip'
           @archive.update_attributes(:complete => true)
@@ -411,9 +412,10 @@ class CsvarchivesController < ApplicationController
 
   def retrieve_archive_from_server
     puts 'sending get request to csv server for file ' + @archive.filename
+
     http = Net::HTTP.new(CSV_SERVER_LOCATION,CSV_SERVER_PORT.to_i)
     http.read_timeout=6000
-    response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename)
+    response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename + "?type=" + params[:type])
     if response.response.class == Net::HTTPOK
       if response.content_type == 'application/zip'
         logger.info( 'file ready, archive id ' + @archive.object_id.to_s)
