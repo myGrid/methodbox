@@ -1,6 +1,6 @@
 <%= javascript_include_tag "sharing.js" -%>
 
-<h1>New CSV Archive</h1>
+<h1>New Data Extract</h1>
 
 <div class="show_basic">
   <% form_tag({:action => :create}, :multipart => true) do -%>
@@ -44,13 +44,13 @@
         </p>
 
         <p style="margin: 0;">
-          <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "CSV Archive",  # this is only for presentation, not for any processing
+          <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Data Extract",  # this is only for presentation, not for any processing
             :existing_attributions => [],
             :attribution_suggestions => Csvarchive.get_all_as_json(current_user) } -%>
         </p>
 
         <p style="text-align: center; margin-top: 1.5em;">
-          <%= submit_tag "Save and create archive", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(true); return(false);" -%> or <%= link_to 'Cancel', csvarchives_path -%>
+          <%= submit_tag "Save and create data extract", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(true); return(false);" -%> or <%= link_to 'Cancel', csvarchives_path -%>
         </p>
       <% end -%>
 
