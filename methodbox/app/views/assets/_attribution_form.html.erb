@@ -11,10 +11,12 @@
 
 <% case resource_type.downcase; when "method" -%>
   <% resource_type_attributed_to_types = "Methods" -%>
-  <% when "model" -%>
+<% when "model" -%>
   <% resource_type_attributed_to_types = "Models" -%>
-  <% when "survey" -%>
+<% when "survey" -%>
   <% resource_type_attributed_to_types = "Surveys" -%>
+<% when "data extract" -%>
+  <% resource_type_attributed_to_types = "Data Extracts" -%>
 <% else -%>
   <% resource_type_attributed_to_types = "THIS MUST BE A NEW TYPE OF RESOURCE FOR WHICH ATTRIBUTIONS ARE INTRODUCED - ADD IT HERE" -%>
 <% end -%>
@@ -23,20 +25,20 @@
 <div class="fold">
 
   <div class="foldTitle">
-    <%#= help_icon("Here you attribute this #{resource_type} to other #{resource_type_attributed_to_types}.") -%>
+<%#= help_icon("Here you attribute this #{resource_type} to other #{resource_type_attributed_to_types}.") -%>
     Attributions
   </div>
 
   <div id="attributions_fold_content" class="foldContent" style="display: block;">
 
-    <%#*<div class="box_infotext">%>
-      <%#*<p>%>
-        <%#*Here you can record attributions to other%>
+<%#*<div class="box_infotext">%>
+<%#*<p>%>
+<%#*Here you can record attributions to other%>
 <%#= resource_type_attributed_to_types -%>
-        <%#*if any were used in creation of this%>
+<%#*if any were used in creation of this%>
 <%#= resource_type -%>.
-      <%#*</p>%>
-    <%#*</div>%>
+<%#*</p>%>
+<%#*</div>%>
 
     <p style="font-weight: bold; margin-top: 1.5em;">
       If this <%= resource_type %> is based on any existing <%= resource_type_attributed_to_types -%>, please list them below

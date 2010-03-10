@@ -42,7 +42,9 @@
     <div class="box_infotext">
     	<p>
     		Here you can specify who can <b>view</b> and <b>download</b> this <% if @resource_type=="Script" -%>
-                Method
+                Script/Method
+                <% elsif @resource_type=="Csvarchive" -%>
+                Data Extract
                 <% else -%>
                 <%= @resource_type -%>
                 <% end -%>
@@ -77,7 +79,7 @@
 			<input <%= 'checked="checked"' if @sharing_mode == Policy::PRIVATE %> id="sharing_scope_<%= Policy::PRIVATE -%>" name="sharing[sharing_scope]"
             value="<%= Policy::PRIVATE -%>" type="radio" onclick="javascript:setSharingElementVisibility(<%= Policy::PRIVATE -%>);" />
         - Keep this <% if @resource_type=="Script" -%>
-                Method
+                Script/Method
                 <% else -%>
                 <%= @resource_type -%>
                 <% end -%> private.
