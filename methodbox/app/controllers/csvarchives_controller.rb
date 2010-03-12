@@ -13,7 +13,7 @@ class CsvarchivesController < ApplicationController
     @scripts = Script.find(:all)
     @scripts=Authorization.authorize_collection("show",@scripts,current_user)
     @surveys = Survey.find(:all)
-#    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
+    #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
 
   def recreate
@@ -120,104 +120,104 @@ class CsvarchivesController < ApplicationController
     #      variable_hash = Hash.new
     existing_arcs = Csvarchive.find(:all, :conditions=>"title='" + params[:archive][:title] + "' and person_id=" + User.find(current_user).person_id.to_s)
     if existing_arcs.empty?
-    all_variables_array = Array.new
-    variable_hash = Hash.new
-    params[:all_variables_array].each do |var|
-      puts "downloading " + var.to_s
-      variable = Variable.find(var)
-      if (!variable_hash.has_key?(variable.dataset_id))
-        variable_hash[variable.dataset_id] = Array.new
+      all_variables_array = Array.new
+      variable_hash = Hash.new
+      params[:all_variables_array].each do |var|
+        puts "downloading " + var.to_s
+        variable = Variable.find(var)
+        if (!variable_hash.has_key?(variable.dataset_id))
+          variable_hash[variable.dataset_id] = Array.new
+        end
+        variable_hash[variable.dataset_id].push(var)
+        all_variables_array.push(Variable.find(var))
+        #        variable_hash[var] = get_variable(var)
+        #        logger.info("Would have downloaded: " + var.to_s)
       end
-      variable_hash[variable.dataset_id].push(var)
-      all_variables_array.push(Variable.find(var))
-      #        variable_hash[var] = get_variable(var)
-      #        logger.info("Would have downloaded: " + var.to_s)
-    end
 
 
-    #create XML request to be sent with http post request
-    doc = XML::Document.new()
-    doc.root = XML::Node.new('Datasets')
-    root = doc.root
-    root << mail = XML::Node.new('Email')
-    mail << User.find(current_user.id).person.email
+      #create XML request to be sent with http post request
+      doc = XML::Document.new()
+      doc.root = XML::Node.new('Datasets')
+      root = doc.root
+      root << mail = XML::Node.new('Email')
+      mail << User.find(current_user.id).person.email
 
-    root << filename = XML::Node.new('Filename')
-    filename << params[:archive][:title]
+      root << filename = XML::Node.new('Filename')
+      filename << params[:archive][:title]
     
-    variable_hash.each_key do |key|
+      variable_hash.each_key do |key|
 
-      root << dataset = XML::Node.new('Dataset')
-      dataset['name']= Dataset.find(key).filename
-      dataset << variables = XML::Node.new('Variables')
-      variable_hash[key].each do |var|
-        variables << variable = XML::Node.new('Variable')
-        variable << Variable.find(var).name
+        root << dataset = XML::Node.new('Dataset')
+        dataset['name']= Dataset.find(key).filename
+        dataset << variables = XML::Node.new('Variables')
+        variable_hash[key].each do |var|
+          variables << variable = XML::Node.new('Variable')
+          variable << Variable.find(var).name
+        end
       end
-    end
 
-    http = Net::HTTP.new('localhost',25000)
-    http.read_timeout=6000
-    #    response = http.post('/eos/download', doc.to_s)
-    puts doc.to_s
-    response = http.post(CSV_SERVER_PATH + '/download', doc.to_s)
-    if response.response.class == Net::HTTPOK
-      xmlstring = String.new
-      response.body.each do |str|
-        xmlstring = xmlstring + str
-      end
-      puts xmlstring
-      xmlparser = XML::Parser.string(xmlstring)
-      xmldoc = xmlparser.parse
-      root = xmldoc.root
-      @jobid = root.child.to_s
+      http = Net::HTTP.new('localhost',25000)
+      http.read_timeout=6000
+      #    response = http.post('/eos/download', doc.to_s)
+      puts doc.to_s
+      response = http.post(CSV_SERVER_PATH + '/download', doc.to_s)
+      if response.response.class == Net::HTTPOK
+        xmlstring = String.new
+        response.body.each do |str|
+          xmlstring = xmlstring + str
+        end
+        puts xmlstring
+        xmlparser = XML::Parser.string(xmlstring)
+        xmldoc = xmlparser.parse
+        root = xmldoc.root
+        @jobid = root.child.to_s
 
-      #only one script at the moment, change to many in future and can be none
-      if params[:script][:id] != ""
-        all_scripts_array = Array.new
-        all_scripts_array.push(Script.find(params[:script][:id]))
-        params[:archive][:scripts] = all_scripts_array
-      end
-       if params[:survey][:id] != ""
-        all_surveys_array = Array.new
-        all_surveys_array.push(Survey.find(params[:survey][:id]))
-        params[:archive][:surveys] = all_surveys_array
-      end
-      params[:archive][:filename] = @jobid
-      params[:archive][:complete] = false
-      params[:archive][:last_used_at] = Time.now
-      #      @archive.content_blob = ContentBlob.new(:data => file.body)
-      params[:archive][:content_type] = "application/zip"
-      params[:archive][:person_id] = User.find(current_user.id).person.id
-      params[:archive][:variables] = all_variables_array
-      params[:archive][:contributor_type] = "User"
-      params[:archive][:contributor_id] = current_user.id
+        #only one script at the moment, change to many in future and can be none
+        if params[:script][:id] != ""
+          all_scripts_array = Array.new
+          all_scripts_array.push(Script.find(params[:script][:id]))
+          params[:archive][:scripts] = all_scripts_array
+        end
+        if params[:survey][:id] != ""
+          all_surveys_array = Array.new
+          all_surveys_array.push(Survey.find(params[:survey][:id]))
+          params[:archive][:surveys] = all_surveys_array
+        end
+        params[:archive][:filename] = @jobid
+        params[:archive][:complete] = false
+        params[:archive][:last_used_at] = Time.now
+        #      @archive.content_blob = ContentBlob.new(:data => file.body)
+        params[:archive][:content_type] = "application/zip"
+        params[:archive][:person_id] = User.find(current_user.id).person.id
+        params[:archive][:variables] = all_variables_array
+        params[:archive][:contributor_type] = "User"
+        params[:archive][:contributor_id] = current_user.id
       
-      @archive = Csvarchive.new(params[:archive])
-      @archive.save
+        @archive = Csvarchive.new(params[:archive])
+        @archive.save
       
-      policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
+        policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
 
-      # update attributions
-      Relationship.create_or_update_attributions(@archive, params[:attributions])
-      puts "policy error: " + policy_err_msg
+        # update attributions
+        Relationship.create_or_update_attributions(@archive, params[:attributions])
+        puts "policy error: " + policy_err_msg
 
-    end
+      end
     
   
 
-    respond_to do |format|
+      respond_to do |format|
 
-      format.html { redirect_to csvarchive_path(@archive) }
+        format.html { redirect_to csvarchive_path(@archive) }
 
-    end
+      end
     else
-#      respond_to do |format|
+      #      respond_to do |format|
 
       flash[:error] = "You already have an archive with such a title"
-  redirect_to(:controller => "csvarchives", :action => "new", :all_variables_array => params[:all_variables_array],:title =>params[:archive][:title], :description => params[:archive][:description])
-#    end
-  end
+      redirect_to(:controller => "csvarchives", :action => "new", :all_variables_array => params[:all_variables_array],:title =>params[:archive][:title], :description => params[:archive][:description])
+      #    end
+    end
   end
 
   def new_create
@@ -442,7 +442,9 @@ class CsvarchivesController < ApplicationController
           metadata << "\n" + Dataset.find(key).name + "\n---------------"
           variable_hash[key].each do |var|
             metadata << "\nName: " + var.name
-            metadata << "\nLabel: " + var.value
+            if var.value != nil
+              metadata << "\nLabel: " + var.value
+            end
             if var.category!= nil
               metadata << "\nCategory: " + var.category
             end
@@ -461,7 +463,8 @@ class CsvarchivesController < ApplicationController
         end
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts metadata}}
         send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + ".zip", :content_type => @archive.content_type, :disposition => 'attachment'
-
+        #        File.delete(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip")
+        #        Dir.rmdir(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename)
         #        send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
       end
       #      elsif response.response.class == Net::HTTPInternalServerError
