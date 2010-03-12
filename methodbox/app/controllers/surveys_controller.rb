@@ -9,6 +9,110 @@ class SurveysController < ApplicationController
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
+  def grid_view
+    puts "doing some stuff"
+    @query= params[:survey_search_query]
+    datasets=params[:entry_ids]
+    @dataset_request = ""
+    datasets.each do |dataset|
+      @dataset_request = @dataset_request + "&datasets[]=" + dataset
+    end
+    #    @selected_surveys = Array.new(params[:entry_ids])
+    #    res = Variable.multi_solr_search("income", :limit=>1000, :models=>(Variable))
+    #    solr_docs = res.docs
+    #    temp_variables = Array.new
+    ##    page_res = solr_docs.paginate(:page=>params[:page], :per_page=>params[:per_page])
+    #    solr_docs.each do |item|
+    #      @selected_surveys.each do |ids|
+    #        if Dataset.find(item.dataset_id).id.to_s == ids
+    #          logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+    #          puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+    #          temp_variables.push(item)
+    #          break
+    #        end
+    #      end
+    #    end
+    #    page_res = temp_variables.paginate(:page=>params[:page], :per_page=>params[:per_page])
+    #    puts page_res
+    #    #    @variables = Variable.find(:all, :conditions=>"category='income'")
+    #    #    start_value = (params[:page] - 1) * params[:rows]
+    #    #    end_value = params[:page] * params[:rows]
+    #    #    @paged_variables = Array.new
+    #    #    if @variables
+    #    #
+    #    #    end
+    #    #    for i in start_value..end_value
+    #    #      @paged_variables.push(@variables[i])
+    #    #    end
+    ##    @variables_json = temp_variables.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:per_page],temp_variables.size)
+    #    @variables_json = page_res.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:per_page],temp_variables.size)
+    #    puts @variables_json
+    #    respond_to do |format|
+    #      format.html
+    #      format.json { render :json => @variables_json }
+    #
+    #    end
+
+    #     respond_to do |format|
+    #        logger.info("rendering grid view")
+    #        format.html
+    #        format.xml
+    #      end
+  end
+
+  def search_stuff
+    puts "doing some stuff"
+    @selected_surveys = params[:datasets]
+    res = Variable.multi_solr_search(params[:query].downcase, :limit=>1000, :models=>(Variable))
+    solr_docs = res.docs
+    temp_variables = Array.new
+    #    page_res = solr_docs.paginate(:page=>params[:page], :per_page=>params[:per_page])
+    solr_docs.each do |item|
+      @selected_surveys.each do |ids|
+        if Dataset.find(item.dataset_id).id.to_s == ids
+          logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+          puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+          temp_variables.push(item)
+          break
+        end
+      end
+    end
+    temp_variables.each do |var|
+      var_name = var.name
+      var.name = "<a href='/variables/" + var.id.to_s
+      var.name = var.name + "'>"
+      var.name = var.name + var_name
+      var.name = var.name + "</a>"
+    end
+    page_res = temp_variables.paginate(:page=>params[:page], :per_page=>params[:rows])
+
+    #    @variables = Variable.find(:all, :conditions=>"category='income'")
+    #    start_value = (params[:page] - 1) * params[:rows]
+    #    end_value = params[:page] * params[:rows]
+    #    @paged_variables = Array.new
+    #    if @variables
+    #
+    #    end
+    #    for i in start_value..end_value
+    #      @paged_variables.push(@variables[i])
+    #    end
+    #    @variables_json = page_res.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:rows],temp_variables.size)
+    @variables_json = page_res.to_jqgrid_json([:name,:value,:category],params[:page],params[:rows],temp_variables.size)
+
+    puts @variables_json
+    respond_to do |format|
+      format.html
+      format.json { render :json => @variables_json }
+       
+    end
+  
+    #     respond_to do |format|
+    #        logger.info("rendering grid view")
+    #        format.html
+    #        format.xml
+    #      end
+  end
+  
   def index
     #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
 
@@ -99,8 +203,8 @@ class SurveysController < ApplicationController
       #    end
       #
       #  else
-#    case params['sort']
-#    when nil
+      #    case params['sort']
+      #    when nil
       @survey_search_query = params[:survey_search_query]
       @selected_surveys = Array.new(params[:entry_ids])
       @current_datasets = Array.new(params[:entry_ids])
@@ -113,7 +217,7 @@ class SurveysController < ApplicationController
         downcase_query = @survey_search_query.downcase
         search_terms.unshift(downcase_query)
       end
-      puts "searching for " + search_terms.to_s
+      logger.info("searching for " + search_terms.to_s)
       temp_variables = Array.new
       search_terms.each do |term|
         #      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
@@ -123,59 +227,88 @@ class SurveysController < ApplicationController
           @selected_surveys.each do |ids|
             if Dataset.find(item.dataset_id).id.to_s == ids
               logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-              puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
-              temp_variables.push(item)
+              #              puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+              contains = false
+              temp_variables.each do |temp_item|
+                if temp_item.id == item.id
+                  contains = true
+                  break
+                end
+              end
+              if contains == false
+                temp_variables.push(item)
+              end
               break
             end
           end
 
         end
       end
-      puts temp_variables.to_json
+      #      puts temp_variables.to_json
       @sorted_variables = temp_variables
       #      @all_variables = @sorted_variables
 
       case params['add_results']
       when "yes"
-        new_variables = Array.new
+        new_variable_list = Array.new
         current_variables = params[:variable_list]
+        #        temp_variables.each do |temp_item|
+        #
+        #          contains = false
         current_variables.each do |var|
-          v = Variable.find(var)
-          new_variables.push(v)
+          temp_variables.delete_if {|x| x.id.to_s == var.to_s}
+          #            puts var.to_s + " " + temp_item.id.to_s
+          #            if var.to_s == temp_item.id.to_s
+          #              contains = true
+          #              puts contains.to_s
+          #              break
+          #            end
+          #            if contains == false
+          #              #              v = Variable.find(temp_item)
+          #              current_variables.push(temp_item.id)
+          #            end
         end
-        @sorted_variables.each do |var|
-          new_variables.push(var)
+        #        end
+        #        puts "curr var" + current_variables.to_json
+        #        @sorted_variables.each do |var|
+        #          new_variables.push(var)
+        #        end
+        current_variables.each do |id|
+          #          puts "pushing " + id.to_s
+          v = Variable.find(id)
+          new_variable_list.push(v)
         end
-        @sorted_variables = new_variables
+        new_variable_list.concat(temp_variables)
+        @sorted_variables = new_variable_list
       when "no"
         #don't have to do anything
       end
 
-#    when "variable"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
-#    when "dataset"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }
-#    when "description"   then "description"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
-#    when "category"   then "category"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }
-#    when "survey" then "survey"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
-#    when "year" then "year"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
-#    when "variable_reverse"  then "variable DESC"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
-#    when "category_reverse"   then "category DESC"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }.reverse
-#    when "description_reverse"   then "description DESC"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
-#    when "dataset_reverse"   then "dataset DESC"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
-#    when "survey_reverse" then "survey DESC"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
-#    when "year_reverse" then "year DESC"
-#      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
-#    end
+      #    when "variable"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
+      #    when "dataset"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }
+      #    when "description"   then "description"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
+      #    when "category"   then "category"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }
+      #    when "survey" then "survey"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
+      #    when "year" then "year"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
+      #    when "variable_reverse"  then "variable DESC"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
+      #    when "category_reverse"   then "category DESC"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }.reverse
+      #    when "description_reverse"   then "description DESC"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
+      #    when "dataset_reverse"   then "dataset DESC"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
+      #    when "survey_reverse" then "survey DESC"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
+      #    when "year_reverse" then "year DESC"
+      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
+      #    end
 
       respond_to do |format|
         logger.info("rendering survey search")
