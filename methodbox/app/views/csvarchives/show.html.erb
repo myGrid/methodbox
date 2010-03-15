@@ -11,8 +11,9 @@
   <%# if !@archive.failure && Authorization.is_authorized?("download", nil, @archive, current_user) -%>
 
     <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button"}, "Download extract as:") -%></li>
-  <% end -%>
   <%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
+  <% end -%>
+
 <%# elsif @archive.failure %>
 <%# if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
 <%#= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
