@@ -53,7 +53,7 @@ class SessionsController < ApplicationController
           redirect_to :action=>"new"
         end
       else
-        flash[:error] = "No user with name " +  params[:login] + ", please create a new account"
+        flash[:error] = "User name or password incorrect, please try again"
         redirect_to :action => 'new'
       end
       
