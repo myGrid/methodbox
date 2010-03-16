@@ -8,20 +8,23 @@
     <li>
       <b class="spiffy"><b class="spiffy1"><b></b></b><b class="spiffy2"><b></b></b><b class="spiffy3"></b><b class="spiffy4"></b><b class="spiffy5"></b></b>
       <div class="survey_box">
-
+<div>
         <p style="padding-left:5px;">
-          <%= link_to(item.title, survey_path(item)) -%>
+          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id})", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox'  %><%= link_to(item.title, survey_path(item)) -%>
         </p>
+</div>
   <%#*<ul>%>
   <%#*<li>%>
   <%#*</li>%>
+<div id="<%= item.id.to_s + "_div"-%>" style="display:none;">
         <% item.datasets.each do |dataset| -%>
           <p style="padding-left:5px;white-space: normal;">
-            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}), :class=>'survey_checkbox'  %>
+            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}), :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}"  %>
             <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= dataset.description-%>
           </p>
           <%#*<br/>%>
         <% end -%>
+</div>
   <%#*</ul>%>
 
       </div>
@@ -31,4 +34,42 @@
 </ul>
 </div>
 <%# end -%>
+
+<script type="text/javascript">
+
+	// var checkedDatasetMap = {};
+	var checkedSurveyMap = {};
+	
+	// function markMeAsClicked(id) {
+	// 		if (checkedDatasetMap[id] != null) {
+	// 			if (checkedDatasetMap[id] == true) {
+	// 				checkedDatasetMap[id] == false;
+	// 			} else {
+	// 				checkedDatasetMap[id] == true;
+	// 			}
+	// 		} else {			
+	// 		checkedMap[id] = true;
+	// 		}
+	// 	}
+	
+	function hideOrShowThisDiv(id) {
+		if ($(id+'_div').style.display == 'none') {
+					$(id+'_div').show();	
+				} else {
+		$(id+'_div').hide();		
+		}
+	
+	}
+	function selectAllDatasetsForYear(id) {
+		if (checkedSurveyMap[id] == null) {
+			checkedSurveyMap[id] = true;
+		} else if (checkedSurveyMap[id] == true) {
+				checkedSurveyMap[id] = false;
+			} else {
+				checkedSurveyMap[id] = true;
+			}
+
+		$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
+	}
+</script>
 
