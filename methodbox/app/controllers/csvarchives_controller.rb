@@ -63,6 +63,9 @@ class CsvarchivesController < ApplicationController
   def download
     #    no security here
     find_archive
+    if params[:type] == nil
+      params[:type] = "CSV"
+    end
     puts "type is " + params[:type]
 
     if @archive.complete
@@ -474,6 +477,11 @@ class CsvarchivesController < ApplicationController
       #        render :update, :status=>:created do |page|
       #          page.redirect_to(:controller => 'csvarchives', :action => 'show', :id=>@archive.id)
       #        end
+    elsif params[:type]!="CSV"
+      flash[:notice] = "This data extract is only available in CSV format."
+       respond_to do |format|
+          format.html { redirect_to csvarchive_path(@archive) }
+        end
     else
       @archive.failure = true
       @archive.save
