@@ -216,4 +216,52 @@ visibility:hidden
     background:#CCC;
 }
 
+.spiffygreen{
+    display:block;
+    width: 125px;
+}
+
+.spiffygreen *{
+    display:block;
+    height:1px;
+    font-size:.01em;
+    overflow:hidden;
+    background:green;
+}
+.spiffy1green{
+    margin-left:3px;
+    margin-right:3px;
+    padding-left:1px;
+    padding-right:1px;
+    border-left:1px solid green;
+    border-right:1px solid green;
+    background:green;
+}
+.spiffy2green{
+    margin-left:1px;
+    margin-right:1px;
+    padding-right:1px;
+    padding-left:1px;
+    border-left:1px solid green;
+    border-right:1px solid green;
+    background:green;
+}
+.spiffy3green{
+    margin-left:1px;
+    margin-right:1px;
+    border-left:1px solid green;
+    border-right:1px solid green;
+}
+.spiffy4green{
+    border-left:1px solid green;
+    border-right:1px solid green;
+}
+.spiffy5green{
+    border-left:1px solid green;
+    border-right:1px solid green;
+}
+.spiffyfggreen{
+    background:green;
+}
+
 
