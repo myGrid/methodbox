@@ -10,7 +10,7 @@
       <div class="survey_box">
 <div>
         <p style="padding-left:5px;">
-          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id})", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox'  %><%= link_to(item.title, survey_path(item)) -%>
+          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id})", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_survey_check'}"  %><%= link_to(item.title, survey_path(item)) -%>
         </p>
 </div>
   <%#*<ul>%>
@@ -19,7 +19,7 @@
 <div id="<%= item.id.to_s + "_div"-%>" style="display:none;">
         <% item.datasets.each do |dataset| -%>
           <p style="padding-left:5px;white-space: normal;">
-            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}), :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}"  %>
+            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}),:onclick=>"checkSelectAllStatus(#{item.id.to_s})", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}"  %>
             <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= dataset.description-%>
           </p>
           <%#*<br/>%>
@@ -38,36 +38,42 @@
 <script type="text/javascript">
 
 	// var checkedDatasetMap = {};
+	//a list of the 'check all' datasets checkbox
+	//and whether it is true or false
 	var checkedSurveyMap = {};
 	
-	// function markMeAsClicked(id) {
-	// 		if (checkedDatasetMap[id] != null) {
-	// 			if (checkedDatasetMap[id] == true) {
-	// 				checkedDatasetMap[id] == false;
-	// 			} else {
-	// 				checkedDatasetMap[id] == true;
-	// 			}
-	// 		} else {			
-	// 		checkedMap[id] = true;
-	// 		}
-	// 	}
-	
+	//if a particular dataset checkbox is clicked and is set to
+	//false then unclick the 'select all' checkbox if it is true 
+	function checkSelectAllStatus(id) {
+
+		$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_survey_check") ) {checkbox.checked = false }} });
+		if (checkedSurveyMap[id] == null) {
+			checkedSurveyMap[id] = false;
+		} else {
+			checkedSurveyMap[id] = false;
+		}
+			
+	}
+	//used to show the dataset list under a
+	//particular survey
 	function hideOrShowThisDiv(id) {
 		if ($(id+'_div').style.display == 'none') {
-					$(id+'_div').show();	
-				} else {
-		$(id+'_div').hide();		
+			$(id+'_div').show();	
+		} else {
+			$(id+'_div').hide();		
 		}
-	
 	}
+	
+	//select all of the datasets for a particular
+	//survey when the select all checkbox is clicked
 	function selectAllDatasetsForYear(id) {
 		if (checkedSurveyMap[id] == null) {
 			checkedSurveyMap[id] = true;
 		} else if (checkedSurveyMap[id] == true) {
-				checkedSurveyMap[id] = false;
-			} else {
-				checkedSurveyMap[id] = true;
-			}
+			checkedSurveyMap[id] = false;
+		} else {
+			checkedSurveyMap[id] = true;
+		}
 
 		$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
 	}
