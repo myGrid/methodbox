@@ -18,7 +18,7 @@
   <%= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
 <% end %>
 
-<%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
+<%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>false } %>
 
 <% if @scripts.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
