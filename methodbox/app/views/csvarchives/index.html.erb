@@ -26,7 +26,7 @@
         <!-- only do the page links if the collection supports it -->
         <%= render :partial => "csvarchives/paginate_all_archives", :locals => { :collection => @all_archives,:my_page=>@my_page } -%>
       <% end -%>
-      <%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>true} %>
+      <%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>false} %>
       <% if @all_archives.public_methods.include?("page_count") -%>
         <!-- only do the page links if the collection supports it -->
         <%= render :partial => "csvarchives/paginate_all_archives", :locals => { :collection => @all_archives,:my_page=>@my_page } -%>
