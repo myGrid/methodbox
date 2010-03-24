@@ -1,3 +1,4 @@
+    <%= stylesheet_link_tag 'main_layout_extras', 'reset-fonts-grids', 'base-min', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced' -%>
 <%#*<div style="width:100%;float:right;display:inline;padding-right:30px;margin-bottom:-20px;">%>
 <div style="position:relative; height:4em;">
   <div style="position:absolute;top: 0.25em;left:0.5em">
@@ -12,7 +13,7 @@
     <table><tr><td>
 <%#= avatar(current_user.person, 40,:alt=>current_user.person.name) -%>
           <%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
-<%#= link_to(image_tag avatar_url(current_user.person, current_user.person.avatar_id, 40) ,:alt=> current_user.person.name, :class=>"framed",:title=>current_user.person.name),person_path(current_user.person) -%></td><td><%= icon "profile", messages_path, nil, nil, "&nbsp;My Messages" %></td>
+<%#= link_to(image_tag avatar_url(current_user.person, current_user.person.avatar_id, 40) ,:alt=> current_user.person.name, :class=>"framed",:title=>current_user.person.name),person_path(current_user.person) -%></td><td><%= icon "profile", url_for(current_user.person), nil, nil, "&nbsp;My Profile" %></td><td><%= icon "message", messages_path, nil, nil, "&nbsp;My Messages" %></td>
         <td><%= icon('cart', cart_path, "View Cart", nil, "My Variable Cart") -%></td><td> <%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %></td></tr>
     </table>
     <%#= avatar(current_user.person, 40) -%>
