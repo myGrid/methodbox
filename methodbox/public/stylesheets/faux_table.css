@@ -98,16 +98,21 @@ li div {
 }
 .col6 {
     /*min-width: 65px;*/
-    width:65px;
+    width:55px;
 }
 .col7 {
     /*min-width: 65px;*/
-    width:70px;
+    width:60px;
 }
 .col8 {
     /*min-width: 50px;*/
     /* Remember the scroll bar needs space*/
-    width:50px;
+    width:40px;
+}
+.col9 {
+    /*min-width: 50px;*/
+    /* Remember the scroll bar needs space*/
+    width:30px;
 }
 
 .head1 {
@@ -131,15 +136,19 @@ li div {
 }
 .head6 {
     /*min-width: 65px;*/
-    width:65px;
+    width:55px;
 }
 .head7 {
     /*min-width: 65px;*/
-    width:70px;
+    width:60px;
 }
 .head8 {
     /*min-width: 75px;*/
-    width:50px;
+    width:40px;
+}
+.head8 {
+    /*min-width: 75px;*/
+    width:30px;
 }
 * html div.faux_table_container {
     /*width:700px;*/
