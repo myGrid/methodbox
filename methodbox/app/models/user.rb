@@ -2,6 +2,8 @@ require 'digest/sha1'
 require 'acts_as_contributor'
 
 class User < ActiveRecord::Base
+  #savage_beast
+  include SavageBeast::UserInit
   
   acts_as_contributor
   # TODO uncomment the following line when SOPs are implemented
@@ -41,6 +43,28 @@ class User < ActiveRecord::Base
   named_scope :without_profile,:conditions=>['person_id IS NULL']
   named_scope :admins,:conditions=>['is_admin = ?',true],:include=>:person
 
+#savage_beast
+  def display_name
+          self.person.name
+  end
+
+  # #savage_beast
+  #   def admin?
+  #     puts "checking admin"
+  #           return self.is_admin?
+  #   end
+  #savage_beast
+  def currently_online
+    false
+  end
+  
+  #savage_beast
+  def build_search_conditions(query)
+    # query && ['LOWER(display_name) LIKE :q OR LOWER(login) LIKE :q', {:q => "%#{query}%"}]
+    query
+  end
+  
+  
   # Activates the user in the database.
   def activate
     @activated = true
