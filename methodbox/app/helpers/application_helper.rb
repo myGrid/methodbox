@@ -3,7 +3,16 @@
 require_dependency File.join(Rails.root, 'vendor', 'plugins', 'annotations', 'lib', 'app', 'helpers', 'application_helper')
 
 module ApplicationHelper
+  #savage_beast
+  include SavageBeast::ApplicationHelper
+  
   include TagsHelper
+  
+  #savage_beast
+    def admin?
+      puts "checking admin"
+            return current_user.is_admin?
+    end
 
   def reload_flash_error
     page.replace "error_flash", :partial => 'layouts/flash_error'
@@ -91,7 +100,8 @@ module ApplicationHelper
     #    html_options = {
     #      :title => "Sort this field"
     #    }
-    link_to_remote text, :title=>'Sort by this field', :before => "Element.show('doing_stuff_spinner')",:success => "Element.hide('doing_stuff_spinner')", :url=> sort_variables_surveys_url(:sorted_variables=>sorted_variables, :search_query=>query, :survey_list => years, :sort => key)
+     # :before => "Element.show('spinner')",:success => "Element.hide('spinner')",
+    link_to_remote text, :title=>'Sort by this field',:before => "Element.show('spinner')",:success => "Element.hide('spinner')", :url=> sort_variables_surveys_url(:sorted_variables=>sorted_variables, :search_query=>query, :survey_list => years, :sort => key)
   end
 
   #List of creatable model classes
