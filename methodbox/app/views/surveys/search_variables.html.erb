@@ -51,15 +51,15 @@
       <div id="sorted_variables_div">
         <%= render :partial => "sorted_variables_div", :locals=>{:sorted_variables => @sorted_variables}-%>
       </div>
-      <div style="position: absolute; bottom:2.1em; left:1em;">
-        <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('doing_stuff_spinner')",:success => "Element.hide('doing_stuff_spinner')"} -%>
+      <div style="position: absolute; bottom:1em; right:1em;">
+        <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
   <%#= submit_tag'Add selected variables to cart', :name=>"_submit",:src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%>
       </div>
-      <div style="position: absolute; bottom:1em; right:1em;">
-        <%= text_field_tag :link_variables_text, @link_reason %>
-        <%= submit_to_remote '_submit', 'Group selected variables', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'link';Element.show('doing_stuff_spinner')",:success => "Element.hide('doing_stuff_spinner')"} -%>
+      <!-- <div style="position: absolute; bottom:1em; right:1em;"> -->
+        <%#= text_field_tag :link_variables_text, @link_reason %>
+        <%#= submit_to_remote '_submit', 'Group selected variables', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'link';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
   <%#= submit_tag 'Group selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%>
-      </div>
+      <!-- </div> -->
       <br/>
       <div style="position: absolute; bottom:0.9em; left:1em;">Select:
         <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
