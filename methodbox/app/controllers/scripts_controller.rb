@@ -11,7 +11,22 @@ class ScriptsController < ApplicationController
 
   # GET /script
   def index
-    @scripts.results=Authorization.authorize_collection("show",@scripts.results,current_user)
+    # found = Script.find(:all,
+    #   :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
+    # #    found = Script.find(:all,
+    # #      :order => "title")
+    # 
+    # # this is only to make sure that actual binary data isn't sent if download is not
+    # # allowed - this is to increase security & speed of page rendering;
+    # # further authorization will be done for each item when collection is rendered
+    # found.each do |script|
+    #   script.content_blob.data = nil unless Authorization.is_authorized?("download", nil, script, current_user)
+    # end
+    # puts "before authorize" + found.results.size.to_s
+    # scripts = found
+    # scripts.results=Authorization.authorize_collection("show",scripts.results,current_user)
+    #  puts "after authorize" + scripts.results.size.to_s
+    # @scripts = scripts
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@scripts}

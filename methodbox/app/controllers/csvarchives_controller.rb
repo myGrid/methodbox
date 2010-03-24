@@ -27,7 +27,7 @@ class CsvarchivesController < ApplicationController
   end
 
   def index
-    @all_archives.results =Authorization.authorize_collection("show",@all_archives.results,current_user)
+    # @all_archives.results =Authorization.authorize_collection("show",@all_archives.results,current_user)
     #    @all_archives.results.each do |item|
     #      if !item.complete
     #        http = Net::HTTP.new('localhost',25000)
