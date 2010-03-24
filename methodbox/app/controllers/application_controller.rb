@@ -16,6 +16,35 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
+  
+#savage_beast
+  def update_last_seen_at
+    #return unless logged_in?
+    #User.update_all ['last_seen_at = ?', Time.now.utc], ['id = ?', current_user.id]
+    #current_user.last_seen_at = Time.now.utc
+  end
+  # #savage_beast
+  # def login_required
+  #       if !current_user
+  #                                 # redirect to login page
+  #                                 return false
+  #                         end
+  #     end
+      
+      # def current_user
+      #         #@current_user ||= ((session[:user_id] && User.find_by_id(session[:user_id])) || 0)
+      #         @current_user = current_user
+      #       end
+      #savage_beast
+      # def logged_in?
+      #        current_user ? true : false #current_user != 0
+      #      end
+      # 
+      #      def admin?
+      #        logged_in? && current_user.admin?
+      #      end
+      
+  
 
   def deal_with_selected
     #        logger.info("commit: " + params[:myHiddenField])
