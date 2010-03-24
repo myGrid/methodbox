@@ -30,6 +30,12 @@
         <%= link_to "Data Extracts", csvarchives_url,:title=>"Data extracts created by users from the source data" -%>
       </li>
 
+	<!-- Forums tab -->
+	            <li <%= (["forums"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+	        <%= link_to "Forums", forums_url,:title=>"Ask questions, help others" -%>
+	      </li>
+	
+<!-- Help tab -->
             <li <%= (["help"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
         <%= link_to "Help", help_index_url,:title=>"Get some help and get started" -%>
       </li>
