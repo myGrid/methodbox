@@ -1,10 +1,14 @@
 <ul class="sectionIcons">
-  <% if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
-    <li><%= icon('watch', watch_variable_path(@variable), nil, nil, 'Watch variable') -%></li>
-  <% else %>
-    <li><%= icon('stopwatch', watch_variable_path(@variable), nil, nil, 'Stop watching variable') -%></li>
+  <%# if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
+    <!-- <li> -->
+<%#= icon('watch', watch_variable_path(@variable), nil, nil, 'Watch variable') -%>
+<!-- </li> -->
+  <%# else %>
+    <!-- <li> -->
+<%#= icon('stopwatch', watch_variable_path(@variable), nil, nil, 'Stop watching variable') -%>
+<!-- </li> -->
 
-  <% end %>
+  <%# end %>
   <li><%= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%></li>
   <li><%= icon('add_to_cart', add_to_cart_variable_path(@variable), "Add Variable to Cart", {:method => :post}, 'Add Variable to Cart') -%></li>
 </ul>
@@ -97,29 +101,29 @@
         <%= link_to(Dataset.find(@variable.dataset_id).survey.surveytype + " " + Dataset.find(@variable.dataset_id).survey.year, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
       </p>
-      <p>
-        <% if !@variable.variable_links.empty? -%>
-          <b>Grouped by:</b>
-        <div class="box_standout">
-          <% @variable.variable_links.each do |link| -%>
-            <%=  link_to(link.description, variable_link_path(link)) -%>
-          <% end -%>
-        </div>
-        <b>Grouped with variables:</b>
-        <div class="box_standout">
-          <% @variable.variable_links.each do |link| -%>
-            <% link.variables.each do |var| -%>
-              <% if @variable.id != var.id -%>
-                <%= link_to(var.name, variable_path(var))-%>
-              <% end -%>
-            <% end -%>
-          <% end -%>
-        </div>
+      <!-- <p> -->
+        <%# if !@variable.variable_links.empty? -%>
+          <!-- <b>Grouped by:</b> -->
+        <!-- <div class="box_standout"> -->
+          <%# @variable.variable_links.each do |link| -%>
+            <%#=  link_to(link.description, variable_link_path(link)) -%>
+          <%# end -%>
+        <!-- </div> -->
+        <!-- <b>Grouped with variables:</b> -->
+        <!-- <div class="box_standout"> -->
+          <%# @variable.variable_links.each do |link| -%>
+            <%# link.variables.each do |var| -%>
+              <%# if @variable.id != var.id -%>
+                <%#= link_to(var.name, variable_path(var))-%>
+              <%# end -%>
+            <%# end -%>
+          <%# end -%>
+        <!-- </div> -->
 
-      <% else -%>
-        <b>No groupings recorded for this variable</b>
-      <% end -%>
-      </p>
+      <%# else -%>
+        <!-- <b>No groupings recorded for this variable</b> -->
+      <%# end -%>
+      <!-- </p> -->
 
     </div>
     <!-- <p>
