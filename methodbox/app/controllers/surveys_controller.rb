@@ -557,6 +557,7 @@ class SurveysController < ApplicationController
     #    @survey.save_without_timestamping
 
     @survey = Survey.find(params[:id])
+    @forum = Forum.all(:conditions=>["name=?", @survey.title])[0]
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@survey}
