@@ -63,23 +63,23 @@
       <div style="width:875px;margin:auto;color:red;">No value information recorded for this variable</div>
     <% end -%>
   </div>
-  <div>
-    <% if !item.variable_links.empty? -%>
-      <div style="width:875px;margin:auto;">Grouped with:</div>
-      <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;">
-        <% item.variable_links.each do |link| -%>
-          <% link.variables.each do |var| -%>
-            <% if item.id != var.id -%>
-              <%= link_to(var.name, variable_path(var))-%>
-            <% end -%>
-          <% end -%>
-        <% end -%>
-      </div>
-    <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No groupings recorded for this variable</div>
-    <% end -%>
-  </div>
-  <br/>
+  <!-- <div> -->
+    <%# if !item.variable_links.empty? -%>
+      <!-- <div style="width:875px;margin:auto;">Grouped with:</div> -->
+      <!-- <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;"> -->
+        <%# item.variable_links.each do |link| -%>
+          <%# link.variables.each do |var| -%>
+            <%# if item.id != var.id -%>
+              <%#= link_to(var.name, variable_path(var))-%>
+            <%# end -%>
+          <%# end -%>
+        <%# end -%>
+      <!-- </div> -->
+    <%# else -%>
+      <!-- <div style="width:875px;margin:auto;color:red;">No groupings recorded for this variable</div> -->
+    <%# end -%>
+  <!-- </div> -->
+  <!-- <br/> -->
 <%#*<div style="width:680px;margin:auto;">%>
 <%# unless item.title_counts.empty? %>
 <%#*<b>Tags: </b>%>
