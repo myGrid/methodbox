@@ -1,0 +1,125 @@
+general:
+  id: 1
+  name: General questions
+  description: Need some help, got some unanswered questions, not sure where to ask them....ask them here
+  position: 1
+  description_html: <p>Need some help, got some unanswered questions, not sure where to ask them....ask them here</p>
+  
+bugs:
+  id: 2
+  name: Bug reports and feature requests
+  description: Think we can do something better.  Got an idea for new functionality.  Something broke and needs fixed!
+  position: 2
+  description_html: <p>Think we can do something better.  Got an idea for new functionality.  Something broke and needs fixed!</p>
+      
+hse1991-1:
+  id: 3
+  name: HSE1991-1992
+  description: Ask questions and queries and post facts about Health Survey for England 1991/1992 here
+  position: 3
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1991/1992 here</p>
+
+hse1993:
+  id: 4
+  name: HSE1993
+  description: Ask questions and queries and post facts about Health Survey for England 1993 here
+  position: 4
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1993 here</p>
+  
+hse1994:
+  id: 5
+  name: HSE1994
+  description: Ask questions and queries and post facts about Health Survey for England 1994 here
+  position: 5
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1994 here</p>
+  
+hse1995:
+  id: 6
+  name: HSE1995
+  description: Ask questions and queries and post facts about Health Survey for England 1995 here
+  position: 6
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1995 here</p>
+  
+hse1996:
+  id: 7
+  name: HSE1996
+  description: Ask questions and queries and post facts about Health Survey for England 1996 here
+  position: 7
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1996 here</p>
+    
+hse1997:
+  id: 8
+  name: HSE1997
+  description: Ask questions and queries and post facts about Health Survey for England 1997 here
+  position: 8
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1997 here</p>
+  
+hse1998:
+  id: 9
+  name: HSE1998
+  description: Ask questions and queries and post facts about Health Survey for England 1998 here
+  position: 9
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1998 here</p>
+    
+hse1999:
+  id: 10
+  name: HSE1999
+  description: Ask questions and queries and post facts about Health Survey for England 1999 here
+  position: 10
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 1999 here</p>
+  
+hse2000:
+  id: 11
+  name: HSE2000
+  description: Ask questions and queries and post facts about Health Survey for England 2000 here
+  position: 11
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2000 here</p>
+   
+hse2001:
+  id: 12
+  name: HSE2001
+  description: Ask questions and queries and post facts about Health Survey for England 2001 here
+  position: 12
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2001 here</p>
+   
+hse2002:
+  id: 13
+  name: HSE2002
+  description: Ask questions and queries and post facts about Health Survey for England 2002 here
+  position: 13
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2002 here</p>
+    
+hse2003:
+  id: 14
+  name: HSE2003
+  description: Ask questions and queries and post facts about Health Survey for England 2003 here
+  position: 14
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2003 here</p> 
+  
+hse2004:
+  id: 15
+  name: HSE2004
+  description: Ask questions and queries and post facts about Health Survey for England 2004 here
+  position: 15
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2004 here</p>  
+  
+hse2005:
+  id: 16
+  name: HSE2005
+  description: Ask questions and queries and post facts about Health Survey for England 2005 here
+  position: 16
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2005 here</p>
+    
+hse2006:
+  id: 17
+  name: HSE2006
+  description: Ask questions and queries and post facts about Health Survey for England 2006 here
+  position: 17
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2006 here</p>
+    
+hse2007:
+  id: 18
+  name: HSE2007
+  description: Ask questions and queries and post facts about Health Survey for England 2007 here
+  position: 18
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2007 here</p>  
