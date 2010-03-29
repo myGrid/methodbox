@@ -333,94 +333,113 @@ table.list_item .tags {
 /* BEGIN Tabber tab styles */
 
 /*--------------------------------------------------
-REQUIRED to hide the non-active tab content.
-But do not hide them in the print stylesheet!
---------------------------------------------------*/
+  REQUIRED to hide the non-active tab content.
+  But do not hide them in the print stylesheet!
+  --------------------------------------------------*/
 .tabberlive .tabbertabhide {
-    display: none;
-
+	display: none;
 }
 
 /*--------------------------------------------------
-.tabber = before the tabber interface is set up
-.tabberlive = after the tabber interface is set up
---------------------------------------------------*/
+  .tabber = before the tabber interface is set up
+  .tabberlive = after the tabber interface is set up
+  --------------------------------------------------*/
 .tabber {
 }
 
 .tabberlive {
-    margin-top: 1em;
-    padding-bottom:5px;
+	margin-top: 1em;
 }
 
 /*--------------------------------------------------
-ul.tabbernav = the tab navigation list
-li.tabberactive = the active tab
---------------------------------------------------*/
+  ul.tabbernav = the tab navigation list
+  li.tabberactive = the active tab
+  --------------------------------------------------*/
 ul.tabbernav
 {
-    margin: 0;
-    padding: 3px 0;
-    /*border-bottom: 1px solid #CCC;*/
-    font-weight: bold;
-    font-size: 108%;
+	margin: 0;
+	border-bottom: 1px solid #CCC;
+	font-weight: bold;
+	font-size: 116%;
+	line-height: 24px;
+	padding-bottom: 1px;
 }
 
 ul.tabbernav li
 {
-    list-style: none;
-    margin: 0;
-    display: inline;
+	list-style: none;
+	list-style-image: none;
+	margin: 0;
+	display: inline;
 }
 
 ul.tabbernav li a
 {
-    padding: 3px 0.5em;
-    margin-left: 3px;
-    border: 1px solid #CCC;
-    border-bottom: none;
-    background: #ccccff;
-    text-decoration: none;
+	padding: 3px 0.5em;
+	margin-right: 4px;
+	border: 1px solid #CCC;
+	border-bottom: none;
+/*	background-image: url('/images/tab-bg.png');*/
+	background-position: top;
+	background-repeat: repeat-x;
+	background-color: #CCCCff;
+	text-decoration: none;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
 }
 
 ul.tabbernav li a:link { color: #333; }
 
 ul.tabbernav li a:hover
 {
-    color: #000;
-    background: #3173ff;
-    border-color: #CCC;
+	color: #000;
+	background: #3173ff;
+	border-color: #CCC;
 }
 
 ul.tabbernav li.tabberactive a
 {
-    background-color: #fff;
-    border-bottom: 1px solid #fff;
+	background: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 ul.tabbernav li.tabberactive a:hover
 {
-    color: #000;
-    background: white;
-    border-bottom: 1px solid white;
+	color: #000;
+	background: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 /*--------------------------------------------------
-.tabbertab = the tab content
-Add style only after the tabber interface is set up (.tabberlive)
---------------------------------------------------*/
+  .tabbertab = the tab content
+  Add style only after the tabber interface is set up (.tabberlive)
+  --------------------------------------------------*/
 .tabberlive .tabbertab {
-    margin-right: 0.3em;
-    border:1px solid #CCCCCC;
+	padding: 1em;
+	border: 1px solid #CCC;
+	border-top: 0;
 
+ /* If you don't want the tab size changing whenever a tab is changed
+    you can set a fixed height */
+
+ /* height:200px; */
+
+ /* If you set a fix height set overflow to auto and you will get a
+    scrollbar when necessary */
+
+ /* overflow:auto; */
 }
 
 /* If desired, hide the heading since a heading is provided by the tab */
 .tabberlive .tabbertab h3 {
-    display: none;
+	display: none;
 }
 .tabberlive .tabbertab h3 {
-    display:none;
+ display:none;
 }
 
 /* Example of using an ID to set different styles for the tabs on the page */
@@ -428,10 +447,9 @@ Add style only after the tabber interface is set up (.tabberlive)
 }
 .tabberlive#tab2 {
 }
-
 .tabberlive#tab2 .tabbertab {
-    height:200px;
-    overflow:auto;
+ height:200px;
+ overflow:auto;
 }
 
 /* END Tabber tab styles */
