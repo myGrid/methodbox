@@ -59,14 +59,14 @@ config.gem 'RedCloth'
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_method_box_session',
-    :secret      => '1576ebcfe0d1c7477397d8fb6a7a4354ad24936cc12fd5d6ab6956ab0fc24fc7aa35da1cccc605a5abafc299ba8749694fc156dc84aa32bdf357c66537361f77'
-  }
+      :session_key => '_method_box_session',
+      :secret      => '1576ebcfe0d1c7477397d8fb6a7a4354ad24936cc12fd5d6ab6956ab0fc24fc7aa35da1cccc605a5abafc299ba8749694fc156dc84aa32bdf357c66537361f77'
+    }
 
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")
-  # config.action_controller.session_store = :active_record_store
+  config.action_controller.session_store = :active_record_store
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,
