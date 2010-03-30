@@ -8,6 +8,36 @@ module ApplicationHelper
   
   include TagsHelper
   
+  # ========================================
+  # Code to help with remembering which tab
+  # the user was in after redirects etc.
+  # ----------------------------------------
+
+  # Note: the implementation of this method means that when it is used
+  # it also resets the param to "false", thus the remembering of a tab is
+  # only done in the one (current) request.
+  # If more control than that is required (ie: being able to configure how long tab is remembered for),
+  # then split into 2 different methods.
+  # def get_and_reset_use_tab_cookie_param_value
+  #   #logger.info ""
+  #   #logger.info "get_and_reset_use_tab_cookie_param_value called; before - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
+  #   #logger.info ""
+  # 
+  #   value = session[:use_tab_cookie]
+  #   value = value.blank? ? false : value
+  # 
+  #   session[:use_tab_cookie] = false
+  # 
+  #   #logger.info ""
+  #   #logger.info "get_and_reset_use_tab_cookie_param_value called; after - session[:use_tab_cookie] = #{session[:use_tab_cookie]}"
+  #   #logger.info ""
+  # 
+  #   return value
+  # end
+
+  # ========================================
+  
+  
   #savage_beast
     def admin?
       puts "checking admin"
@@ -101,7 +131,10 @@ module ApplicationHelper
     #      :title => "Sort this field"
     #    }
      # :before => "Element.show('spinner')",:success => "Element.hide('spinner')",
-    link_to_remote text, :title=>'Sort by this field',:before => "Element.show('spinner')",:success => "Element.hide('spinner')", :url=> sort_variables_surveys_url(:sorted_variables=>sorted_variables, :search_query=>query, :survey_list => years, :sort => key)
+    link_to_remote text, :submit=> 'sorted_variables', :title=>'Sort by this field',:before => "Element.show('spinner')",:success => "Element.hide('spinner')", :url=> sort_variables_surveys_url(:search_query=>query, :survey_list => years, :sort => key)
+    # link_to_remote text, :submit=> 'sorted_variables', :title=>'Sort by this field',:before => "Element.show('spinner')",:success => "Element.hide('spinner')", :url=> sort_variables_surveys_url(:sorted_variables=>sorted_variables, :search_query=>query, :survey_list => years, :sort => key)
+    
+ 
   end
 
   #List of creatable model classes
