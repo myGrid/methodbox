@@ -4,7 +4,7 @@
     <div class="head1">&nbsp</div>
 	<div class="head2">&nbsp</div>
     <div class="head3">
-      <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, sorted_variables) %>
+ 	  <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, sorted_variables) %>
     </div>
     <div class="head4">
       <%= sort_link_helper("Description", "description", @search_query, @survey_list, sorted_variables) %>
@@ -26,3 +26,8 @@
     </div>
   </li>
 </ul>
+<div id="sorted_variables">
+<% sorted_variables.each do |variable| -%>
+  <%= hidden_field_tag "sorted_variables[]", variable.id.to_s -%>
+<% end -%>
+</div>
