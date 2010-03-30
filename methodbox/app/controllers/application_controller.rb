@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
-  protect_from_forgery # :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
+  protect_from_forgery  :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
   
 #savage_beast
   def update_last_seen_at
@@ -560,6 +560,10 @@ class ApplicationController < ActionController::Base
   #The default for the number items in a page when paginating
   def default_items_per_page
     7
+  end
+  
+  def default_variables_per_page
+    30
   end
   
   # See ActionController::Base for details
