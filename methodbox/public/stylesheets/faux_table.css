@@ -85,6 +85,7 @@ li div {
 }
 .col3 {
     /*min-width: 150px;*/
+	white-space:normal;
     width:165px;
 }
 .col4 {
@@ -98,19 +99,23 @@ li div {
 }
 .col6 {
     /*min-width: 65px;*/
+	white-space:normal;
     width:55px;
 }
 .col7 {
     /*min-width: 65px;*/
+	white-space:normal;
     width:60px;
 }
 .col8 {
     /*min-width: 50px;*/
+	white-space:normal;
     width:40px;
 }
 .col9 {
     /*min-width: 50px;*/
     /* Remember the scroll bar needs space*/
+	white-space:normal;
     width:30px;
 }
 
