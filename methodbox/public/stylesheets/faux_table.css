@@ -1,6 +1,6 @@
 div.faux_table_container {
     border:1px solid #996633;
-    height:550px;
+    max-height:550px;
     overflow:auto;
     /* Stop the horizontal bar from appearing*/
     overflow-x:hidden;
@@ -106,7 +106,6 @@ li div {
 }
 .col8 {
     /*min-width: 50px;*/
-    /* Remember the scroll bar needs space*/
     width:40px;
 }
 .col9 {
@@ -146,7 +145,7 @@ li div {
     /*min-width: 75px;*/
     width:40px;
 }
-.head8 {
+.head9 {
     /*min-width: 75px;*/
     width:30px;
 }
