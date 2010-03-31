@@ -22,6 +22,10 @@ class Csvarchive < ActiveRecord::Base
   belongs_to :person
 
   acts_as_solr(:fields=>[:title,:description]) if SOLR_ENABLED
+  
+  def to_param
+    "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
+  end
 
   def self.get_all_as_json(user)
     all_archives = Csvarchive.find(:all, :order => "ID asc")

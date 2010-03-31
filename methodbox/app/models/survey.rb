@@ -21,6 +21,11 @@ class Survey < ActiveRecord::Base
   
     validates_uniqueness_of :title, :scope => [ :contributor_id, :contributor_type ], :message => "error - you already have a Survey with such title."
 
+
+    def to_param
+      "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
+    end
+    
   # get a list of Surveys with their original uploaders - for autocomplete fields
   # (authorization is done immediately to save from iterating through the collection again afterwards)
   #

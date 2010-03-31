@@ -10,5 +10,9 @@ class Variable < ActiveRecord::Base
   acts_as_solr(:fields=>[:name,:value,:dataset_id]) if SOLR_ENABLED
   acts_as_taggable_on :title
   acts_as_annotatable
+  
+  def to_param
+    "#{id}-#{name.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
+  end
 
 end

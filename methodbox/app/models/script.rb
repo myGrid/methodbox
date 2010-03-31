@@ -23,6 +23,10 @@ class Script < ActiveRecord::Base
              :dependent => :destroy
 
   belongs_to :person
+  
+  def to_param
+    "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
+  end
 
     def self.get_all_as_json(user)
     all_scripts = Script.find(:all, :order => "ID asc")
