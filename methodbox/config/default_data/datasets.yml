@@ -18,6 +18,7 @@ hse1994-1:
   filename: hse94ai2nd.tab
   description: Individual population statistics for 1994
   survey_id: 3
+  key_variable: pserial
 
 hse1994-2:
   id: 4
@@ -25,6 +26,7 @@ hse1994-2:
   filename: hse94ah.tab
   description: Household statistics for 1994
   survey_id: 3
+  key_variable: hserial
   
 hse1994-3:
   id: 5
@@ -32,6 +34,7 @@ hse1994-3:
   filename: hse94ap.tab
   description: Proxy statistics for 1994
   survey_id: 3
+  key_variable: pserial
 
 hse1995-1:
   id: 6
@@ -39,6 +42,7 @@ hse1995-1:
   filename: hse95ah.tab
   description: Household statistics for 1995
   survey_id: 4
+  key_variable: hserial
 
 hse1995-2:
   id: 7
@@ -46,6 +50,7 @@ hse1995-2:
   filename: hse95ai2nd.tab
   description: Individual population statistics for 1995
   survey_id: 4
+  key_variable: pserial
 
 hse1995-3:
   id: 8
@@ -53,6 +58,7 @@ hse1995-3:
   filename: hse95p.tab
   description: Proxy statistics for 1995
   survey_id: 4
+  key_variable: pserial
 
 hse1996-1:
   id: 9
@@ -81,6 +87,7 @@ hse1997-1:
   filename: hse97ah.tab
   description: Household statistics for 1997
   survey_id: 6
+  key_variable: pserial
 
 hse1997-2:
   id: 13
@@ -88,6 +95,7 @@ hse1997-2:
   filename: hse97ai.tab
   description: Individual population statistics for 1997
   survey_id: 6
+  key_variable: pserial
 
 hse1997-3:
   id: 14
@@ -102,6 +110,7 @@ hse1998-1:
   filename: hse98ai.tab
   description: Individual population statistics for 1998
   survey_id: 7
+  key_variable: pserial
 
 hse1998-2:
   id: 16
@@ -109,6 +118,7 @@ hse1998-2:
   filename: hse98ah.tab
   description: Household statistics for 1998
   survey_id: 7
+  key_variable: hserial
 
 hse1999-1:
   id: 17
@@ -137,6 +147,7 @@ hse2000-1:
   filename: hse00ai.tab
   description: Individual population statistics for 2000
   survey_id: 9
+  key_variable: pserial
 
 hse2000-2:
   id: 21
@@ -144,6 +155,7 @@ hse2000-2:
   filename: hse00ah.tab
   description: Household statistics for 2000
   survey_id: 9
+  key_variable: hserial
     
 hse2001-1:
   id: 22
@@ -179,6 +191,7 @@ hse2003-1:
   filename: hse03ai.tab
   description: Individual population statistics for 2003
   survey_id: 12
+  key_variable: pserial
 
 hse2003-2:
   id: 27
@@ -186,6 +199,7 @@ hse2003-2:
   filename: hse03ah.tab
   description: Household statistics for 2003
   survey_id: 12
+  key_variable: hserial
     
 hse2004-1:
   id: 28
@@ -193,6 +207,7 @@ hse2004-1:
   filename: hse04gpa.tab
   description: Individual population statistics for 2004
   survey_id: 13
+  key_variable: pserial
 
 hse2004-2:
   id: 29
@@ -200,6 +215,7 @@ hse2004-2:
   filename: hse04ah.tab
   description: Household statistics for 2004
   survey_id: 13
+  key_variable: hserial
 
 hse2004-3:
   id: 30
@@ -207,6 +223,7 @@ hse2004-3:
   filename: hse04etha.tab
   description: Ethnic boost sample for 2004
   survey_id: 13
+  key_variable: pserial
    
 hse2005-1:
   id: 31
@@ -214,6 +231,7 @@ hse2005-1:
   filename: hse05ai.tab
   description: Individual population statistics for 2005
   survey_id: 14
+  key_variable: pserial
 
 hse2005-2:
   id: 32
@@ -221,6 +239,7 @@ hse2005-2:
   filename: hse05ah.tab
   description: Household statistics for 2005
   survey_id: 14
+  key_variable: hserial
 
 hse2006-1:
   id: 33
@@ -228,6 +247,7 @@ hse2006-1:
   filename: hse06ai.tab
   description: Individual population statistics for 2006
   survey_id: 15
+  key_variable: pserial
 
 hse2006-2:
   id: 34
@@ -235,6 +255,7 @@ hse2006-2:
   filename: hse06ah.tab
   description: Household statistics for 2006
   survey_id: 15
+  key_variable: hserial
     
 hse2007-1:
   id: 35
@@ -242,6 +263,7 @@ hse2007-1:
   filename: hse07ai.tab
   description: Individual population statistics for 2007
   survey_id: 16
+  key_variable: pserial
 
 hse2007-2:
   id: 36
@@ -249,3 +271,4 @@ hse2007-2:
   filename: hse07ah.tab
   description: Household statistics for 2007
   survey_id: 16
+  key_variable: hserial
