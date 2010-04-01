@@ -4,8 +4,8 @@
   <div>
     <ul class="faux_table<%= curr_cycle %>">
       <li>
-        <div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()" -%></div>
-        <div class="col2"><%= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript:Element.hide($('#{item.name + item.dataset_id.to_s + '_expanded'}'));Element.show($('#{item.name + item.dataset_id.to_s}'));") -%></div>
+        <div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}" -%></div>
+        <div class="col2"><%= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript:if ($('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}').checked == true) {$('#{item.name + item.dataset_id.to_s + '_checkbox'}').checked =true} else {$('#{item.name + item.dataset_id.to_s + '_checkbox'}').checked=false};Field.disable('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}');Field.enable('#{item.name + item.dataset_id.to_s + '_checkbox'}');Element.hide($('#{item.name + item.dataset_id.to_s + '_expanded'}'));Element.show($('#{item.name + item.dataset_id.to_s}'));") -%></div>
         <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
         <div class="col4">
           <% if item.value != nil -%>
