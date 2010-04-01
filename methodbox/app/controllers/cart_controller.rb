@@ -29,7 +29,7 @@ class CartController < ApplicationController
     end
 
     render :update, :status=>:created do |page|
-      page.replace_html "table_container", :partial=>"table"
+      page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables}
     end
     when "create_archive"
       download_all_variables
