@@ -120,7 +120,8 @@ class CartController < ApplicationController
     end
    
   end
-
+#check if there are any variables in the cart.
+#If there are then redirect to the new csvarchives page
   def download_all_variables
     logger.info("download all variables")
 
@@ -130,25 +131,25 @@ class CartController < ApplicationController
         page.replace_html "progress_bar", :partial =>"surveys/try_again"
       end
     else
-      @variable_hash = Hash.new
-      @all_variables_array = Array.new
-      session[:cart].items.each do |var|
-        puts "downloading " + var.to_s
-        variable = Variable.find(var)
-        if (!@variable_hash.has_key?(variable.dataset_id))
-          @variable_hash[variable.dataset_id] = Array.new
-        end
-        @variable_hash[variable.dataset_id].push(var)
-        @all_variables_array.push(Variable.find(var))
-        #        variable_hash[var] = get_variable(var)
-        #        logger.info("Would have downloaded: " + var.to_s)
-      end
+      # @variable_hash = Hash.new
+      # @all_variables_array = Array.new
+      # session[:cart].items.each do |var|
+      #   puts "downloading " + var.to_s
+      #   variable = Variable.find(var)
+      #   if (!@variable_hash.has_key?(variable.dataset_id))
+      #     @variable_hash[variable.dataset_id] = Array.new
+      #   end
+      #   @variable_hash[variable.dataset_id].push(var)
+      #   @all_variables_array.push(Variable.find(var))
+      #   #        variable_hash[var] = get_variable(var)
+      #   #        logger.info("Would have downloaded: " + var.to_s)
+      # end
      
 
       @number_processed = 'Fill in the details for this new Archive'
       render :update, :status=>:created do |page|
         #        page.replace_html "progress_bar", :partial =>"surveys/progress_bar"
-        page.redirect_to(:controller => 'csvarchives', :action => 'new', :all_variables_array => @all_variables_array)
+        page.redirect_to(:controller => 'csvarchives', :action => 'new')
       end
 
     end
