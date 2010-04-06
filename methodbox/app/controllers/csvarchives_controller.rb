@@ -125,7 +125,7 @@ class CsvarchivesController < ApplicationController
     if existing_arcs.empty?
       all_variables_array = Array.new
       variable_hash = Hash.new
-      params[:all_variables_array].each do |var|
+      session[:cart].items.each do |var|
         puts "downloading " + var.to_s
         variable = Variable.find(var)
         if (!variable_hash.has_key?(variable.dataset_id))
