@@ -465,7 +465,16 @@ class CsvarchivesController < ApplicationController
           metadata << "\n\n\n---------------\n---------------"
         end
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts metadata}}
-        send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + ".zip", :content_type => @archive.content_type, :disposition => 'attachment'
+        begin
+        send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + ".zip", :content_type => @archive.content_type, :disposition => 'attachment', :stream => false 
+          
+        rescue Exception => e
+          
+        ensure
+        File.delete(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip")
+          
+        end
+        
         #        File.delete(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip")
         #        Dir.rmdir(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename)
         #        send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
