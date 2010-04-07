@@ -41,7 +41,8 @@ div.hlist li{
  vertical-align: top;
  margin: 0.5em 0.2em;
  #display: inline; /* ie7 */
- _display: inline; /* ie4 ie5 ie6 */
+/* _display: inline; */
+/* ie4 ie5 ie6 */
 }
 
 /*.hlist li {
@@ -58,6 +59,10 @@ ul.survey {
     border: 1px solid #CCC;
     overflow: auto;
 }
+* html ul.survey {
+	overflow:visible;
+	height:1px;
+}
 ul.survey li {
     float: left;
     /*padding-left: 0em;*/
@@ -71,16 +76,25 @@ ul.survey li {
     border: 1px solid black;
 }*/
 
-div .survey_box {
+/*div .survey_box {
     border: none;
     width: 125px;
+}*/
+
+.survey_box{
+	white-space: normal;
+    border: none;
+    width: 120px;
+	padding-left:5px;
+	background-color:#CCC;
 }
 
-.survey_box {
-    /*margin: 5px;*/
-    /*padding: 5px;*/
-    background-color: #CCC;
-    /*border: 1px solid black;*/
+.hidden_para {
+	white-space: normal;
+	border: none;
+    width: 120px;
+	padding-left:5px;
+	background-color:#CCC;
 }
 
 .survey_box ul {
