@@ -6,3 +6,4 @@ CSV_FILE_PATH='/Users/Ian/obesity_data/csv/'
 REGISTRATION_CLOSED = true
 NEW_CSV_FILE_PATH='/Users/Ian/obesity_data/csv/complete'
 METADATA_PATH='/Users/Ian/obesity_data/metadata/'
+UKDA_EMAIL_ADDRESS='http://oai.esds.ac.uk:8080/NesstarLogin/login.do'
