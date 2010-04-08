@@ -80,6 +80,9 @@ ul.survey li {
     border: none;
     width: 125px;
 }*/
+.survey_table th, td {
+	vertical-align:top;
+}
 
 .survey_box{
 	white-space: normal;
