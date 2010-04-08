@@ -144,4 +144,13 @@ class Person < ActiveRecord::Base
     return !avatar_id.nil?
   end
   
+  def ukda_registered 
+   params={'LoginName' => email, 'Login' => 'Login'}
+   response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
+   xml_parser = XML::Parser.string(response.body)
+   xml = xml_parser.parse
+   node = xml.find('child::registered')
+   return node.first.content == "yes"
+  end
+  
 end
