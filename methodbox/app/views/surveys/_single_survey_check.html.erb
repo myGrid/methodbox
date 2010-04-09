@@ -1,10 +1,5 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
-<%#= stylesheet_link_tag 'survey_ul_2'%>
-<%# unless key.nil? -%>
-<%#*<div width="100%">%>
-<%#*<ul class="survey">%>
 
-<!-- <li> -->
 	<% tableize @survey_hash[key],
 	  :cols => 6,
 	  :class => 'survey_table',
@@ -16,24 +11,15 @@
 		        <p class="survey_box" id="<%= item.id.to_s + "_survey_box"-%>">
 		          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id})", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_survey_check'}"  %><%= link_to(item.title, survey_path(item)) -%>
 		        </p>
-
-		  <%#*<ul>%>
-		  <%#*<li>%>
-		  <%#*</li>%>
+		          <p class="hidden_para" style="display:none;" id="<%= item.id.to_s + "_div"-%>">
 
 		        <% item.datasets.each do |dataset| -%>
-		          <p class="hidden_para" style="display:none;" id="<%= item.id.to_s + "_div"-%>">
-		            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}),:onclick=>"checkSelectAllStatus(#{item.id.to_s},#{dataset.id.to_s})", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}"  %>
-		            <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= dataset.description-%>
-		          </p>
+		            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}),:onclick=>"checkSelectAllStatus(#{item.id.to_s},#{dataset.id.to_s})", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}" %>
+		            <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= dataset.description -%>
+<br/>
 		<%= javascript_tag "addDataset(#{item.id.to_s}, #{dataset.id.to_s})"-%>
-		          <%#*<br/>%>
 		        <% end -%>
-
-		  <%#*</ul>%>
-
-
+    </p>
 		      <b class="spiffy" id="<%= item.id.to_s + "_spiffy_bottom"-%>"><b class="spiffy5" id="<%= item.id.to_s + "_spiffy_bottom_5"-%>"></b><b class="spiffy4" id="<%= item.id.to_s + "_spiffy_bottom_4"-%>"></b><b class="spiffy3" id="<%= item.id.to_s + "_spiffy_bottom_3"-%>"></b><b class="spiffy2" id="<%= item.id.to_s + "_spiffy_bottom_2"-%>"><b></b></b><b class="spiffy1" id="<%= item.id.to_s + "_spiffy_bottom_1"-%>"><b></b></b></b>
-		    <!-- </li> -->
 
 	<% end %>
