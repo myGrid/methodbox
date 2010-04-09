@@ -37,13 +37,29 @@ module ApplicationHelper
 
   # ========================================
   
+  #Check if someone is registered with the UKDA using their
+  #web service (see UKDA_EMAIL_ADDRESS in environment_local.rb). It
+  #takes a form with the persons email address and 'Login' submit button
+  #params and returns some xml with a simple <registered>yes</registered>
+  #or <registered>no</registered>
+  def ukda_registration_check(person)
+   params={'LoginName' => person.email, 'Login' => 'Login'}
+   response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
+   xml_parser = XML::Parser.string(response.body)
+   xml = xml_parser.parse
+   node = xml.find('child::registered')
+   return node.first.content == "yes"
+  end
+  
   
   #savage_beast
     def admin?
       puts "checking admin"
             return current_user.is_admin?
     end
-
+    
+#if the flash is for an ajax rendered page then use this to flash 
+#something
   def reload_flash_error
     page.replace "error_flash", :partial => 'layouts/flash_error'
   end
