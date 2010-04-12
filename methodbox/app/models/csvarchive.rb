@@ -4,15 +4,15 @@ class Csvarchive < ActiveRecord::Base
   #really not sure about this whole acts as resource stuff yet
   acts_as_resource
 
-  has_many :variable_lists
+  has_many :variable_lists, :dependent => :destroy
   
   has_many :variables, :through => :variable_lists
 
-  has_many :script_lists
+  has_many :script_lists, :dependent => :destroy
 
   has_many :scripts, :through => :script_lists
 
-  has_many :survey_lists
+  has_many :survey_lists, :dependent => :destroy
 
   has_many :surveys, :through => :survey_lists
 
