@@ -54,8 +54,8 @@ function addDataset(survey_id, dataset_id) {
 //depending on its selection status
 function changeColour(survey_id, selected) {
 	if (selected) {
-		$(survey_id + '_survey_box').setStyle({backgroundColor:"green"});
-		$(survey_id + '_div').setStyle({backgroundColor:"green"});
+		$(survey_id + '_survey_box').setStyle({backgroundColor:"#E2DDB5"});
+		$(survey_id + '_div').setStyle({backgroundColor:"#E2DDB5"});
 		$(survey_id + '_spiffy_top').replace('<b class="spiffygreen" id="' + survey_id + '_spiffy_top"><b class="spiffy1green" id="' + survey_id + '_spiffy_top_1"><b></b></b><b class="spiffy2green" id="' + survey_id + '_spiffy_top_2"><b></b></b><b class="spiffy3green" id="' + survey_id + '_spiffy_top_3"></b><b class="spiffy4green" id="' + survey_id + '_spiffy_top_4"></b><b class="spiffy5green" id="' + survey_id + '_spiffy_top_5"></b></b>');
 		$(survey_id + '_spiffy_bottom').replace('<b class="spiffygreen" id="' + survey_id + '_spiffy_bottom"><b class="spiffy5green" id="' + survey_id + '_spiffy_bottom_5"></b><b class="spiffy4green" id="' + survey_id + '_spiffy_bottom_4"></b><b class="spiffy3green" id="' + survey_id + '_spiffy_bottom_3"></b><b class="spiffy2green" id="' + survey_id + '_spiffy_bottom_2"><b></b></b><b class="spiffy1green" id="' + survey_id + '_spiffy_bottom_1"><b></b></b></b>');
 	} else {
