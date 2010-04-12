@@ -230,7 +230,7 @@ visibility:hidden
     border-right:1px solid #CCC;
 }
 .spiffyfg{
-    background:#CCC;
+    background:#E2DDB5;
 }
 
 .spiffygreen{
@@ -243,42 +243,42 @@ visibility:hidden
     height:1px;
     font-size:.01em;
     overflow:hidden;
-    background:green;
+    background:#E2DDB5;
 }
 .spiffy1green{
     margin-left:3px;
     margin-right:3px;
     padding-left:1px;
     padding-right:1px;
-    border-left:1px solid green;
-    border-right:1px solid green;
-    background:green;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+    background:#E2DDB5;
 }
 .spiffy2green{
     margin-left:1px;
     margin-right:1px;
     padding-right:1px;
     padding-left:1px;
-    border-left:1px solid green;
-    border-right:1px solid green;
-    background:green;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+    background:#E2DDB5;
 }
 .spiffy3green{
     margin-left:1px;
     margin-right:1px;
-    border-left:1px solid green;
-    border-right:1px solid green;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
 }
 .spiffy4green{
-    border-left:1px solid green;
-    border-right:1px solid green;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
 }
 .spiffy5green{
-    border-left:1px solid green;
-    border-right:1px solid green;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
 }
 .spiffyfggreen{
-    background:green;
+    background:#E2DDB5;
 }
 
 
