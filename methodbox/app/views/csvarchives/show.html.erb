@@ -23,7 +23,7 @@
     <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
   <% end %>
   <% if Authorization.is_authorized?("destroy", nil, @archive, current_user) -%>
-    <li><%= icon('destroy', csvarchive_path(@archive), nil, { :confirm => 'This deletes the Data Extract and all metadata. Are you sure?', :method => :delete }, 'Delete Data Extract') -%></li>
+    <li><%= icon('destroy', csvarchive_path(@archive), nil, { :confirm => 'This deletes the Data Extract and links to any methods/scripts and surveys. Are you sure?', :method => :delete }, 'Delete Data Extract') -%></li>
   <% end -%>
 </ul>
 
