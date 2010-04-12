@@ -117,3 +117,21 @@ function selectAllDatasetsForYear(id) {
 
 	$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
 }
+//set all datasets for a particular survey to true or false
+function selectDatasets(checkbox, selected) {
+	 checkbox.checked = selected; 
+	survey_id = checkbox.identify();
+	id = survey_id.split("_")[0];
+	if (checkedSurveyMap[id] == null) {
+		checkedSurveyMap[id] = selected;
+		setDatasets(id, selected);
+		changeColour(id, selected);
+	} else {
+		checkedSurveyMap[id] = selected;
+		setDatasets(id, selected);
+		changeColour(id, selected);
+	}
+	//make sure the checkbox for each survey is checked or unchecked
+//	$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
+	
+}
