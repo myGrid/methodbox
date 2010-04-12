@@ -318,6 +318,16 @@ class CsvarchivesController < ApplicationController
     end
   end
   
+  # DELETE /csvarchive/1
+  def destroy
+    find_archive
+    @archive.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(csvarchives_url) }
+    end
+  end
+  
   protected
   
   def find_archives
