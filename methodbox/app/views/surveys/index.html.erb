@@ -1,4 +1,5 @@
 <%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'survey_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
@@ -46,11 +47,11 @@
 
     <%#*<br/>%>
           <div style="position: absolute; bottom:1em; left:1em;">Select:
-            <%= link_to_function 'All', "$$('input.survey_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+            <%= link_to_function 'All', "$$('input.survey_checkbox').each(function(checkbox){selectDatasets(checkbox, true);})" %>
             ,&nbsp
-            <%= link_to_function 'None', "$$('input.survey_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+            <%= link_to_function 'None', "$$('input.survey_checkbox').each(function(checkbox) { selectDatasets(checkbox, false);})" %>
             ,&nbsp
-            <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { { checkbox.checked = !checkbox.checked } });" %>
+            <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { selectDatasets(checkbox, !checkbox.checked);})" %>
           </div>
         </div><br/><br/>
 
