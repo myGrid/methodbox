@@ -330,7 +330,11 @@ class SurveysController < ApplicationController
       user_search.person = Person.find(current_user.person_id)
       user_search.terms = @survey_search_query
       user_search.dataset_ids = @all_datasets
-      user_search.variable_ids = @sorted_variables
+      var_as_ints = Array.new
+      @sorted_variables.each do |temp_var|
+        var_as_ints.push(temp_var.id)
+      end
+      user_search.variable_ids = var_as_ints
       user_search.save
 
       respond_to do |format|
