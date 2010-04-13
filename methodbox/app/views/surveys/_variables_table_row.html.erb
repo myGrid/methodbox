@@ -25,7 +25,8 @@
         <%= Dataset.find(item.dataset_id).name -%>
       </div>
       <div class="col8">
-        <%= Dataset.find(item.dataset_id).survey.year -%>
+	<!-- replace any '-' characters with space -->
+        <%= Dataset.find(item.dataset_id).survey.year.tr('-',' ') -%>
       </div>
 	 <div class="col9">
         <%= VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
