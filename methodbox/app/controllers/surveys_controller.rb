@@ -205,6 +205,8 @@ class SurveysController < ApplicationController
       #  else
       #    case params['sort']
       #    when nil
+      # page = params[:page]
+      #      number_per_page = params[:number_per_page]
       @survey_search_query = params[:survey_search_query]
       @selected_surveys = Array.new(params[:entry_ids])
       @current_datasets = Array.new(params[:entry_ids])
@@ -323,6 +325,13 @@ class SurveysController < ApplicationController
       #    when "year_reverse" then "year DESC"
       #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
       #    end
+
+      user_search = UserSearch.new
+      user_search.person = Person.find(current_user.person_id)
+      user_search.terms = @survey_search_query
+      user_search.dataset_ids = @all_datasets
+      user_search.variable_ids = @sorted_variables
+      user_search.save
 
       respond_to do |format|
         logger.info("rendering survey search")
