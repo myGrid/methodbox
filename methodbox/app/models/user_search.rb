@@ -6,4 +6,8 @@ class UserSearch < ActiveRecord::Base
 
   has_many :datasets, :through => :dataset_lists
   
+  has_many :search_variable_lists
+  
+  has_many :variables, :through => :search_variable_lists
+  
 end
