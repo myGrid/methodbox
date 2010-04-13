@@ -213,11 +213,11 @@ class SurveysController < ApplicationController
       @all_datasets = Array.new(params[:entry_ids])
       #    logger.info("length " + @survey_list.size)
       #    @search_query||=""
-      user_search = UserSearch.new
-      user_search.person = Person.find(current_user.person_id)
-      user_search.terms = @survey_search_query
-      user_search.dataset_ids = @all_datasets
-      user_search.save
+      # user_search = UserSearch.new
+      #      user_search.person = Person.find(current_user.person_id)
+      #      user_search.terms = @survey_search_query
+      #      user_search.dataset_ids = @all_datasets
+      #      user_search.save
       search_terms = @survey_search_query.split(' ')
       search_terms.each do |search_term|
         t = SearchTerm.find(:all, :conditions=>["term=?",search_term])
