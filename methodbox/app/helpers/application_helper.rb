@@ -37,6 +37,12 @@ module ApplicationHelper
 
   # ========================================
   
+  def all_variables_in_extracts(survey)
+    varList = VariableList.all(:include=> :variable)
+    v = Array.new
+if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.push(var.variable) end
+  end
+  
   #Check if someone is registered with the UKDA using their
   #web service (see UKDA_EMAIL_ADDRESS in environment_local.rb). It
   #takes a form with the persons email address and 'Login' submit button
@@ -199,11 +205,11 @@ module ApplicationHelper
   end
   
   def expand_image(margin_left="0.3em")
-    image_tag "folds/unfold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Expand', :title=>tooltip_title_attrib("Expand for more details")
+    image_tag "folds/unfold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Expand', :title=>"Expand for more details"
   end
   
   def collapse_image(margin_left="0.3em")
-    image_tag "folds/fold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Collapse', :title=>tooltip_title_attrib("Collapse the details")
+    image_tag "folds/fold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Collapse', :title=>"Collapse the details"
   end
 
   def image method,options={}
@@ -371,7 +377,7 @@ module ApplicationHelper
   
   
   def help_icon(text, delay=200, extra_style="")
-    image_tag method_to_icon_filename("help"), :alt=>"help", :title=>tooltip_title_attrib(text,delay), :style => "vertical-align: middle;#{extra_style}"
+    image_tag method_to_icon_filename("help"), :alt=>"help", :title=>text, :style => "vertical-align: middle;#{extra_style}"
   end
   
   def flag_icon(country, text=country, margin_right='0.3em')
@@ -409,7 +415,7 @@ module ApplicationHelper
       list_item += flag_icon(item.country)
     end
     item_caption = h(caption.blank? ? item.name : caption)
-    list_item += link_to truncate(item_caption, :length=>truncate_to), url_for(item), :title => tooltip_title_attrib(custom_tooltip.blank? ? item_caption : custom_tooltip)
+    list_item += link_to truncate(item_caption, :length=>truncate_to), url_for(item), :title => custom_tooltip.blank? ? item_caption : custom_tooltip
     list_item += "</li>"
     
     return list_item
@@ -653,7 +659,7 @@ module ApplicationHelper
     if (options[:type]==:variable)
       link=variables_url(:variable=>tag.name)
     end
-    link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>tooltip_title_attrib(tag.name)
+    link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>tag.name
   end
 
   def list_item_tags_list tags,options={}
