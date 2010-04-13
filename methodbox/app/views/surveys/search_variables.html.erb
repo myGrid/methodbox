@@ -14,7 +14,7 @@
         <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
         <% @link_reason="Reason for grouping" unless @link_reason -%>
 
-        <%= text_field_tag :survey_search_query, @survey_search_query %>
+        <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
   <%#*<ul class="sectionIcons">%>
   <%#*<li>%>
   <%#= icon('add_to_cart', add_to_cart_url, 'Add selected variables to cart', {:title => "Add selected variables to cart", :action => :add_to_cart}, 'Add selected variables to cart', true) -%>
