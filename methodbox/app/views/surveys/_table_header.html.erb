@@ -3,25 +3,25 @@
 
     <div class="head1">&nbsp</div>
 	<div class="head2">&nbsp</div>
-    <div class="head3">
+    <div class="head3" title="Click to sort by variable name">
  	  <%= sort_link_helper("Variable", "variable", @search_query, @survey_list, sorted_variables) %>
     </div>
-    <div class="head4">
+    <div class="head4" title="Variable description (click to sort by this field)">
       <%= sort_link_helper("Description", "description", @search_query, @survey_list, sorted_variables) %>
     </div>
-    <div class="head5">
+    <div class="head5" title="Variable category (click to sort by this field)">
       <%= sort_link_helper("Category", "category", @search_query, @survey_list, sorted_variables) %>
     </div>
-    <div class="head6">
+    <div class="head6" title="Survey name (click to sort by this field)">
       <%= sort_link_helper("Survey", "survey", @search_query, @survey_list, sorted_variables) %>
     </div>
-    <div class="head7">
+    <div class="head7" title="Dataset name (click to sort by this field)">
       <%= sort_link_helper("Dataset", "dataset", @search_query, @survey_list, sorted_variables) %>
     </div>
-    <div class="head8">
+    <div class="head8" title="Survey year (click to sort by this field)">
       <%= sort_link_helper("Year", "year", @search_query, @survey_list, sorted_variables) %>
     </div>
-    <div class="head9">
+    <div class="head9" title="Frequency - number of times variable appears in data extract (click to sort by this field)">
       <%= sort_link_helper("Freq", "frequency", @search_query, @survey_list, sorted_variables) %>
     </div>
   </li>
