@@ -6,7 +6,9 @@
 <table class="list_item">
   <tr class="<%= odd_row ? "odd_row" : "even_row" -%>">
     <td style="width: 125px;">
-      <p style="margin-top:0; padding-top:0; text-align: center;"><%= check_box_tag "entry_ids[]", resource.id,false, :class=>'survey_checkbox'  %></p>
+      <!-- <p style="margin-top:0; padding-top:0; text-align: center;"> -->
+<%#= check_box_tag "entry_ids[]", resource.id,false, :class=>'survey_checkbox'  %>
+<!-- </p> -->
       <center><%#= contributor(resource.asset.contributor, true, 60) -%></center>
     </td>
 
