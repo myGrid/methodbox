@@ -79,7 +79,8 @@
 .list_items_container{
     padding-left: 7px;
     padding-right: 7px;
-    padding-bottom:7px;
+    padding-bottom: 7px;
+	padding-top: 7px;
 }
 
 table.list_item {
