@@ -115,18 +115,31 @@ class ScriptsController < ApplicationController
         }
       end
     else
-
-      if params[:archive][:id] != ""
+      if params[:data_extracts] != nil
         all_archives_array = Array.new
-        all_archives_array.push(Csvarchive.find(params[:archive][:id]))
+        params[:data_extracts].each do |extract_id|
+          all_archives_array.push(Csvarchive.find(extract_id))
+        end
         params[:script][:csvarchives] = all_archives_array
       end
-
-      if params[:survey][:id] != ""
+      # if params[:archive][:id] != ""
+      #         all_archives_array = Array.new
+      #         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
+      #         params[:script][:csvarchives] = all_archives_array
+      #       end
+      if params[:surveys] != nil
         all_surveys_array = Array.new
-        all_surveys_array.push(Survey.find(params[:survey][:id]))
-        params[:script][:surveys] = all_surveys_array
+        params[:surveys].each do |survey_id|
+          all_surveys_array.push(Survey.find(survey_id))
+          params[:script][:surveys] = all_surveys_array 
+        end
       end
+      # if params[:survey][:id] != ""
+        # all_surveys_array = Array.new
+        # all_surveys_array.push(Survey.find(params[:survey][:id]))
+
+      # end
+
       # create new Script and content blob - non-empty file was selected
 
       # prepare some extra metadata to store in Script instance
