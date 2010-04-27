@@ -62,6 +62,22 @@ function clearList(name) {
     }
 }
 
+function removeChildren(name) {
+	$(name).childElements().each(function(e) {
+	        e.remove();
+	    });
+}
+
+// Ajax.Responders.register({   
+//   onCreate: function(){   
+//     $('spinner').show();   
+//   },   
+//   onComplete: function() {   
+//     if(Ajax.activeRequestCount == 0)   
+//       $('spinner').hide();   
+//   }   
+// });
+
 //Ajax.Base.prototype.initialize = Ajax.Base.prototype.initialize.wrap(
 //   function(p, options){
 //     p(options);
