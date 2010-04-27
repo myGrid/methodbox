@@ -60,9 +60,15 @@
                 </li>
               <% end -%>
 
-              <% if current_user.is_admin? -%>
-                <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
+              <% if current_user.is_admin? || mine?(@person) -%>
+<% if mine?(@person) -%>
+                <li><%= icon "destroy", person_path(@person), "Delete your account", { :confirm => 'Are you sure?', :method => :delete }, "Delete your account" -%>
                 </li>
+	<% else -%>
+	 <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
+        </li>
+	<% end -%>
+
               <% end -%>
             </ul>
           <% end %>
