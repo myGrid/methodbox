@@ -19,7 +19,7 @@ class Csvarchive < ActiveRecord::Base
   belongs_to :content_blob,
     :dependent => :destroy
 
-  belongs_to :person
+  belongs_to :person, :dependent => :destroy
 
   acts_as_solr(:fields=>[:title,:description]) if SOLR_ENABLED
   

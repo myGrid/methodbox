@@ -22,7 +22,7 @@ class Script < ActiveRecord::Base
   belongs_to :content_blob,
              :dependent => :destroy
 
-  belongs_to :person
+  belongs_to :person, :dependent => :destroy
   
   def to_param
     "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
