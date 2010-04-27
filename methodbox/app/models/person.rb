@@ -24,7 +24,7 @@ class Person < ActiveRecord::Base
 
   validates_associated :avatars
 
-  has_and_belongs_to_many :disciplines
+  # has_and_belongs_to_many :disciplines
   
   has_many :avatars,
     :as => :owner,
@@ -39,7 +39,7 @@ class Person < ActiveRecord::Base
 
   acts_as_taggable_on :tools, :expertise
     
-  has_one :user
+  has_one :user, :dependent => :destroy
   
   acts_as_solr(:fields => [ :first_name, :last_name,:expertise ]) if SOLR_ENABLED
 
