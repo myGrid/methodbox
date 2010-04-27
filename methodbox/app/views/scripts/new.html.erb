@@ -28,6 +28,15 @@
           <b>Link with a Data Extract:</b>
           <%= collection_select(:archive, :id, @archives, :id, :title, options ={:prompt => "Select an archive"}) -%>
         </p>
+
+	<p>
+	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
+      :collection=>@archives,:authorization_for_showing_already_done => false } -%>
+</p>
+
+
+	<br/>
+	<div style="clear:both;"/>
         <p>
           <b>Link with a Survey:</b>
           <%= collection_select(:survey, :id, @surveys, :id, :title, options ={:prompt => "Select a Survey"}) -%>
