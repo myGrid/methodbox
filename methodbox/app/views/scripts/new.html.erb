@@ -1,4 +1,5 @@
 <%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'link_adder.js'-%>
 
 <h1>New Script</h1>
 
@@ -28,11 +29,20 @@
           <b>Link with a Data Extract:</b>
           <%= collection_select(:archive, :id, @archives, :id, :title, options ={:prompt => "Select an archive"}) -%>
         </p>
-
+<div>
 	<p>
 	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
       :collection=>@archives,:authorization_for_showing_already_done => false } -%>
 </p>
+<div>
+	<br/>
+	<div style="clear:both;"/>
+<div>
+	<p>
+	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
+      :collection=>@surveys,:authorization_for_showing_already_done => true } -%>
+</p>
+</div>
 
 
 	<br/>
