@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
     #User.update_all ['last_seen_at = ?', Time.now.utc], ['id = ?', current_user.id]
     #current_user.last_seen_at = Time.now.utc
   end
+  
+  def admin?
+    return current_user.is_admin?
+  end
   # #savage_beast
   # def login_required
   #       if !current_user
