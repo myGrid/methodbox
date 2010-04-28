@@ -350,7 +350,7 @@
 	border-collapse:collapse;
 	font-family: 'Lucida Grande', Tahoma, Arial, Helvetica, sans-serif;
 }
-.forums table.wide {	width:100%; }
+/*.forums table.wide {	width:100%; }*/
 .forums table tr th
 {
 	background:#444444;
