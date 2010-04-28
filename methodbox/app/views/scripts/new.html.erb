@@ -25,12 +25,13 @@
           <% script_description_value = (params[:script].blank? || params[:script][:description].blank?) ? nil : params[:script][:description] -%>
           <%= text_area_tag 'script[description]', script_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
-        <p>
-          <b>Link with a Data Extract:</b>
-          <%= collection_select(:archive, :id, @archives, :id, :title, options ={:prompt => "Select an archive"}) -%>
+        <p style="margin-top: 0.5em;">
+          <b>Type:</b>
+          <%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
         </p>
 <div>
-	<p>
+	<p>          
+		<b>Link with Data Extracts:</b>
 	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
       :collection=>@archives,:authorization_for_showing_already_done => false } -%>
 </p>
@@ -39,6 +40,7 @@
 	<div style="clear:both;"/>
 <div>
 	<p>
+		<b>Link with Surveys:</b>
 	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
       :collection=>@surveys,:authorization_for_showing_already_done => true } -%>
 </p>
@@ -47,14 +49,6 @@
 
 	<br/>
 	<div style="clear:both;"/>
-        <p>
-          <b>Link with a Survey:</b>
-          <%= collection_select(:survey, :id, @surveys, :id, :title, options ={:prompt => "Select a Survey"}) -%>
-        </p>
-        <p style="margin-top: 0.5em;">
-          <b>Type:</b>
-          <%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
-        </p>
 
         <%= render :partial => "assets/project_selector", :locals => { :resource_type => "Method",   # this is only for presentation, not for any processing
           :project_hash => current_user.generate_own_project_id_name_hash } -%>
