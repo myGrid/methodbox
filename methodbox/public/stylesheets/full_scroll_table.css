@@ -1,31 +1,31 @@
-body {
+/*body {
 	background: #FFF;
 	color: #000;
 	font: normal normal 12px Verdana, Geneva, Arial, Helvetica, sans-serif;
 	margin: 10px;
 	padding: 0
-}
+}*/
 
-table, td, a {
+/*table, td, a {
 	color: #000;
 	font: normal normal 12px Verdana, Geneva, Arial, Helvetica, sans-serif
-}
+}*/
 
-h1 {
+/*h1 {
 	font: normal normal 18px Verdana, Geneva, Arial, Helvetica, sans-serif;
 	margin: 0 0 5px 0
-}
+}*/
 
-h2 {
+/*h2 {
 	font: normal normal 16px Verdana, Geneva, Arial, Helvetica, sans-serif;
 	margin: 0 0 5px 0
 }
-
-h3 {
+*/
+/*h3 {
 	font: normal normal 13px Verdana, Geneva, Arial, Helvetica, sans-serif;
 	color: #008000;
 	margin: 0 0 15px 0
-}
+}*/
 /* end basic styling                                 */
 
 /* define height and width of scrollable area. Add 16px to width for scrollbar          */
