@@ -1,5 +1,4 @@
 <%= stylesheet_link_tag 'full_scroll_table' -%>
-<%= javascript_include_tag 'link_adder.js'-%>
 <% unless collection.empty? -%>
 <div id="<%= resource_id -%>_hidden">
 	</div>
@@ -55,20 +54,20 @@
 	<li>
 		
 		<%#= image_tag ( method_to_icon_filename("right_arrow_single"), :size => "50x50", :alt => "Add selected Data Extracts", :title=>"Add selected Data Extracts") -%>
-<%= button_to_function('Add selected', 'addSelected("data_extracts","source")') -%>
+<%= button_to_function('Add selected', "addSelected('#{resource_id}','source')") -%>
 </li>
 	<li>
-		<%= button_to_function('Add all', 'addAll("data_extracts","source")') -%>
+		<%= button_to_function('Add all', "addAll('#{resource_id}','source')") -%>
 		<%#= image_tag ( method_to_icon_filename("right_arrow_double"), :size => "50x50", :alt => "Add all Data Extracts", :title=>"Add all Data Extracts", :onclick=>"addAll('data_extracts','source')") -%>
 </li>
 	<li>
 		<%#= image_tag ( method_to_icon_filename("left_arrow_single"), :size => "50x50", :alt => "Remove selected Data Extracts", :title=>"Remove selected Data Extracts") -%>
-		<%= button_to_function('Remove selected', 'addSelected("data_extracts","target")') -%>
+		<%= button_to_function('Remove selected', "addSelected('#{resource_id}','target')") -%>
 		</li>
 	<li>
 
 		<%#= image_tag ( method_to_icon_filename("left_arrow_double"), :size => "50x50", :alt => "Remove all Data Extracts", :title=>"Remove all Data Extracts")-%>
-<%= button_to_function('Remove all', 'addAll("data_extracts","target")') -%>
+<%= button_to_function('Remove all', "addAll('#{resource_id}','target')") -%>
 	</li>
 	</ul>
 </div>
