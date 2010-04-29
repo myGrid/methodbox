@@ -7,27 +7,27 @@ class HomeController < ApplicationController
   layout :select_layout
   
   def index
-    scripts = Script.all(:conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now.midnight})
+    scripts = Script.all(:order => "created_at DESC", :conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now})
     if scripts.empty?
       scripts = Script.all(:order => "created_at DESC",:limit => 10)
     end
     if scripts.size < 10
       num = 10 - scripts.size
-      extra_scripts = Script.all(:order => "created_at DESC",:limit => num, :offset => scripts.size)
+      extra_scripts = Script.all(:order => "created_at DESC",:order => "created_at DESC",:limit => num, :offset => scripts.size)
       scripts.concat(extra_scripts)
     end
     scripts = select_authorised scripts
-    archives = Csvarchive.all(:conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now.midnight})
+    archives = Csvarchive.all(:order => "created_at DESC",:conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now})
     if archives.empty?
       archives = Csvarchive.all(:order => "created_at DESC",:limit => 10)
     end
     if archives.size < 10
       num = 10 - archives.size
-      extra_archives = Csvarchive.all(:order => "created_at DESC",:limit => num, :offset => archives.size)
+      extra_archives = Csvarchive.all(:order => "created_at DESC",:order => "created_at DESC",:limit => num, :offset => archives.size)
       archives.concat(extra_archives)
     end
     archives = select_authorised archives
-    datasets = Survey.all(:conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now.midnight})
+    datasets = Survey.all(:order => "created_at DESC",:conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now})
     if datasets.empty?
       datasets = Survey.all(:order => "created_at DESC",:limit => 10)
     end
