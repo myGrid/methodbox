@@ -17,7 +17,14 @@ class SessionsController < ApplicationController
       end
       #if the person has registered but has not yet selected a profile then go to the select person page
       #otherwise login normally
-      if current_user.person.nil?
+      if current_user.dormant?
+         self.current_user.forget_me if logged_in?
+          cookies.delete :auth_token
+          reset_session
+         flash[:notice] = "This account is no longer active.  If you wish access to any items belonging to this account within the MethodBox then please re-register using the same email address as before"
+          redirect_back_or_default('/')
+        
+      elsif current_user.person.nil?
         redirect_to(select_people_path)
       else
         respond_to do |format|
