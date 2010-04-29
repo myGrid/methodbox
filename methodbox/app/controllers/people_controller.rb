@@ -4,6 +4,7 @@ class PeopleController < ApplicationController
   
   before_filter :login_required,:except=>[:select,:userless_project_selected_ajax,:create,:new]  
   before_filter :current_user_exists,:only=>[:select,:userless_project_selected_ajax,:create,:new]
+  before_filter :current_user_dormant,:except=>[:index,:new,:create]
   before_filter :profile_belongs_to_current_or_is_admin, :only=>[:edit, :update,:destroy]
   before_filter :profile_is_not_another_admin_except_me, :only=>[:edit,:update,:destroy]
   # before_filter :is_user_admin_auth, :only=>[:destroy]
@@ -45,7 +46,7 @@ class PeopleController < ApplicationController
       #FIXME: this needs double checking, (a) not sure its right, (b) can be paged when using find.
       @people=@people.select{|p| !(p.group_memberships & @role.group_memberships).empty?}
     else
-      @people = Person.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name)
+      @people = Person.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name,:conditions => ["dormant != ?", true])
     end
 
 
@@ -61,6 +62,7 @@ class PeopleController < ApplicationController
   def show
     find_cart
     @person = Person.find(params[:id])
+
     #    check each archive to see if it is complete or not
     archives = Csvarchive.find_all_by_person_id(params[:id])
 
@@ -87,6 +89,7 @@ class PeopleController < ApplicationController
       format.html # show.html.erb
       format.xml  { render :xml => @person.to_xml}
     end
+
   rescue SystemCallError
     respond_to do |format|
       format.html # show.html.erb
@@ -263,7 +266,13 @@ class PeopleController < ApplicationController
   # DELETE /people/1.xml
   def destroy
     @person = Person.find(params[:id])
-    @person.destroy
+    user = User.find(current_user.id)
+    user.dormant = true
+    user.save
+    @person.dormant=true
+    @person.save
+    current_user.forget_me
+    reset_session
 
     respond_to do |format|
       format.html { redirect_to(people_url) }
@@ -311,6 +320,14 @@ class PeopleController < ApplicationController
     person.expertise_list=tags
 
       
+  end
+  
+  def current_user_dormant
+    if Person.find(params[:id]).dormant?
+      flash[:notice] = "/people/"+params[:id] + " is not a valid account.  Please try again"
+      redirect_to(:controller=>:people,:action=>:index)
+      return
+    end
   end
   
   def profile_belongs_to_current_or_is_admin
