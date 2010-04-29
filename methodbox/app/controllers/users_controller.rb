@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     # protects against session fixation attacks, wreaks havoc with
     # request forgery protection.
     # uncomment at your own risk
-    # reset_session
+    reset_session
     @user = User.new(params[:user])
     @user.person=Person.new(params[:person])
     
@@ -89,7 +89,7 @@ class UsersController < ApplicationController
       user = User.find_by_login(params[:login])
 
       respond_to do |format|
-        if user && user.person && !user.person.email.blank?
+        if user && user.person && !user.person.email.blank? && !user.dormant?
           user.reset_password_code_until = 1.day.from_now
           user.reset_password_code =  Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
           user.save!
@@ -98,7 +98,7 @@ class UsersController < ApplicationController
           format.html { render :action => "forgot_password" }
         else
           flash[:error] = "Invalid user: #{params[:login]}" if !user
-          flash[:error] = "Unable to send you an email, as this information isn't available for #{params[:login]}" if user && (!user.person || user.person.email.blank?)
+          flash[:error] = "Unable to send you an email, as this information isn't available for #{params[:login]}" if user && (!user.person || user.person.email.blank? || user.dormant?)
           format.html { render :action => "forgot_password" }
         end
       end
