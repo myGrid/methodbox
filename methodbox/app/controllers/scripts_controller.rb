@@ -1,7 +1,8 @@
 class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
   before_filter :login_required
-  before_filter :find_scripts, :only => [ :index ]
+  before_filter :find_scripts_by_page, :only => [ :index ]
+  before_filter :find_scripts, :only => [ :new, :edit]
   before_filter :find_archives, :find_surveys, :only => [ :new, :edit ]
   before_filter :find_cart
   before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
@@ -55,6 +56,18 @@ class ScriptsController < ApplicationController
 
     @archives = @script.csvarchives
     @surveys = @script.surveys
+
+    all_script_source_links = []
+    @script.scripts_as_source.each do |link|
+      puts link.class
+      all_script_source_links << link.target_id
+    end
+    all_script_target_links = []
+    @script.scripts_as_target.each do |link|
+      all_script_target_links << link.source_id
+    end
+    
+    @all_script_links = all_script_source_links | all_script_target_links
 
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
@@ -134,6 +147,16 @@ class ScriptsController < ApplicationController
           params[:script][:surveys] = all_surveys_array 
         end
       end
+      
+      # if params[:scripts] != nil
+      #   all_scripts_array = Array.new
+      #   params[:scripts].each do |script_id|
+      #     sl = ScriptToScriptLink.new(:source_id=>params[:id],:target_id=>script_id)
+      #     sl.save
+      #     #all_scripts_array.push(Script.find(script_id))
+      #     #params[:script][:linked_scripts] = all_scripts_array 
+      #   end
+      # end
       # if params[:survey][:id] != ""
         # all_surveys_array = Array.new
         # all_surveys_array.push(Survey.find(params[:survey][:id]))
@@ -166,6 +189,16 @@ class ScriptsController < ApplicationController
 
       respond_to do |format|
         if @script.save
+          #first save the script to script links
+          if params[:scripts] != nil
+            all_scripts_array = Array.new
+            params[:scripts].each do |script_id|
+              sl = ScriptToScriptLink.new(:source_id=>@script.id,:target_id=>script_id)
+              sl.save
+              #all_scripts_array.push(Script.find(script_id))
+              #params[:script][:linked_scripts] = all_scripts_array 
+            end
+          end
           # the Script was saved successfully, now need to apply policy / permissions settings to it
           policy_err_msg = Policy.create_or_update_policy(@script, current_user, params)
 
@@ -247,9 +280,24 @@ class ScriptsController < ApplicationController
 
   protected
 
-  def find_scripts
+  def find_scripts_by_page
     found = Script.find(:all,
       :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
+    #    found = Script.find(:all,
+    #      :order => "title")
+
+    # this is only to make sure that actual binary data isn't sent if download is not
+    # allowed - this is to increase security & speed of page rendering;
+    # further authorization will be done for each item when collection is rendered
+    found.each do |script|
+      script.content_blob.data = nil unless Authorization.is_authorized?("download", nil, script, current_user)
+    end
+
+    @scripts = found
+  end
+  
+  def find_scripts
+    found = Script.find(:all)
     #    found = Script.find(:all,
     #      :order => "title")
 

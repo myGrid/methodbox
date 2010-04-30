@@ -6,7 +6,8 @@ require 'zip/zipfilesystem'
 class CsvarchivesController < ApplicationController
 
   before_filter :login_required
-  before_filter :find_archives, :only => [ :index ]
+  before_filter :find_archives_by_page, :only => [ :index]
+  before_filter :find_scripts, :find_surveys, :find_archives, :only => [ :new ]
 
   def new
     set_parameters_for_sharing_form
@@ -94,6 +95,19 @@ class CsvarchivesController < ApplicationController
     @sorted_variables = @archive.variables
     @surveys = @archive.surveys
     @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
+    
+     all_extract_source_links = []
+      @archive.extracts_as_source.each do |link|
+        puts link.class
+        all_extract_source_links << link.target_id
+      end
+      all_extract_target_links = []
+      @archive.extracts_as_target.each do |link|
+        all_extract_target_links << link.source_id
+      end
+
+      @all_extract_links = all_extract_source_links | all_extract_target_links
+      
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@archives}
@@ -176,18 +190,37 @@ class CsvarchivesController < ApplicationController
         xmldoc = xmlparser.parse
         root = xmldoc.root
         @jobid = root.child.to_s
-
-        #only one script at the moment, change to many in future and can be none
-        if params[:script][:id] != ""
+        if params[:scripts] != nil
           all_scripts_array = Array.new
-          all_scripts_array.push(Script.find(params[:script][:id]))
+          params[:scripts].each do |script_id|
+            all_scripts_array.push(Script.find(script_id))
+          end
           params[:archive][:scripts] = all_scripts_array
         end
-        if params[:survey][:id] != ""
+        # if params[:archive][:id] != ""
+        #         all_archives_array = Array.new
+        #         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
+        #         params[:script][:csvarchives] = all_archives_array
+        #       end
+        if params[:surveys] != nil
           all_surveys_array = Array.new
-          all_surveys_array.push(Survey.find(params[:survey][:id]))
-          params[:archive][:surveys] = all_surveys_array
+          params[:surveys].each do |survey_id|
+            all_surveys_array.push(Survey.find(survey_id))
+          end
+          params[:archive][:surveys] = all_surveys_array 
         end
+        #only one script at the moment, change to many in future and can be none
+        # if params[:script][:id] != ""
+        #          all_scripts_array = Array.new
+        #          all_scripts_array.push(Script.find(params[:script][:id]))
+        #        end
+        #          params[:archive][:scripts] = all_scripts_array
+          
+        # if params[:survey][:id] != ""
+        #          all_surveys_array = Array.new
+        #          all_surveys_array.push(Survey.find(params[:survey][:id]))
+        #          params[:archive][:surveys] = all_surveys_array
+        #        end
         params[:archive][:filename] = @jobid
         params[:archive][:complete] = false
         params[:archive][:last_used_at] = Time.now
@@ -200,6 +233,13 @@ class CsvarchivesController < ApplicationController
       
         @archive = Csvarchive.new(params[:archive])
         @archive.save
+        #we now have an id for the extract so save all of its links with other extracts
+        if params[:data_extracts] != nil
+          params[:data_extracts].each do |extract_id|
+            link = ExtractToExtractLink.new(:source_id=>@archive.id,:target_id=>extract_id)
+            link.save
+          end
+        end
       
         policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
 
@@ -330,7 +370,7 @@ class CsvarchivesController < ApplicationController
   
   protected
   
-  def find_archives
+  def find_archives_by_page
     @my_page = params[:my_page]
     @all_page = params[:all_page]
     @my_archives = Csvarchive.find(:all,
@@ -340,6 +380,31 @@ class CsvarchivesController < ApplicationController
   end
 
   private
+  
+  def find_scripts
+    found = Script.find(:all)
+    #    found = Script.find(:all,
+    #      :order => "title")
+
+    # this is only to make sure that actual binary data isn't sent if download is not
+    # allowed - this is to increase security & speed of page rendering;
+    # further authorization will be done for each item when collection is rendered
+    found.each do |script|
+      script.content_blob.data = nil unless Authorization.is_authorized?("download", nil, script, current_user)
+    end
+
+    @scripts = found
+  end
+
+  def find_archives
+    @archives = Csvarchive.find(:all)
+    @archives=Authorization.authorize_collection("show",@archives,current_user)
+  end
+
+  def find_surveys
+    @surveys = Survey.find(:all)
+    #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
+  end
 
   def set_parameters_for_sharing_form
     logger.info "setting sharing for archive"
