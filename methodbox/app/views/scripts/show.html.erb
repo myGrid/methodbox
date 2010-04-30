@@ -1,14 +1,14 @@
 <% truncate_length_for_boxes = 22 -%>
 
 <ul class="sectionIcons">
-  <% if Authorization.is_authorized?("manage", nil, @script, current_user) -%>
+  <% if Authorization.is_authorized?("manage", nil, @script, current_user) && !User.find(@script.contributor_id).dormant? -%>
     <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Manage Method') -%></li>
-  <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) -%>
+  <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
   <%# this is not owner, but current user can edit -%>
     <li><%= icon('edit', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
   <% end -%>
 
-  <% if Authorization.is_authorized?("destroy", nil, @script, current_user) -%>
+  <% if Authorization.is_authorized?("destroy", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
     <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Script') -%></li>
   <% end -%>
 
@@ -94,9 +94,15 @@
         None
       <% end -%>
       <br/>
-      <br/>
-
-
+	<br/>
+      <b>Linked with Script(s):</b>
+		<% if !@all_script_links.empty? -%>
+        <% @all_script_links.each do |linked_script| -%>
+          <%= link_to(Script.find(linked_script).title, script_path(Script.find(linked_script))) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>
     </div>
   </div>
 </div>
