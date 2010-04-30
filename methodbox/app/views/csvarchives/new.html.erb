@@ -1,4 +1,5 @@
 <%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'link_adder.js'-%>
 
 <h1>New Data Extract</h1>
 
@@ -25,6 +26,39 @@
           <% archive_description_value = (params[:description].blank?) ? nil : params[:description] -%>
           <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
+
+		<div>
+			<p>          
+				<b>Link with Data Extracts:</b>
+			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
+		      :collection=>@archives,:authorization_for_showing_already_done => false } -%>
+		</p>
+		</div>
+			<br/>
+			<div style="clear:both;">
+				</div>
+		<div>
+			<p>
+				<b>Link with Surveys:</b>
+			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
+		      :collection=>@surveys,:authorization_for_showing_already_done => true } -%>
+		</p>
+		</div>
+		<br/>
+		<div style="clear:both;">
+			</div>
+		<div>
+			<p>          
+				<b>Link with Scripts:</b>
+			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
+		      :collection=>@scripts,:authorization_for_showing_already_done => false } -%>
+		</p>
+		</div>
+
+
+			<br/>
+			<div style="clear:both;">
+				</div>
         <p>
           <b>Link with Method/Script:</b>
           <%= collection_select(:script, :id, @scripts, :id, :title, options ={:prompt => "Select a Method/Script"}) -%>
@@ -33,6 +67,10 @@
           <b>Link with Survey:</b>
           <%= collection_select(:survey, :id, @surveys, :id, :title, options ={:prompt => "Select a Survey"}) -%>
         </p>
+        <!-- <p style="margin: 0;"> -->
+         <%#= render :partial => "linked_scripts_form", :locals => {:person => current_user, :existing_script_links => [],
+         :script_suggestions => Script.get_all_as_json(current_user) } -%>
+        <!-- </p> -->
       </div>
     </center>
 
