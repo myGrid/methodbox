@@ -3,6 +3,12 @@ require 'acts_as_resource'
 class Csvarchive < ActiveRecord::Base
   #really not sure about this whole acts as resource stuff yet
   acts_as_resource
+  
+  #based on http://blog.hasmanythrough.com/2006/4/21/self-referential-through
+  has_many :extracts_as_source, :foreign_key => 'source_id', :class_name => 'ExtractToExtractLink'
+  has_many :extracts_as_target,   :foreign_key => 'target_id',   :class_name => 'ExtractToExtractLink'
+  has_many :sources,  :through => :extracts_as_target
+  has_many :targets,    :through => :extracts_as_source
 
   has_many :variable_lists, :dependent => :destroy
   

@@ -3,7 +3,13 @@ require 'acts_as_resource'
 class Script < ActiveRecord::Base
 
   acts_as_resource
-
+  
+  #based on http://blog.hasmanythrough.com/2006/4/21/self-referential-through
+  has_many :scripts_as_source, :foreign_key => 'source_id', :class_name => 'ScriptToScriptLink'
+  has_many :scripts_as_target,   :foreign_key => 'target_id',   :class_name => 'ScriptToScriptLink'
+  has_many :sources,  :through => :scripts_as_target
+  has_many :targets,    :through => :scripts_as_source
+  
   has_many :script_lists
 
   has_many :csvarchives, :through => :script_lists
