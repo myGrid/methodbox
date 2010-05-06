@@ -157,3 +157,13 @@ hse2007:
   UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=6112
   headline_report: http://www.ic.nhs.uk/statistics-and-data-collections/health-and-lifestyles-related-surveys/health-survey-for-england/health-survey-for-england-2007:-healthly-lifestyles:-knowledge-attitudes-and-behaviour-%5Bns%5D
   original_filename: HSE2007.tab
+  
+hse2008:
+    id: 17
+    title: HSE2008
+    surveytype: HSE
+    description: Physical activity and fitness and obesity in children
+    year: 2008
+    UKDA_summary: 
+    headline_report: 
+    original_filename: HSE2008.tab

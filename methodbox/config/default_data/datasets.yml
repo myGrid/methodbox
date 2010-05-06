@@ -272,3 +272,19 @@ hse2007-2:
   description: Household statistics for 2007
   survey_id: 16
   key_variable: hserial
+  
+hse2008-1:
+    id: 37
+    name: hse07ai
+    filename: hse08ai.tab
+    description: Individual population statistics for 2008
+    survey_id: 17
+    key_variable: pserial
+
+hse2008-2:
+    id: 38
+    name: hse07ah
+    filename: hse08ah.tab
+    description: Household statistics for 2008
+    survey_id: 17
+    key_variable: hserial
