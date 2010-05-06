@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100413150412) do
+ActiveRecord::Schema.define(:version => 20100505152258) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -136,6 +136,18 @@ ActiveRecord::Schema.define(:version => 20100413150412) do
     t.string   "key_variable"
   end
 
+  create_table "extract_to_extract_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
+  end
+
+  create_table "extract_to_extract_lists", :id => false, :force => true do |t|
+    t.integer  "source_extract_id"
+    t.integer  "linked_extract_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "favourite_group_memberships", :force => true do |t|
     t.integer  "person_id"
     t.integer  "favourite_group_id"
@@ -180,6 +192,18 @@ ActiveRecord::Schema.define(:version => 20100413150412) do
     t.integer "role_id"
   end
 
+  create_table "links", :force => true do |t|
+    t.string   "subject_type",       :null => false
+    t.integer  "subject_id",         :null => false
+    t.string   "predicate",          :null => false
+    t.string   "object_type",        :null => false
+    t.integer  "object_id",          :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "subject_field_name"
+    t.string   "object_field_name"
+  end
+
   create_table "messages", :force => true do |t|
     t.integer  "from"
     t.integer  "to"
@@ -220,6 +244,7 @@ ActiveRecord::Schema.define(:version => 20100413150412) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
+    t.boolean  "dormant",            :default => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -284,6 +309,11 @@ ActiveRecord::Schema.define(:version => 20100413150412) do
     t.integer  "script_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "script_to_script_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
   end
 
   create_table "scripts", :force => true do |t|
@@ -418,6 +448,7 @@ ActiveRecord::Schema.define(:version => 20100413150412) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
+    t.boolean  "dormant",                                 :default => false
   end
 
   create_table "variable_linkages", :force => true do |t|
