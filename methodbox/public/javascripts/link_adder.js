@@ -14,6 +14,26 @@ var allLinks = {};
 //the cell details for each object
 var allLinksData = {};
 
+//At initialization keeptrack of what is already in the target box
+function alreadySelected(resource_type, id, details) {
+	targetMap[resource_type][id] = true;
+	sourceMap[resource_type][id] = false;
+	checkedSourceMap[resource_type][id] = false;
+
+	allLinks[resource_type][id] = false;
+	
+	removeChildren(resource_type +'_hidden');
+	for (var key in targetMap[resource_type]) {
+		if (targetMap[resource_type][key] == true) {
+			var hidden_input = new Element('input',{'id':resource_type+'[]','name': resource_type+'[]','type':'hidden'});
+			hidden_input.value = key;
+			hidden_input.text = key;
+			$(resource_type +'_hidden').insert(hidden_input);
+		}
+	}
+	
+}
+
 //Move all from the target to source tables.
 function addAll(resource_type, source) {
 	
