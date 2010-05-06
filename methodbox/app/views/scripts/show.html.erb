@@ -96,9 +96,9 @@
       <br/>
 	<br/>
       <b>Linked with Script(s):</b>
-		<% if !@all_script_links.empty? -%>
-        <% @all_script_links.each do |linked_script| -%>
-          <%= link_to(Script.find(linked_script).title, script_path(Script.find(linked_script))) -%>
+		<% if !@scripts.empty? -%>
+        <% @scripts.each do |script| -%>
+          <%= link_to(script.title, script_path(script)) -%>
         <% end -%>
       <% else -%>
         None

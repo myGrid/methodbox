@@ -33,7 +33,7 @@
 	<p>          
 		<b>Link with Data Extracts:</b>
 	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
-      :collection=>@archives,:authorization_for_showing_already_done => false } -%>
+      :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
 </p>
 </div>
 	<br/>
@@ -43,7 +43,7 @@
 	<p>
 		<b>Link with Surveys:</b>
 	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
-      :collection=>@surveys,:authorization_for_showing_already_done => true } -%>
+      :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
 </p>
 </div>
 <br/>
@@ -53,7 +53,7 @@
 	<p>          
 		<b>Link with Scripts:</b>
 	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
-      :collection=>@scripts,:authorization_for_showing_already_done => false } -%>
+      :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
 </p>
 </div>
 
