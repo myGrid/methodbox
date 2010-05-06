@@ -37,6 +37,15 @@ module ApplicationHelper
 
   # ========================================
   
+  #return css display style for hiding/showing a div
+  def hide_style(hide)
+    if hide
+      return 'style="display:none;"'
+    else
+      return 'style="display:inline;"'
+    end
+  end
+  
   def all_variables_in_extracts(survey)
     varList = VariableList.all(:include=> :variable)
     v = Array.new
@@ -242,6 +251,14 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
   
   def method_to_icon_filename(method)
     case (method.to_s)
+    when "left_arrow_single"
+      return "single_arrows_left.png"
+    when "right_arrow_single"
+      return "single_arrows_right.png"
+    when "left_arrow_double"
+      return "double_arrows_left.png"
+    when "right_arrow_double"
+      return "double_arrows_right.png"
     when "add_to_cart"
       return "famfamfam_silk/add.png"
     when "cart"
@@ -438,8 +455,11 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
       contributor_name = h(contributor_person.name)
       contributor_url = person_path(contributor_person.id)
       contributor_name_link = link_to(contributor_name, contributor_url)
-      
-      if avatar
+      if Person.find(contributor_person.id).dormant?
+        result = null_avatar("person", size, "Former Member " + contributor_name)
+        result += "<p style='margin: 0; text-align: center;'>#{'Former Member ' + contributor_name}#{you_string}</p>"
+        return result
+      elsif avatar
         result = avatar(contributor_person, size, false, contributor_url, contributor_name, false)
         result += "<p style='margin: 0; text-align: center;'>#{contributor_name_link}#{you_string}</p>"
         return result
