@@ -50,24 +50,81 @@ class ScriptsController < ApplicationController
   end
 
   # GET /scripts/1
+  #find all the links with other records for this script, include links where it is either the 'object'
+  #or the 'subject'
   def show
     # store timestamp of the previous last usage
     @last_used_before_now = @script.last_used_at
+    source_archives = []
+    source_surveys = []
+    source_scripts = []
+    target_archives = []
+    target_surveys = []
+    target_scripts = []
 
-    @archives = @script.csvarchives
-    @surveys = @script.surveys
+    links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
 
-    all_script_source_links = []
-    @script.scripts_as_source.each do |link|
-      puts link.class
-      all_script_source_links << link.target_id
+    links.each do |link|
+      case link.object.class.name
+      when "Csvarchive"
+        source_archives.push(link.object)
+      when "Script"
+        source_scripts.push(link.object)
+      when "Survey"
+        source_surveys.push(link.object)
+      end
     end
-    all_script_target_links = []
-    @script.scripts_as_target.each do |link|
-      all_script_target_links << link.source_id
+      
+    target_links = Link.find(:all, :conditions => { :object_type => "Script", :object_id => @script.id, :predicate => "link" })
+                                                    
+    target_links.each do |link|
+      case link.object.class.name
+      when "Csvarchive"
+        target_archives.push(link.object)
+      when "Script"
+        target_scripts.push(link.object)
+      when "Survey"
+        target_surveys.push(link.object)
+      end
     end
+      
+    @archives = source_archives | target_archives
+    @scripts = source_scripts | target_scripts
+    @surveys = source_surveys | target_scripts
+      
+      
+      # @script.annotations_with_attribute("link").each do |annotation|
+      #   case annotation.source.class.name
+      #   when "Csvarchive"
+      #     @archives.push(annotation.source)
+      #   when "Script"
+      #     @scripts.push(annotation.source)
+      #   when "Survey"
+      #     @surveys.push(annotation.source)
+      #   end
+      # end
+
+      # all_script_source_links = []
+      #     @script.scripts_as_source.each do |link|
+      #       puts link.class
+      #       all_script_source_links << link.target_id
+      #     end
+      #     @selected_scripts = all_script_source_links
+    # end
+    # @archives = @script.csvarchives
+    #     @surveys = @script.surveys
     
-    @all_script_links = all_script_source_links | all_script_target_links
+    # all_script_source_links = []
+    #     @script.scripts_as_source.each do |link|
+    #       puts link.class
+    #       all_script_source_links << link.target_id
+    #     end
+    # all_script_target_links = []
+    #    @script.scripts_as_target.each do |link|
+    #      all_script_target_links << link.source_id
+    #    end
+    
+    # @all_script_links = all_script_source_links | all_script_target_links
 
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
@@ -92,6 +149,10 @@ class ScriptsController < ApplicationController
   # GET /scripts/new
   #No auth check for loading new scripts, login is enough
   def new
+    @selected_scripts=[]
+    @selected_archives=[]
+    @selected_surveys=[]
+    
     #    @archives = Csvarchive.find(:all)
     #    @archives=Authorization.authorize_collection("show",@archives,current_user)
     respond_to do |format|
@@ -104,9 +165,43 @@ class ScriptsController < ApplicationController
     end
   end
 
+  #When editing display all the links which have been made from this Script, only include those for which it is the 'subject'
   # GET /scripts/1/edit
   def edit
-
+    @selected_archives = []
+    @selected_surveys = []
+    @selected_scripts = []
+    #find links where this Script is the source
+    links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
+    
+    links.each do |link|
+      case link.object.class.name
+      when "Csvarchive"
+        @selected_archives.push(link.object.id)
+      when "Script"
+        @selected_scripts.push(link.object.id)
+      when "Survey"
+        @selected_surveys.push(link.object.id)
+      end
+    end        
+                                                  
+    # @script.annotations_with_attribute("link").each do |annotation|
+    #      case annotation.source
+    #      when "Csvarchive"
+    #        @selected_archives.push(annotation.source_id)
+    #      when "Script"
+    #        @selected_scripts.push(annotation.source_id)
+    #      when "Survey"
+    #        @selected_surveys.push(annotation.source_id)
+    #      end
+    #    end
+   
+    # all_script_source_links = []
+    #     @script.scripts_as_source.each do |link|
+    #       puts link.class
+    #       all_script_source_links << link.target_id
+    #     end
+    #     @selected_scripts = all_script_source_links
   end
 
   # POST /scripts
@@ -128,25 +223,25 @@ class ScriptsController < ApplicationController
         }
       end
     else
-      if params[:data_extracts] != nil
-        all_archives_array = Array.new
-        params[:data_extracts].each do |extract_id|
-          all_archives_array.push(Csvarchive.find(extract_id))
-        end
-        params[:script][:csvarchives] = all_archives_array
-      end
+      # if params[:data_extracts] != nil
+      #    all_archives_array = Array.new
+      #    params[:data_extracts].each do |extract_id|
+      #      all_archives_array.push(Csvarchive.find(extract_id))
+      #    end
+      #    params[:script][:csvarchives] = all_archives_array
+      #  end
       # if params[:archive][:id] != ""
       #         all_archives_array = Array.new
       #         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
       #         params[:script][:csvarchives] = all_archives_array
       #       end
-      if params[:surveys] != nil
-        all_surveys_array = Array.new
-        params[:surveys].each do |survey_id|
-          all_surveys_array.push(Survey.find(survey_id))
-          params[:script][:surveys] = all_surveys_array 
-        end
-      end
+      # if params[:surveys] != nil
+      #   all_surveys_array = Array.new
+      #   params[:surveys].each do |survey_id|
+      #     all_surveys_array.push(Survey.find(survey_id))
+      #     params[:script][:surveys] = all_surveys_array 
+      #   end
+      # end
       
       # if params[:scripts] != nil
       #   all_scripts_array = Array.new
@@ -189,15 +284,36 @@ class ScriptsController < ApplicationController
 
       respond_to do |format|
         if @script.save
-          #first save the script to script links
+          #save all the links as annotations.
+          #at the moment all the links have predicates of 'link' but this could change in the future to a user defined one
+          #this would mean that each Linkage could have many different reasons
           if params[:scripts] != nil
-            all_scripts_array = Array.new
+            # all_scripts_array = Array.new
             params[:scripts].each do |script_id|
-              sl = ScriptToScriptLink.new(:source_id=>@script.id,:target_id=>script_id)
-              sl.save
-              #all_scripts_array.push(Script.find(script_id))
-              #params[:script][:linked_scripts] = all_scripts_array 
+            link = Link.new
+            link.subject = @script
+            link.object = Script.find(script_id)
+            link.predicate = "link"
+            link.save
             end
+          end
+          if params[:surveys] != nil
+              params[:surveys].each do |survey_id|
+                 link = Link.new
+                 link.subject = @script
+                 link.object = Survey.find(survey_id)
+                 link.predicate = "link"
+                 link.save
+              end
+          end
+          if params[:data_extracts] != nil
+              params[:data_extracts].each do |extract_id|
+                 link = Link.new
+                 link.subject = @script
+                 link.object = Csvarchive.find(extract_id)
+                 link.predicate = "link"
+                 link.save
+              end
           end
           # the Script was saved successfully, now need to apply policy / permissions settings to it
           policy_err_msg = Policy.create_or_update_policy(@script, current_user, params)
@@ -231,7 +347,13 @@ class ScriptsController < ApplicationController
       [:contributor_id, :contributor_type, :original_filename, :content_type, :content_blob_id, :created_at, :updated_at, :last_used_at,:method_type].each do |column_name|
         params[:script].delete(column_name)
       end
-
+      # params[:script].script_lists.each do |list|
+      #   list.delete
+      # end
+      # params[:script].survey_to_script_lists.each do |list|
+      #   list.delete
+      # end
+    end
       # update 'last_used_at' timestamp on the Script
       params[:script][:last_used_at] = Time.now
 
@@ -242,8 +364,45 @@ class ScriptsController < ApplicationController
       params[:script][:contributor_type] = current_user.class.name
       params[:script][:contributor_id] = current_user.id
       params[:script][:method_type] = params[:method_type]
-    end
+      
+      #remove all the existing links where this Script is the source
+      links = Link.find(:all, 
+                                   :conditions => { :subject_type => "Script", 
+                                                    :subject_id => @script.id,
+                                                    :predicate => "link" })
 
+      links.each do |link|
+        link.delete
+      end
+      #add the links again
+      if params[:scripts] != nil
+        # all_scripts_array = Array.new
+        params[:scripts].each do |script_id|
+        link = Link.new
+        link.subject = @script
+        link.object = Script.find(script_id)
+        link.predicate = "link"
+        link.save
+        end
+      end
+      if params[:surveys] != nil
+          params[:surveys].each do |survey_id|
+             link = Link.new
+             link.subject = @script
+             link.object = Survey.find(survey_id)
+             link.predicate = "link"
+             link.save
+          end
+      end
+      if params[:data_extracts] != nil
+          params[:data_extracts].each do |extract_id|
+             link = Link.new
+             link.subject = @script
+             link.object = Csvarchive.find(extract_id)
+             link.predicate = "link"
+             link.save
+          end
+      end
     respond_to do |format|
       if @script.update_attributes(params[:script])
         # the Script was updated successfully, now need to apply updated policy / permissions settings to it
