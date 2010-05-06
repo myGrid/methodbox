@@ -122,4 +122,11 @@ hse2007:
   name: HSE2007
   description: Ask questions and queries and post facts about Health Survey for England 2007 here
   position: 18
-  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2007 here</p>  
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2007 here</p> 
+  
+hse2008:
+  id: 19
+  name: HSE2008
+  description: Ask questions and queries and post facts about Health Survey for England 2008 here
+  position: 19
+  description_html: <p>Ask questions and queries and post facts about Health Survey for England 2008 here</p> 
