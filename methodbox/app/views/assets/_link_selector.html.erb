@@ -14,13 +14,14 @@
 	<tbody class="scrollContent" id="<%= resource_id + "_source_table_body"-%>">
   	<% collection.each do |item| -%>
 		  <% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-		<tr id="<%= resource_id + "_" + item.id.to_s + "_source_row" -%>">
+		<tr id="<%= resource_id + "_" + item.id.to_s + "_source_row" -%>" <%= hide_style(true)  unless !selected.include?(item.id) -%>>
 			<td id="<%= resource_id + "_" + item.id.to_s + "_source_cell"
 			 -%>" onclick="javascript:checkItem('<%= item.id.to_s -%>', 'source', '<%= resource_id -%>')">
 				<%= item.title -%>
 			</td>
 			</tr>
 			<%= javascript_tag "addInstanceOfObject('#{resource_id}','#{item.id.to_s}', '#{item.title}')" -%>
+			
 		<% end -%>
 		<% end -%>
 		</tbody>
@@ -37,12 +38,15 @@
 	<tbody class="scrollContent" id="<%= resource_id + "_target_table_body"-%>">
   	<% collection.each do |item| -%>
 		  <% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-		<tr id="<%= resource_id + "_" + item.id.to_s + "_target_row" -%>" style="display:none;">
+		<tr id="<%= resource_id + "_" + item.id.to_s + "_target_row" -%>" <%= hide_style(true) unless selected.include?(item.id) -%>>
 			<td id="<%= resource_id + "_" + item.id.to_s + "_target_cell"
 			 -%>" onclick="javascript:checkItem('<%= item.id.to_s -%>', 'target', '<%= resource_id -%>')">
 				<%= item.title -%>
 			</td>
 			</tr>
+			<% if selected.include?(item.id) -%>
+				<%= javascript_tag "alreadySelected('#{resource_id}','#{item.id.to_s}', '#{item.title}')" -%>
+			<% end -%>
 		<% end -%>
 		<% end -%>
 		</tbody>
