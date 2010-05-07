@@ -5,6 +5,7 @@ class CreateDatasets < ActiveRecord::Migration
       t.string :name
       t.string :filename
       t.string :description
+      t.string :key_variable
       t.timestamps
     end
   end
