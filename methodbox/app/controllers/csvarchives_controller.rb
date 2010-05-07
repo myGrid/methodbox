@@ -7,10 +7,13 @@ class CsvarchivesController < ApplicationController
 
   before_filter :login_required
   before_filter :find_archives_by_page, :only => [ :index]
-  before_filter :find_scripts, :find_surveys, :find_archives, :only => [ :new ]
+  before_filter :find_scripts, :find_surveys, :find_archives, :only => [ :new,:edit ]
 
   def new
     set_parameters_for_sharing_form
+    @selected_scripts=[]
+    @selected_archives=[]
+    @selected_surveys=[]
     @scripts = Script.find(:all)
     @scripts=Authorization.authorize_collection("show",@scripts,current_user)
     @surveys = Survey.find(:all)
@@ -96,17 +99,54 @@ class CsvarchivesController < ApplicationController
     @surveys = @archive.surveys
     @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
     
-     all_extract_source_links = []
-      @archive.extracts_as_source.each do |link|
-        puts link.class
-        all_extract_source_links << link.target_id
-      end
-      all_extract_target_links = []
-      @archive.extracts_as_target.each do |link|
-        all_extract_target_links << link.source_id
-      end
+    source_archives = []
+    source_surveys = []
+    source_scripts = []
+    target_archives = []
+    target_surveys = []
+    target_scripts = []
 
-      @all_extract_links = all_extract_source_links | all_extract_target_links
+    links = Link.find(:all, :conditions => { :subject_type => "Csvarchive", :subject_id => @archive.id, :predicate => "link" })
+
+    links.each do |link|
+      case link.object.class.name
+      when "Csvarchive"
+        source_archives.push(link.object)
+      when "Script"
+        source_scripts.push(link.object)
+      when "Survey"
+        source_surveys.push(link.object)
+      end
+    end
+      
+    target_links = Link.find(:all, :conditions => { :object_type => "Csvarchive", :object_id => @archive.id, :predicate => "link" })
+                                                    
+    target_links.each do |link|
+      case link.object.class.name
+      when "Csvarchive"
+        target_archives.push(link.object)
+      when "Script"
+        target_scripts.push(link.object)
+      when "Survey"
+        target_surveys.push(link.object)
+      end
+    end
+      
+    @archives = source_archives | target_archives
+    @scripts = source_scripts | target_scripts
+    @surveys = source_surveys | target_scripts
+    
+     # all_extract_source_links = []
+     #  @archive.extracts_as_source.each do |link|
+     #    puts link.class
+     #    all_extract_source_links << link.target_id
+     #  end
+     #  all_extract_target_links = []
+     #  @archive.extracts_as_target.each do |link|
+     #    all_extract_target_links << link.source_id
+     #  end
+     # 
+     #  @all_extract_links = all_extract_source_links | all_extract_target_links
       
     respond_to do |format|
       format.html # show.html.erb
@@ -116,16 +156,104 @@ class CsvarchivesController < ApplicationController
 
   def edit
     find_archive
+     @selected_archives = []
+      @selected_surveys = []
+      @selected_scripts = []
+      #find links where this Script is the source
+      links = Link.find(:all, :conditions => { :subject_type => "Csvarchive", :subject_id => @archive.id, :predicate => "link" })
+
+      links.each do |link|
+        case link.object.class.name
+        when "Csvarchive"
+          @selected_archives.push(link.object.id)
+        when "Script"
+          @selected_scripts.push(link.object.id)
+        when "Survey"
+          @selected_surveys.push(link.object.id)
+        end
+      end
+      
     set_parameters_for_sharing_form
   end
 
   def update
     find_archive
-    puts "would have updated"
-    respond_to do |format|
-      format.html { redirect_to csvarchive_path(@archive) }
-      format.xml {render :xml=>@archive}
+    # remove protected columns (including a "link" to content blob - actual data cannot be updated!)
+      # params[:script].script_lists.each do |list|
+      #   list.delete
+      # end
+      # params[:script].survey_to_script_lists.each do |list|
+      #   list.delete
+      # end
+    # end
+      # update 'last_used_at' timestamp on the Script
+      params[:csvarchive][:last_used_at] = Time.now
+      
+    links = Link.find(:all, 
+                                 :conditions => { :subject_type => "Csvarchive", 
+                                                  :subject_id => @archive.id,
+                                                  :predicate => "link" })
+
+    links.each do |link|
+      link.delete
     end
+    #add the links again
+    if params[:scripts] != nil
+      # all_scripts_array = Array.new
+      params[:scripts].each do |script_id|
+      link = Link.new
+      link.subject = @archive
+      link.object = Script.find(script_id)
+      link.predicate = "link"
+      link.save
+      end
+    end
+    if params[:surveys] != nil
+        params[:surveys].each do |survey_id|
+           link = Link.new
+           link.subject = @archive
+           link.object = Survey.find(survey_id)
+           link.predicate = "link"
+           link.save
+        end
+    end
+    if params[:data_extracts] != nil
+        params[:data_extracts].each do |extract_id|
+           link = Link.new
+           link.subject = @archive
+           link.object = Csvarchive.find(extract_id)
+           link.predicate = "link"
+           link.save
+        end
+    end
+    # puts "would have updated"
+    respond_to do |format|
+      if @archive.update_attributes(params[:csvarchive])
+        # the Script was updated successfully, now need to apply updated policy / permissions settings to it
+        policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
+
+        # update attributions
+        Relationship.create_or_update_attributions(@archive, params[:attributions])
+
+        if policy_err_msg.blank?
+          flash[:notice] = 'Data Extract metadata was successfully updated.'
+          format.html { redirect_to csvarchive_path(@archive) }
+        else
+          flash[:notice] = "Data Extract metadata was successfully updated. However some problems occurred, please see these below.</br></br><span style='color: red;'>" + policy_err_msg + "</span>"
+          format.html { redirect_to :controller => 'csvarchive', :id => @archive, :action => "edit" }
+        end
+      else
+        format.html {
+          set_parameters_for_sharing_form()
+          render :action => "edit"
+        }
+      end
+    end
+  # end
+    # respond_to do |format|
+    #   format.html { redirect_to csvarchive_path(@archive) }
+    #   format.xml {render :xml=>@archive}
+    # end
   end
   
   # PUT /csvarchives/1
@@ -190,25 +318,25 @@ class CsvarchivesController < ApplicationController
         xmldoc = xmlparser.parse
         root = xmldoc.root
         @jobid = root.child.to_s
-        if params[:scripts] != nil
-          all_scripts_array = Array.new
-          params[:scripts].each do |script_id|
-            all_scripts_array.push(Script.find(script_id))
-          end
-          params[:archive][:scripts] = all_scripts_array
-        end
+        # if params[:scripts] != nil
+        #          all_scripts_array = Array.new
+        #          params[:scripts].each do |script_id|
+        #            all_scripts_array.push(Script.find(script_id))
+        #          end
+        #          params[:archive][:scripts] = all_scripts_array
+        #        end
         # if params[:archive][:id] != ""
         #         all_archives_array = Array.new
         #         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
         #         params[:script][:csvarchives] = all_archives_array
         #       end
-        if params[:surveys] != nil
-          all_surveys_array = Array.new
-          params[:surveys].each do |survey_id|
-            all_surveys_array.push(Survey.find(survey_id))
-          end
-          params[:archive][:surveys] = all_surveys_array 
-        end
+        # if params[:surveys] != nil
+        #          all_surveys_array = Array.new
+        #          params[:surveys].each do |survey_id|
+        #            all_surveys_array.push(Survey.find(survey_id))
+        #          end
+        #          params[:archive][:surveys] = all_surveys_array 
+        #        end
         #only one script at the moment, change to many in future and can be none
         # if params[:script][:id] != ""
         #          all_scripts_array = Array.new
@@ -233,13 +361,35 @@ class CsvarchivesController < ApplicationController
       
         @archive = Csvarchive.new(params[:archive])
         @archive.save
-        #we now have an id for the extract so save all of its links with other extracts
-        if params[:data_extracts] != nil
-          params[:data_extracts].each do |extract_id|
-            link = ExtractToExtractLink.new(:source_id=>@archive.id,:target_id=>extract_id)
+        #we now have an id for the extract so save all of its links with other things
+         if params[:scripts] != nil
+            # all_scripts_array = Array.new
+            params[:scripts].each do |script_id|
+            link = Link.new
+            link.subject = @archive
+            link.object = Script.find(script_id)
+            link.predicate = "link"
             link.save
+            end
           end
-        end
+          if params[:surveys] != nil
+              params[:surveys].each do |survey_id|
+                 link = Link.new
+                 link.subject = @archive
+                 link.object = Survey.find(survey_id)
+                 link.predicate = "link"
+                 link.save
+              end
+          end
+          if params[:data_extracts] != nil
+              params[:data_extracts].each do |extract_id|
+                 link = Link.new
+                 link.subject = @archive
+                 link.object = Csvarchive.find(extract_id)
+                 link.predicate = "link"
+                 link.save
+              end
+          end
       
         policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
 
@@ -485,6 +635,8 @@ class CsvarchivesController < ApplicationController
       end
     end
   end
+  
+  
 
   def find_archive
     @archive = Csvarchive.find(params[:id])
