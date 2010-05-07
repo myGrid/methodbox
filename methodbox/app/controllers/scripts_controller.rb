@@ -284,7 +284,7 @@ class ScriptsController < ApplicationController
 
       respond_to do |format|
         if @script.save
-          #save all the links as annotations.
+          #save all the links.
           #at the moment all the links have predicates of 'link' but this could change in the future to a user defined one
           #this would mean that each Linkage could have many different reasons
           if params[:scripts] != nil
