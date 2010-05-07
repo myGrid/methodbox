@@ -31,7 +31,7 @@
 			<p>          
 				<b>Link with Data Extracts:</b>
 			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
-		      :collection=>@archives,:authorization_for_showing_already_done => false } -%>
+		      :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
 		</p>
 		</div>
 			<br/>
@@ -41,7 +41,7 @@
 			<p>
 				<b>Link with Surveys:</b>
 			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
-		      :collection=>@surveys,:authorization_for_showing_already_done => true } -%>
+		      :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
 		</p>
 		</div>
 		<br/>
@@ -51,22 +51,12 @@
 			<p>          
 				<b>Link with Scripts:</b>
 			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
-		      :collection=>@scripts,:authorization_for_showing_already_done => false } -%>
+		      :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
 		</p>
 		</div>
-
-
-			<br/>
-			<div style="clear:both;">
-				</div>
-        <p>
-          <b>Link with Method/Script:</b>
-          <%= collection_select(:script, :id, @scripts, :id, :title, options ={:prompt => "Select a Method/Script"}) -%>
-        </p>
-         <p>
-          <b>Link with Survey:</b>
-          <%= collection_select(:survey, :id, @surveys, :id, :title, options ={:prompt => "Select a Survey"}) -%>
-        </p>
+		<br/>
+		<div style="clear:both;">
+			</div>
         <!-- <p style="margin: 0;"> -->
          <%#= render :partial => "linked_scripts_form", :locals => {:person => current_user, :existing_script_links => [],
          :script_suggestions => Script.get_all_as_json(current_user) } -%>

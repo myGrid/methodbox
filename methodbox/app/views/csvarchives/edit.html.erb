@@ -1,4 +1,5 @@
 <%= javascript_include_tag "sharing.js" %>
+<%= javascript_include_tag 'link_adder.js'-%>
 
 <% current_user_authorized_to_manage = Authorization.is_authorized?("manage", nil, @archive, current_user) -%>
 
@@ -15,7 +16,7 @@
     <%= f.error_messages %>
 
     <center>
-      <div style="width: 60%;">
+      <div style="width: 90%;">
         <p style="margin-top: 1.5em;">
           <b>Title:</b><br/>
           <%= f.text_field :title, :style => "width: 100%;" -%>
@@ -25,7 +26,33 @@
           <b>Description:</b><br/>
           <%= f.text_area :description, :style => "width: 100%;", :rows => 5 -%>
         </p>
-
+		<div>
+			<p>          
+				<b>Link with Data Extracts:</b>
+			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
+		      :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
+		</p>
+		</div>
+			<br/>
+			<div style="clear:both;">
+				</div>
+		<div>
+			<p>
+				<b>Link with Surveys:</b>
+			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
+		      :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
+		</p>
+		</div>
+		<br/>
+		<div style="clear:both;">
+			</div>
+		<div>
+			<p>          
+				<b>Link with Scripts:</b>
+			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
+		      :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
+		</p>
+		</div>
         <%# only the owner should get to see this option (ability to reload defaults remain in 'edit' action, but project selector is disabled) -%>
         <%# if current_user_authorized_to_manage -%>
           <%#= render :partial => "assets/project_selector", :locals => { :resource_type => "CSV Archive",  # this is only for presentation, not for any processing
@@ -52,7 +79,9 @@
           :attribution_suggestions => Script.get_all_as_json(current_user) } -%>
       <%#*</p>%>
     <%# end -%>
-
+	<br/>
+	<div style="clear:both;">
+		</div>
  
       <% if current_user_authorized_to_manage -%>
       <p style="margin: 2.5em 0 0 0;">

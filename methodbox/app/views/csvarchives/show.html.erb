@@ -60,31 +60,33 @@
       </p>
     <% end -%>
     <br/>
-    <b>Linked with Script(s):</b>
-    <% if !@scripts.empty? -%>
+    <br/>
+	  <b>Linked with Data Extracts(s):</b>
+      <% if !@archives.empty? -%>
 
-      <% @scripts.each do |script| -%>
-        <%= link_to(script.title, script_path(script)) -%>
+        <% @archives.each do |archive| -%>
+          <%= link_to(archive.title, csvarchive_path(archive)) -%>
+        <% end -%>
+      <% else -%>
+        None
       <% end -%>
-    <% else -%>
-      None
-    <% end -%>
-    <br/>
-    <b>Linked with Survey(s):</b>
-    <% if !@surveys.empty? -%>
+      <br/>
+      <br/>
+      <b>Linked with Survey(s):</b>
+      <% if !@surveys.empty? -%>
 
-      <% @surveys.each do |survey| -%>
-        <%= link_to(survey.title, survey_path(survey)) -%>
+        <% @surveys.each do |survey| -%>
+          <%= link_to(survey.title, survey_path(survey)) -%>
+        <% end -%>
+      <% else -%>
+        None
       <% end -%>
-    <% else -%>
-      None
-    <% end -%>
-    <br/>
-    <br/>
-	<b>Linked with Data Extract(s):</b>
-		<% if !@all_extract_links.empty? -%>
-        <% @all_extract_links.each do |linked_extract| -%>
-          <%= link_to(Csvarchive.find(linked_extract).title, csvarchive_path(Csvarchive.find(linked_extract))) -%>
+      <br/>
+	<br/>
+      <b>Linked with Script(s):</b>
+		<% if !@scripts.empty? -%>
+        <% @scripts.each do |script| -%>
+          <%= link_to(script.title, script_path(script)) -%>
         <% end -%>
       <% else -%>
         None
