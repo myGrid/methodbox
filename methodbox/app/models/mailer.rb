@@ -42,7 +42,7 @@ class Mailer < ActionMailer::Base
     from        NOREPLY_SENDER
     sent_on     Time.now
 
-    body        :username=>user.login, :name=>user.person.name, :admins=>User.admins.collect{|u| u.person}, :activation_code=>user.activation_code, :host=>base_host
+    body        :username=>user.email, :name=>user.person.name, :admins=>User.admins.collect{|u| u.person}, :activation_code=>user.activation_code, :host=>base_host
   end
 
   def forgot_password(user,base_host)
@@ -51,7 +51,7 @@ class Mailer < ActionMailer::Base
     from       NOREPLY_SENDER
     sent_on    Time.now
     
-    body       :username=>user.login, :name=>user.person.name, :reset_code => user.reset_password_code, :host=>base_host
+    body       :username=>user.email, :name=>user.person.name, :reset_code => user.reset_password_code, :host=>base_host
   end
 
   def welcome(user,base_host)
