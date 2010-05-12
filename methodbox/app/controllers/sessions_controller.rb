@@ -49,7 +49,7 @@ class SessionsController < ApplicationController
       end            
     else
       #check if user is part way through registration processes      
-      user=User.find_by_login(params[:login])      
+      user=User.find_by_email(params[:login])      
       if !user.nil? && !user.active? && user.authenticated?(params[:password])
         if (user.person.nil?)
           flash[:notice]="You need to continue selecting a profile"

@@ -4,7 +4,7 @@ class PeopleController < ApplicationController
   
   before_filter :login_required,:except=>[:select,:userless_project_selected_ajax,:create,:new]  
   before_filter :current_user_exists,:only=>[:select,:userless_project_selected_ajax,:create,:new]
-  before_filter :current_user_dormant,:except=>[:index,:new,:create]
+  before_filter :current_user_dormant,:except=>[:index,:new,:create,:select]
   before_filter :profile_belongs_to_current_or_is_admin, :only=>[:edit, :update,:destroy]
   before_filter :profile_is_not_another_admin_except_me, :only=>[:edit,:update,:destroy]
   # before_filter :is_user_admin_auth, :only=>[:destroy]
@@ -237,6 +237,8 @@ class PeopleController < ApplicationController
     
     respond_to do |format|
       if @person.update_attributes(params[:person]) && set_group_membership_role_ids(@person,params)
+        @person.user.email = @person.email
+        @person.user.save
         #        flash[:notice] = 'Person was successfully updated.'
         format.html { redirect_to(@person) }
         format.xml  { head :ok }

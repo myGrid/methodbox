@@ -28,17 +28,30 @@ class UsersController < ApplicationController
     # uncomment at your own risk
     reset_session
     @user = User.new(params[:user])
-    @user.person=Person.new(params[:person])
+    user_person = Person.new(params[:person])
+    user_person.email = @user.email
+    @user.person=user_person
     
     @user.save
-    
+    respond_to do |format|
     if @user.errors.empty?
-      @user.activate unless ACTIVATION_REQUIRED
       self.current_user = @user
-      redirect_to(select_people_path)
+      if !ACTIVATION_REQUIRED
+        @user.activate
+        
+        format.html {redirect_to(root_path)}
+      else
+            # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
+            Mailer.deliver_signup(current_user,base_host)
+            flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
+            logout_user
+            format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+      end
     else
-      render :action => 'new'
+      puts @users.errors
+      format.html {render :action => 'new'}
     end
+  end
   end
 
   def activate
@@ -86,19 +99,19 @@ class UsersController < ApplicationController
     if request.get?
       # forgot_password.rhtml
     elsif request.post?
-      user = User.find_by_login(params[:login])
+      user = User.find_by_email(params[:login])
 
       respond_to do |format|
-        if user && user.person && !user.person.email.blank? && !user.dormant?
+        if user && user.person && !user.email.blank? && !user.dormant?
           user.reset_password_code_until = 1.day.from_now
           user.reset_password_code =  Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
           user.save!
           Mailer.deliver_forgot_password(user, base_host)
-          flash[:notice] = "Instructions on how to reset your password have been sent to #{user.person.email}"
+          flash[:notice] = "Instructions on how to reset your password have been sent to #{user.email}"
           format.html { render :action => "forgot_password" }
         else
           flash[:error] = "Invalid user: #{params[:login]}" if !user
-          flash[:error] = "Unable to send you an email, as this information isn't available for #{params[:login]}" if user && (!user.person || user.person.email.blank? || user.dormant?)
+          flash[:error] = "Unable to send you an email, as this information isn't available for #{params[:login]}" if user && (!user.person || user.email.blank? || user.dormant?)
           format.html { render :action => "forgot_password" }
         end
       end
