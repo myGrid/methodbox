@@ -1,14 +1,11 @@
-<center>
-  <div id="signup" style="width: 700px; margin-top: 0.5em;">
-
-    <ul class="sectionIcons" style="text-align: right;">
-      <li><%= icon("refresh", login_url, "Return to login page", nil, "Return to login page") -%></li>
-    </ul>
+<!-- <center> -->
+	    <h2>Please provide your details (<font style="color: #FF0000;">*</font> <font style="font-size: small;"> compulsory field)</font></h2>
+  <div id="signup" style="float:right; width: 40%; margin: 1em;">
 
     <p><b>Sign me up</b></p>  <p>I want to share <b>knowledge</b> and <b>expertise</b> with other MethodBox users</p>
 
     <p class="box_infotext">
-      <b>By registering, you are indicating that you have read and agree that:</b>
+      <b>By registering, you are indicating that:</b>
       <br/>
       <b>You have registered with <a href="http://www.esds.ac.uk/">ESDS</a> and are allowed to use the datasets they provide</b>
       <br/>
@@ -17,56 +14,89 @@
       personally identifiable data available to third parties without consent.
       Please contact us if you have any queries about our terms or our privacy policy.
       <br/><br/>
-      If you have previously provided a login and password but didn't select or create a profile, then your details have already been stored
-      and you should <b><%= link_to "login", login_url %></b> to continue the registration process.
+      If you have previously registered but suspended/deleted your account and wish to re-claim your old 'assets then please re-register using the same email address as previously used.
     </p>
-    
+</div>    
 
-    <% if error_messages_for :user -%>
-      <p><%= error_messages_for :user %></p>
-    <% end -%>
 
-    <h2>Please provide your details (<font style="color: #FF0000;">*</font> <font style="font-size: small;"> compulsory field)</font></h2>
 <%#= help_icon("Please note that fields marked with an asterisk are compulsory.") %>
 
-    <% form_for :user, :url=>users_url do |f| -%>
+    <%# form_for :user, :url=>users_url do |f| -%>
+	<div style="width:60%; margin: 1em;">
+	<% form_tag(:controller=>'users', :action=>'create') do -%>
+	
       <table style="width: 100%;">
         <tr>
           <td style="width: 50%;">
-            <div class="box_simple">
-              <center>
+            <!-- <div class="box_simple"> -->
+              <!-- <center> -->
                 <div style="width: 90%;">
+				<fieldset>
+				<legend>Email Address</legend>
+		          <p>
+		            <%= label :email, "Your email address" %><font style="color: #FF0000;">*</font><br />
+		            <%= text_field(:user, :email, :style => "width: 100%;") %>
+		          </p>
+		          <p>
+		            <%= label :email_confirmation, "Confirm your email address" %><font style="color: #FF0000;">*</font><br />
+		            <%= text_field(:user, :email_confirmation, :style => "width: 100%;") %>
+		          </p>
+				</fieldset>
+				<fieldset>
+				<legend>Password</legend>
                   <p>
-                    <label for="user_login">
-                      <b><font style="color: #FF0000;">*</font> Login name</b> (Login should contain a minimum of 3 characters)
-                      <%#= help_icon("Login should contain a minimum of 3 characters") -%>
-                    </label><br/>
-                    <%= f.text_field :login, :style => "width: 100%" %>
+					<%= label :password, "Password (should contain a minimum of 4 characters)" %><font style="color: #FF0000;">*</font><br/>
+                    <%= password_field(:user, :password, :style => "width: 100%;") %>
                   </p>
+				
 
                   <p>
-                    <label for="user_password">
-                      <b><font style="color: #FF0000;">*</font> Password</b> (Password should contain a minimum of 4 characters)
-                      <%#= help_icon("Password should contain a minimum of 4 characters") -%>
-                    </label><br/>
-                    <%= f.password_field :password, :style => "width: 100%;" %>
+                    <%= label :password_confirmation, "Confirm your password" %><font style="color: #FF0000;">*</font><br/>
+					<%= password_field(:user, :password_confirmation, :style => "width: 100%;") %>
                   </p>
+				</fieldset>
+				
+				<fieldset>
+				<legend>About you</legend>
+				 <p>
+		            <%= label :first_name, "First name" -%><font style="color: #FF0000;">*</font><br/>
+		            <%= text_field(:person, :first_name, :style => "width: 100%;") -%>
+		          </p>
 
-                  <p>
-                    <label for="user_password_confirmation"><b><font style="color: #FF0000;">*</font> Confirm Password</b></label><br/>
-                    <%= f.password_field :password_confirmation, :style => "width: 100%;" %>
-                  </p>
-                </div>
-              </center>
+		          <p>
+		            <%= label :last_name, "Last name" %><font style="color: #FF0000;">*</font><br/>
+		            <%= text_field(:person, :last_name, :style => "width: 100%;") %>
+		          </p>
+				<p>  
+					<%= label :description, "Description" %><br/>
+				  <%= text_area(:person, :description, :class=>"description", :rows => 8, :style => "width: 100%;") -%>
+				</p>
+				</fieldset>
+				<fieldset>
+                <legend>Notifications</legend>
+                        <p>
+						        <%= check_box('person','send_notifications') %>
+						        <%= label :send_notifications, "I would like to receive email notifications" %>
+						</p>
+
+						<div class="box_info_standout" style="margin-top: 0.6em; font-size: 93%;">
+						  By ticking this box you agree to receiving emails from us.
+						  This may be announcements, maintenance notices and so on.
+						  This will also include email notifications when other users message you.
+						  Your email address is private and will not be available to other users and
+						  will not be passed on to any third parties.
+						</div>
+                </fieldset>
+              <!-- </center> -->
             </div>
           </td>
 
         </tr>
       </table>
-
+</div>
       <p style="text-align: center;">
         <%= submit_tag 'Register' %>
       </p>
     <% end -%>
   </div>
-</center>
+<!-- </center> -->
