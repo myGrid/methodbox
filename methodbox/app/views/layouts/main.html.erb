@@ -16,32 +16,6 @@
         $(element).innerHTML=<%= "'"+image_tag("ajax-loader.gif")+"'" -%> ;
 }      
     </script>
-    <%#*<script type="text/javascript">%>
-      <%#*var $j = jQuery.noConflict();%>
-
-      <%#*// Use jQuery via $j(...)%>
-
-    <%#*</script>%>
-
-<%#*<script type="text/javascript">%>
-<%#*window.dhtmlHistory.create({%>
-<%#*toJSON: function(o) {%>
-<%#*return Object.toJSON(o);%>
-<%#*},%>
-<%#*fromJSON: function(s) {%>
-<%#*return s.evalJSON();%>
-<%#*}%>
-<%#*});%>
-
-<%#*var pageListener = function(newLocation, historyData) {%>
-<%#*eval(historyData);%>
-<%#*};%>
-
-<%#*window.onload = function() {%>
-<%#*dhtmlHistory.initialize();%>
-<%#*dhtmlHistory.addListener(pageListener);%>
-<%#*}%>
-<%#*</script>%>
 
   </head>
 
@@ -49,34 +23,13 @@
   <body style="background-color:#EFDED2;">
 
     <div id="doc4" class="yui-t7">
-<%#*<div id="doc4" class="yui-t7" style="background-color:#FFFFFF">%>
-<%#*<div class="yui-b" style="background-color:#FFFFFF;padding:5px;float:left;">%>
-
-<%#= render :partial => "layouts/sidebar" %>
-<%#*</div>%>
       <div id="hd">
         <div id="header">
-<%#*<div id="header" style="background-color:#ACCBE0;">%>
           <%= render :partial=>"layouts/header" %>
         </div>
-<%#= render :partial => "layouts/head_tabber_pre" %>
-<%#*<br/>%>
         <%= render :partial=>"layouts/tabnav" %>
-<%#*<div id="myexp_searchbar" style="background-image:url(/images/searchbar-flare.png);">%>
-<%#= render :partial=>"search/search_bar" %>
-<%#*</div>%>
-<%#*<div>%>
-<%#*<b class="spiffy"><b class="spiffy1"><b></b></b><b class="spiffy2"><b></b></b><b class="spiffy3"></b><b class="spiffy4"></b><b class="spiffy5"></b></b>%>
-<%#*<div style="background:#1B619B; height:25px;margin-top:-27px;">%>
-<%#*</div>%>
-<%#*<b class="spiffy"><b class="spiffy5"><b></b></b><b class="spiffy4"><b></b></b><b class="spiffy3"></b><b class="spiffy2"></b><b class="spiffy1"></b></b>%>
-
-<%#*<b class="spiffy"><b class="spiffy5"></b><b class="spiffy4"></b><b class="spiffy3"></b><b class="spiffy2"><b></b></b><b class="spiffy1"><b></b></b></b>%>
-
-<%#*</div>%>
       </div>
       <div id="bd">
-<%#*<div id="bd" style="min-height:550px;margin: 1em;">%>
         <div id="yui-main">
 	      <div style="position: absolute; top:250px; left:550px;display: none;z-index:1000;"  id="spinner">
 	              Working....<%= image_tag method_to_icon_filename("large-spinner"), :alt=>"working...", :title=>"working...", :style => "vertical-align: middle;",:height => '64', :width => '64' -%>
