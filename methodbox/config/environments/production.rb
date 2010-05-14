@@ -24,3 +24,13 @@ config.action_controller.perform_caching             = true
 #
 SOLR_ENABLED=true
 ACTIVATION_REQUIRED=true
+
+ActionMailer::Base.delivery_method = :smtp
+ActionMailer::Base.smtp_settings = {
+  :address => "smtp.gmail.com",
+  :port => 587,
+  :domain => "methodbox.org",
+  :authentication => :plain,
+  :user_name => "methodbox",
+  :password => "unicornd@rts12"
+}
