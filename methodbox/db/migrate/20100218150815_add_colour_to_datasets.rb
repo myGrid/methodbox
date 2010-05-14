@@ -4,6 +4,6 @@ class AddColourToDatasets < ActiveRecord::Migration
   end
 
   def self.down
-     remove_column :datasets, :colour, :string
+     remove_column :datasets, :colour
   end
 end
