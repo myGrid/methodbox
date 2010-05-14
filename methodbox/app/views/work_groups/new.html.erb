@@ -1,0 +1,38 @@
+<%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'link_adder.js'-%>
+<h1>New Group</h1>
+
+<div class="show_basic">
+  <% form_tag({:action => :create}, :multipart => true) do -%>
+    <%= error_messages_for :script -%>
+
+    <center>
+      <div style="width: 90%;">
+
+        <p style="margin-top: 1.5em;">
+          <b>Title:</b><font style="color: #FF0000;">*</font><br/>
+          <% group_name_value = (params[:group].blank? || params[:group][:name].blank?) ? nil : params[:group][:name] -%>
+          <%= text_field_tag 'group[name]', group_name_value, :style => "width: 100%;" -%>
+        </p>
+
+        <p style="margin-top: 0.5em;">
+          <b>Description:</b><br/>
+          <% group_description_value = (params[:group].blank? || params[:group][:info].blank?) ? nil : params[:group][:info] -%>
+          <%= text_area_tag 'group[info]', group_description_value, :style => "width: 100%;", :rows => 5 -%>
+        </p>
+
+<div>
+	<p>          
+		<b>Add people to this group:</b>
+	<%= render :partial => "assets/group_people_selector", :locals => { :resource_id => "people", :resource_type => "People",   # this is only for presentation, not for any processing
+      :collection=>@people,:selected=>[],:authorization_for_showing_already_done => false } -%>
+</p>
+</div>
+<br/>
+<div style="clear:both;">
+</div>
+  <p style="text-align: center; margin-top: 1.5em;">
+    <%= submit_tag "Create this group", :id => "group_submit_btn", :onclick => "javascript: validateGroupFields(true); return(false);" -%> or <%= link_to 'Cancel', work_groups_path -%>
+  </p>
+<% end -%>
+</center>

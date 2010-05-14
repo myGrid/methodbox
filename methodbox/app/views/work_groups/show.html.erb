@@ -1,0 +1,35 @@
+<div class="show_basic">
+  <div class="main_content_left_box">
+    <div class="box_about_actor">
+      <p>
+        <b>Name:</b>
+        <span class="title"><%=h @group.name -%></span>
+      </p>
+      <br/>
+      <p>
+        <b>Description</b>
+        <% unless @group.info.blank? -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@group.info)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
+      </p>
+      <br/>
+      <b>People in this group:</b>
+		<% if !@group.people.empty? -%>
+        <% @group.people.each do |member| -%>
+          <%= link_to(member.name, person_path(member)) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>
+    </div>
+  </div>
+</div>
+
+<div style="clear:both;">
+</div>
