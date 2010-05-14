@@ -1,0 +1,60 @@
+Install:
+MYSQL: 
+	see http://dev.mysql.com/downloads/mysql/
+	Used all default options
+Instant Rails	
+	see http://instantrails.rubyforge.org/wiki/wiki.pl
+	http://rubyforge.org/frs/?group_id=904
+	
+SOLR rebuild:
+	(solr running) rake solr:start_win
+	ruby scripts/concole
+	>>Person.rebuild_solr_index
+	>>Project.rebuild_solr_index
+	>>Script.rebuild_solr_index
+	>>Survey.rebuild_solr_index
+	>>Variable.rebuild_solr_index
+	quit
+	
+csv
+	Go to csvserver directory
+	create "logs" directory
+	mvn jetty;run 
+	or mvn org.mortbay.jetty:maven-jetty-plugin:run	
+
+	
+Installation:
+	-create database in sql
+	-update database.yml if required
+	"rake db:bootstrap"
+		or "rake db:migrate"
+		   "rake savage_beast:bootstrap_db"
+	(in command promt) -mysql -u username -p database_name < dumpfile.sql (no space after -u and -p)
+	-SOLR rebuild
+	-"rake db:seed_default_dbdata"
+	
+	TODO:
+	
+		get data files
+		
+		test csv
+		see config/environment_local.rb
+		
+		src/ main.webapps/webinf/classes.csv.properties
+		src/ main.webapps/webinf/classes.email.properties
+		
+	SOLR: in config/environments.development	
+		rake solr:start
+		
+		see vendor/pluins/acts_as_solr/lib/tasks/solr.rake start_win
+	
+	Get Data files
+	 get variables.sql
+	 see http://www.mygrid.org.uk/dev/blog/
+
+---
+csvserver/src/main/webapp/WEB-INF/classes/csv.properties
+csvserver/src/main/webapp/WEB-INF/classes/email.properties
+methodbox/config/environment_local.rb
+methodbox/config/database.yml
+
