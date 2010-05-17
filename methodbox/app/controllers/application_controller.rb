@@ -502,6 +502,10 @@ class ApplicationController < ActionController::Base
   
   def is_user_admin_auth
     unless current_user.is_admin?
+      if (User.count :conditions => "is_admin = true") == 0
+      	flash[:notice] = "No Admin User found. Set a user to admin ASAP."
+      	return true
+      end      	
       error("Admin rights required", "is invalid (not admin)")
       return false
     end
