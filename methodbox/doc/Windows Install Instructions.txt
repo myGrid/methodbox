@@ -1,0 +1,135 @@
+Install:
+MYSQL: 
+	see http://dev.mysql.com/downloads/mysql/
+	Used all default options
+	
+Instant Rails	
+	see http://instantrails.rubyforge.org/wiki/wiki.pl
+	http://rubyforge.org/frs/?group_id=904
+	(Do not rename/delete the mysql folder as has required drivers)
+	Set it to not start the servers.
+	Use this to open ruby conoles
+		Must be run as adminstrator or with protection of files off.		
+	
+Get methodbox code
+	use svn on http://methodbox.googlecode.com/svn/trunk/
+	
+Update ruby
+	"gem update --system"
+	"gem update rails"
+
+Install GhostScript
+	see http://pages.cs.wisc.edu/~ghost/
+	
+Install rmagic	
+	see: http://rmagick.rubyforge.org/install-faq.html#win	
+
+Add Gems
+	gem install fastercsv
+	gem install libxml-ruby
+	gem install will_paginate
+	gem install ruby-debug -v 0.9.3 
+	gem install rubyzip
+	gem install RedCloth
+	gem install uuidtools
+	gem install -v=2.3.3 rails
+	gem install rubygems-update
+	gem install mysql
+	
+Setup Mysql
+	Create user 'userName'@'localhost' identified by 'password';
+	create database obelab_development;
+	create database obelab_test;
+	grant all privilges on *.* to 'userName'@'localhost'
+	
+Obtain CSV data 
+	csv folder with *.tab files
+	doc folder with *.pdf files
+	variables.sql
+
+Update config files
+	csvserver/src/main/webapp/WEB-INF/classes/csv.properties
+	csvserver/src/main/webapp/WEB-INF/classes/email.properties
+	methodbox/config/environment_local.rb
+	methodbox/config/database.yml
+	
+	
+Migrate database
+	rake savage_beast:bootstrap_db
+	rake db:schema:load
+	rake db:seed
+	(folder holding variables.sql) "mysql -u username -p password database_name < variables.sql" (no space after -u and -p)
+	mysql -uchristian -pelabs obelab_development < variables.sql
+	
+	
+SOLR rebuild:
+	(solr running) rake solr:start_win
+	ruby script/console
+	>>Person.rebuild_solr_index
+	>>Project.rebuild_solr_index
+	>>Script.rebuild_solr_index
+	>>Survey.rebuild_solr_index
+	>>Variable.rebuild_solr_index
+	quit
+	
+csv
+	Go to csvserver directory
+	create "logs" directory
+	
+java
+	Install java 1.6.18 tested bit no reason others would not work.
+	Make sure Environment variable JAVA_HOME is set.	
+	
+maven
+	Make sure maven is installed
+	Make sure %path% includes folder with the mvn.exe file
+	
+Create first admin users.
+	set (in environment_local) REGISTRATION_CLOSED = false
+	set user created to admin.
+
+===
+run
+	Start webserver
+		(in methodbox folder) "ruby script/server webrick"
+	Start Solr	
+		(in methodbox folder)  rake solr:start_win
+	Start Ssv
+		(in csvserver folder) mvn jetty:run 
+		or mvn org.mortbay.jetty:maven-jetty-plugin:run	
+
+	
+Installation:
+	-update database.yml if required
+	"rake db:bootstrap"
+		or "rake db:migrate"
+		   "rake savage_beast:bootstrap_db"
+	(in command promt) -mysql -u username -p database_name < dumpfile.sql (no space after -u and -p)
+	-SOLR rebuild
+	-"rake db:seed_default_dbdata"
+	
+	TODO:
+	
+		get data files
+		
+		test csv
+		see config/environment_local.rb
+		
+		src/ main.webapps/webinf/classes.csv.properties
+		src/ main.webapps/webinf/classes.email.properties
+		
+	SOLR: in config/environments.development	
+		rake solr:start
+		
+		see vendor/pluins/acts_as_solr/lib/tasks/solr.rake start_win
+	
+	Get Data files
+	 get variables.sql
+	 see http://www.mygrid.org.uk/dev/blog/
+
+---
+csvserver/src/main/webapp/WEB-INF/classes/csv.properties
+csvserver/src/main/webapp/WEB-INF/classes/email.properties
+methodbox/config/environment_local.rb
+methodbox/config/database.yml
+
