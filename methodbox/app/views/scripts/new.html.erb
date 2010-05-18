@@ -71,7 +71,7 @@
       <div style="width: 90%;">
 
         <p style="margin: 2.5em 0 0 0;">
-          <%= render :partial => "assets/sharing_form" -%>
+          <%= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
         </p>
 
         <p style="margin: 0;">
