@@ -49,7 +49,7 @@ function init_sharing() {
     PRIVATE = parseInt($('const_private').value);
     EVERYONE = parseInt($('const_everyone').value);
     ALL_REGISTERED_USERS = parseInt($('const_all_registered_users').value);
-    ALL_ELAB_USERS = parseInt($('const_all_sysmo_users').value);
+    ALL_ELAB_USERS = parseInt($('const_all_elab_users').value);
     CUSTOM_PERMISSIONS_ONLY = parseInt($('const_custom_permissions_only').value);
 	
     DETERMINED_BY_GROUP = parseInt($('const_determined_by_group').value);
@@ -57,8 +57,8 @@ function init_sharing() {
     VIEWING = parseInt($('const_viewing').value);
     DOWNLOADING = parseInt($('const_downloading').value);
     EDITING = parseInt($('const_editing').value);
-	
-    replaceFavouriteGroupRedboxActionURL();
+	//no favourite groups currently in use in methodbox
+    //replaceFavouriteGroupRedboxActionURL();
 }
 	
 
@@ -67,43 +67,43 @@ function setSharingElementVisibility(sharing_scope)
     switch(sharing_scope)
     {
         case PRIVATE:
-            $('include_custom_sharing_div_' + EVERYONE).hide();
-            $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
-            $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
-            $('cb_use_whitelist').disabled = true;
-            $('cb_use_blacklist').disabled = true;
+            // $('include_custom_sharing_div_' + EVERYONE).hide();
+            // $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
+            // $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
+            // $('cb_use_whitelist').disabled = true;
+            // $('cb_use_blacklist').disabled = true;
             setCustomSharingDivVisibility(PRIVATE);
             break;
         case EVERYONE:
-            $('include_custom_sharing_div_' + EVERYONE).show();
-            $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
-            $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
-            $('cb_use_whitelist').disabled = false;
-            $('cb_use_blacklist').disabled = false;
+            // $('include_custom_sharing_div_' + EVERYONE).show();
+            // $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
+            // $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
+            // $('cb_use_whitelist').disabled = false;
+            // $('cb_use_blacklist').disabled = false;
             setCustomSharingDivVisibility(EVERYONE);
             break;
         case ALL_REGISTERED_USERS:
-            $('include_custom_sharing_div_' + EVERYONE).hide();
-            $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).show();
-            $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
-            $('cb_use_whitelist').disabled = false;
-            $('cb_use_blacklist').disabled = false;
+            // $('include_custom_sharing_div_' + EVERYONE).hide();
+            // $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).show();
+            // $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
+            // $('cb_use_whitelist').disabled = false;
+            // $('cb_use_blacklist').disabled = false;
             setCustomSharingDivVisibility(ALL_REGISTERED_USERS);
             break;
         case ALL_ELAB_USERS:
-            $('include_custom_sharing_div_' + EVERYONE).hide();
-            $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
-            $('include_custom_sharing_div_' + ALL_ELAB_USERS).show();
-            $('cb_use_whitelist').disabled = false;
-            $('cb_use_blacklist').disabled = false;
+            // $('include_custom_sharing_div_' + EVERYONE).hide();
+            // $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
+            // $('include_custom_sharing_div_' + ALL_ELAB_USERS).show();
+            // $('cb_use_whitelist').disabled = false;
+            // $('cb_use_blacklist').disabled = false;
             setCustomSharingDivVisibility(ALL_ELAB_USERS);
             break;
         case CUSTOM_PERMISSIONS_ONLY:
-            $('include_custom_sharing_div_' + EVERYONE).hide();
-            $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
-            $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
-            $('cb_use_whitelist').disabled = false;
-            $('cb_use_blacklist').disabled = false;
+            // $('include_custom_sharing_div_' + EVERYONE).hide();
+            // $('include_custom_sharing_div_' + ALL_REGISTERED_USERS).hide();
+            // $('include_custom_sharing_div_' + ALL_ELAB_USERS).hide();
+            // $('cb_use_whitelist').disabled = false;
+            // $('cb_use_blacklist').disabled = false;
             setCustomSharingDivVisibility(CUSTOM_PERMISSIONS_ONLY);
             break;
         default:
@@ -114,8 +114,9 @@ function setSharingElementVisibility(sharing_scope)
 
 function setCustomSharingDivVisibility(sharing_scope)
 {
-    if ((sharing_scope >= ALL_ELAB_USERS && sharing_scope <= EVERYONE && $('include_custom_sharing_'+sharing_scope).checked)
-        || sharing_scope == CUSTOM_PERMISSIONS_ONLY)
+    // if ((sharing_scope >= ALL_ELAB_USERS && sharing_scope <= EVERYONE && $('include_custom_sharing_'+sharing_scope).checked)
+        // || sharing_scope == CUSTOM_PERMISSIONS_ONLY)
+    if (sharing_scope == CUSTOM_PERMISSIONS_ONLY)
         {
         $('specific_sharing').show();
     }
@@ -244,7 +245,8 @@ function updateSharingSettings() {
   
     // ************** CUSTOM PERMISSIONS ***************
     // build custom permissions list and set relevant other options
-    updateCustomSharingSettings();
+//methodbox doing this differently by using the controller to build list of workgroups
+    // updateCustomSharingSettings();
 }
 
 
@@ -342,7 +344,7 @@ function deleteContributor(contributor_type, contributor_id) {
         }
   
     // update the page
-    updateCustomSharingSettings();
+    // updateCustomSharingSettings();
 }
 
 
