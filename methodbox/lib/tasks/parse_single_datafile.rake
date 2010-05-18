@@ -12,8 +12,8 @@ require 'fastercsv'
 namespace :obesity do
   desc "load data from csv"
   task :load_single_datafile  => :environment do
-    survey_id = 13
-    f = FCSV.open("/home/idunlop/hse96bind.tab", :headers => true,  :return_headers => true,:col_sep => "\t")
+    dataset_id = 38
+    f = FCSV.open("/Users/Ian/obesity_data/csv/hse08ah.tab", :headers => true,  :return_headers => true,:col_sep => "\t")
     h = f.readline
    
     h.each do |variable_name|
@@ -26,7 +26,7 @@ namespace :obesity do
       #        variable.dermethod = variable_dermethod
       #        variable.info = variable_info
       #        variable.category = variable_category
-      variable.survey_id = survey_id;
+      variable.dataset_id = dataset_id;
       variable.save
 
     end
