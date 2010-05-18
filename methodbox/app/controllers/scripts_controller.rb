@@ -3,7 +3,7 @@ class ScriptsController < ApplicationController
   before_filter :login_required
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :find_scripts, :only => [ :new, :edit]
-  before_filter :find_archives, :find_surveys, :only => [ :new, :edit ]
+  before_filter :find_archives, :find_surveys, :find_groups, :only => [ :new, :edit ]
   before_filter :find_cart
   before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
 
@@ -91,40 +91,6 @@ class ScriptsController < ApplicationController
     @archives = source_archives | target_archives
     @scripts = source_scripts | target_scripts
     @surveys = source_surveys | target_scripts
-      
-      
-      # @script.annotations_with_attribute("link").each do |annotation|
-      #   case annotation.source.class.name
-      #   when "Csvarchive"
-      #     @archives.push(annotation.source)
-      #   when "Script"
-      #     @scripts.push(annotation.source)
-      #   when "Survey"
-      #     @surveys.push(annotation.source)
-      #   end
-      # end
-
-      # all_script_source_links = []
-      #     @script.scripts_as_source.each do |link|
-      #       puts link.class
-      #       all_script_source_links << link.target_id
-      #     end
-      #     @selected_scripts = all_script_source_links
-    # end
-    # @archives = @script.csvarchives
-    #     @surveys = @script.surveys
-    
-    # all_script_source_links = []
-    #     @script.scripts_as_source.each do |link|
-    #       puts link.class
-    #       all_script_source_links << link.target_id
-    #     end
-    # all_script_target_links = []
-    #    @script.scripts_as_target.each do |link|
-    #      all_script_target_links << link.source_id
-    #    end
-    
-    # @all_script_links = all_script_source_links | all_script_target_links
 
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
@@ -168,6 +134,17 @@ class ScriptsController < ApplicationController
   #When editing display all the links which have been made from this Script, only include those for which it is the 'subject'
   # GET /scripts/1/edit
   def edit
+    @selected_groups = []
+    if @script.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY 
+      @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY 
+      @script.asset.policy.permissions.each do |permission|
+        if permission.contributor_type == "WorkGroup"
+          puts "Shared with group " + permission.contributor_id.to_s
+          @selected_groups.push(permission.contributor_id)
+        end
+      end
+    end
+    
     @selected_archives = []
     @selected_surveys = []
     @selected_scripts = []
@@ -185,23 +162,6 @@ class ScriptsController < ApplicationController
       end
     end        
                                                   
-    # @script.annotations_with_attribute("link").each do |annotation|
-    #      case annotation.source
-    #      when "Csvarchive"
-    #        @selected_archives.push(annotation.source_id)
-    #      when "Script"
-    #        @selected_scripts.push(annotation.source_id)
-    #      when "Survey"
-    #        @selected_surveys.push(annotation.source_id)
-    #      end
-    #    end
-   
-    # all_script_source_links = []
-    #     @script.scripts_as_source.each do |link|
-    #       puts link.class
-    #       all_script_source_links << link.target_id
-    #     end
-    #     @selected_scripts = all_script_source_links
   end
 
   # POST /scripts
@@ -284,6 +244,7 @@ class ScriptsController < ApplicationController
 
       respond_to do |format|
         if @script.save
+          puts "saved script"
           #save all the links.
           #at the moment all the links have predicates of 'link' but this could change in the future to a user defined one
           #this would mean that each Linkage could have many different reasons
@@ -315,6 +276,23 @@ class ScriptsController < ApplicationController
                  link.save
               end
           end
+          
+           if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+             puts "custom sharing here"
+             values = "{"
+                params[:groups].each do |workgroup_id|
+                   values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+                end
+                values = values.chop
+                values << "}}"
+                values.insert(0,"{\"WorkGroup\":")
+                params[:sharing][:permissions][:values] = values
+                params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+                logger.info "custom permissions: " + values
+                puts params[:sharing][:permissions][:values]
+                puts params[:sharing][:permissions][:contributor_types]
+            end
+
           # the Script was saved successfully, now need to apply policy / permissions settings to it
           policy_err_msg = Policy.create_or_update_policy(@script, current_user, params)
 
@@ -403,6 +381,23 @@ class ScriptsController < ApplicationController
              link.save
           end
       end
+      
+      if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+        puts "custom sharing here"
+        values = "{"
+           params[:groups].each do |workgroup_id|
+              values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+           end
+           values = values.chop
+           values << "}}"
+           values.insert(0,"{\"WorkGroup\":")
+           params[:sharing][:permissions][:values] = values
+           params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+           logger.info "custom permissions: " + values
+           puts params[:sharing][:permissions][:values]
+           puts params[:sharing][:permissions][:contributor_types]
+       end
+       
     respond_to do |format|
       if @script.update_attributes(params[:script])
         # the Script was updated successfully, now need to apply updated policy / permissions settings to it
@@ -468,6 +463,10 @@ class ScriptsController < ApplicationController
     end
 
     @scripts = found
+  end
+  
+  def find_groups
+    @groups = WorkGroup.find(:all)
   end
 
   def find_archives
