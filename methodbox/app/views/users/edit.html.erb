@@ -1,8 +1,16 @@
+<%
+profile=@user.person
+-%>
+
 <div id="signup" class="yui-b">  
   <% form_for @user do |f| -%>
       <%= f.error_messages %>
-      <p><label for "login">Login</label><br/>
-      <b><%= @user.login %></b>
+      <p><label for "User">User</label><br/>
+      <% if profile -%>
+        <%= link_to h(profile.name),profile %>
+      <% else -%>
+        <span class='none_text'>No profile</span>
+      <% end -%>
       <p><label for="password">New password</label><br/>
       <%= f.password_field :password %></p>
   
