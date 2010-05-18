@@ -289,14 +289,14 @@
   GET_INSTITUTIONS_LINK = '<%= request_institutions_projects_path -%>';
 
 	
-	CREATE_FAVOURITE_GROUP_LINK = '<%= create_favourite_group_path -%>';
-	UPDATE_FAVOURITE_GROUP_LINK = '<%= update_favourite_group_path -%>';
+	// CREATE_FAVOURITE_GROUP_LINK = '<%= create_favourite_group_path -%>';
+	// UPDATE_FAVOURITE_GROUP_LINK = '<%= update_favourite_group_path -%>';
 	
 	
 	
 	<% @policy.permissions.each do |p| -%>
 	  <% case p.contributor_type; when "FavouriteGroup", "Person", "Project", "Institution", "WorkGroup" -%>
-		  <% unless p.contributor_type == "FavouriteGroup" && [FavouriteGroup::WHITELIST_NAME, FavouriteGroup::BLACKLIST_NAME].include?(p.contributor.name) -%>
+		  <#% unless p.contributor_type == "FavouriteGroup" && [FavouriteGroup::WHITELIST_NAME, FavouriteGroup::BLACKLIST_NAME].include?(p.contributor.name) -%>
 			  if('<%= p.contributor_type -%>' in permissions_for_set)
 				  permissions_for_set['<%= p.contributor_type -%>']++;
 			  else {
@@ -319,7 +319,7 @@
 				  ['<%= contributor_name -%>', <%= p.contributor_id -%>, <%= p.access_type -%>];
 			<% end -%>
 		<% end -%>
-	<% end -%>
+	<#% end -%>
 	
 	// build custom permissions list and set relevant other options
 	updateCustomSharingSettings();

@@ -104,6 +104,30 @@
 			<%#= render :partial => "assets/sharing_form_custom_permissions_checkbox", :locals => { :custom_sharing_cb_for_scope => Policy::ALL_REGISTERED_USERS,
 			                                                                                       :sharing_scope => @sharing_mode, :use_custom_sharing => @use_custom_sharing } -%>
 		</p>
+		
+		<p>
+	    	<label for="sharing_scope_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>">
+	      	<input type="radio" <%= 'checked="checked"' if sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY -%> id="include_custom_sharing_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>" name="sharing[sharing_scope]"
+	              value="<%= Policy::CUSTOM_PERMISSIONS_ONLY-%>" onclick="javascript:setSharingElementVisibility(<%= Policy::CUSTOM_PERMISSIONS_ONLY-%>);" />
+	          - Specific Groups
+			  </label>
+
+				<br/>
+				
+				<div id="specific_sharing" <%= sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY ? hide_style(false) : hide_style(true) -%>>
+					<p>          
+						<b>Share with group(s):</b>
+						<div style="clear:both;"></div>
+					<%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups",   # this is only for presentation, not for any processing
+				      :collection=>groups,:selected=>selected_groups,:authorization_for_showing_already_done => false } -%>
+				</p>
+				</div>
+				<br/>
+				<div style="clear:both;">
+				</div>
+				<%#= render :partial => "assets/sharing_form_custom_permissions_checkbox", :locals => { :custom_sharing_cb_for_scope => Policy::ALL_REGISTERED_USERS,
+				                                                                                       :sharing_scope => @sharing_mode, :use_custom_sharing => @use_custom_sharing } -%>
+			</p>
 
 
    <!-- custom permissions-->
@@ -152,5 +176,6 @@
 	<% end -%>
 	
 	// build custom permissions list and set relevant other options
-	updateCustomSharingSettings();
+	//this is not used anymore in methodbox
+	// updateCustomSharingSettings();
 </script>
