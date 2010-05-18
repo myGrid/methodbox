@@ -74,8 +74,8 @@ class Policy < ActiveRecord::Base
       
       
       policy = Policy.new(:name => 'auto',
-                          :contributor_type => 'User',
-                          :contributor_id => current_user.id,
+                          :contributor_type => 'Person',
+                          :contributor_id => current_user.person.id,
                           :sharing_scope => sharing_scope,
                           :access_type => access_type,
                           :use_custom_sharing => use_custom_sharing,
@@ -104,6 +104,11 @@ class Policy < ActiveRecord::Base
     unless params[:sharing][:permissions].blank?
       contributor_types = ActiveSupport::JSON.decode(params[:sharing][:permissions][:contributor_types])
       new_permission_data = ActiveSupport::JSON.decode(params[:sharing][:permissions][:values])
+      puts "Inside policy"
+      puts params[:sharing][:permissions][:values]
+      puts params[:sharing][:permissions][:contributor_types]
+      puts contributor_types
+      puts new_permission_data
     else
       contributor_types = []
       new_permission_data = {}
@@ -144,6 +149,7 @@ class Policy < ActiveRecord::Base
       contributor_types.each do |contributor_type|
         if new_permission_data.has_key?(contributor_type)
           new_permission_data["#{contributor_type}"].each do |p|
+            puts "in policy " + p[0].to_s + " " + contributor_type.to_s
             unless (found = Permission.find(:first, :conditions => {:contributor_type => contributor_type, :contributor_id => p[0], :policy_id => policy.id}))
               Permission.create(:contributor_type => contributor_type, :contributor_id => p[0], :access_type => p[1]["access_type"], :policy_id => policy.id)
             end
