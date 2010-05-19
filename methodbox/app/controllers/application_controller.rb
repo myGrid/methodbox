@@ -473,8 +473,8 @@ class ApplicationController < ActionController::Base
   def authorized?
     if super
       if current_user.person.nil?
-        logger.info ("No person record found for user "+current_user.person_id.to_s)
-        logger.info ("Redirect applied by application_controller.authorized?")
+        logger.info("No person record found for user "+current_user.person_id.to_s)
+        logger.info("Redirect applied by application_controller.authorized?")
       	redirect_to(select_people_path) if current_user.person.nil?
       end      	
       true
