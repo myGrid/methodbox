@@ -472,7 +472,11 @@ class ApplicationController < ActionController::Base
   #selection page (GET people/select)
   def authorized?
     if super
-      redirect_to(select_people_path) if current_user.person.nil?
+      if current_user.person.nil?
+        logger.info ("No person record found for user "+current_user.person_id.to_s)
+        logger.info ("Redirect applied by application_controller.authorized?")
+      	redirect_to(select_people_path) if current_user.person.nil?
+      end      	
       true
     else
       false
