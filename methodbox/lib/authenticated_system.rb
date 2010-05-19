@@ -66,6 +66,7 @@ module AuthenticatedSystem
       respond_to do |format|
         format.html do
           store_location
+          flash[:error]="Please log in first"
           redirect_to new_session_path
         end
         format.any do
