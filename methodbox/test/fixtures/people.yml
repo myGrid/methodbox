@@ -141,10 +141,6 @@ person_for_datafile_owner:
   last_name: "Owner"
   email: "data_file_owner@email.com"
 
-modeller_person:
-  first_name: "Modeller"
-  disciplines: modeller,experimentalist
-
 person_without_group:
   first_name: "Lonely"
 

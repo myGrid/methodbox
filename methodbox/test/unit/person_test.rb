@@ -1,14 +1,8 @@
 require 'test_helper'
 
 class PersonTest < ActiveSupport::TestCase
-  fixtures :people, :projects,:institutions, :work_groups, :group_memberships,:users, :tags,:taggings,:disciplines
+  fixtures :people, :projects, :group_memberships,:users, :tags,:taggings
   
-  # Replace this with your real tests.
-  def test_work_groups
-    p=people(:one)
-    assert_equal 2,p.work_groups.size
-  end
-
   def test_registered
     registered=Person.registered
     registered.each do |p|
@@ -35,17 +29,8 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal 1, p.expertise.size
     assert_equal "golf",p.expertise[0].name
   end
-  
-  def test_institutions
-    p=people(:one)
-    assert_equal 2,p.institutions.size
     
-    p=people(:two)
-    assert_equal 2,p.work_groups.size
-    assert_equal 2,p.projects.size
-    assert_equal 1,p.institutions.size
-  end
-  
+  #May 17, 2010 this test currently failed. I have not looked into why yet. Christian  
   def test_projects
     p=people(:one)
     assert_equal 2,p.projects.size
@@ -101,6 +86,7 @@ class PersonTest < ActiveSupport::TestCase
     assert_equal "Fred Smith-Jones",p.name
   end
 
+  #May 17, 2010 this test currently failed. I have not looked into why yet. Christian  
   def test_valid
     p=people(:one)
     assert p.valid?
@@ -151,13 +137,5 @@ class PersonTest < ActiveSupport::TestCase
     newP.email="zxczxc@zxczxczxc.com"
     assert newP.valid?
   end
-
-  def test_disciplines
-    p=people(:modeller_person)
-    assert_equal 2,p.disciplines.size
-    assert p.disciplines.include?(disciplines(:modeller))
-    assert p.disciplines.include?(disciplines(:experimentalist))
-  end
-
 
 end
