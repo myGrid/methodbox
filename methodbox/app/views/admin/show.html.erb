@@ -14,6 +14,8 @@
 
   <%= render :partial=>"users_details",:locals=>{:users=>Person.without_group.registered.collect{|p| p.user},:title=>"People not in groups" } -%>
 
-<%= render :partial=>"users_details",:locals=>{:users=>User.admins,:title=>"Admin Users" } -%>
+  <%= render :partial=>"users_details",:locals=>{:users=>User.admins,:title=>"Admin Users" } -%>
+
+  <%= render :partial=>"users_plus_details",:locals=>{:users=>User.find(:all),:title=>"All Users" } -%>
 
 </div>

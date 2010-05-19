@@ -1,0 +1,32 @@
+<%
+profile=user.person
+-%>
+
+  ID:<%= user.id -%>
+  <% if profile -%>
+    <%= link_to h(profile.name),profile %>
+  <% else -%>
+    <span class='none_text'>No profile</span>
+  <% end -%>
+  
+  Status: 
+  <% if user.is_admin -%>
+    Admin,
+  <% end -%>  
+  <% if user.can_edit_projects -%>
+    Project Editor,
+  <% end -%>  
+  <% if user.can_edit_institutions -%>
+    Institutions Editor
+  <% end -%>  
+  <% if !user.is_admin && !user.can_edit_projects && !user.can_edit_institutions -%>
+    Normal User
+  <% end %>  
+  
+  <% if user.is_admin -%>
+    <%= button_to "Revoke Admin Rights", {:controller => "admin", :action => "change_admin_status", :id => user.id, :is_admin => false} -%>
+  <% else %>  
+    <%= button_to "Grant Admin Rights", {:controller => "admin", :action => "change_admin_status", :id => user.id, :is_admin => true} -%>
+  <% end -%>  
+    
+<br>
