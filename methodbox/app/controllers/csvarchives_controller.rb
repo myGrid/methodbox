@@ -5,7 +5,7 @@ require 'zip/zipfilesystem'
 
 class CsvarchivesController < ApplicationController
 
-  before_filter :login_required
+  before_filter :login_required, :except => [ :help, :help2]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :only => [ :new,:edit ]
 

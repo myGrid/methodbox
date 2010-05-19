@@ -1,11 +1,11 @@
 class SurveysController < ApplicationController
 
-  before_filter :login_required
+  before_filter :login_required, :except => [ :help]
 
-  before_filter :find_cart
+  before_filter :find_cart, :except => [ :help]
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
-  #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax ]
+  #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
