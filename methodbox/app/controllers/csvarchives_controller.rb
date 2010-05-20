@@ -7,7 +7,9 @@ class CsvarchivesController < ApplicationController
 
   before_filter :login_required, :except => [ :help, :help2]
   before_filter :find_archives_by_page, :only => [ :index]
-  before_filter :find_scripts, :find_surveys, :find_archives, :only => [ :new,:edit ]
+  before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :only => [ :new,:edit ]
+  before_filter :find_archive, :only => [ :edit, :update, :show, :recreate, :download ]
+  before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
   def new
     set_parameters_for_sharing_form
@@ -20,43 +22,18 @@ class CsvarchivesController < ApplicationController
     #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
 
+  # The idea here was that if an archive failed to be created on the CSV server side
+  # then you could send a request to it to be 're-created'.  However, it is not yet implemented
   def recreate
-    find_archive
     logger.info("Recreating archive for " + @archive.filename)
     respond_to do |format|
-
       format.html { redirect_to csvarchive_path(@archive) }
-
     end
   end
-
+  
+  # GET /csvarchives/
+  # Generate array for current_user archives and all archives
   def index
-    # @all_archives.results =Authorization.authorize_collection("show",@all_archives.results,current_user)
-    #    @all_archives.results.each do |item|
-    #      if !item.complete
-    #        http = Net::HTTP.new('localhost',25000)
-    #        http.read_timeout=6000
-    #        puts 'sending get request to csv server for file ' + item.filename
-    #        #          response = http.get('/eos/download/' + item.filename)
-    #        response = http.get(CSV_SERVER_PATH + '/download/' + item.filename)
-    #        if response.response.class == Net::HTTPOK
-    #          puts 'response 1'
-    #          if response.content_type == 'application/zip'
-    #            item.update_attributes(:complete => true)
-    #
-    #          end
-    #        elsif response.response.class == Net::HTTPInternalServerError
-    #
-    #          logger.info( 'archive creation failed ' + item.object_id.to_s)
-    #          item.update_attributes(:failure => true)
-    #          flash[:error] = "Server reports that CSV archive creation for "  + link_to(item.title, csvarchive_path(:id=>item.id)) + " failed, it is recommended that you recreate it"
-    #          #        respond_to do |format|
-    #          #          format.html { redirect_to csvarchive_path(@archive) }
-    #          #        end
-    #        end
-    #      end
-    #    end
-
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@my_archives, :xml=>@all_archives}
@@ -65,12 +42,13 @@ class CsvarchivesController < ApplicationController
 
   # GET /csvarchive/1;download
   def download
-    #    no security here
-    find_archive
+    # no security here, need some so that people cannot just type in the id
+    # and get it if it is 'hidden'
     if params[:type] == nil
       params[:type] = "CSV"
     end
-    puts "type is " + params[:type]
+    # this download info should be logged somewhere
+    # puts "type is " + params[:type]
 
     if @archive.complete
       retrieve_archive_from_server
@@ -90,7 +68,6 @@ class CsvarchivesController < ApplicationController
   end
 
   def show
-    find_archive
     #    switch on if using web service
     check_available
     set_parameters_for_sharing_form
@@ -135,18 +112,6 @@ class CsvarchivesController < ApplicationController
     @archives = source_archives | target_archives
     @scripts = source_scripts | target_scripts
     @surveys = source_surveys | target_scripts
-    
-     # all_extract_source_links = []
-     #  @archive.extracts_as_source.each do |link|
-     #    puts link.class
-     #    all_extract_source_links << link.target_id
-     #  end
-     #  all_extract_target_links = []
-     #  @archive.extracts_as_target.each do |link|
-     #    all_extract_target_links << link.source_id
-     #  end
-     # 
-     #  @all_extract_links = all_extract_source_links | all_extract_target_links
       
     respond_to do |format|
       format.html # show.html.erb
@@ -155,7 +120,17 @@ class CsvarchivesController < ApplicationController
   end
 
   def edit
-    find_archive
+    
+    @selected_groups = []
+    if @archive.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY 
+      @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY 
+      @archive.asset.policy.permissions.each do |permission|
+        if permission.contributor_type == "WorkGroup"
+          @selected_groups.push(permission.contributor_id)
+        end
+      end
+    end
+    
      @selected_archives = []
       @selected_surveys = []
       @selected_scripts = []
@@ -172,22 +147,13 @@ class CsvarchivesController < ApplicationController
           @selected_surveys.push(link.object.id)
         end
       end
-      
-    set_parameters_for_sharing_form
+    # this is not required any more since the required 'magic' to find sharing_mode is done above
+    # set_parameters_for_sharing_form
   end
 
   def update
-    find_archive
-    # remove protected columns (including a "link" to content blob - actual data cannot be updated!)
-      # params[:script].script_lists.each do |list|
-      #   list.delete
-      # end
-      # params[:script].survey_to_script_lists.each do |list|
-      #   list.delete
-      # end
-    # end
-      # update 'last_used_at' timestamp on the Script
-      params[:csvarchive][:last_used_at] = Time.now
+
+    params[:csvarchive][:last_used_at] = Time.now
       
     links = Link.find(:all, 
                                  :conditions => { :subject_type => "Csvarchive", 
@@ -226,7 +192,23 @@ class CsvarchivesController < ApplicationController
            link.save
         end
     end
-    # puts "would have updated"
+    # generate the json encoding for the groups sharing permissions to go in the params
+    if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+       puts "custom sharing here"
+       values = "{"
+          params[:groups].each do |workgroup_id|
+             values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+          end
+          values = values.chop
+          values << "}}"
+          values.insert(0,"{\"WorkGroup\":")
+          params[:sharing][:permissions][:values] = values
+          params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+          logger.info "custom permissions: " + values
+          puts params[:sharing][:permissions][:values]
+          puts params[:sharing][:permissions][:contributor_types]
+      end
+    
     respond_to do |format|
       if @archive.update_attributes(params[:csvarchive])
         # the Script was updated successfully, now need to apply updated policy / permissions settings to it
@@ -257,12 +239,10 @@ class CsvarchivesController < ApplicationController
   end
   
   # PUT /csvarchives/1
+  # Send the csv parse request to the server and get the job id back
+  # also store all the variables in an array to link to the archive object
   def create
 
-    #     send the csv parse request to the server and get the job id back
-    #a hash, each key is a particular survey, the value is the variable
-    #      also store all the variables in an array to add to the archive object
-    #      variable_hash = Hash.new
     existing_arcs = Csvarchive.find(:all, :conditions=>"title='" + params[:archive][:title] + "' and person_id=" + User.find(current_user).person_id.to_s)
     if existing_arcs.empty?
       all_variables_array = Array.new
@@ -275,10 +255,7 @@ class CsvarchivesController < ApplicationController
         end
         variable_hash[variable.dataset_id].push(var)
         all_variables_array.push(Variable.find(var))
-        #        variable_hash[var] = get_variable(var)
-        #        logger.info("Would have downloaded: " + var.to_s)
       end
-
 
       #create XML request to be sent with http post request
       doc = XML::Document.new()
@@ -305,8 +282,8 @@ class CsvarchivesController < ApplicationController
 
       http = Net::HTTP.new('localhost',25000)
       http.read_timeout=6000
-      #    response = http.post('/eos/download', doc.to_s)
-      puts doc.to_s
+      # maybe we should log this instead
+      # puts doc.to_s
       response = http.post(CSV_SERVER_PATH + '/download', doc.to_s)
       if response.response.class == Net::HTTPOK
         xmlstring = String.new
@@ -318,41 +295,12 @@ class CsvarchivesController < ApplicationController
         xmldoc = xmlparser.parse
         root = xmldoc.root
         @jobid = root.child.to_s
-        # if params[:scripts] != nil
-        #          all_scripts_array = Array.new
-        #          params[:scripts].each do |script_id|
-        #            all_scripts_array.push(Script.find(script_id))
-        #          end
-        #          params[:archive][:scripts] = all_scripts_array
-        #        end
-        # if params[:archive][:id] != ""
-        #         all_archives_array = Array.new
-        #         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
-        #         params[:script][:csvarchives] = all_archives_array
-        #       end
-        # if params[:surveys] != nil
-        #          all_surveys_array = Array.new
-        #          params[:surveys].each do |survey_id|
-        #            all_surveys_array.push(Survey.find(survey_id))
-        #          end
-        #          params[:archive][:surveys] = all_surveys_array 
-        #        end
-        #only one script at the moment, change to many in future and can be none
-        # if params[:script][:id] != ""
-        #          all_scripts_array = Array.new
-        #          all_scripts_array.push(Script.find(params[:script][:id]))
-        #        end
-        #          params[:archive][:scripts] = all_scripts_array
-          
-        # if params[:survey][:id] != ""
-        #          all_surveys_array = Array.new
-        #          all_surveys_array.push(Survey.find(params[:survey][:id]))
-        #          params[:archive][:surveys] = all_surveys_array
-        #        end
+        
         params[:archive][:filename] = @jobid
         params[:archive][:complete] = false
         params[:archive][:last_used_at] = Time.now
-        #      @archive.content_blob = ContentBlob.new(:data => file.body)
+        # could store the request as the content blob?
+        # @archive.content_blob = ContentBlob.new(:data => file.body)
         params[:archive][:content_type] = "application/zip"
         params[:archive][:person_id] = User.find(current_user.id).person.id
         params[:archive][:variables] = all_variables_array
@@ -363,7 +311,6 @@ class CsvarchivesController < ApplicationController
         @archive.save
         #we now have an id for the extract so save all of its links with other things
          if params[:scripts] != nil
-            # all_scripts_array = Array.new
             params[:scripts].each do |script_id|
             link = Link.new
             link.subject = @archive
@@ -390,6 +337,22 @@ class CsvarchivesController < ApplicationController
                  link.save
               end
           end
+          
+          if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+             puts "custom sharing here"
+             values = "{"
+                params[:groups].each do |workgroup_id|
+                   values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+                end
+                values = values.chop
+                values << "}}"
+                values.insert(0,"{\"WorkGroup\":")
+                params[:sharing][:permissions][:values] = values
+                params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+                logger.info "custom permissions: " + values
+                puts params[:sharing][:permissions][:values]
+                puts params[:sharing][:permissions][:contributor_types]
+            end
       
         policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
 
@@ -398,8 +361,6 @@ class CsvarchivesController < ApplicationController
         puts "policy error: " + policy_err_msg
 
       end
-    
-  
 
       respond_to do |format|
 
@@ -415,6 +376,9 @@ class CsvarchivesController < ApplicationController
     end
   end
 
+  # some experimental code for creating the archive on the rails side.
+  # would need a lot of work due to threading etc.
+  # DO NOT USE!
   def new_create
 
     #     send the csv parse request to the server and get the job id back
@@ -530,6 +494,10 @@ class CsvarchivesController < ApplicationController
   end
 
   private
+  
+  def find_groups
+    @groups = WorkGroup.find(:all)
+  end
   
   def find_scripts
     found = Script.find(:all)
