@@ -1209,30 +1209,18 @@ function validateScriptFields(is_new_file) {
     return(true);
 }
 
-function validateArchiveFields(is_new_file) {
-    // only make this test if that's a new Script
-    //  if(is_new_file) {
-    //	  if($('_data').value.length == 0) {
-    //	    alert("Please specify the name of the file to upload!");
-    //	    $('script_data').focus();
-    //	    return(false);
-    //	  }
-    //	}
-    if (!(/^\w/.test($('archive_title').value))){
-        alert("File name is not valid, please use letters, numbers or underscore only");
-        $('archive_title').focus();
-        return(false);
-    }
-    // other tests are applicable to both editing and creating new SOP
-    if($('archive_title').value.length == 0) {
-        alert("Please specify the title for the CSV Archive!");
-        $('archive_title').focus();
+function validateGroupFields() {
+
+    if($('group_name').value.length == 0) {
+        alert("Please specify the title for the group!");
+        $('group_name').focus();
         return(false);
     }
 
-    $('archive_submit_btn').disabled = true;
-    $('archive_submit_btn').value = (is_new_file ? "Uploading and Saving..." : "Updating...");
-    $('archive_submit_btn').form.submit();
+    $('group_submit_btn').disabled = true;
+    $('group_submit_btn').value = ("Saving...");
+    $('group_submit_btn').form.submit();
+	RedBox.close();
     return(true);
 }
 
