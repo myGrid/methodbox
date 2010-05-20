@@ -9,7 +9,7 @@
   <li><%= icon('Methods', csvarchives_path, 'View all CSV Archives', nil, 'View all CSV Archives') -%></li>
 </ul>
 
-<h1>Editing CSV Archive: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
+<h1>Editing Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
 
 <div class="show_basic">
   <% form_for(@archive) do |f| %>
@@ -61,7 +61,6 @@
             :disable_project_select => true } -%>
         <%# end -%>
       </div>
-    </center>
 
     <%#*<p>%>
       <%#= render :partial => "organisms/select_organism",:locals=>{:model=>Script} -%>
@@ -85,11 +84,11 @@
  
       <% if current_user_authorized_to_manage -%>
       <p style="margin: 2.5em 0 0 0;">
-        <%= render :partial => "assets/sharing_form" -%>
+          <%= render :partial => "assets/sharing_form", :locals => {:sharing_mode => @sharing_mode, :groups => @groups, :selected_groups => @selected_groups } -%>
       </p>
 
       <p style="margin: 0;">
-        <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "CSV Archive",  # this is only for presentation, not for any processing so you can change it safely if required
+        <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Data Extract",  # this is only for presentation, not for any processing so you can change it safely if required
           :existing_attributions => Authorization.authorize_collection("show", @archive.attributions_objects, current_user),
           :attribution_suggestions => Csvarchive.get_all_as_json(current_user) } -%>
       </p>
@@ -98,4 +97,5 @@
       <%= f.submit "Update", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(false); return(false);"  -%> or <%= link_to "Cancel", csvarchive_path(@archive) -%>
     </p>
   <% end %>
+    </center>
 </div>
