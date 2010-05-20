@@ -68,6 +68,24 @@ function removeChildren(name) {
 	    });
 }
 
+function subset() {
+  p1 = $F('group_name')
+  p2 = $F('group_info')
+  // p3 = $F('people_hidden')
+  p3 = $F('people_hidden')
+  return $H({ x: p1, y: p2, z: p3 });
+}
+
+// document.observe('dom:loaded', function() {  
+//      $('new-group-link').observe('click', function(event) {  
+//         event.stop();  
+//          Modalbox.show(this.href,  
+//              {title: 'Create new group',  
+//              width: 500}  
+//          );  
+//      });  
+//  })
+
 // Ajax.Responders.register({   
 //   onCreate: function(){   
 //     $('spinner').show();   
