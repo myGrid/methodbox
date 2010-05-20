@@ -28,6 +28,10 @@
 }*/
 /* end basic styling                                 */
 
+#group_buttons ul li {
+	list-style: none outside none;
+}
+
 /* define height and width of scrollable area. Add 16px to width for scrollbar          */
 div.tableContainer {
 	clear: both;
