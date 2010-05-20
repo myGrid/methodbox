@@ -48,7 +48,6 @@ class UsersController < ApplicationController
             format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
       end
     else
-      puts @users.errors
       format.html {render :action => 'new'}
     end
   end
