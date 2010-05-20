@@ -57,6 +57,7 @@ class WorkGroupsController < ApplicationController
     if params[:people] != nil
       @group.person_ids = params[:people]
     end
+    @group.user = current_user
 
     respond_to do |format|
       if @group.save
