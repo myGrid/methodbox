@@ -18,22 +18,9 @@
 <%= hidden_field_tag "sharing[permissions][contributor_types]", "" -%>
 <%= hidden_field_tag "sharing[permissions][values]", "" -%>
 
-<%# @resource_type -%>
-<%# @favourite_groups -%>
-<%# @all_projects -%>
-
-<%# @policy_type -%>
-<%# @sharing_mode -%>
-<%# @access_mode -%>
-<%# @use_custom_sharing -%>
-<%# @use_whitelist -%>
-<%# @use_blacklist -%>
-
-
 <div class="fold">
 
   <div class="foldTitle">
-    <%#= help_icon("Here you can specify who can <b>view</b>, <b>download</b> and <b>edit</b> this #{@resource_type}.") -%>
     Sharing
   </div>
 
@@ -48,25 +35,9 @@
                 <% else -%>
                 <%= @resource_type -%>
                 <% end -%>
-				<%#= link_to_function "Click here" + expand_image, visual_effect(:toggle_blind, "more_info", :duration => 0.3) -%>
-                <%#*for more information.%>
+
 			</p>
 			
-			<div id="more_info" class="box_simple" style="display: none;">
-              <%#*<p>%>
-                <%#*Here you may specify the People, Projects or Groups that may View and Edit the details about your <%= @resource_type -%>.%>
-                <%#*<br/>%>
-                <%#*<p>%>
-                <%#*You may:%>
-                <%#*<ul>%>
-                  <%#*<li>Keep the <%= @resource_type -%>
-                    <%#*private, and only visible to yourself</li>%>
-                  <%#*<li>Share with all MethodBox members</li>%>
-                  <%#*<li>Define more fine-grained sharing, by selecting <em>Custom sharing permissions</em>.<br/> Using custom sharing permissions you can share with specific individuals,<br/>or set up custom favourite groups for people you regularly need to share with.</li>%>
-                <%#*</ul>%>
-                <%#*</p>%>
-              <%#*</p>%>
-			</div>
 		</div>
 
 		<br/>
@@ -101,8 +72,6 @@
 			                                                                                :sharing_scope => @sharing_mode, :access_type => @access_mode } -%>
 						
 			<br/>
-			<%#= render :partial => "assets/sharing_form_custom_permissions_checkbox", :locals => { :custom_sharing_cb_for_scope => Policy::ALL_REGISTERED_USERS,
-			                                                                                       :sharing_scope => @sharing_mode, :use_custom_sharing => @use_custom_sharing } -%>
 		</p>
 		
 		<p>
@@ -113,7 +82,11 @@
 			  </label>
 
 				<br/>
-				
+
+<!-- this next line would use a helper action to show a redbox popup for adding a new group.  The problem is in the
+request sent.  Serialising params for a link_to_remote isn't obvious or easy for array style hidden inputs.  Maybe can add this back in some time in the future.  Just add groups through standard views at the moment -->
+
+				<%#= work_group_popup_link_action_new() -%>
 				<div id="specific_sharing" <%= sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY ? hide_style(false) : hide_style(true) -%>>
 					<p>          
 						<b>Share with group(s):</b>
@@ -125,13 +98,8 @@
 				<br/>
 				<div style="clear:both;">
 				</div>
-				<%#= render :partial => "assets/sharing_form_custom_permissions_checkbox", :locals => { :custom_sharing_cb_for_scope => Policy::ALL_REGISTERED_USERS,
-				                                                                                       :sharing_scope => @sharing_mode, :use_custom_sharing => @use_custom_sharing } -%>
+
 			</p>
-
-
-   <!-- custom permissions-->
-<!-- Removed from the moment, still available in _sharing_form_with_custom_permissions-->
 		
   </div>
 </div>
