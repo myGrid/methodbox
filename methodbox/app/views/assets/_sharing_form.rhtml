@@ -76,7 +76,7 @@
 		
 		<p>
 	    	<label for="sharing_scope_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>">
-	      	<input type="radio" <%= 'checked="checked"' if sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY -%> id="include_custom_sharing_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>" name="sharing[sharing_scope]"
+	      	<input type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY -%> id="include_custom_sharing_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>" name="sharing[sharing_scope]"
 	              value="<%= Policy::CUSTOM_PERMISSIONS_ONLY-%>" onclick="javascript:setSharingElementVisibility(<%= Policy::CUSTOM_PERMISSIONS_ONLY-%>);" />
 	          - Specific Groups
 			  </label>
@@ -87,7 +87,7 @@
 request sent.  Serialising params for a link_to_remote isn't obvious or easy for array style hidden inputs.  Maybe can add this back in some time in the future.  Just add groups through standard views at the moment -->
 
 				<%#= work_group_popup_link_action_new() -%>
-				<div id="specific_sharing" <%= sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY ? hide_style(false) : hide_style(true) -%>>
+				<div id="specific_sharing" <%= @sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY ? hide_style(false) : hide_style(true) -%>>
 					<p>          
 						<b>Share with group(s):</b>
 						<div style="clear:both;"></div>
