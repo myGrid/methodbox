@@ -9,18 +9,20 @@
   <% if logged_in? -%>
   <div style="position:absolute;top:0.25em;right:0.5em;">
 
-<%#= icon "profile", person_path(current_user.person), nil, nil, "&nbsp;My Profile" %>
+<% if logged_in? && !current_user.person.nil? %>
+  <%#= icon "profile", person_path(current_user.person), nil, nil, "&nbsp;My Profile" %>
     <table><tr><td>
-<%#= avatar(current_user.person, 40,:alt=>current_user.person.name) -%>
-          <%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
-<%#= link_to(image_tag avatar_url(current_user.person, current_user.person.avatar_id, 40) ,:alt=> current_user.person.name, :class=>"framed",:title=>current_user.person.name),person_path(current_user.person) -%></td><td><%= icon "profile", url_for(current_user.person), nil, nil, "&nbsp;My Profile" %></td><td><%= icon "message", messages_path, nil, nil, "&nbsp;My Messages" %></td>
-        <td><%= icon('cart', cart_path, "View Cart", nil, "My Variable Cart") -%></td><td> <%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %></td></tr>
+      <%#= avatar(current_user.person, 40,:alt=>current_user.person.name) -%>
+        <%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
+        <%#= link_to(image_tag avatar_url(current_user.person, current_user.person.avatar_id, 40) ,:alt=> current_user.person.name, :class=>"framed",:title=>current_user.person.name),person_path(current_user.person) -%></td><td><%= icon "profile", url_for(current_user.person), nil, nil, "&nbsp;My Profile" %></td><td><%= icon "message", messages_path, nil, nil, "&nbsp;My Messages" %></td>
+      <td><%= icon('cart', cart_path, "View Cart", nil, "My Variable Cart") -%></td><td> <%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %></td></tr>
     </table>
     <%#= avatar(current_user.person, 40) -%>
-<%#*<span style="color: #666666; margin-left: 0.1em;">%>
-<%#*<small>[%>
-<%#= link_to "edit", edit_person_path(current_user.person) -%>
-<%#*]</small>%>
+    <%#*<span style="color: #666666; margin-left: 0.1em;">%>
+    <%#*<small>[%>
+      <%#= link_to "edit", edit_person_path(current_user.person) -%>
+    <%#*]</small>%>
+<% end %>    
 <%#*</span>%>
     <%#*<ul class="gadget_list" style="list-style-type:none;"%>
       <%#*<li>%>
