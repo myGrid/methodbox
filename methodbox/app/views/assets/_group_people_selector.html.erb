@@ -2,7 +2,7 @@
 <% unless collection.empty? -%>
 <div id="<%= resource_id -%>_hidden">
 	</div>
-<div  style="float:left;margin-left:60px;">
+<div style="float:left;margin-left:20px;">
 <div id="tableContainer" class="tableContainer">
 <table id="<%= resource_id + "_source_table" -%>" border="0" cellpadding="0" cellspacing="0" width="100px" class="scrollTable">
 <thead class="fixedHeader">
@@ -23,12 +23,13 @@
 			<%= javascript_tag "addInstanceOfObject('#{resource_id}','#{item.id.to_s}', '#{item.name}')" -%>
 			
 		<% end -%>
+			<div id="groups_table_source_bottom"> </div>
 		<% end -%>
 		</tbody>
 </table>
 </div>
 </div>
-<div  style="float:right;margin-right:60px;">
+<div style="float:right;margin-right:20px;">
 <div id="tableContainer" class="tableContainer">
 <table id="<%= resource_id + "_target_table" -%>" border="0" cellpadding="0" cellspacing="0" width="100px" class="scrollTable">
 <thead class="fixedHeader">
@@ -48,6 +49,7 @@
 				<%= javascript_tag "alreadySelected('#{resource_id}','#{item.id.to_s}', '#{item.name}')" -%>
 			<% end -%>
 		<% end -%>
+			<div id="groups_table_target_bottom"> </div>
 		<% end -%>
 		</tbody>
 </table>
