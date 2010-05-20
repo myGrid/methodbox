@@ -4,7 +4,7 @@ class FavouritesControllerTest < ActionController::TestCase
   
   include AuthenticatedTestHelper
   
-  fixtures :users, :favourites, :projects, :people, :institutions
+  fixtures :users, :favourites, :projects, :people
   
   def setup
     login_as(:quentin)
