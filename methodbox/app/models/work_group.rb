@@ -3,6 +3,8 @@ class WorkGroup < ActiveRecord::Base
   # No project or institutions modelled at the moment
   # belongs_to :institution
   # belongs_to :project
+  
+  belongs_to :user
   has_many :group_memberships
   has_many :people, :through=>:group_memberships
   
@@ -16,7 +18,7 @@ class WorkGroup < ActiveRecord::Base
   end
   
   def description
-    description
+    info
   end
   
 end
