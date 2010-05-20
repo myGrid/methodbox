@@ -1,0 +1,39 @@
+<%# this should be set by the caller, this is an extra check -%>
+<% resource=resource_list_item %>
+<% odd_row ||= false -%>
+<% narrow_view ||= false -%>
+
+<table class="list_item">
+  <tr class="<%= odd_row ? "odd_row" : "even_row" -%>">
+    <td style="width: 125px;">
+      <p style="margin-top:0; padding-top:0; text-align: center;"><b>Owner:</b></p>
+      <center><%= contributor(resource.user, true, 60) -%></center>
+    </td>
+
+    <td style="text-align: left;">
+      <p class="title">
+        <%= icon "script", nil, nil, nil, '' -%>
+        <% title = h(resource.name) -%>
+        <%= link_to(title, work_group_path(resource)) -%>
+      </p>
+
+      </p>
+
+      <div class="desc" style="font-size: 85%;">
+        <% unless resource.info.blank? -%>
+          <%= truncate(white_list(resource.info), :length=>500) -%>
+        <% else -%>
+          <span class="none_text">No description</span>
+        <% end -%>
+      </div>
+
+    </td>
+
+    <td class="actions" style="width: 80px;">
+      <%= icon "show", work_group_path(resource), nil, nil, "View" -%>
+      <% if resource.user.id == current_user.id -%>
+        <%= icon "edit", edit_work_group_path(resource), nil, nil, "Edit" -%>
+      <% end -%>
+    </td>
+  </tr>
+</table>

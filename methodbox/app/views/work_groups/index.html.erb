@@ -1,0 +1,16 @@
+<ul class="sectionIcons" style="text-align:left;">
+  <li><%= icon "new", new_work_group_path, "Create a new group", nil, "Create a new group" %></li>
+</ul>
+</div>
+
+<% if @groups.public_methods.include?("page_count") %>
+  <!-- only do the page links if the collection supports it -->
+  <%= render :partial => "layouts/paginate", :locals => { :collection => @groups } -%>
+<% end %>
+
+<%= render :partial => "assets/resource_list", :locals => { :collection => @groups, :authorization_for_showing_already_done=>false } %>
+
+<% if @groups.public_methods.include?("page_count") %>
+  <!-- only do the page links if the collection supports it -->
+  <%= render :partial => "layouts/paginate", :locals => { :collection => @groups } -%>
+<% end %>
