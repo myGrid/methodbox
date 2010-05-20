@@ -7,6 +7,7 @@ class WorkGroupsController < ApplicationController
   before_filter :find_people, :only => [:new,:edit,:create]
   before_filter :set_no_layout, :only => [ :review_popup ]
   before_filter :find_work_group, :only => [ :review_popup ]
+  before_filter :find_work_group_auth, :only => [ :edit ]
   
   protect_from_forgery :except => [ :review_popup ]
   
@@ -71,6 +72,37 @@ class WorkGroupsController < ApplicationController
     end
   end
   
+   # POST /groups
+   # POST /groups.xml
+   # experimental ajax style create for inline creation of workgroups along with link_to_remote and RedBox popup
+   # def create
+   #   @group = WorkGroup.new
+   #   @group.name = params[:group_name]
+   #   @group.info = params[:group_desc]
+   #   if params[:people] != nil
+   #     @group.person_ids = params[:people]
+   #   end
+   # 
+   #   respond_to do |format|
+   #     if @group.save
+   #       # flash[:notice] = 'Group was successfully created.'
+   #       render :update, :status=>:created do |page|
+   #         page.insert_html(:before, "groups_table_source_bottom", :partial => "assets/selector_source_row",:locals=>{:resource_id => "groups", :item=>@group, :hidden=>false})
+   #         page.insert_html(:before, "groups_table_target_bottom", :partial => "assets/selector_target_row",:locals=>{:resource_id => "groups", :item=>@group, :hidden=>true})
+   #         # page << $('groups_source_table_body').down('tr').insert(after
+   #         # page << "addNewWorkgroup(#{"groups"},#{@group.id},#{@group.name})"
+   #       end
+   #       # format.html { redirect_to(@group) }
+   #       # format.xml  { render :xml => @group, :status => :created, :location => @group }
+   #     else
+   #       puts @group.errors
+   #       flash[:error] = 'Could not create the group. Please try again.'
+   #       format.html { render :action => "new" }
+   #       format.xml  { render :xml => @group.errors, :status => :unprocessable_entity }
+   #     end
+   #   end
+   # end
+  
   
   # POST /work_groups/review
   # will be called to display the RedBox popup for reviewing member permissions of workgroup
@@ -85,7 +117,13 @@ class WorkGroupsController < ApplicationController
   # PUT /groups/1.xml
   def update
     @group = WorkGroup.find(params[:id])
-
+      people_array = [] 
+      if params[:people] != nil
+      params[:people].each do |person_id|
+        people_array.push(Person.find(person_id))
+      end
+    end
+    params[:group][:people] = people_array
     respond_to do |format|
       if @group.update_attributes(params[:group])
         flash[:notice] = 'Group was successfully updated.'
@@ -107,6 +145,31 @@ class WorkGroupsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(groups_url) }
       format.xml  { head :ok }
+    end
+  end
+  
+  protected
+  
+  # Currently only the person who created the group can edit it, add people etc.
+  def find_work_group_auth
+    begin
+      group = WorkGroup.find(params[:id])             
+      
+      if group.user == current_user
+        @group = group
+      else
+        respond_to do |format|
+          flash[:error] = "You are not authorized to perform this action"
+          format.html { redirect_to work_groups_path }
+        end
+        return false
+      end
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        flash[:error] = "Couldn't find the WorkGroup or you are not authorized to view it"
+        format.html { redirect_to work_groups_path }
+      end
+      return false
     end
   end
   
