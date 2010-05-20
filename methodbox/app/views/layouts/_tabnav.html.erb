@@ -1,7 +1,7 @@
-<% if logged_in? && !current_user.person.nil? %>
-  <div style="background:#ACCBE0;">
-    <%#*<div style="background:#1B619B; height:24px;">%>
-    <ul class="tabnav">
+<div style="background:#ACCBE0;">
+  <%#*<div style="background:#1B619B; height:24px;">%>
+  <ul class="tabnav">
+  <% if logged_in? && !current_user.person.nil? %>
 
     <!-- People tab -->
       <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>>
@@ -35,20 +35,30 @@
         <%= link_to "Forums", forums_url,:title=>"Ask questions, help others" -%>
       </li>
 	
-    <!-- Help tab -->
-      <li <%= (["help"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Help", help_index_url,:title=>"Get some help and get started" -%>
-      </li>
-
     <!-- Admin tab -->
       <% if current_user.is_admin? %>
         <li <%= (["admin"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
           <%= link_to "Admin", :controller => "admin", :action => "show", :title=>"Access the administration pages" -%>
         </li>
-      <% end %>  
+      <% end %> 
+  <% else %>
+    <!-- Login tab -->
+      <li <%= (["sessions"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+        <%= link_to "Log In", :controller => "session", :action => "new", :title=>"Log in to start using Methodbox" -%>
+      </li>
+    <!-- About tab -->
+      <li <%= (["about"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+        <%= link_to "About Us", :controller => "about", :action => "index", :title=>"TODO" -%>
+      </li>
+  <% end  %>
 
-    </ul>
-  </div>
-  <div style="background:#1B619B;height:25px;">
-  </div>
-<% end  %>
+    
+  <!-- Help tab -->
+    <li <%= (["help"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
+      <%= link_to "Help", help_index_url,:title=>"Get some help and get started" -%>
+    </li>
+
+  </ul>
+</div>
+<div style="background:#1B619B;height:25px;">
+</div>
