@@ -183,40 +183,6 @@ class ScriptsController < ApplicationController
         }
       end
     else
-      # if params[:data_extracts] != nil
-      #    all_archives_array = Array.new
-      #    params[:data_extracts].each do |extract_id|
-      #      all_archives_array.push(Csvarchive.find(extract_id))
-      #    end
-      #    params[:script][:csvarchives] = all_archives_array
-      #  end
-      # if params[:archive][:id] != ""
-      #         all_archives_array = Array.new
-      #         all_archives_array.push(Csvarchive.find(params[:archive][:id]))
-      #         params[:script][:csvarchives] = all_archives_array
-      #       end
-      # if params[:surveys] != nil
-      #   all_surveys_array = Array.new
-      #   params[:surveys].each do |survey_id|
-      #     all_surveys_array.push(Survey.find(survey_id))
-      #     params[:script][:surveys] = all_surveys_array 
-      #   end
-      # end
-      
-      # if params[:scripts] != nil
-      #   all_scripts_array = Array.new
-      #   params[:scripts].each do |script_id|
-      #     sl = ScriptToScriptLink.new(:source_id=>params[:id],:target_id=>script_id)
-      #     sl.save
-      #     #all_scripts_array.push(Script.find(script_id))
-      #     #params[:script][:linked_scripts] = all_scripts_array 
-      #   end
-      # end
-      # if params[:survey][:id] != ""
-        # all_surveys_array = Array.new
-        # all_surveys_array.push(Survey.find(params[:survey][:id]))
-
-      # end
 
       # create new Script and content blob - non-empty file was selected
 
