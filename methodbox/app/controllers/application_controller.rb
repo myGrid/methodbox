@@ -25,8 +25,9 @@ class ApplicationController < ActionController::Base
   end
   
   def admin?
-    return current_user.is_admin?
+    return current_user && current_user.is_admin?
   end
+  
   # #savage_beast
   # def login_required
   #       if !current_user

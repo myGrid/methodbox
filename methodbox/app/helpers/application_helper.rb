@@ -45,14 +45,7 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
    node = xml.find('child::registered')
    return node.first.content == "yes"
   end
-  
-  
-  #savage_beast
-    def admin?
-      puts "checking admin"
-            return current_user.is_admin?
-    end
-    
+      
 #if the flash is for an ajax rendered page then use this to flash 
 #something
   def reload_flash_error
