@@ -4,10 +4,13 @@ class HomeControllerTest < ActionController::TestCase
   fixtures :people, :users
 
   include AuthenticatedTestHelper
+  def setup
+    login_as(:quentin)
+  end
 
   def test_title
     get :index
-    assert_select "title",:text=>/MethodBox.*/, :count=>1
+    assert_select "title",:text=>/Sysmo SEEK.*/, :count=>1
   end
 
   test "admin link not visible to non admin" do
