@@ -49,21 +49,34 @@ class SessionsController < ApplicationController
       end            
     else
       #check if user is part way through registration processes      
-      user=User.find_by_email(params[:login])      
-      if !user.nil? && !user.active? && user.authenticated?(params[:password])
-        if (user.person.nil?)
-          flash[:notice]="You need to continue selecting a profile"
-          session[:user_id]=user.id
-          redirect_to select_people_path
-        else
+      user=User.find_by_email(params[:login])   
+      if user
+        if !user.authenticated?(params[:password])
+          logger.info("Attempt to access "+user.email+" with incorrect password.")
+          flash[:error] = "User name or password incorrect, please try again"
+          redirect_to :action => 'new'
+        elsif !user.active?        
+          logger.info("Attempt to access "+user.email+" but account was not active.")
           flash[:error]="You still need to activate your account. You should have been sent a validation email."
           redirect_to :action=>"new"
-        end
+        elsif (user.person.nil?)
+          logger.info("Attempt to access "+user.email+" but no person found.")
+          flash[:error]="Sorry your person record is missing. Please contact an admin"
+          session[:user_id]= nil
+          redirect_to root_url
+        else  
+          logger.info(user.email)
+          logger.info(user.active?)
+          logger.info(user.activation_code)
+          logger.info("Attempt to access "+user.email+" failed for unknown reason.")
+          flash[:error]="Sorry there is a unexpected technical problem with your account. Please contact an admin"
+          redirect_to root_url
+        end  
       else
+        logger.info("Attempt to access unknown account "+params[:login])
         flash[:error] = "User name or password incorrect, please try again"
         redirect_to :action => 'new'
       end
-      
     end
   end
 

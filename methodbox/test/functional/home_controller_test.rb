@@ -9,7 +9,8 @@ class HomeControllerTest < ActionController::TestCase
     get :index
     assert_response :redirect
     assert_redirected_to :controller => "session", :action => "new"
-    assert_not_nil flash[:error]
+    assert_nil flash[:error]
+    assert_nil flash[:notice]
   end
 
   test "admin link not visible to non admin" do
