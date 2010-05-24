@@ -12,7 +12,7 @@ class PeopleControllerTest < ActionController::TestCase
 
   def test_title
     get :index
-    assert_select "title",:text=>/Sysmo SEEK.*/, :count=>1
+    assert_select "title",:text=>/MethodBox.*/, :count=>1
   end
   
   def test_should_get_index
@@ -119,11 +119,11 @@ class PeopleControllerTest < ActionController::TestCase
     assert_redirected_to person_path(assigns(:person))
   end
 
-  def test_should_destroy_person
-    assert_difference('Person.count', -1) do
-      delete :destroy, :id => people(:one)
-    end
-
-    assert_redirected_to people_path
-  end
+  #May 24 2010 CUrrent code does not suppot deleting a person
+  #def test_should_destroy_person
+  #  assert_difference('Person.count', -1) do
+  #    delete :destroy, :id => people(:one)
+  #  end  
+  #  assert_redirected_to people_path
+  #end
 end
