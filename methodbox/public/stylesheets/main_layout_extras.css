@@ -19,7 +19,7 @@
 }
 #bd {
     min-height:550px;
-    margin: 0;
+    margin: 1em;
 }
 #notice_flash {
     color: green;
