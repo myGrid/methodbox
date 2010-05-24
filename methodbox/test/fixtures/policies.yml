@@ -23,18 +23,16 @@ custom_permissions_only_policy:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
 editing_for_all_sysmo_users_policy:
   contributor: owner_of_editing_for_all_sysmo_users_policy (User)
   name: "auto"
-  sharing_scope: <%= Policy::ALL_SYSMO_USERS %>
+  sharing_scope: <%= Policy::ALL_ELAB_USERS %>
   access_type: <%= Policy::EDITING %>
   use_custom_sharing: false
   use_whitelist: true
   use_blacklist: true
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
-
 
 download_for_all_registered_users_policy:
   contributor: owner_of_download_for_all_registered_users_policy (User)
@@ -47,7 +45,6 @@ download_for_all_registered_users_policy:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
 fully_public_policy:
   contributor: owner_of_fully_public_policy (User)
   name: "auto"
@@ -59,7 +56,6 @@ fully_public_policy:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
 policy_with_complex_permissions:
   contributor: owner_of_complex_permissions_policy (User)
   name: "auto"
@@ -70,7 +66,6 @@ policy_with_complex_permissions:
   use_blacklist: false
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
-
 
 private_policy_with_custom_sharing:
   contributor: owner_of_my_first_sop (User)
@@ -95,7 +90,6 @@ public_download_with_no_custom_sharing:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
 whitelist_blacklist_and_custom_sharing:
   contributor: owner_of_my_first_sop (User)
   name: "auto"
@@ -107,11 +101,10 @@ whitelist_blacklist_and_custom_sharing:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
 policy_for_worgroup_sharing_tests:
   contributor: owner_of_my_first_sop (User)
   name: "auto"
-  sharing_scope: <%= Policy::ALL_SYSMO_USERS %>
+  sharing_scope: <%= Policy::ALL_ELAB_USERS %>
   access_type: <%= Policy::VIEWING %>
   use_custom_sharing: true
   use_whitelist: false
@@ -119,11 +112,10 @@ policy_for_worgroup_sharing_tests:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
 policy_for_worgroup_sharing_tests_no_custom_sharing:
   contributor: owner_of_my_first_sop (User)
   name: "auto"
-  sharing_scope: <%= Policy::ALL_SYSMO_USERS %>
+  sharing_scope: <%= Policy::ALL_ELAB_USERS %>
   access_type: <%= Policy::VIEWING %>
   use_custom_sharing: false
   use_whitelist: false
@@ -134,7 +126,7 @@ policy_for_worgroup_sharing_tests_no_custom_sharing:
 sysmo_member_download:
   contributor: owner_of_my_first_sop (User)
   name: "auto"
-  sharing_scope: <%= Policy::ALL_SYSMO_USERS %>
+  sharing_scope: <%= Policy::ALL_ELAB_USERS %>
   access_type: <%= Policy::DOWNLOADING %>
   use_custom_sharing: false
   use_whitelist: false
@@ -145,7 +137,7 @@ sysmo_member_download:
 sysmo_member_edit:
   contributor: owner_of_my_first_sop (User)
   name: "auto"
-  sharing_scope: <%= Policy::ALL_SYSMO_USERS %>
+  sharing_scope: <%= Policy::ALL_ELAB_USERS %>
   access_type: <%= Policy::EDITING %>
   use_custom_sharing: false
   use_whitelist: false
@@ -153,13 +145,10 @@ sysmo_member_edit:
   created_at: <%= 2.days.ago.to_s :db %>
   updated_at: <%= 2.days.ago.to_s :db %>
 
-
-
-
 policy_for_test_with_projects_institutions:
   contributor: owner_of_my_first_sop (User)
   name: "auto"
-  sharing_scope: <%= Policy::ALL_SYSMO_USERS %>
+  sharing_scope: <%= Policy::ALL_ELAB_USERS %>
   access_type: <%= Policy::VIEWING %>
   use_custom_sharing: true
   use_whitelist: false
