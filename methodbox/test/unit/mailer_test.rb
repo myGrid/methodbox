@@ -15,19 +15,20 @@ class MailerTest < ActionMailer::TestCase
     assert_equal @expected.encoded, Mailer.create_signup(users(:aaron),"localhost").encoded
   end
 
-  test "request resource" do
-    @expected.subject = "A Sysmo Member requested a protected file: Picture"
-    @expected.to = "Datafile Owner <data_file_owner@email.com>"
-    @expected.from = "no-reply@sysmo-db.org"
-    @expected.reply_to = "Aaron Spiggle <aaron@email.com>"
-    @expected.date = Time.now
+  #May 24, 2010 Pictures no longer in data_files
+  #test "request resource" do
+  #  @expected.subject = "A Sysmo Member requested a protected file: Picture"
+  #  @expected.to = "Datafile Owner <data_file_owner@email.com>"
+  #  @expected.from = "no-reply@sysmo-db.org"
+  #  @expected.reply_to = "Aaron Spiggle <aaron@email.com>"
+  #  @expected.date = Time.now
+  #
+  #  @expected.body = read_fixture('request_resource')
 
-    @expected.body = read_fixture('request_resource')
-
-    resource=data_files(:picture)
-    user=users(:aaron)
-    assert_equal @expected.encoded,Mailer.create_request_resource(user,resource,"localhost").encoded
-  end
+  #  resource=data_files(:picture)
+  #  user=users(:aaron)
+  #  assert_equal @expected.encoded,Mailer.create_request_resource(user,resource,"localhost").encoded
+  #end
 
   test "forgot_password" do
     @expected.subject = 'Sysmo SEEK - Password reset'
