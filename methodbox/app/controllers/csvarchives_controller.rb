@@ -99,19 +99,19 @@ class CsvarchivesController < ApplicationController
     target_links = Link.find(:all, :conditions => { :object_type => "Csvarchive", :object_id => @archive.id, :predicate => "link" })
                                                     
     target_links.each do |link|
-      case link.object.class.name
+      case link.subject.class.name
       when "Csvarchive"
-        target_archives.push(link.object)
+        target_archives.push(link.subject)
       when "Script"
-        target_scripts.push(link.object)
+        target_scripts.push(link.subject)
       when "Survey"
-        target_surveys.push(link.object)
+        target_surveys.push(link.subject)
       end
     end
       
     @archives = source_archives | target_archives
     @scripts = source_scripts | target_scripts
-    @surveys = source_surveys | target_scripts
+    @surveys = source_surveys | target_surveys
       
     respond_to do |format|
       format.html # show.html.erb
