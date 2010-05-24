@@ -77,7 +77,7 @@
       <% if !@archives.empty? -%>
 
         <% @archives.each do |archive| -%>
-          <%= link_to(archive.title, csvarchive_path(archive)) -%>
+          <%= link_to(Csvarchive.find(archive).title, csvarchive_path(Csvarchive.find(archive))) -%>
         <% end -%>
       <% else -%>
         None
@@ -88,7 +88,7 @@
       <% if !@surveys.empty? -%>
 
         <% @surveys.each do |survey| -%>
-          <%= link_to(survey.title, survey_path(survey)) -%>
+          <%= link_to(Survey.find(survey).title, survey_path(Survey.find(survey))) -%>
         <% end -%>
       <% else -%>
         None
@@ -98,7 +98,7 @@
       <b>Linked with Script(s):</b>
 		<% if !@scripts.empty? -%>
         <% @scripts.each do |script| -%>
-          <%= link_to(script.title, script_path(script)) -%>
+          <%= link_to(Script.find(script).title, script_path(Script.find(script))) -%>
         <% end -%>
       <% else -%>
         None
