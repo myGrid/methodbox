@@ -80,11 +80,11 @@ class ScriptsController < ApplicationController
     target_links.each do |link|
       case link.object.class.name
       when "Csvarchive"
-        target_archives.push(link.object)
+        target_archives.push(link.subject)
       when "Script"
-        target_scripts.push(link.object)
+        target_scripts.push(link.subject)
       when "Survey"
-        target_surveys.push(link.object)
+        target_surveys.push(link.subject)
       end
     end
       
