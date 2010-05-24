@@ -78,7 +78,7 @@ class ScriptsController < ApplicationController
     target_links = Link.find(:all, :conditions => { :object_type => "Script", :object_id => @script.id, :predicate => "link" })
                                                     
     target_links.each do |link|
-      case link.object.class.name
+      case link.subject.class.name
       when "Csvarchive"
         target_archives.push(link.subject.id)
       when "Script"
