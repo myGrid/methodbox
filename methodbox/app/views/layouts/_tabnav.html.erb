@@ -48,7 +48,7 @@
       </li>
     <!-- About tab -->
       <li <%= (["about"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
-        <%= link_to "About Us", :about_index_url, :title=>"TODO" -%>
+        <%= link_to "About Us", about_index_url, :title=>"TODO" -%>
       </li>
   <% end  -%>
 
