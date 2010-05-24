@@ -6,7 +6,9 @@
 <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
 <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
 <div class="show_basic" style="padding-right: 2em;">
+	
   <% form_remote_tag :url => { :action => "remove_from_cart"} do -%>
+	<% if !@sorted_variables.empty? -%>
     <%= hidden_field_tag 'submit', 'remove_variables' %>
   <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
   <%#= hidden_field_tag 'survey_array', @survey_list %>
@@ -36,11 +38,9 @@
     </div>
     <div id="table_container" class="faux_table_container">
       <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables} -%>
-
-  <%# @sorted_variables.each do |item| %>
-  <%#= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
-
-  <%# end %>
     </div>
+	<% else -%>
+	There are no variables in your cart, why not <%= link_to "search for some", surveys_url,:title=>"Search the data sources for variables of interest" -%>
+	<% end -%>
   <% end -%>
 </div>
