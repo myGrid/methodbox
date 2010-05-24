@@ -1,33 +1,33 @@
 <div style="background:#ACCBE0;">
   <%#*<div style="background:#1B619B; height:24px;">%>
   <ul class="tabnav">
-  <% if logged_in? && !current_user.person.nil? %>
+  <% if logged_in? && !current_user.person.nil? -%>
 
     <!-- People tab -->
-      <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>>
-        <%= link_to "People", people_url, :title=> "Who's who in the method box?"-%>
+      <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%>>
+        <%= link_to "People", people_url, :title=> "Who's who in the method box?"%>
       </li>
 
-    <!-- Projects tab -->
-      <%#*<li%>
-        <%#= (["projects"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %>
-        <%#*>%>
+    <%#<!-- Projects tab --> -%>
+      <%#*<li -%>
+        <%#= (["projects"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%>
+        <%#*> -%>
         <%#= link_to "Projects", projects_url -%>
-      <%#*</li>%>
+      <%#*</li> -%>
 
     <!-- Methods tab -->
-      <li <%= (["scripts"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Methods & Scripts", scripts_url,:title=>"Advice and scripts for data cleaning and statistical analysis"-%>
+      <li <%= (["scripts"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
+        <%= link_to "Methods & Scripts", scripts_url,:title=>"Advice and scripts for data cleaning and statistical analysis"%>
       </li>
 
     <!-- Surveys tab -->
-      <li <%= (["surveys"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Data Sources", surveys_url, :title=>"Archived surveys and other sources of data for research" -%>
+      <li <%= (["surveys"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
+        <%= link_to "Data Sources", surveys_url, :title=>"Archived surveys and other sources of data for research" %>
       </li>
 
     <!-- Archives tab -->
-      <li <%= (["csvarchives"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Data Extracts", csvarchives_url,:title=>"Data extracts created by users from the source data" -%>
+      <li <%= (["csvarchives"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
+        <%= link_to "Data Extracts", csvarchives_url,:title=>"Data extracts created by users from the source data" %>
       </li>
 
     <!-- Forums tab -->
@@ -35,24 +35,23 @@
         <%= link_to "Forums", forums_url,:title=>"Ask questions, help others" -%>
       </li>
 	
-    <!-- Admin tab -->
-      <% if current_user.is_admin? %>
+    <% if current_user.is_admin? -%>
+      <!-- Admin tab -->
         <li <%= (["admin"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-          <%= link_to "Admin", :controller => "admin", :action => "show", :title=>"Access the administration pages" -%>
+          <%= link_to "Admin", admin_url, :title=>"Access the administration pages" -%>
         </li>
-      <% end %> 
-  <% else %>
+    <% end -%> 
+  <% else -%>
     <!-- Login tab -->
-      <li <%= (["sessions"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "Log In", :controller => "session", :action => "new", :title=>"Log in to start using Methodbox" -%>
+      <li <%= (["sessions"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
+        <%= link_to "Log In", new_session_url, :title=>"Log in to start using Methodbox" -%>
       </li>
     <!-- About tab -->
-      <li <%= (["about"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-        <%= link_to "About Us", :controller => "about", :action => "index", :title=>"TODO" -%>
+      <li <%= (["about"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
+        <%= link_to "About Us", :about_index_url, :title=>"TODO" -%>
       </li>
-  <% end  %>
+  <% end  -%>
 
-    
   <!-- Help tab -->
     <li <%= (["help"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
       <%= link_to "Help", help_index_url,:title=>"Get some help and get started" -%>

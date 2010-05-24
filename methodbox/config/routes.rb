@@ -27,6 +27,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :help
   
+  map.resources :about
+
   map.cart '/cart/', :controller=>'cart',:action=>'show'
 
   map.resources :datasets
