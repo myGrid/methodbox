@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
 
   def active?
     # the existence of an activation code means they have not activated yet
-    activation_code.nil?
+    activated_at
   end
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
