@@ -56,13 +56,6 @@ class UserTest < ActiveSupport::TestCase
     assert_not_nil user.activation_code
   end
 
-  def test_should_require_login
-    assert_no_difference 'User.count' do
-      u = create_user(:login => nil)
-      assert u.errors.on(:login)
-    end
-  end
-
   def test_should_require_password
     assert_no_difference 'User.count' do
       u = create_user(:password => nil)
@@ -77,24 +70,30 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_not_require_email
-    assert_difference 'User.count' do
+  def test_should_require_email
+    assert_no_difference 'User.count' do
       u = create_user(:email => nil)
+    end
+  end
+
+  def test_should_require_Unique_email
+    assert_no_difference 'User.count' do
+      u = create_user(:email => 'quentin@example.com')
     end
   end
 
   def test_should_reset_password
     users(:quentin).update_attributes(:password => 'new password', :password_confirmation => 'new password')
-    assert_equal users(:quentin), User.authenticate('quentin', 'new password')
+    assert_equal users(:quentin), User.authenticate('quentin@example.com', 'new password')
   end
 
   def test_should_not_rehash_password
-    users(:quentin).update_attributes(:login => 'quentin2')
-    assert_equal users(:quentin), User.authenticate('quentin2', 'test')
+    users(:quentin).update_attributes(:email => 'quentin2@example.com')
+    assert_equal users(:quentin), User.authenticate('quentin2@example.com', 'test')
   end
 
   def test_should_authenticate_user
-    assert_equal users(:quentin), User.authenticate('quentin', 'test')
+    assert_equal users(:quentin), User.authenticate('quentin@example.com', 'test')
   end
 
   def test_should_set_remember_token
