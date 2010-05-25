@@ -3,21 +3,24 @@ require 'test_helper'
 class MailerTest < ActionMailer::TestCase
   fixtures :all
 
+
+  def setup
+     @expected.from    = "methodbox+no-reply@googlemail.com"
+  end
+  
   test "signup" do
-    @expected.subject = 'Sysmo SEEK account activation'
+    @expected.subject = 'MethodBox account activation'
     @expected.to = "Aaron Spiggle <aaron@email.com>"
-    @expected.from    = "no-reply@sysmo-db.org"
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('signup')
     
-
-    assert_equal @expected.encoded, Mailer.create_signup(users(:aaron),"localhost").encoded
+    check_email @expected, Mailer.create_signup(users(:aaron),"localhost")
   end
 
   #May 24, 2010 Pictures no longer in data_files
   #test "request resource" do
-  #  @expected.subject = "A Sysmo Member requested a protected file: Picture"
+  #  @expected.subject = "A MethodBox Member requested a protected file: Picture"
   #  @expected.to = "Datafile Owner <data_file_owner@email.com>"
   #  @expected.from = "no-reply@sysmo-db.org"
   #  @expected.reply_to = "Aaron Spiggle <aaron@email.com>"
@@ -27,13 +30,12 @@ class MailerTest < ActionMailer::TestCase
 
   #  resource=data_files(:picture)
   #  user=users(:aaron)
-  #  assert_equal @expected.encoded,Mailer.create_request_resource(user,resource,"localhost").encoded
+  #  check_email @expected, Mailer.create_request_resource(user,resource,"localhost")
   #end
 
   test "forgot_password" do
-    @expected.subject = 'Sysmo SEEK - Password reset'
+    @expected.subject = 'MethodBox - Password reset'
     @expected.to = "Aaron Spiggle <aaron@email.com>"
-    @expected.from    = "no-reply@sysmo-db.org"
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('forgot_password')
@@ -41,32 +43,45 @@ class MailerTest < ActionMailer::TestCase
     u=users(:aaron)
     u.reset_password_code_until = 1.day.from_now
     u.reset_password_code="fred"
-    assert_equal @expected.encoded, Mailer.create_forgot_password(users(:aaron),"localhost").encoded
+    check_email @expected, Mailer.create_forgot_password(users(:aaron),"localhost")
   end
 
   test "contact_admin_new_user_no_profile" do
-    @expected.subject = 'Sysmo Member signed up'
+    @expected.subject = 'MethodBox Member signed up'
     @expected.to = "Quentin Jones <quentin@email.com>"
-    @expected.from    = "no-reply@sysmo-db.org"
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('contact_admin_new_user_no_profile')
     
-
-    assert_equal @expected.encoded, 
-      Mailer.create_contact_admin_new_user_no_profile("test message",users(:quentin),"localhost").encoded
+    check_email @expected, Mailer.create_contact_admin_new_user_no_profile("test message",users(:quentin),"localhost")
   end
 
   test "welcome" do
-    @expected.subject = 'Welcome to Sysmo SEEK'
+    @expected.subject = 'Welcome to MethodBox'
     @expected.to = "Quentin Jones <quentin@email.com>"
-    @expected.from    = "no-reply@sysmo-db.org"
-    @expected.date = Time.now
-    
+    @expected.from    = "methodbox+no-reply@googlemail.com"
+    @expected.date = Time.now  
     @expected.body = read_fixture('welcome')
     
-
-    assert_equal @expected.encoded, Mailer.create_welcome(users(:quentin),"localhost").encoded
+    check_email @expected, Mailer.create_welcome(users(:quentin),"localhost")
   end
 
+  def check_email(expected, response)
+    assert_equal expected.subject, response.subject
+    assert_equal expected.to,      response.to
+    assert_equal expected.from,    response.from
+    assert_equal expected.date,    response.date
+    
+    expected_body = expected.body.split("\n")
+    response_body = response.body.split("\n")
+    
+    for i in 0..(expected_body.length-1)
+      #puts expected_body[i]
+      #puts response_body[i]
+      assert_equal expected_body[i], response_body[i]
+    end  
+    #puts " "
+    assert_equal expected.body, response.body
+    assert_equal expected.encoded, response.encoded
+  end
 end

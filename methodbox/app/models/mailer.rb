@@ -51,7 +51,7 @@ class Mailer < ActionMailer::Base
     from       NOREPLY_SENDER
     sent_on    Time.now
     
-    body       :username=>user.email, :name=>user.person.name, :reset_code => user.reset_password_code, :host=>base_host
+    body       :email=>user.email, :name=>user.person.name, :reset_code => user.reset_password_code, :host=>base_host
   end
 
   def welcome(user,base_host)
