@@ -1,9 +1,6 @@
 require 'test_helper'
 
-class ScriptsControllerTest < ActionController::TestCase
-  fixtures :users, :people
-
-  include AuthenticatedTestHelper
+class CsvarchivesControllerTest < ActionController::TestCase
 
   test "visible to logged in" do
     login_as(:aaron)

@@ -2,10 +2,6 @@ require 'test_helper'
 
 class SurveysControllerTest < ActionController::TestCase
 
-  fixtures :users, :people
-
-  include AuthenticatedTestHelper
-
   test "visible to logged in" do
     login_as(:aaron)
     get :index

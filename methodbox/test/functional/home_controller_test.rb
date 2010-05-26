@@ -1,9 +1,6 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class HomeControllerTest < ActionController::TestCase
-  fixtures :people, :users
-
-  include AuthenticatedTestHelper
 
   test "invisible to not logged in" do
     get :index

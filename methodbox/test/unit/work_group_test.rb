@@ -2,7 +2,6 @@ require 'test_helper'
  
 
 class WorkGroupTest < ActiveSupport::TestCase
-  fixtures :people, :projects, :work_groups, :group_memberships
   
   #May 24, 2101 Commented out all test due to major reworing of work_groups model
   #def test_people

@@ -2,10 +2,6 @@ require 'test_helper'
 
 class AvatarsControllerTest < ActionController::TestCase
   
-  fixtures :people,:users,:avatars
-
-  include AuthenticatedTestHelper
-  
   def setup
     login_as(:quentin)
   end

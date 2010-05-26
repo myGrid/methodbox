@@ -2,10 +2,6 @@ require 'test_helper'
 
 class ForumsControllerTest < ActionController::TestCase
 
-  fixtures :forums, :users, :people
-
-  include AuthenticatedTestHelper
-
   test "visible to admin" do
 
     login_as(:quentin)

@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class VariablesControllerTest < ActionController::TestCase
-  fixtures :users, :people
-
-  include AuthenticatedTestHelper
 
   test "visible to logged in" do
     login_as(:aaron)

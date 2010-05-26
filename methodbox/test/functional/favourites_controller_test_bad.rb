@@ -2,10 +2,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class FavouritesControllerTest < ActionController::TestCase
   
-  include AuthenticatedTestHelper
-  
-  fixtures :users, :favourites, :projects, :people
-  
   def setup
     login_as(:quentin)
   end

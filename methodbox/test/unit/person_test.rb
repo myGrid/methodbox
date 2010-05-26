@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PersonTest < ActiveSupport::TestCase
-  fixtures :people, :projects, :group_memberships,:users, :tags,:taggings
   
   def test_registered
     registered=Person.registered

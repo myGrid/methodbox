@@ -2,8 +2,6 @@ require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
   
-  fixtures :projects, :work_groups, :group_memberships, :people, :users, :taggings, :tags
-  
   #checks that the dependent work_groups are destoryed when the project s
   def test_delete_work_groups_when_project_deleted
     n_wg=WorkGroup.find(:all).size
