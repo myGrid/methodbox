@@ -118,7 +118,9 @@
         <b>Further information</b>
       <div class="box_standout">
         <a href="<%= @survey.UKDA_summary%>">ESDS Summary</a><br/>
-        <a href="<%= @survey.headline_report%>">Headline Report</a>
+        <% if @survey.headline_report -%>
+          <a href="<%= @survey.headline_report%>">Headline Report</a>
+        <% end -%>  
       </div>
 <br/>
 <b>Forum</b>
