@@ -1,55 +1,8 @@
-<% unless logged_in? -%>
-  <div>
-    <!-- <div> -->
-    <div class="myexperiment_gadget" style="width:35%;float:left;display:inline;padding-left:1.75em;">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-
-      <div class="header">
-        <p style="font-size:1.75em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">About</p>
-      </div>
-
-      <div class="contents">
-
-        <div>
-          <p style="text-align:left;font-size:1.5em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox enables you to browse and download datasets, share methods and scripts, find fellow researchers with similar interests and share your knowledge.</p>
-
-        </div>
-      </div>
-
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-
-    <div class="myexperiment_gadget" style="width:35%;float:right;display:inline;padding-right:1.75em;">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-
-      <div class="header">
-        <p style="font-size:1.75em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Who?</p>
-      </div>
-
-      <div class="contents">
-
-
-        <div>
-          <p style="text-align:left;font-size:1.5em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;"> MethodBox is brought to you by a team from the <a href = "http://www.manchester.ac.uk">University of Manchester</a> in the UK, led by <a href="http://www.cs.man.ac.uk/~/carole">Carole Goble</a>, <a href="http://www.manchester.ac.uk/research/Buchan/">Iain Buchan</a> and <a href="http://www.manchester.ac.uk/research/angela.dale/">Angela Dale</a>.
-          </p>
-          <p style="text-align:left;font-size:1.5em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox is part of the <a href="http://www.mygrid.org.uk">myGrid consortium</a>, which brought you the <a href="http://www.mygrid.org.uk/taverna">Taverna Workflow Workbench</a> for creating and executing scientific workflows, <a href="http://www.myexperiment.org">myExperiment</a> for sharing workflows and <a href="http://www.biocatalogue.org">Bio-catalogue</a> for curating life science web-services.</p>
-        </div>
-
-      </div>
-
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-
-    <div class="myexperiment_gadget" style="width:20%">
-      <!-- <div> -->
-      <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
-
-      <div class="header">
-        <p style="font-size:1.75em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">Log in / Register</p>
-      </div>
-
+<div style="margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0; background-image:url(/images/roundbox_gradient.gif);">
+	<div style="text-align:right; background-color: #FFFFFF;">
+		<%= link_to image_tag("close.gif", :alt => "Close login box"), "#", :onclick => "closeLoginBox('login_box'); return false;" %>
+	</div>
+	<center>
       <div class="contents">
         <% form_tag session_path do %>
           <%= hidden_field_tag "called_from[controller]", controller.controller_name -%>
@@ -82,25 +35,23 @@
           </p>
 
         <% end %>
-        <% if !REGISTRATION_CLOSED -%>
-          <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
-            <b>Need an account?</b><br />
-            <b><%= link_to "Sign up", signup_url %></b>
-          </p>
-        <% else -%>
-          <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
-            <b>New user registration is currently closed</b>
-          </p>
-        <% end -%>
+        <%# if !REGISTRATION_CLOSED -%>
+          <!-- <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;"> -->
+            <!-- <b>Need an account?</b><br /> -->
+            <!-- <b> -->
+<%#= link_to "Sign up", signup_url %>
+<!-- </b> -->
+          <!-- </p> -->
+        <%# else -%>
+          <!-- <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;"> -->
+            <!-- <b>New user registration is currently closed</b> -->
+          <!-- </p> -->
+        <%# end -%>
         <br/>
         <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
           <b><%= link_to "Forgotten password?", forgot_password_url %></b>
         </p>
 
       </div>
-
-      <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
-    </div>
-  </div>
-
-<% end -%>
+	<center>
+</div>
