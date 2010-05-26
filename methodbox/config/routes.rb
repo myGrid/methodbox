@@ -24,6 +24,8 @@ ActionController::Routing::Routes.draw do |map|
    # page for cart
    
   map.resources :work_groups
+  
+  map.resources :home
 
   map.resources :help
   
@@ -160,7 +162,7 @@ ActionController::Routing::Routes.draw do |map|
   
   # used by the "sharing" form to get settings from an existing policy 
   map.request_policy_settings '/policies/request_settings', :controller => 'policies', :action => 'send_policy_data'
-  map.root :controller=>"home"
+  map.root :controller=>"home", :action=>"about"
 
   # See how all your routes lay out with "rake routes"
 
