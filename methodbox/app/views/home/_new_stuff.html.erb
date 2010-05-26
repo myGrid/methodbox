@@ -1,0 +1,7 @@
+<h2>View the latest additions to Methodbox</h2>
+<% if !@results.blank? %>
+  <% resource_hash = classify_for_tabs @results -%>
+  <%= render :partial => "assets/resource_listing_tabbed_by_class", :locals => { :asset_hash => resource_hash,
+    :narrow_view => true,
+    :authorization_already_done => true } -%>
+<% end %>
