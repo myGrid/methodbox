@@ -76,6 +76,22 @@ function subset() {
   return $H({ x: p1, y: p2, z: p3 });
 }
 
+function showLoginBox(boxID) {
+        var box = document.getElementById(boxID);
+        if (box) {
+
+                $(boxID).blindDown({ duration: 0.6 });
+        }
+}
+
+function closeLoginBox(boxID) {
+        var box = document.getElementById(boxID);
+        if (box) {
+                $(boxID).blindUp({ duration: 0.6 });
+        }
+}
+
+
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  
 //         event.stop();  
