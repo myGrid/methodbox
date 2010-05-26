@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
 
-  before_filter :login_required, :except => [ :help]
+  before_filter :login_required, :except => [ :help, :index, :search_variables, :sort_variables]
 
   before_filter :find_cart, :except => [ :help]
 
@@ -325,7 +325,7 @@ class SurveysController < ApplicationController
       #    when "year_reverse" then "year DESC"
       #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
       #    end
-
+      if logged_in?
       user_search = UserSearch.new
       user_search.person = Person.find(current_user.person_id)
       user_search.terms = @survey_search_query
@@ -336,7 +336,7 @@ class SurveysController < ApplicationController
       end
       user_search.variable_ids = var_as_ints
       user_search.save
-
+    end
       respond_to do |format|
         logger.info("rendering survey search")
         format.html
