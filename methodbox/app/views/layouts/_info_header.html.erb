@@ -1,0 +1,15 @@
+<div>
+	<div style="float: right;">
+<ul style="margin: 0;">
+			<li style="list-style:none;"><b><%= link_to "My Profile", person_url(current_user.person) -%></b></li>
+			<li style="list-style:none;"><b><%= link_to "My Messages", messages_path -%></b></li>
+
+			<li style="list-style:none;"><b><%= link_to "My Variable Cart", cart_path -%></b></li>
+
+			<li style="list-style:none;"><b><%= link_to "Logout", logout_url -%></b></li>
+</ul>
+	</div>
+	<div>
+		<%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
+	</div>
+</div>

@@ -1,73 +1,11 @@
-    <%= stylesheet_link_tag 'main_layout_extras', 'reset-fonts-grids', 'base-min', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced' -%>
-<%#*<div style="width:100%;float:right;display:inline;padding-right:30px;margin-bottom:-20px;">%>
-<div style="position:relative; height:5.5em;">
-  <div style="position:absolute;top: 0.25em;left:0.5em">
-    <%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>70, :style=>"padding-left:5px;"),root_path -%>
-<%#*<font style="font-size:2em;padding-left:3px;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">MethodBox</font>%>
-<%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50, :style=>"vertical-align:bottom;margin-bottom:-0.15em;"),root_path %>
-  </div>
-  <% if logged_in? -%>
-  <div style="position:absolute;top:0.25em;right:0.5em;">
-
-<% if logged_in? && !current_user.person.nil? %>
-  <%#= icon "profile", person_path(current_user.person), nil, nil, "&nbsp;My Profile" %>
-    <table><tr><td>
-      <%#= avatar(current_user.person, 40,:alt=>current_user.person.name) -%>
-        <%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
-        <%#= link_to(image_tag avatar_url(current_user.person, current_user.person.avatar_id, 40) ,:alt=> current_user.person.name, :class=>"framed",:title=>current_user.person.name),person_path(current_user.person) -%></td><td><%= icon "profile", url_for(current_user.person), nil, nil, "&nbsp;My Profile" %></td><td><%= icon "message", messages_path, nil, nil, "&nbsp;My Messages" %></td>
-      <td><%= icon('cart', cart_path, "View Cart", nil, "My Variable Cart") -%></td><td> <%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %></td></tr>
-    </table>
-    <%#= avatar(current_user.person, 40) -%>
-    <%#*<span style="color: #666666; margin-left: 0.1em;">%>
-    <%#*<small>[%>
-      <%#= link_to "edit", edit_person_path(current_user.person) -%>
-    <%#*]</small>%>
-<% end %>    
-<%#*</span>%>
-    <%#*<ul class="gadget_list" style="list-style-type:none;"%>
-      <%#*<li>%>
-        <%#= icon "profile", messages_path, nil, nil, "&nbsp;My Messages" %>
-      <%#*</li>%>
-      <%#*<li>%>
-        <%#= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %>
-      <%#*</li>%>
-    <%#*</ul>%>
-  </div>
-  <div style="position:absolute;bottom:-1.75em;right:0.5em;">
-<%#= @search_query="Enter search here" -%>
-    <%= render :partial=>"search/search_bar" -%>
-  </div>
-  <% end -%>
+<div style="float: left;">
+	<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>70, :style=>"margin-right: 3em;"),root_path -%>
 </div>
-
-<%# if RAILS_ENV=="development" && false -%>
-<%#*<table><tr><td>%>
-<%#*<h1 style="color:red;">Development Mode</h1>%>
-<%#*</td><td>%>
-<%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox"),
-root_path %>
-<%#*</td>%>
-<%#*</tr>%>
-<%#*</table>%>
-<%# else -%>
-<%#*<table width="100%">%>
-
-<%#*<tr>%>
-<%#*<td style="text-align:center; ">%>
-<%#= link_to image_tag("box_inside_big.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>50),
-root_path %>
-
-<%#*</td>%>
-<%#*<td>%>
-<%#*<p id="header_text" style="background-color: #ACCBE0;padding-top:1em;padding-bottom:1em;margin:0;">Look inside the <b>METHOD BOX</b>. Find and share <b>datasets</b>, <b>methods</b> and <b>know-how</b>. Making <b>best practice</b> your practice%>
-<%#*</p>%>
-<%#*</td>%>
-<%#*<!--<td style="text-align:right;">%>
-<%#= link_to image_tag("eLab3.gif",:alt=>"eLab",:title=>"eLab"),root_path %>
-<%#*</td>-->%>
-
-<%#*</tr>%>
-<%#*</table>%>
-
-
-<%# end -%>
+<div id="welcome-text" style="font-size: 20px; margin-top: 0.5em ;margin-right: 3em;">
+	<b>Browse</b> <i>datasets</i>, <b>shop</b> for <i>variables</i> and <b>share</b> your <i>knowledge</i>.
+</div>
+<% if logged_in? -%>
+	<!-- <div style="position:absolute;bottom:-1.75em;right:0.5em;"> -->
+    <%#= render :partial=>"search/search_bar" -%>
+	<!-- </div> -->
+<% end -%>

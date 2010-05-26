@@ -1,0 +1,10 @@
+<div style="text-align: center; margin-top: 1em;">
+	<b><%= link_to "Sign up", signup_url %></b> / <b><%= link_to "Log in", login_url, :onclick => "showLoginBox('login_box'); return false;"%></b>
+</div>
+<div id="login_box" style="display: none; z-index: 100; position: absolute;">
+	<%= render :partial=>"gadgets/sign_in" %>
+</div>
+<div style="text-align: center;">or</div>
+<div style="text-align: center;">
+	<b><%= link_to "try it out", surveys_url %></b>
+</div>

@@ -1,19 +1,11 @@
-<div style="background:#ACCBE0;">
-  <%#*<div style="background:#1B619B; height:24px;">%>
-  <ul class="tabnav">
   <% if logged_in? && !current_user.person.nil? -%>
+<div>
+  <ul class="tabnav">
 
     <!-- People tab -->
       <li <%= (["people"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%>>
         <%= link_to "People", people_url, :title=> "Who's who in the method box?"%>
       </li>
-
-    <%#<!-- Projects tab --> -%>
-      <%#*<li -%>
-        <%#= (["projects"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%>
-        <%#*> -%>
-        <%#= link_to "Projects", projects_url -%>
-      <%#*</li> -%>
 
     <!-- Methods tab -->
       <li <%= (["scripts"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
@@ -40,29 +32,6 @@
         <%= link_to "Forums", forums_url,:title=>"Ask questions, help others" -%>
       </li>
 	
-    <% if current_user.is_admin? -%>
-      <!-- Admin tab -->
-        <li <%= (["admin"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-          <%= link_to "Admin", admin_url, :title=>"Access the administration pages" -%>
-        </li>
-    <% end -%> 
-  <% else -%>
-    <!-- Login tab -->
-      <li <%= (["sessions"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
-        <%= link_to "Log In", new_session_url, :title=>"Log in to start using Methodbox" -%>
-      </li>
-    <!-- About tab -->
-      <li <%= (["about"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') -%> >
-        <%= link_to "About Us", about_index_url, :title=>"TODO" -%>
-      </li>
-  <% end  -%>
-
-  <!-- Help tab -->
-    <li <%= (["help"].include?(controller.controller_name.to_s) ? ' id="selected_tabnav"' : '') %> >
-      <%= link_to "Help", help_index_url,:title=>"Get some help and get started" -%>
-    </li>
-
   </ul>
 </div>
-<div style="background:#1B619B;height:25px;">
-</div>
+<% end -%>
