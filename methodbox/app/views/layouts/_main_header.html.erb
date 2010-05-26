@@ -1,3 +1,8 @@
+<% if logged_in? && current_user.is_admin? -%>
+<div style="margin-bottom: 1em;">
+<%= link_to "Admin functions", admin_url -%>
+</div>
+<% end -%>
 <div id="small-hd" style="float:right;width:20%;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0; background-image:url(/images/roundbox_gradient.gif); height: 75px;">
 	<% if !logged_in? %>
 		<%= render :partial=>"layouts/login_header" %>
