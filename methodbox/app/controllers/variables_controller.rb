@@ -22,7 +22,7 @@ class VariablesController < ApplicationController
       @tag = params[:variable]
       @variables = Variable.tagged_with(@tag, :on=>:title)
     else
-      @variables = Variable.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name)
+      @variables = Variable.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:name)
     end
     
     respond_to do |format|
