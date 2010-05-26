@@ -1,10 +1,20 @@
 class HomeController < ApplicationController
   
-  before_filter :login_required
+  before_filter :login_required, :except=> [ :about ]
 
   before_filter :find_cart
   
   layout :select_layout
+  
+  def about
+    respond_to do |format|
+        if logged_in?
+          format.html {redirect_to home_index_url}
+        else
+        format.html # about.html.erb  
+      end    
+    end
+  end
   
   def index
     scripts = Script.all(:order => "created_at DESC", :conditions => { :created_at => (Time.now.midnight - 7.day)..Time.now})
@@ -46,11 +56,11 @@ class HomeController < ApplicationController
   end
   
   def select_layout
-    if logged_in?
+    # if logged_in?
       return 'main'
-    else
-      return 'logged_out'
-    end
+    # else
+      # return 'logged_out'
+    # end
   end
 
   private
