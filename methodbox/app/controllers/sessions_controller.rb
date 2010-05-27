@@ -1,7 +1,7 @@
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
  
-  layout 'logged_out'  
+  layout 'main'  
   
   # render new.rhtml
   def new
