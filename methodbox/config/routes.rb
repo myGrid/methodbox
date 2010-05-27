@@ -25,7 +25,7 @@ ActionController::Routing::Routes.draw do |map|
    
   map.resources :work_groups
   
-  map.resources :home
+  # map.resources :home
 
   map.resources :help
   
@@ -162,7 +162,8 @@ ActionController::Routing::Routes.draw do |map|
   
   # used by the "sharing" form to get settings from an existing policy 
   map.request_policy_settings '/policies/request_settings', :controller => 'policies', :action => 'send_policy_data'
-  map.root :controller=>"home", :action=>"about"
+  map.root :controller=>'home', :action=>'about'
+  map.index '/index', :controller => 'home', :action=>'index'
 
   # See how all your routes lay out with "rake routes"
 
