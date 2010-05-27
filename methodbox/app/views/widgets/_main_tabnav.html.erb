@@ -1,4 +1,4 @@
-<% if logged_in? -%>
+<%# if logged_in? -%>
 <%  
 # this partial renders a tabnav, you can call it in your views with:
 #   <%= tabnav :main % > (just the tabnav) 
@@ -26,17 +26,20 @@ render_tabnav :main,
   #   end
   # end 
          
-  add_tab do |t|
+ 
+	add_tab do |t|
    t.named 'People'
    t.titled "Who's who in the MethodBox"
    t.links_to :controller => 'people'
-  end 
+  end unless !logged_in?
 
-  add_tab do |t|
+
+	add_tab do |t|
    t.named 'Methods and Scripts'
    t.titled "Advice and scripts for data cleaning and statistical analysis"
    t.links_to :controller => 'scripts'
-  end
+  end unless !logged_in?
+
 
   add_tab do |t|
    t.named 'Data Sources'
@@ -48,19 +51,27 @@ render_tabnav :main,
    t.named 'Data Extracts'
    t.titled "Data sources created by the users"
    t.links_to :controller => 'csvarchives'
-  end
+  end unless !logged_in?
 
-  add_tab do |t|
+
+	add_tab do |t|
    t.named 'Groups'
    t.titled "Create groups to share things with"
    t.links_to :controller => 'work_groups'
+  end unless !logged_in?
+
+  add_tab do |t|
+   t.named 'Help'
+   t.titled "How to use MethodBox to find variables, share methods and browse surveys"
+   t.links_to :controller => 'help'
   end
 
   add_tab do |t|
    t.named 'Forums'
    t.titled "Ask questions, help others"
-   t.links_to :controller => 'forums_controller'
-  end
+   t.links_to :controller => 'forums'
+  end unless !logged_in?
+
   #  
   # you can use restful routes with:
   #
@@ -94,4 +105,4 @@ render_tabnav :main,
   # end
 end 
 %>
-<% end -%>
+<%# end -%>
