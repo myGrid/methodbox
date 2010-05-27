@@ -1,5 +1,6 @@
 <% truncate_length_for_boxes = 22 -%>
 
+<!-- We might need these buttons in the future if users can upload there own surveys -->
 <%#*<ul class="sectionIcons">%>
 <%# if Authorization.is_authorized?("manage", nil, @survey, current_user) -%>
 <%#*<li>%>
@@ -31,6 +32,7 @@
 
 <h1 class="contribution_title">Survey: <%= link_to(h(@survey.title), survey_path(@survey)) -%></h1>
 
+<!-- This might be needed for future upload reasons -->
 <%#= render :partial => "assets/resource_datetime_info", :locals => { :resource => @survey } -%>
 
 
@@ -46,6 +48,7 @@
         <%=h @survey.surveytype -%>
       </p>
 
+<!-- This might be needed for future upload reasons -->
 <%#*<p>%>
 <%#*<b>File name:</b>%>
 <%#=h @survey.original_filename -%>
@@ -55,17 +58,6 @@
 <%#*<b>Format:</b>%>
 <%#=h @survey.content_type -%>
 <%#*</p>%>
-
-<%#*<p>%>
-<%#*<b>Organism:</b>%>
-<%# if @survey.organism -%>
-<%#=organism_link_to @survey.organism -%>
-<%# else -%>
-<%#*<span class="none_text">Unknown</span>%>
-<%# end -%>
-<%#*</p>%>
-
-<%#*<br/>%>
 
       <p>
         <b>Description</b>
@@ -90,7 +82,7 @@
           None
         <% end -%>
       </p>
-
+<% if logged_in? -%>
       <br/>
       <b>Linked with Data Extracts(s):</b>
       <% if !@survey.csvarchives.empty? -%>
@@ -113,6 +105,7 @@
         None
       <% end -%>
       <br/>
+<% end -%>
       <br/>
       <p>
         <b>Further information</b>
@@ -123,11 +116,12 @@
         <% end -%>  
       </div>
 <br/>
+<% if logged_in? -%>
 <b>Forum</b>
 <% if @forum != nil -%>
 	<div class="box_standout">
 		<%= link_to h("View the forum"), forum_path(@forum), :class => "title" %>
-      </div>
+    </div>
 <% end -%>
 <% if @forum != nil -%>
       <% if @forum.recent_post -%>
@@ -143,33 +137,17 @@
 </div>
       <% end -%>
 <% end -%>
+<% end -%>
       </p>
-
-
-
-
     </div>
   </div>
-
-  <div class="main_content_right_box">
+<!-- This might be needed for future upload reasons -->
+  <!-- <div class="main_content_right_box"> -->
 <%#= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @survey } -%>
 <%#= render :partial => "assets/resource_attributions_box", :locals => { :resource => @survey, :attributed_to => Authorization.authorize_collection("show", @survey.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
-  </div>
+  <!-- </div> -->
 
   <div style="clear:both;">
-
-
-<%# get, classify and authorize all assets for this project -%>
-<%# script_asset_hash = classify_for_tabs([@survey.asset.project]) -%>
-
-<%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@survey.title,:item_hash=>script_asset_hash} %>
-
   </div>
-
-
-<%#*<div class="show_basic">%>
-<%#= render :partial => "single_faceted_browse", :locals => { :resource => @survey } -%>
-<%#*</div>%>
-
 
 </div>
