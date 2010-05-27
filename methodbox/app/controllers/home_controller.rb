@@ -9,7 +9,7 @@ class HomeController < ApplicationController
   def about
     respond_to do |format|
         if logged_in?
-          format.html {redirect_to home_index_url}
+          format.html {redirect_to index_url}
         else
         format.html # about.html.erb  
       end    
