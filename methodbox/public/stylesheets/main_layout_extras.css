@@ -18,13 +18,38 @@
 /*    background-color:#ACCBE0;*/
 }
 #bd {
-    min-height:550px;
+min-height: 550px;
 /*    margin: 1em;*/
 }
 #notice_flash {
-    color: green;
-    font-weight: bold;
-    margin: 0.8em 0.8em;
-    line-height: 1.4;
+color: green;
+font-weight: bold;
+margin: 0.8em 0.8em;
+line-height: 1.4;
 }
+.header-breadcrumbs ul {
+float: left;
+width: 560px;
+list-style: none;
+padding: 0 0 0 15px;
+font-family: verdana,arial,sans-serif;
+}
+.header-breadcrumbs ul li {
+display: inline;
+padding: 0 0 0 10px;
+background: transparent url(/images/bg_bullet_arrow.gif) no-repeat 0 50%;
+font-weight: bold;
+color: rgb(125,125,125);
+font-size: 100%;
+}
+.header-breadcrumbs ul a {
+color: rgb(70,122,167);
+text-decoration: none;
+}
+.header-breadcrumbs ul a:hover {
+color: rgb(42,90,138);
+text-decoration: underline;
+}
+
+
 
