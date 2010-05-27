@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
-
-  before_filter :login_required, :except => [ :help, :index, :search_variables, :sort_variables]
+  
+  before_filter :login_required, :except => [ :help, :index, :search_variables, :sort_variables, :show]
 
   before_filter :find_cart, :except => [ :help]
 
@@ -9,6 +9,7 @@ class SurveysController < ApplicationController
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
+#experimental code for doing jgrid table using jqgrid plugin
   def grid_view
     puts "doing some stuff"
     @query= params[:survey_search_query]
@@ -17,47 +18,6 @@ class SurveysController < ApplicationController
     datasets.each do |dataset|
       @dataset_request = @dataset_request + "&datasets[]=" + dataset
     end
-    #    @selected_surveys = Array.new(params[:entry_ids])
-    #    res = Variable.multi_solr_search("income", :limit=>1000, :models=>(Variable))
-    #    solr_docs = res.docs
-    #    temp_variables = Array.new
-    ##    page_res = solr_docs.paginate(:page=>params[:page], :per_page=>params[:per_page])
-    #    solr_docs.each do |item|
-    #      @selected_surveys.each do |ids|
-    #        if Dataset.find(item.dataset_id).id.to_s == ids
-    #          logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-    #          puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
-    #          temp_variables.push(item)
-    #          break
-    #        end
-    #      end
-    #    end
-    #    page_res = temp_variables.paginate(:page=>params[:page], :per_page=>params[:per_page])
-    #    puts page_res
-    #    #    @variables = Variable.find(:all, :conditions=>"category='income'")
-    #    #    start_value = (params[:page] - 1) * params[:rows]
-    #    #    end_value = params[:page] * params[:rows]
-    #    #    @paged_variables = Array.new
-    #    #    if @variables
-    #    #
-    #    #    end
-    #    #    for i in start_value..end_value
-    #    #      @paged_variables.push(@variables[i])
-    #    #    end
-    ##    @variables_json = temp_variables.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:per_page],temp_variables.size)
-    #    @variables_json = page_res.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:per_page],temp_variables.size)
-    #    puts @variables_json
-    #    respond_to do |format|
-    #      format.html
-    #      format.json { render :json => @variables_json }
-    #
-    #    end
-
-    #     respond_to do |format|
-    #        logger.info("rendering grid view")
-    #        format.html
-    #        format.xml
-    #      end
   end
 
   def search_stuff
