@@ -9,8 +9,12 @@
 <!-- </li> -->
 
   <%# end %>
-  <li><%= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%></li>
+  <!-- <li> -->
+<%#= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%>
+<!-- </li> -->
+<% if logged_in? -%>
   <li><%= icon('add_to_cart', add_to_cart_variable_path(@variable), "Add Variable to Cart", {:method => :post}, 'Add Variable to Cart') -%></li>
+<% end -%>
 </ul>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
 <div class="show_basic">
