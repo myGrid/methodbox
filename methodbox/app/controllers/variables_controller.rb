@@ -1,6 +1,6 @@
 class VariablesController < ApplicationController
 
-  before_filter :login_required, :except => [ :help]
+  before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show]
 
   def open_pdf
     find_variable
