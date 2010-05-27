@@ -524,6 +524,25 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  
+  #maybe use the breadcrumbs in the future
+  #add one to a controller with eg. add_breadcrumb 'Home', 'index_url'
+  
+  #add little breadcrumbs to the routes 
+  #based on http://szeryf.wordpress.com/2008/06/13/easy-and-flexible-breadcrumbs-for-rails/
+  def add_breadcrumb name, url = ''
+    @breadcrumbs ||= []
+    url = eval(url) if url =~ /_path|_url|@/
+    @breadcrumbs << [name, url]
+  end
+
+  def self.add_breadcrumb name, url, options = {}
+    before_filter options do |controller|
+      puts "crumb for " + name + " " + url
+      controller.send(:add_breadcrumb, name, url)
+    end
+  end
+  
 
   def discard_flash_if_xhr
     flash.discard if request.xhr?
