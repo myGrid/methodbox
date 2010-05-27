@@ -3,7 +3,11 @@
 <%= stylesheet_link_tag 'faux_table'%>
 <% form_tag :url => { :action => "add_to_cart"} do -%>
   <div class="show_basic" style="padding-right: 2em;">
-    <h2>Browse the table, select some variables, group similar ones together and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.</h2><br/>
+	<% if !logged_in? -%>
+	    <h2>Welcome, guest. Browse the table, look at the variable metadata.  If you want to download any variables then you need to <%= link_to "register", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open')};return false" -%>.<br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
+	<% else -%>
+    <h2>Browse the table, select some variables, look at the metadata and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
+<% end -%>
 
     <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:95px;">
       <div style="position: absolute; ;top:0.9em;left:1em">
@@ -15,23 +19,8 @@
         <% @link_reason="Reason for grouping" unless @link_reason -%>
 
         <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
-  <%#*<ul class="sectionIcons">%>
-  <%#*<li>%>
-  <%#= icon('add_to_cart', add_to_cart_url, 'Add selected variables to cart', {:title => "Add selected variables to cart", :action => :add_to_cart}, 'Add selected variables to cart', true) -%>
-  <%#*</li>%>
-  <%#*</ul>%>
-  <%#*<ul class="sectionIcons">%>
-  <%#*<li>%>
-  <%#*<span class="icon">%>
-  <%#= button_to_remote "Add selected variables to cart", {:title=>"Add selected variables to cart", :url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" }-%>
-  <%#*Add selected variables to cart%>
-  <%#*</span>%>
-  <%#*</li>%>
-  <%#*</ul>%>
-        <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'search';" %>
-  <%#= check_box_tag "append_search" -%>
-  <%#= label_tag 'append_search', 'Add search results to currrent table' -%>
 
+        <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'search';" %>
       </div>
       <div style="position: absolute; bottom:-10em; left:26em;">
               <%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
@@ -54,10 +43,9 @@
 <% if logged_in? -%>
       <div style="position: absolute; bottom:1em; right:1em;">
         <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
-  <%#= submit_tag'Add selected variables to cart', :name=>"_submit",:src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%>
       </div>
 <% end -%>
-
+<!-- This code used to be used for linking variables together, might be used again-->
       <!-- <div style="position: absolute; bottom:1em; right:1em;"> -->
         <%#= text_field_tag :link_variables_text, @link_reason %>
         <%#= submit_to_remote '_submit', 'Group selected variables', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'link';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
@@ -72,9 +60,11 @@
         <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
 
       </div>
+<% if logged_in? -%>
       <div id="cart_button" style="position: absolute; top:1em; right:1em;">
         <%= render :partial => "cart_button" -%>
       </div>
+<% end -%>
     </div>
     <br/>
     <br/>
@@ -83,7 +73,6 @@
     </div>
     <div id="table_container" class="faux_table_container">
       <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables} -%>
-      <%#= render :partial => "add_variables_div" -%>
     </div>
   </div>
 <% end -%>
@@ -93,8 +82,3 @@
     uncheckAll();
   });
 </script>
-<%#*<script type="text/javascript" charset="utf-8">%>
-  <%#*window._token = '%>
-<%#= form_authenticity_token -%>
-  <%#*';%>
-<%#*</script>%>
