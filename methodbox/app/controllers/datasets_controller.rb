@@ -1,6 +1,6 @@
 class DatasetsController < ApplicationController
 
-  before_filter :login_required
+  before_filter :login_required, :except => [ :show ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show ]
 
