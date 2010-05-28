@@ -22,7 +22,7 @@
 <%#= help_icon("Please note that fields marked with an asterisk are compulsory.") %>
 
     <%# form_for :user, :url=>users_url do |f| -%>
-	<div style="width:60%; margin: 1em;">
+	<div style="width:50%; margin: 1em; float: left;">
 	<% form_tag(:controller=>'users', :action=>'create') do -%>
 	
       <table style="width: 100%;">
@@ -98,5 +98,6 @@
         <%= submit_tag 'Register' %>
       </p>
     <% end -%>
-  </div>
+<div style="clear:both;">
+</div>
 <!-- </center> -->
