@@ -9,6 +9,8 @@ div.faux_table_container {
     text-align:left;
     margin:auto;
     float:left;
+	/* stop the vertical scroll from appearing */
+	min-height: 150px;
 }
 div.faux_table_header_container {
     border:1px solid #996633;
