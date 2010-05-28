@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   
-  layout "logged_out", :except=>[:edit]
+  layout "main", :except=>[:edit]
     
   before_filter :is_current_user_auth, :only=>[:edit, :update]  
   
