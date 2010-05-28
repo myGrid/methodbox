@@ -10,12 +10,12 @@ class MailerTest < ActionMailer::TestCase
   
   test "signup" do
     @expected.subject = 'MethodBox account activation'
-    @expected.to = "Aaron Spiggle <aaron@email.com>"
+    @expected.to = "Not_Yet Activated <unactivated@example.com>"
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('signup')
     
-    check_email @expected, Mailer.create_signup(users(:aaron),"localhost")
+    check_email @expected, Mailer.create_signup(users(:unactivated),"localhost")
   end
 
   #May 24, 2010 Pictures no longer in data_files
