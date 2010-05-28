@@ -55,12 +55,31 @@ class UsersController < ApplicationController
 
   def activate
     self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
-    if logged_in? && !current_user.active?
-      current_user.activate
-      Mailer.deliver_welcome current_user, base_host
-      flash[:notice] = "You have succesfully signed up"
-      redirect_to current_user.person
-    else
+    if self.current_user
+      if self.current_user.person
+        self.current_user.activate
+        if logged_in? 
+          puts current_user
+          puts current_user.email
+          puts self.current_user.person
+          Mailer.deliver_welcome self.current_user, base_host
+          logger.info("New user activated: " + current_user.person_id.to_s)
+          flash[:notice] = "You have succesfully signed up"
+          redirect_to self.current_user.person
+        else
+          #logger_in should have set flash[:error]
+          logger.info("Login Failed for "+ self.current_user.person_id.to_s)
+          flash[:error] = "login fialed"
+          redirect_back_or_default('/')
+        end
+      else  
+        logger.info("No person record found for user "+current_user.person_id.to_s)
+        flash[:error] = "Sorry account is corrupt. Please contact an admin."
+        redirect_back_or_default('/')
+      end        
+    else #if self.current_user
+      logger.info("Activation code not found: "+params[:activation_code].to_s)
+      flash[:error] = "Sorry account already activated or incorrect activation code. Please contact an admin."
       redirect_back_or_default('/')
     end
   end
