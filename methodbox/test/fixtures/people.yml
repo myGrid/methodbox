@@ -69,8 +69,10 @@ pal:
 # ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
 
 person_for_unactivated:
-  first_name: "Not yet"
-  last_name: "activated"
+  first_name: "Not_Yet"
+  last_name: "Activated"
+  email: unactivated@example.com
+
 
 person_for_owner_of_my_first_sop:
   first_name: "Owner Of"

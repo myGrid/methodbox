@@ -16,7 +16,7 @@ aaron:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>  
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   person_id: 2
   is_admin: false
   can_edit_projects: true
@@ -27,7 +27,7 @@ fred:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a 
+  activated_at: <%= 5.days.ago.to_s :db %> 
   person: fred
   is_admin: false
   can_edit_projects: true
@@ -39,7 +39,7 @@ cant_edit:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   person_id: 11
   is_admin: false
   can_edit_projects: false
@@ -51,24 +51,11 @@ can_edit:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   person_id: 12
   is_admin: false
   can_edit_projects: true
   can_edit_institutions: true
-
-#a user that is not activated and has no profile associated
-part_registered:
-  id: 6
-  email: part_registered@example.com
-  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
-  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
-  created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
-  is_admin: false
-  can_edit_projects: false
-  can_edit_institutions: false
-
 
 # ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
 
@@ -83,13 +70,23 @@ unactivated:
   can_edit_projects: false
   can_edit_institutions: false
 
+unactivated_missing_person:
+  email: unactivatedMissingPerson@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
+  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9b
+  is_admin: false
+  can_edit_projects: false
+  can_edit_institutions: false
+
 owner_of_my_first_sop:
   person: person_for_owner_of_my_first_sop
   email: asset_owner@example.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -99,7 +96,7 @@ person_missing:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -110,7 +107,7 @@ owner_of_fully_public_policy:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -122,7 +119,7 @@ owner_of_download_for_all_registered_users_policy:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -134,7 +131,7 @@ owner_of_editing_for_all_sysmo_users_policy:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -146,7 +143,7 @@ owner_of_custom_permissions_only_policy:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -158,7 +155,7 @@ owner_of_complex_permissions_policy:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -170,7 +167,7 @@ owner_of_a_sop_with_complex_permissions:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -182,7 +179,7 @@ registered_user_with_no_projects:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -194,7 +191,7 @@ test_user_only_in_whitelist:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -206,7 +203,7 @@ test_user_only_in_blacklist:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -218,7 +215,7 @@ sysmo_user_in_blacklist:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -230,7 +227,7 @@ sysmo_user_both_in_blacklist_and_whitelist:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -242,7 +239,7 @@ random_registered_user_who_wants_to_access_different_things:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9a
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -253,7 +250,7 @@ model_owner:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: nil
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
@@ -264,7 +261,7 @@ datafile_owner:
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
-  activation_code: nil
+  activated_at: <%= 5.days.ago.to_s :db %> 
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
