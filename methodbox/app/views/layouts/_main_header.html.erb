@@ -4,8 +4,10 @@
 	<% end -%>
 <div id="logged-in-hd" style="margin-top: 2px; width:100%;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; height: 5.5em; background-color: #ACCBE0;">
 	<div style="float: left;margin-left: 1em; padding-top: 2px;">
+
 		<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>75, :style=>"margin-right: 3em;"),root_path -%>
 	</div>
+
 	<div style="float: right;margin-right: 1em; padding-top: 4px;">
 		<div>
 			<div style="float:right;">
@@ -13,35 +15,38 @@
 					<!-- <li style="list-style: none;"> -->
 					<%#= link_to current_user.person.name + "&nbsp;", person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
 					<!-- </li> -->
-					<li style="list-style: none;">
+					<li style="list-style: none; line-height: 1;">
 						<%= icon('cart', cart_path, "View Cart", nil, "My Variable Cart") -%>
 					<%#= link_to "My Variable Cart&nbsp;", cart_path -%>
 					</li>
-					<li style="list-style:none;">
+					<li style="list-style:none; line-height: 1;">
 						<%= icon "message", messages_path, nil, nil, "&nbsp;My Messages" %>
 					<%#= link_to "My Messages", messages_path -%>
 					</li>
-					<li style="list-style: none;">
+					<li style="list-style: none; line-height: 1;">
 						<%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %>
 					<%#= link_to "Logout&nbsp;", logout_url -%>
 					</li>
 				</ul>
 			</div>
-
+<div id="avatar-pic" style="float:left;">
 			<%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
 			<br/>
 			<%= link_to current_user.person.name, person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
+			</div>
 		</div>
 	</div>
-	<div id="search-bar-hd" style="text-align: center; padding-top: 4px;margin-top:1.5em;">
-		<%= render :partial=>"search/search_bar" %>
-	</div>
+<div id="search-bar-hd" style="text-align: center; padding-top: 4px;margin-top:1.5em;">
+	<%= render :partial=>"search/search_bar" %>
+</div>
 </div>
 <% else -%>
-<div id="small-hd" style="float:right;width:20%;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0; background-color: #ACCBE0; height: 75px;">
+<div id="small-hd" style="float:right;width:170px;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0; background-color: #ACCBE0; height: 75px;">
 	<%= render :partial=>"layouts/login_header" %>
 </div>
-<div id="big-hd" style="width:74%;margin-top:1em;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0;  background-color: #ACCBE0; height: 75px;">
+<div id="big-hd" style="position: absolute; width:730px;margin-top:1em;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0;  background-color: #ACCBE0; height: 75px;">
 	<%= render :partial=>"layouts/header" %>
 </div>
 <% end -%>
+<div style="clear:both;">
+</div>
