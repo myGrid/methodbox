@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 
   def create    
     self.current_user = User.authenticate(params[:login], params[:password])
-    if logged_in?
+    if authorized?
       if params[:remember_me] == "1"
         current_user.remember_me unless current_user.remember_token?
         cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
@@ -25,7 +25,9 @@ class SessionsController < ApplicationController
           redirect_back_or_default('/')
         
       elsif current_user.person.nil?
-        redirect_to(select_people_path)
+          logger.info("Attempt to access " + current_user.email + " but no person found.")
+          flash[:error]="Sorry your person record is missing. Please contact an admin"
+          session[:user_id]= nil
       else
         respond_to do |format|
 #          flash[:notice] = "Logged in successfully"
