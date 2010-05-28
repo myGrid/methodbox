@@ -4,7 +4,7 @@
 <% form_tag :url => { :action => "add_to_cart"} do -%>
   <div class="show_basic" style="padding-right: 2em;">
 	<% if !logged_in? -%>
-	    <h2>Welcome, guest. Browse the table, look at the variable metadata.  If you want to download any variables then you need to <%= link_to "register", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open')};return false" -%>.<br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
+	    <h2>Welcome, guest. Browse the table, look at the variable metadata.  If you want to download any variables then you need to <%= link_to "register", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open'); return false;} else return true;" -%>.<br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
 	<% else -%>
     <h2>Browse the table, select some variables, look at the metadata and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
 <% end -%>
