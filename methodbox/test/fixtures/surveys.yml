@@ -1,0 +1,169 @@
+hse1991-1992:
+    id: 1
+    title: HSE1991-1992
+    surveytype: HSE
+    description: Cardio-vascular disease and associated risk factors
+    year: 1991-1992
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3238
+    headline_report: 
+    original_filename: HSE1991-1992.tab
+    
+hse1993:
+    id: 2
+    title: HSE1993
+    surveytype: HSE
+    description: Cardio-vascular disease and associated risk factors
+    year: 1993
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3316
+    headline_report: 
+    original_filename: HSE1993.tab
+    
+hse1994:
+    id: 3
+    title: HSE1994
+    surveytype: HSE
+    description: Cardio-vascular disease and associated risk factors
+    year: 1994
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3640
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4001552
+    original_filename: HSE1994.tab
+    
+hse1995:
+    id: 4
+    title: HSE1995
+    surveytype: HSE
+    description: Asthma, accidents and disability
+    year: 1995
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3796
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015202
+    original_filename: HSE1995.tab
+    
+hse1996:
+    id: 5
+    title: HSE1996
+    surveytype: HSE
+    description: Respiratory and other atopic conditions (asthma and asthma-related symptoms, hay fever and eczema), lung function, non-fatal accidents and health state measures.
+    year: 1996
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3886
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4001554
+    original_filename: HSE1996.tab
+   
+hse1997:
+    id: 6
+    title: HSE1997
+    surveytype: HSE
+    description: Health of young people aged 2-24 years
+    year: 1997
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=3979
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015503
+    original_filename: HSE1997.tab
+
+hse1998:
+    id: 7
+    title: HSE1998
+    surveytype: HSE
+    description: Cardio-vsacular disease and associated risk factors
+    year: 1998
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4150
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/Publications/PublicationsStatistics/DH_4009101
+    original_filename: HSE1998.tab
+    
+hse1999:
+    id: 8
+    title: HSE1999
+    surveytype: HSE
+    description: Health of Ethnic Minorities
+    year: 1999
+    UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4365
+    headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015530
+    original_filename: HSE1999.tab
+
+hse2000:
+  id: 9
+  title: HSE2000
+  surveytype: HSE
+  description: Health of Older People & Social Exclusion - includes a sample of care home residents.
+  year: 2000
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4487
+  headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4015537
+  original_filename: HSE2000.tab
+
+hse2001:
+  id: 10
+  title: HSE2001
+  surveytype: HSE
+  description: Respiratory disease and atopic conditions, disability and non-fatal accidents
+  year: 2001
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4628
+  headline_report: http://www.archive2.official-documents.co.uk/document/deps/doh/survey01/hse01.htm
+  original_filename: HSE2001.tab
+
+hse2002:
+  id: 11
+  title: HSE2002
+  surveytype: HSE
+  description: children, young people and maternal health, and included a boost sample of young people aged 0 to 24 years and mothers of infants aged under one year
+  year: 2002
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=4912
+  headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/PublishedSurvey/HealthSurveyForEngland/Healthsurveyresults/DH_4001558
+  original_filename: HSE2002.tab
+
+hse2003:
+  id: 12
+  title: HSE2003
+  surveytype: HSE
+  description: Cardio-vascular disease and risk factors
+  year: 2003
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=5098
+  headline_report: http://www.dh.gov.uk/en/Publicationsandstatistics/Publications/PublicationsStatistics/DH_4098712
+  original_filename: HSE2003.tab
+
+hse2004:
+  id: 13
+  title: HSE2004
+  surveytype: HSE
+  description: Health of Ethnic Minorities
+  year: 2004
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=5439
+  headline_report: http://www.ic.nhs.uk/statistics-and-data-collections/health-and-lifestyles-related-surveys/health-survey-for-england/health-survey-for-england-2004-health-of-ethnic-minorities-headline-tables
+  original_filename: HSE2004.tab
+
+hse2005:
+  id: 14
+  title: HSE2005
+  surveytype: HSE
+  description: Health of Older People - includes a boost sample of people aged 65 and over resident in private households.
+  year: 2005
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=5675
+  headline_report: http://www.ic.nhs.uk/statistics-and-data-collections/health-and-lifestyles-related-surveys/health-survey-for-england/health-survey-for-england-2005:-health-of-older-people-%5Bns%5D
+  original_filename: HSE2005.tab
+
+hse2006:
+  id: 15
+  title: HSE2006
+  surveytype: HSE
+  description: Cardio-vascular disease and risk factors adults, obesity and risk factors children
+  year: 2006
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=5809
+  headline_report: http://www.ic.nhs.uk/statistics-and-data-collections/health-and-lifestyles-related-surveys/health-survey-for-england/health-survey-for-england-2006:-cvd-and-risk-factors-adults-obesity-and-risk-factors-children
+  original_filename: HSE2006.tab
+
+hse2007:
+  id: 16
+  title: HSE2007
+  surveytype: HSE
+  description: Healthy lifestyles, knowledge, attitudes and behaviours
+  year: 2007
+  UKDA_summary: http://www.esds.ac.uk/findingData/snDescription.asp?sn=6112
+  headline_report: http://www.ic.nhs.uk/statistics-and-data-collections/health-and-lifestyles-related-surveys/health-survey-for-england/health-survey-for-england-2007:-healthly-lifestyles:-knowledge-attitudes-and-behaviour-%5Bns%5D
+  original_filename: HSE2007.tab
+  
+hse2008:
+    id: 17
+    title: HSE2008
+    surveytype: HSE
+    description: Physical activity and fitness and obesity in children
+    year: 2008
+    UKDA_summary: 
+    headline_report: 
+    original_filename: HSE2008.tab
