@@ -7,6 +7,7 @@ height but it is better than nothing*/
 	left:500px;
 }
 #search-bar-hd {
-	position: relative;
-	top: -70px;
+/*	position: relative;*/
+	display: inline;
+	top: -50px;
 }
