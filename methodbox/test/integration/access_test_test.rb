@@ -20,7 +20,8 @@ class AccessTestTest < ActionController::IntegrationTest
       anyone_can_get "scripts/help"
       anyone_can_get "scripts/help2" 
 
-      login_can_get "surveys"
+      anyone_can_get "surveys"
+      anyone_can_get "surveys/help"
       #login_can_get "surveys/1-hse1991-1992" #need to add data
       
    end
