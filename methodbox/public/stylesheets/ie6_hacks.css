@@ -1,3 +1,7 @@
+/* IE 6 does not cope with the floats in the header very well so try and fix it
+ using absolute positioning for the avatar picture and relative to force the
+search bar to appear in the header.  Still not quite right as it now expands the header
+height but it is better than nothing*/
 #avatar-pic {
 	position: relative;
 	left:500px;
