@@ -34,7 +34,7 @@
 					</li>
 				</ul>
 			</div>
-<div id="avatar-pic" style="float:left;">
+<div id="avatar-pic" style="float:left;text-align:center;">
 			<%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
 			<br/>
 			<%= link_to current_user.person.name, person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
