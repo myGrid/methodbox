@@ -364,6 +364,8 @@ ul.tabbernav
 	font-size: 116%;
 	line-height: 24px;
 	padding-bottom: 1px;
+	/* IE needs this or it might centre the tabs */
+	text-align: left;
 }
 
 ul.tabbernav li
