@@ -7,7 +7,7 @@ class AccessTestTest < ActionController::IntegrationTest
       admin_can_get "admin"
       #more
    
-      login_can_get "cart" You have a nil object when you didn't expect it
+      login_can_get "cart" #You have a nil object when you didn't expect it
       #more
 
       login_can_get "csvarchives"
@@ -32,6 +32,8 @@ class AccessTestTest < ActionController::IntegrationTest
       #more
       
       login_can_get "scripts"
+      login_can_get "scripts/new"
+
       #more
       anyone_can_get "scripts/help"
       anyone_can_get "scripts/help2" 

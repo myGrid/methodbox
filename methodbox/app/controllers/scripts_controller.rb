@@ -2,13 +2,9 @@ class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
   before_filter :login_required, :except => [ :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
-  before_filter :find_scripts, :only => [ :new, :edit]
-  before_filter :find_archives, :find_surveys, :find_groups, :only => [ :new, :edit ]
+  before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
   before_filter :find_cart, :except => [ :help, :help2]
   before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
-
-  before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
-
 
   # GET /script
   def index
@@ -115,9 +111,6 @@ class ScriptsController < ApplicationController
   # GET /scripts/new
   #No auth check for loading new scripts, login is enough
   def new
-    @selected_scripts=[]
-    @selected_archives=[]
-    @selected_surveys=[]
     
     #    @archives = Csvarchive.find(:all)
     #    @archives=Authorization.authorize_collection("show",@archives,current_user)
@@ -134,7 +127,6 @@ class ScriptsController < ApplicationController
   #When editing display all the links which have been made from this Script, only include those for which it is the 'subject'
   # GET /scripts/1/edit
   def edit
-    @selected_groups = []
     if @script.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY 
       @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY 
       @script.asset.policy.permissions.each do |permission|
@@ -145,9 +137,6 @@ class ScriptsController < ApplicationController
       end
     end
     
-    @selected_archives = []
-    @selected_surveys = []
-    @selected_scripts = []
     #find links where this Script is the source
     links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
     
@@ -170,7 +159,7 @@ class ScriptsController < ApplicationController
       respond_to do |format|
         flash.now[:error] = "Please select a file to upload."
         format.html {
-          set_parameters_for_sharing_form()
+          set_paramemeters_for_new_edit()
           render :action => "new"
         }
       end
@@ -178,7 +167,7 @@ class ScriptsController < ApplicationController
       respond_to do |format|
         flash.now[:error] = "The file that you have selected is empty. Please check your selection and try again!"
         format.html {
-          set_parameters_for_sharing_form()
+          set_paramemeters_for_new_edit()
           render :action => "new"
         }
       end
@@ -274,7 +263,7 @@ class ScriptsController < ApplicationController
           end
         else
           format.html {
-            set_parameters_for_sharing_form()
+            set_paramemeters_for_new_edit()
             render :action => "new"
           }
         end
@@ -381,7 +370,7 @@ class ScriptsController < ApplicationController
         end
       else
         format.html {
-          set_parameters_for_sharing_form()
+          set_paramemeters_for_new_edit()
           render :action => "edit"
         }
       end
@@ -417,6 +406,8 @@ class ScriptsController < ApplicationController
   end
   
   def find_scripts
+    @selected_scripts=[] unless @selected_scripts
+
     found = Script.find(:all)
     #    found = Script.find(:all,
     #      :order => "title")
@@ -432,15 +423,20 @@ class ScriptsController < ApplicationController
   end
   
   def find_groups
+    @selected_groups = [] unless @selected_groups
     @groups = WorkGroup.find(:all)
   end
 
   def find_archives
+    @selected_archives=[] unless @selected_archives
+
     @archives = Csvarchive.find(:all)
     @archives=Authorization.authorize_collection("show",@archives,current_user)
   end
 
   def find_surveys
+    @selected_surveys=[] unless @selected_surveys
+
     @surveys = Survey.find(:all)
     #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
@@ -470,6 +466,7 @@ class ScriptsController < ApplicationController
 
 
   def set_parameters_for_sharing_form
+  
     policy = nil
     policy_type = ""
 
@@ -519,5 +516,14 @@ class ScriptsController < ApplicationController
     @all_people_as_json = Person.get_all_as_json
 
   end
+
+  def set_paramemeters_for_new_edit    
+    find_scripts
+    find_archives
+    find_surveys
+    find_groups
+ 
+    set_parameters_for_sharing_form
+  end  
 
 end
