@@ -1,56 +1,50 @@
 class SearchController < ApplicationController
-  
-  before_filter :login_required
-  
+    
+  before_filter :login_required, :except => [ :index]
+  before_filter :local_login_required, :only => [ :index]
+
   def index
     
     @search_query = params[:search_query]
     @search_query||=""
+    
     @search_type = params[:search_type]
     type=@search_type.downcase unless @search_type.nil?
 
     downcase_query = @search_query.downcase
+
+    if (downcase_query.nil? or downcase_query.strip.empty?)  
+      flash.now[:notice]="Sorry your query appeared blank. Please try again"
+      return
+    end
     
     @results=[]
     case(type)
     when("people")
-      @results = Person.multi_solr_search(downcase_query, :limit=>100, :models=>[Person]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      find_people
       @results = select_authorised @results
     when("surveys")
-      @results = Survey.multi_solr_search(downcase_query, :limit=>100, :models=>[Survey]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      find_surveys
       #    all surveys can be searched for the moment
     when("methods")
-      @results = Script.multi_solr_search(downcase_query, :limit=>100, :models=>[Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      find_methods
       @results = select_authorised @results
     when("data extracts")
-      @results = Csvarchive.multi_solr_search(downcase_query, :limit=>100, :models=>[Csvarchive]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      @results = select_authorised @results
-      #    when ("sops")
-      #      @results = Sop.multi_solr_search(downcase_query, :limit=>100, :models=>[Sop]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      #    when ("studies")
-      #      @results = Study.multi_solr_search(downcase_query, :limit=>100, :models=>[Study]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      #    when ("models")
-      #      @results = Model.multi_solr_search(downcase_query, :limit=>100, :models=>[Model]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      #    when ("data files")
-      #      @results = DataFile.multi_solr_search(downcase_query, :limit=>100, :models=>[DataFile]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      #   when ("investigations")
-      #      @results = Investigation.multi_solr_search(downcase_query, :limit=>100, :models=>[Investigation]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      #   when ("assays")
-      #      @results = Assay.multi_solr_search(downcase_query, :limit=>100, :models=>[Assay]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-    else
+       find_csvarchive  
+       @results = select_authorised @results
+    when("all")
       #slight fudge to allow all HSE datasets to come up since any users are already registered
-      @results = Person.multi_solr_search(downcase_query, :limit=>100, :models=>[Person]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      @results = @results + Script.multi_solr_search(downcase_query, :limit=>100, :models=>[Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-      @results = @results + Csvarchive.multi_solr_search(downcase_query, :limit=>100, :models=>[Csvarchive]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      find_people
+      find_methods
+      find_csvarchive  
       @results = select_authorised @results
-      @results = @results + Survey.multi_solr_search(downcase_query, :limit=>100, :models=>[Survey]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
-
-      #      @results = Person.multi_solr_search(downcase_query, :limit=>100, :models=>[Person, Survey, Script]).results if (SOLR_ENABLED and !downcase_query.nil? and !downcase_query.strip.empty?)
+      find_surveys
+    else
+      logger.info("Unexpected search_type "+@search_query)
+      flash[:error]="Unexpected search_type" 
+      redirect_to root_url
     end
 
-    #    if (type != "surveys")
-    #      @results = select_authorised @results
-    #    end
     puts "SEARCH RESULTS: " + @results.to_s
     if @results.empty?
       puts "flashing no matches"
@@ -61,13 +55,56 @@ class SearchController < ApplicationController
     
   end
 
-
   private
   
+  #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
+  def find_surveys
+    if (SOLR_ENABLED)  
+      @results = @results + Survey.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Survey]).results
+    else
+      @results = @results + Survey.find(:all, :conditions => ["desacription like ?", @search_query.downcase])
+    end
+  end  
+
+  def find_people
+    if (SOLR_ENABLED)  
+      @results = @results + Person.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Person]).results 
+    else
+      @results = @results + Person.find(:all, :conditions => ["last_name like ?", @search_query.downcase])
+    end
+  end  
+
+  def find_methods
+    if (SOLR_ENABLED)  
+      @results = @results + Script.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Script]).results
+    #else
+      #todo
+    end
+  end  
+
+  def find_csvarchive
+    if (SOLR_ENABLED)  
+      @results = @results + Csvarchive.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Csvarchive]).results
+    #else
+      #todo
+    end
+  end  
+ 
 
   #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
   def select_authorised collection
+    puts current_user
     collection.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
+  end
+  
+  def local_login_required
+    @search_type = params[:search_type]
+    type=@search_type.downcase unless @search_type.nil?
+    if (type == "surveys")  
+      return true
+    else
+      return login_required
+    end  
   end
   
 end

@@ -73,6 +73,10 @@ person_for_unactivated:
   last_name: "Activated"
   email: unactivated@example.com
 
+person_for_with_age_in_name:
+  first_name: "Alex"
+  last_name: "Age"
+  email: alex@example.com
 
 person_for_owner_of_my_first_sop:
   first_name: "Owner Of"

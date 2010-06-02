@@ -80,6 +80,17 @@ unactivated_missing_person:
   can_edit_projects: false
   can_edit_institutions: false
 
+with_age_in_name:
+  person: person_for_with_age_in_name
+  email: alex@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
+  activation_code: 8f24789ae988411ccf33ab0c30fe9106fab32e9b
+  is_admin: false
+  can_edit_projects: false
+  can_edit_institutions: false
+
 owner_of_my_first_sop:
   person: person_for_owner_of_my_first_sop
   email: asset_owner@example.com
