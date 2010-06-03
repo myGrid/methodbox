@@ -12,7 +12,7 @@ class ScriptsController < ApplicationController
     #   :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
     # #    found = Script.find(:all,
     # #      :order => "title")
-    # 
+    #
     # # this is only to make sure that actual binary data isn't sent if download is not
     # # allowed - this is to increase security & speed of page rendering;
     # # further authorization will be done for each item when collection is rendered
@@ -70,9 +70,9 @@ class ScriptsController < ApplicationController
         source_surveys.push(link.object)
       end
     end
-      
+
     target_links = Link.find(:all, :conditions => { :object_type => "Script", :object_id => @script.id, :predicate => "link" })
-                                                    
+
     target_links.each do |link|
       case link.subject.class.name
       when "Csvarchive"
@@ -83,7 +83,7 @@ class ScriptsController < ApplicationController
         target_surveys.push(link.subject)
       end
     end
-      
+
     @archives = source_archives | target_archives
     @scripts = source_scripts | target_scripts
     @surveys = source_surveys | target_surveys
@@ -111,7 +111,7 @@ class ScriptsController < ApplicationController
   # GET /scripts/new
   #No auth check for loading new scripts, login is enough
   def new
-    
+
     #    @archives = Csvarchive.find(:all)
     #    @archives=Authorization.authorize_collection("show",@archives,current_user)
     respond_to do |format|
@@ -127,8 +127,8 @@ class ScriptsController < ApplicationController
   #When editing display all the links which have been made from this Script, only include those for which it is the 'subject'
   # GET /scripts/1/edit
   def edit
-    if @script.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY 
-      @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY 
+    if @script.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY
+      @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY
       @script.asset.policy.permissions.each do |permission|
         if permission.contributor_type == "WorkGroup"
           puts "Shared with group " + permission.contributor_id.to_s
@@ -136,10 +136,10 @@ class ScriptsController < ApplicationController
         end
       end
     end
-    
+
     #find links where this Script is the source
     links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
-    
+
     links.each do |link|
       case link.object.class.name
       when "Csvarchive"
@@ -149,28 +149,18 @@ class ScriptsController < ApplicationController
       when "Survey"
         @selected_surveys.push(link.object.id)
       end
-    end        
-                                                  
+    end
+
   end
 
   # POST /scripts
   def create
-    if (params[:script][:data]).blank?
-      respond_to do |format|
-        flash.now[:error] = "Please select a file to upload."
-        format.html {
-          set_paramemeters_for_new_edit()
-          render :action => "new"
-        }
-      end
+    if !params[:script]
+      create_failed("Please use form to create a script.")
+    elsif (params[:script][:data]).blank?
+      create_failed("Please select a file to upload.")
     elsif (params[:script][:data]).size == 0
-      respond_to do |format|
-        flash.now[:error] = "The file that you have selected is empty. Please check your selection and try again!"
-        format.html {
-          set_paramemeters_for_new_edit()
-          render :action => "new"
-        }
-      end
+      create_failed("The file that you have selected is empty. Please check your selection and try again!")
     else
 
       # create new Script and content blob - non-empty file was selected
@@ -231,7 +221,7 @@ class ScriptsController < ApplicationController
                  link.save
               end
           end
-          
+
            if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
              puts "custom sharing here"
              values = "{"
@@ -297,10 +287,10 @@ class ScriptsController < ApplicationController
       params[:script][:contributor_type] = current_user.class.name
       params[:script][:contributor_id] = current_user.id
       params[:script][:method_type] = params[:method_type]
-      
+
       #remove all the existing links where this Script is the source
-      links = Link.find(:all, 
-                                   :conditions => { :subject_type => "Script", 
+      links = Link.find(:all,
+                                   :conditions => { :subject_type => "Script",
                                                     :subject_id => @script.id,
                                                     :predicate => "link" })
 
@@ -336,7 +326,7 @@ class ScriptsController < ApplicationController
              link.save
           end
       end
-      
+
       if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
         puts "custom sharing here"
         values = "{"
@@ -352,7 +342,7 @@ class ScriptsController < ApplicationController
            puts params[:sharing][:permissions][:values]
            puts params[:sharing][:permissions][:contributor_types]
        end
-       
+
     respond_to do |format|
       if @script.update_attributes(params[:script])
         # the Script was updated successfully, now need to apply updated policy / permissions settings to it
@@ -404,7 +394,7 @@ class ScriptsController < ApplicationController
 
     @scripts = found
   end
-  
+
   def find_scripts
     @selected_scripts=[] unless @selected_scripts
 
@@ -421,7 +411,7 @@ class ScriptsController < ApplicationController
 
     @scripts = found
   end
-  
+
   def find_groups
     @selected_groups = [] unless @selected_groups
     @groups = WorkGroup.find(:all)
@@ -466,7 +456,7 @@ class ScriptsController < ApplicationController
 
 
   def set_parameters_for_sharing_form
-  
+
     policy = nil
     policy_type = ""
 
@@ -517,13 +507,23 @@ class ScriptsController < ApplicationController
 
   end
 
-  def set_paramemeters_for_new_edit    
+  def set_paramemeters_for_new_edit
     find_scripts
     find_archives
     find_surveys
     find_groups
- 
+
     set_parameters_for_sharing_form
-  end  
+  end
+
+  def create_failed(message)
+    respond_to do |format|
+      flash.now[:error] = "Please select a file to upload."
+      format.html {
+        set_paramemeters_for_new_edit()
+        render :action => "new"
+      }
+    end
+  end
 
 end

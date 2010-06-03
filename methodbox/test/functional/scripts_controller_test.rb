@@ -4,6 +4,13 @@ class ScriptsControllerTest < ActionController::TestCase
 
   #No test for flash[:error] as popped up rather than set
 
+  def test_create_no_script
+    login_as :aaron
+    assert_no_difference 'Script.count' do
+      post :create, :title => 'test script', :data => ''
+    end
+  end
+
   def test_empty_file
     login_as :aaron
     assert_no_difference 'Script.count' do
