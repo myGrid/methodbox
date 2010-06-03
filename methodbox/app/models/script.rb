@@ -3,13 +3,13 @@ require 'acts_as_resource'
 class Script < ActiveRecord::Base
 
   acts_as_resource
-  
+
   #based on http://blog.hasmanythrough.com/2006/4/21/self-referential-through
   has_many :scripts_as_source, :foreign_key => 'source_id', :class_name => 'ScriptToScriptLink'
   has_many :scripts_as_target,   :foreign_key => 'target_id',   :class_name => 'ScriptToScriptLink'
   has_many :sources,  :through => :scripts_as_target
   has_many :targets,    :through => :scripts_as_source
-  
+
   has_many :script_lists
 
   has_many :csvarchives, :through => :script_lists
@@ -20,16 +20,18 @@ class Script < ActiveRecord::Base
 
   acts_as_solr(:fields=>[:description,:title]) if SOLR_ENABLED
 
-  validates_presence_of :title
+  validates_presence_of :title, :message => "error - you must provide a title."
 
   # allow same titles, but only if these belong to different users
   validates_uniqueness_of :title, :scope => [ :contributor_id, :contributor_type ], :message => "error - you already have a Script with such title."
+
+  validates_presence_of :original_filename, :message => "error - original_filename missing."
 
   belongs_to :content_blob,
              :dependent => :destroy
 
   belongs_to :person, :dependent => :destroy
-  
+
   def to_param
     "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
   end
