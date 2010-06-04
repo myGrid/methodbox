@@ -114,7 +114,18 @@
 
     </div>
   </div>
-  <% unless persons_asset_hash.empty? -%>
+<% if mine?(@person) -%>
+<div id="person_tab" class="tabbertab">
+    <h3>
+        My Searches
+    </h3>
+<div>
+	<%= render :partial => "search/previous_searches" -%>
+</div>
+</div>
+<% end %>
+ 
+ <% unless persons_asset_hash.empty? -%>
     <% persons_asset_hash.each_key do |resource_type| -%>
       <% visible_resource_type = resource_type.titleize.pluralize -%>
       <% visible_resource_type = "Data Extracts" if visible_resource_type=="Csvarchives" %>
