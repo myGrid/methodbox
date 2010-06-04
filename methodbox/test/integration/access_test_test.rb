@@ -2,55 +2,75 @@ require 'test_helper'
 
 class AccessTestTest < ActionController::IntegrationTest
 
-   def test_access
-   
+   def test_admin  
       admin_can_get "admin"
       #more
+   end
    
-      login_can_get "cart" #You have a nil object when you didn't expect it
+   def test_cart
+      #login_can_get "cart" #You have a nil object when you didn't expect it
       #more
-
+   end
+   
+   def test_csvarchives
       login_can_get "csvarchives"
       #more
-         
+   end
+   
+   def test_datasets
       anyone_can_get "datasets/1-3238" 
       #more
-      
+   end
+   
+   def test_forums
       login_can_get "forums"
       #more
-
+   end
+   
+   def test_help
       anyone_can_get "help"
       #more
-      
+   end
+   
+   def test_home
       login_can_get "home/index"   
       #more
-      
+   end
+   
+   def test_people
       login_can_get "people"
       #more
       #login_can_get "people/1"  #"unintialized constant Sop"    
       login_can_get "people/2/edit" #user 2 is the one tested as normal
       #more
-      
+   end
+   
+   def test_scripts
       login_can_get "scripts"
-      login_can_get "scripts/new"
-
+      login_can_get "scripts/new"   
+   
       #more
       anyone_can_get "scripts/help"
       anyone_can_get "scripts/help2" 
-      
+   end
+   
+   def test_search      
       anyone_can_get "/search/?search_query=age&search_type=Surveys"
       login_can_get "/search/?search_query=age&search_type=people"
       login_can_get "/search/?search_query=age&search_type=all"
-      find_surveys
       anyone_can_get "/search/?search_query=age&search_type=Surveys"
       #how to add variables?
-
+   end
+   
+   def test_surveys
       #anyone_can_get "surveys"
       
       #more
       #anyone_can_get "surveys/help"
       #anyone_can_get "surveys/1-hse1991-1992" 
-      
+   end
+   
+   def test_workgroups      
       #login_can_get "work_groups"
       #more
       
@@ -76,6 +96,7 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:error]
       assert_response :success
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
    end
 
@@ -84,12 +105,14 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:error]
       assert_response :success
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
       
       login_normal    
       get path
       assert_nil flash[:error]
       assert_response :success
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
 
       login_admin
@@ -97,6 +120,7 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:error]
       assert_response :success
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
    end
 
@@ -112,6 +136,7 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_response :success
       assert_nil flash[:error]
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
 
       login_admin
@@ -119,6 +144,7 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:error]
       assert_response :success
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
    end
 

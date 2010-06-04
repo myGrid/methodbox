@@ -3,7 +3,7 @@ module AuthenticatedSystem
     # Returns true or false if the user is logged in.
     # Preloads @current_user with the user model if they're logged in.
     def logged_in?
-      # flash[:error] = nil
+      flash[:error] = nil if (flash[:error] == "Please log in first" || flash[:error]=="Admin rights required")
       !!current_user
     end
 
