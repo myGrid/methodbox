@@ -7,6 +7,7 @@ class PeopleController < ApplicationController
   before_filter :current_user_dormant,:except=>[:index,:new,:create,:select]
   before_filter :profile_belongs_to_current_or_is_admin, :only=>[:edit, :update,:destroy]
   before_filter :profile_is_not_another_admin_except_me, :only=>[:edit,:update,:destroy]
+  before_filter :find_previous_searches, :only=>[ :show ]
   # before_filter :is_user_admin_auth, :only=>[:destroy]
   before_filter :is_user_admin_or_personless, :only=>[:new]
   before_filter :auth_params,:only=>[:update,:create]
@@ -294,6 +295,15 @@ class PeopleController < ApplicationController
       render :text=>""
     end
     
+  end
+  #find any previous searches if you are looking at your own
+  #profile
+  def find_previous_searches
+    search=[]
+    if logged_in? && current_user.id == Person.find(params[:id]).user.id
+      search = UserSearch.all(:order => "created_at DESC", :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
   end
 
   private
