@@ -29,38 +29,38 @@
           <b>Type:</b>
           <%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
         </p>
-<div>
-	<p>          
-		<b>Link with Data Extracts:</b>
-	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
-      :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
-</p>
-</div>
-	<br/>
-	<div style="clear:both;">
-		</div>
-<div>
-	<p>
-		<b>Link with Surveys:</b>
-	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
-      :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
-</p>
-</div>
-<br/>
-<div style="clear:both;">
-	</div>
-<div>
-	<p>          
-		<b>Link with Scripts:</b>
-	<%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
-      :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
-</p>
-</div>
+        <div>
+          <p>
+            <b>Link with Data Extracts:</b>
+              <%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
+              :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
+          </p>
+        </div>
+        <br/>
+        <div style="clear:both;">
+        </div>
+        <div>
+          <p>
+            <b>Link with Surveys:</b>
+            <%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
+           :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
+          </p>
+        </div>
+        <br/>
+        <div style="clear:both;">
+        </div>
+        <div>
+          <p>
+            <b>Link with Scripts:</b>
+            <%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
+           :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
+          </p>
+        </div>
 
 
-	<br/>
-	<div style="clear:both;">
-		</div>
+        <br/>
+        <div style="clear:both;">
+        </div>
 
         <%= render :partial => "assets/project_selector", :locals => { :resource_type => "Method",   # this is only for presentation, not for any processing
           :project_hash => current_user.generate_own_project_id_name_hash } -%>
@@ -83,10 +83,10 @@
         <p style="text-align: center; margin-top: 1.5em;">
           <%= submit_tag "Upload and Save", :id => "script_submit_btn", :onclick => "javascript: validateScriptFields(true); return(false);" -%> or <%= link_to 'Cancel', scripts_path -%>
         </p>
-      <% end -%>
 
-    </div>
-  </center>
+      </div>
+    </center>
+  <% end -%>
 
 
 </div>
