@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100520084746) do
+ActiveRecord::Schema.define(:version => 20100604104531) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -423,7 +423,7 @@ ActiveRecord::Schema.define(:version => 20100520084746) do
   add_index "topics", ["forum_id"], :name => "index_topics_on_forum_id"
 
   create_table "user_searches", :force => true do |t|
-    t.integer  "person_id"
+    t.integer  "user_id"
     t.string   "terms"
     t.datetime "created_at"
     t.datetime "updated_at"
