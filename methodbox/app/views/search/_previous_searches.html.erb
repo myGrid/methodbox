@@ -1,0 +1,21 @@
+<%= stylesheet_link_tag 'previous_searches_scroll_table' -%>
+<% if !@recent_searches.empty? -%>
+	<div id="tableContainer" class="tableContainer">
+		<table class="scrollTable">
+			<thead class="fixedHeader">
+			<tr><th>Date</th><th>Search terms</th><th>Datasets</th></tr>
+			</thead>
+			<tbody class="scrollContent">
+				<% @recent_searches.each do |recent_search| -%>
+				<tr><td><%= recent_search.created_at -%></td><td style="white-space: normal;"><%= recent_search.terms -%></td><td>
+					<% recent_search.datasets.each do |dataset| %>
+					<%= link_to dataset.name, dataset_url(dataset) -%>
+					<% end -%>
+				</td></tr>
+				<% end -%>
+			</tbody>
+		</table>
+	</div>
+<% else -%>
+	Any searches you have carried out will be displayed here.  You don't have any yet, why not <%= link_to "try one", surveys_url -%>
+<% end %>
