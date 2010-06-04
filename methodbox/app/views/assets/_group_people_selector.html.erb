@@ -20,7 +20,7 @@
 				<%= item.name -%>
 			</td>
 			</tr>
-			<%= javascript_tag "addInstanceOfObject('#{resource_id}','#{item.id.to_s}', '#{item.name}')" -%>
+			<%= javascript_tag "addInstanceOfObject('#{resource_id}','#{item.id.to_s}', '#{escape_javascript(item.name)}')" -%>
 			
 		<% end -%>
 			<div id="groups_table_source_bottom"> </div>
