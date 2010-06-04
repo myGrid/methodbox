@@ -53,7 +53,7 @@
 </table>
 </div>
 </div>
-<% end -%>
+
 <div id="group_buttons">	
 	<ul style="margin-top:30px;margin-bottom:30px;">
 	<li>
@@ -76,4 +76,7 @@
 	</li>
 	</ul>
 </div>
+<% else %>
+There are no groups to share with.  You can <%= link_to "create one", new_work_group_path -%> and try again.
+<% end -%>
 
