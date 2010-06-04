@@ -45,7 +45,7 @@
 			</td>
 			</tr>
 			<% if selected.include?(item.id) -%>
-				<%= javascript_tag "alreadySelected('#{resource_id}','#{item.id.to_s}', '#{item.title}')" -%>
+				<%= javascript_tag "alreadySelected('#{resource_id}','#{item.id.to_s}', '#{escape_javascript(item.title)}')" -%>
 			<% end -%>
 		<% end -%>
 		<% end -%>
