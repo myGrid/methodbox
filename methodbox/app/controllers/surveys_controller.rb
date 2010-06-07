@@ -1,6 +1,8 @@
 class SurveysController < ApplicationController
   
   before_filter :login_required, :except => [ :help, :index, :search_variables, :sort_variables, :show]
+  
+  before_filter :find_previous_searches, :only => [ :index]
 
   before_filter :find_cart, :except => [ :help]
 
@@ -609,6 +611,17 @@ class SurveysController < ApplicationController
   end
 
   protected
+  
+  #find any previous searches if you are looking at your own
+  #profile
+  def find_previous_searches
+    search=[]
+    if logged_in?
+      search = UserSearch.all(:order => "created_at DESC", :limit =>10, :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
+  end
+  
 
   def find_surveys
     found = Survey.find(:all,
