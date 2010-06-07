@@ -31,6 +31,7 @@
 			Previous searches:
 		<%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>  
 		</div>
+		<% end -%>
         <!-- jquery grid experiment -->
         <%#= submit_to_remote 'submit', 'JQ Grid', {:url=>{:controller => "variables", :action=> "grid_view"}} -%>
         <% if logged_in? -%>
