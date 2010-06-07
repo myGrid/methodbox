@@ -19,34 +19,6 @@ unactivated_person:
   last_name: "Activated"
   email: unactivated@example.com
 
-three:
-  id: 4
-  first_name: "no_user"
-  last_name: "smith"
-
-no_first_name:
-  id: 6
-  last_name: "lastname"
-
-no_last_name:
-  id: 7        
-  first_name: "firstname"
-
-double_firstname:
-  id: 8        
-  first_name: "Fred David"
-  last_name: "Bloggs"
-
-double_lastname:
-  id: 9        
-  first_name: "Fred"
-  last_name: "Smith Jones"
-
-double_barrelled_lastname:
-  id: 10        
-  first_name: "Fred"
-  last_name: "Smith-Jones"
-
 # ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
 
 admin_person:
@@ -54,15 +26,8 @@ admin_person:
   last_name: "jones"
   email: "quentin@email.com"
 
-
-
 person_for_with_age_in_name:
   first_name: "Alex"
   last_name: "Age"
   email: alex@example.com
 
-person_without_group:
-  first_name: "Lonely"
-
-person_without_user:
-  first_name: "Userless"
