@@ -54,11 +54,11 @@ class UsersControllerTest < ActionController::TestCase
 
   def test_should_activate_user
     assert_nil User.authenticate('unactivated@example.com', 'test')
-    get :activate, :activation_code => users(:unactivated).activation_code
+    get :activate, :activation_code => users(:unactivated_user).activation_code
     assert_nil flash[:error]
     assert_not_nil flash[:notice]
-    assert_redirected_to person_path(people(:person_for_unactivated).id)
-    assert_equal users(:unactivated), User.authenticate('unactivated@example.com', 'test')
+    assert_redirected_to person_path(people(:unactivated_person).id)
+    assert_equal users(:unactivated_user), User.authenticate('unactivated@example.com', 'test')
   end
   
   def test_should_not_activate_user_without_person
@@ -85,16 +85,16 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   def test_can_edit_self
-    login_as :quentin
-    get :edit, :id=>users(:quentin)
+    login_as :normal_user
+    get :edit, :id=>users(:normal_user)
     assert_response :success
     #TODO: is there a better way to test the layout used?
     #assert_select "div#myexp_sidebar" #check its using the right layout
   end
   
   def test_cant_edit_some_else
-    login_as :quentin
-    get :edit, :id=>users(:aaron)
+    login_as :normal_user
+    get :edit, :id=>users(:other_user)
     assert_redirected_to root_url
   end  
 
@@ -109,11 +109,11 @@ class UsersControllerTest < ActionController::TestCase
   #end
 
   def test_update_password
-    login_as :quentin
-    u=users(:quentin)
+    login_as :normal_user
+    u=users(:normal_user)
     post :update, :id=>u.id, :user=>{:id=>u.id,:password=>"mmmmm",:password_confirmation=>"mmmmm"}
     assert_nil flash[:error]
-    assert User.authenticate("quentin@example.com","mmmmm")
+    assert User.authenticate("aaron@example.com","mmmmm")
   end
 
   protected

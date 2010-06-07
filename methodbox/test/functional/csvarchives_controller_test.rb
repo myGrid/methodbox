@@ -3,7 +3,7 @@ require 'test_helper'
 class CsvarchivesControllerTest < ActionController::TestCase
 
   test "visible to logged in" do
-    login_as(:aaron)
+    login_as(:normal_user)
     get :index
     assert_response :success
     assert_nil flash[:error]

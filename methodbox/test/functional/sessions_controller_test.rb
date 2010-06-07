@@ -42,7 +42,7 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   def test_should_logout
-    login_as :quentin
+    login_as :normal_user
     get :destroy
     assert_nil flash[:error]
     assert_nil flash[:notice]
@@ -51,38 +51,38 @@ class SessionsControllerTest < ActionController::TestCase
   end
 
   def test_should_remember_me
-    post :create, :login => 'quentin@example.com', :password => 'test', :remember_me => "1"
+    post :create, :login => 'aaron@example.com', :password => 'test', :remember_me => "1"
     assert_not_nil @response.cookies["auth_token"]
   end
 
   def test_should_not_remember_me
-    post :create, :login => 'quentin@example.com', :password => 'test', :remember_me => "0"
+    post :create, :login => 'aaron@example.com', :password => 'test', :remember_me => "0"
     assert_nil @response.cookies["auth_token"]
   end
 
   def test_should_delete_token_on_logout
-    login_as :quentin
+    login_as :normal_user
     get :destroy
     assert_nil @response.cookies["auth_token"], []
   end
 
   def test_should_login_with_cookie
-    users(:quentin).remember_me
-    @request.cookies["auth_token"] = cookie_for(:quentin)
+    users(:normal_user).remember_me
+    @request.cookies["auth_token"] = cookie_for(:normal_user)
     get :new
     assert @controller.send(:logged_in?)
   end
 
   def test_should_fail_expired_cookie_login
-    users(:quentin).remember_me
-    users(:quentin).update_attribute :remember_token_expires_at, 5.minutes.ago
-    @request.cookies["auth_token"] = cookie_for(:quentin)
+    users(:normal_user).remember_me
+    users(:normal_user).update_attribute :remember_token_expires_at, 5.minutes.ago
+    @request.cookies["auth_token"] = cookie_for(:admin)
     get :new
     assert !@controller.send(:logged_in?)
   end
 
   def test_should_fail_cookie_login
-    users(:quentin).remember_me
+    users(:normal_user).remember_me
     @request.cookies["auth_token"] = auth_token('invalid_auth_token')
     get :new
     assert !@controller.send(:logged_in?)

@@ -8,7 +8,7 @@ class ProjectsControllerTest < ActionController::TestCase
   end
 
   def setup
-    login_as(:quentin)
+    login_as(:admin)
   end
   
   def test_should_get_index

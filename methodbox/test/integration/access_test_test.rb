@@ -40,8 +40,10 @@ class AccessTestTest < ActionController::IntegrationTest
    def test_people
       login_can_get "people"
       #more
-      #login_can_get "people/1"  #"unintialized constant Sop"    
-      login_can_get "people/2/edit" #user 2 is the one tested as normal
+      #login_can_get "people/1" unitialised constant sop
+      login_can_get "people/1/edit" #person 1 is normal_user
+      login_can_get "people/2"      
+      admin_can_get "people/2/edit", "Not the current person"  #person 2 is other_person
       #more
    end
    
@@ -63,21 +65,28 @@ class AccessTestTest < ActionController::IntegrationTest
    end
    
    def test_surveys
-      #anyone_can_get "surveys"
+      anyone_can_get "surveys"
       
       #more
-      #anyone_can_get "surveys/help"
-      #anyone_can_get "surveys/1-hse1991-1992" 
+      anyone_can_get "surveys/help"
+      anyone_can_get "surveys/1-hse1991-1992" 
    end
    
-   def test_workgroups      
-      #login_can_get "work_groups"
+   def test_variable
+      login_can_get "variables"
+      
+      #more
+      anyone_can_get "variables/help"
+   end
+
+   def xest_workgroups      
+      login_can_get "work_groups"
       #more
       
       #My messages
    end
    
-   def admin_can_get(path)
+   def admin_can_get(path, adminError = "Admin rights required")      
       get path
       assert_equal "Please log in first",  flash[:error]
       assert_response :redirect      
@@ -86,7 +95,7 @@ class AccessTestTest < ActionController::IntegrationTest
       
       login_normal
       get path
-      assert_equal "Admin rights required",  flash[:error]
+      assert_equal adminError,  flash[:error]
       assert_response :redirect      
       assert_nil flash[:notice]
       logout

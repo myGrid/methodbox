@@ -133,7 +133,7 @@ class ScriptTest < ActiveSupport::TestCase
 
 protected
   def test_script(options = {})
-    Script.new({ :title => 'From Script Test', :body => "Body for the test", :description => "this is where I would decribe it", :content_type => "Some context type", :contributor_type => "User", :contributor_id => users(:aaron).id, :original_filename => "data.gif", :method_type => "Other"}.merge(options))
+    Script.new({ :title => 'From Script Test', :body => "Body for the test", :description => "this is where I would decribe it", :content_type => "Some context type", :contributor_type => "User", :contributor_id => users(:normal_user).id, :original_filename => "data.gif", :method_type => "Other"}.merge(options))
   end
 
   def create_script(options = {})

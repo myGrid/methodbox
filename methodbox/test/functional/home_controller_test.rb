@@ -14,7 +14,7 @@ class HomeControllerTest < ActionController::TestCase
 
   #May 28, 2010 Change of admin link under discussion
   #test "admin tab visible to admin" do
-  #  login_as(:quentin)
+  #  login_as(:admin)
   #  get :index
   #  assert_response :success
   #  assert_nil flash[:error]
@@ -22,7 +22,7 @@ class HomeControllerTest < ActionController::TestCase
   #end
 
   def test_title
-    login_as(:quentin)
+    login_as(:normal_user)
     get :index
     assert_select "title",:text=>/MethodBox.*/, :count=>1
   end

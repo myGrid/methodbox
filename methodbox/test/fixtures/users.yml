@@ -1,42 +1,32 @@
-quentin:
-  id: 1
-  email: quentin@example.com
-  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
-  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
-  created_at: <%= 5.days.ago.to_s :db %>  
-  activated_at: <%= 5.days.ago.to_s :db %> 
-  person_id: 1
-  is_admin: true
-  can_edit_projects: true
-  can_edit_institutions: true
+#These must have fixed id due to test using them (or the person id)integf
 
-aaron:
-  id: 2
+normal_user:
+  id: 1
   email: aaron@example.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>  
+  activated_at: <%= 5.days.ago.to_s :db %> 
+  person_id: 1
+  is_admin: false
+  can_edit_projects: true
+  can_edit_institutions: true
+
+other_user:  
+  id: 2
+  email: fred@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %> 
   person_id: 2
   is_admin: false
   can_edit_projects: true
   can_edit_institutions: true
 
-fred:  
-  email: fred@example.com
-  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
-  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
-  created_at: <%= 1.days.ago.to_s :db %>
-  activated_at: <%= 5.days.ago.to_s :db %> 
-  person: fred
-  is_admin: false
-  can_edit_projects: true
-  can_edit_institutions: true
-
-# ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
-
-unactivated:
-  person: person_for_unactivated
+unactivated_user:
+  id: 3
+  person_id: 3
   email: unactivated@example.com
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
@@ -45,6 +35,19 @@ unactivated:
   is_admin: false
   can_edit_projects: false
   can_edit_institutions: false
+
+# ******** Fixtures below this point used with new Rails association mechanism - hence, no IDs defined ********
+
+admin:
+  email: quentin@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 5.days.ago.to_s :db %>  
+  activated_at: <%= 5.days.ago.to_s :db %> 
+  person: admin_person
+  is_admin: true
+  can_edit_projects: true
+  can_edit_institutions: true
 
 unactivated_missing_person:
   email: unactivatedMissingPerson@example.com

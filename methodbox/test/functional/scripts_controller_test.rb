@@ -4,8 +4,8 @@ class ScriptsControllerTest < ActionController::TestCase
 
   #No test for flash[:error] as popped up rather than set
 
-  def test_create_no_script_refused
-    login_as :aaron
+  def test_create_no_data_refused
+    login_as :normal_user
     assert_no_difference 'Script.count' do
       post :create, :title => 'test script', :data => ''
     end
@@ -77,7 +77,7 @@ protected
   end
 
   def create_script_ok(options = {})
-    login_as :aaron
+    login_as :normal_user
     assert_difference 'Script.count' do
       create_script(options)
       s = Script.find_by_title ('FromScriptTest')
@@ -90,7 +90,7 @@ protected
   end
 
   def create_script_refused(options = {})
-    login_as :aaron
+    login_as :normal_user
     assert_no_difference 'Script.count' do
       create_script(options)
       assert_select "h1", "New Script"

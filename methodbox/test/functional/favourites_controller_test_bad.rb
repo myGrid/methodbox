@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class FavouritesControllerTest < ActionController::TestCase
   
   def setup
-    login_as(:quentin)
+    login_as(:admin)
   end
   
   def test_add_valid_favourite

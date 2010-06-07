@@ -15,7 +15,7 @@ class MailerTest < ActionMailer::TestCase
 
     @expected.body    = read_fixture('signup')
     
-    check_email @expected, Mailer.create_signup(users(:unactivated),"localhost")
+    check_email @expected, Mailer.create_signup(users(:unactivated_user),"localhost")
   end
 
   #May 24, 2010 Pictures no longer in data_files
@@ -35,15 +35,15 @@ class MailerTest < ActionMailer::TestCase
 
   test "forgot_password" do
     @expected.subject = 'MethodBox - Password reset'
-    @expected.to = "Aaron Spiggle <aaron@email.com>"
+    @expected.to = "Aaron Spiggle <aaron@example.com>"
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('forgot_password')
     
-    u=users(:aaron)
+    u=users(:normal_user)
     u.reset_password_code_until = 1.day.from_now
-    u.reset_password_code="fred"
-    check_email @expected, Mailer.create_forgot_password(users(:aaron),"localhost")
+    u.reset_password_code="someCode"
+    check_email @expected, Mailer.create_forgot_password(users(:normal_user),"localhost")
   end
 
   test "contact_admin_new_user_no_profile" do
@@ -53,17 +53,17 @@ class MailerTest < ActionMailer::TestCase
 
     @expected.body    = read_fixture('contact_admin_new_user_no_profile')
     
-    check_email @expected, Mailer.create_contact_admin_new_user_no_profile("test message",users(:quentin),"localhost")
+    check_email @expected, Mailer.create_contact_admin_new_user_no_profile("test message",users(:unactivated_user),"localhost")
   end
 
   test "welcome" do
     @expected.subject = 'Welcome to MethodBox'
-    @expected.to = "Quentin Jones <quentin@email.com>"
+    @expected.to = "Aaron Spiggle <aaron@example.com>"
     @expected.from    = "methodbox+no-reply@googlemail.com"
     @expected.date = Time.now  
     @expected.body = read_fixture('welcome')
     
-    check_email @expected, Mailer.create_welcome(users(:quentin),"localhost")
+    check_email @expected, Mailer.create_welcome(users(:normal_user),"localhost")
   end
 
   def check_email(expected, response)
