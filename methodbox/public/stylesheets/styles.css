@@ -629,3 +629,6 @@ div#requesting_resource_status {
     margin: 0em 4em 0em 4em;
 }
 
+span#warning {
+    color: #8b0000
+}

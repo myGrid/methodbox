@@ -9,7 +9,10 @@
   <li><%= icon('scripts', scripts_path, 'View all Methods', nil, 'View all Methods') -%></li>
 </ul>
 
-<h1>Editing Script: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
+<h1>
+	Editing Script: <%= link_to(h(@script.title), script_path(@script)) -%>
+	<%= render :partial=>"layouts/sandbox_warning" %>
+</h1>
 
 <div class="show_basic">
   <% form_for(@script) do |f| %>

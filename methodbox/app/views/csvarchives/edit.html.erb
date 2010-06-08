@@ -9,7 +9,10 @@
   <li><%= icon('Methods', csvarchives_path, 'View all CSV Archives', nil, 'View all CSV Archives') -%></li>
 </ul>
 
-<h1>Editing Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
+<h1>
+Editing Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%>
+<%= render :partial=>"layouts/sandbox_warning" %>
+</h1>
 
 <div class="show_basic">
   <% form_for(@archive) do |f| %>
