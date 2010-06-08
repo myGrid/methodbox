@@ -31,3 +31,7 @@ person_for_with_age_in_name:
   last_name: "Age"
   email: alex@example.com
 
+person_for_work_group_owner:
+  first_name: "william"
+  last_name: "brown"
+  email: william@example.com
