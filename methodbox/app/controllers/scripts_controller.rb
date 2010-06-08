@@ -518,7 +518,7 @@ class ScriptsController < ApplicationController
 
   def create_failed(message)
     respond_to do |format|
-      flash.now[:error] = "Please select a file to upload."
+      flash.now[:error] = message
       format.html {
         set_paramemeters_for_new_edit()
         render :action => "new"
