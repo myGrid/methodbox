@@ -47,6 +47,12 @@ class WorkGroupTest < ActiveSupport::TestCase
     end
   end
 
+  def test_duplicate_name_fails
+    assert_no_difference 'WorkGroup.count' do
+      wg = create_work_group(:name => "Sample Group")
+    end
+  end
+
   def test_nil_info_ok
     assert_difference 'WorkGroup.count' do
       wg = create_work_group(:info => nil)

@@ -8,6 +8,7 @@ class WorkGroupsController < ApplicationController
   before_filter :set_no_layout, :only => [ :review_popup ]
   before_filter :find_work_group, :only => [ :review_popup ]
   before_filter :find_work_group_auth, :only => [ :edit ]
+  before_filter :unique_name, :only => [ :create ]
   
   protect_from_forgery :except => [ :review_popup ]
   
@@ -211,4 +212,28 @@ class WorkGroupsController < ApplicationController
       format.js # review_popup.html.erb
     end
   end
+  
+  def unique_name
+    if params[:group] && params[:group][:name]
+      !WorkGroup.find_by_name(params[:group][:name]) || redirect_to_new("Title must be unique")
+    else
+      redirect_to_new  
+    end  
+  end
+  
+  # Redirect as appropriate when an create request fails.
+  #
+  # The default action is to redirect to the create screen.
+  def redirect_to_new(message = "Please use new form")
+    respond_to do |format|
+      format.html do
+        flash[:error] = message
+        redirect_to new_work_group_path
+      end
+      format.any do
+        request_http_basic_authentication message
+      end
+    end
+  end
+
 end

@@ -9,6 +9,7 @@ class WorkGroup < ActiveRecord::Base
   has_many :people, :through=>:group_memberships
   
   validates_presence_of     :name
+  validates_uniqueness_of   :name
   
   validates_presence_of     :user
   

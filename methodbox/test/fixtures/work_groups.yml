@@ -1,0 +1,12 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+no_members_group:
+  name: 'No Members'
+  info: 'Strange workgroup with no members'
+  user:  work_group_owner
+  
+sample_group:
+  name: 'Sample Group'
+  info: 'Sample Workgroup'
+  user:  work_group_owner  
+  #todo add members
