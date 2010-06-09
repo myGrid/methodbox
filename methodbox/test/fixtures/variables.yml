@@ -1,0 +1,18 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+with_age1:
+  name: myage
+  value: "This is my own age"
+  dataset_id: 3
+  
+with_age2:
+  name: firstDrink
+  value: "Age at which I had my first drink"
+  dataset_id: 4
+  
+  
+# one:
+#   column: value
+#
+# two:
+#   column: value

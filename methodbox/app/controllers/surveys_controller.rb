@@ -198,15 +198,13 @@ class SurveysController < ApplicationController
       logger.info("searching for " + search_terms.to_s)
       temp_variables = Array.new
       search_terms.each do |term|
-        #      @results = Variable.find_by_solr(downcase_query,:limit => 1000)
-        results = Variable.find_by_solr(term,:limit => 1000)
-        variables = results.docs
+        variables = find_variables(term)
         variables.each do |item|
           @selected_surveys.each do |ids|
             #if Dataset.find(item.dataset_id).id.to_s == ids
             if item.dataset_id.to_s == ids
               logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-              #              puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+              #uts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
               contains = false
               temp_variables.each do |temp_item|
                 if temp_item.id == item.id
@@ -312,14 +310,14 @@ class SurveysController < ApplicationController
       #     format.html
       #   end
       #end
-    rescue
-      puts "Searching failed: " + $!
-      respond_to do |format|
-        format.html {
-          flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-          redirect_to :action => "index"
-        }
-      end
+    #rescue
+    #  puts "Searching failed: " + $!
+    #  respond_to do |format|
+    #    format.html {
+    #      flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
+    #      redirect_to :action => "index"
+    #    }
+    #  end
       #      render :update do |page|
       #      render :action => index
       #         page.reload_flash_error
@@ -717,5 +715,17 @@ class SurveysController < ApplicationController
 
 
   end
+
+  private
+  
+    #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
+    def find_variables(term)
+      if (SOLR_ENABLED)
+        results = Variable.find_by_solr(term,:limit => 1000)
+        results.docs
+      else
+        results = Variable.find(:all, :conditions => ["name like ? or value like ?", '%'+term+'%','%'+term+'%'])
+      end
+    end
 
 end
