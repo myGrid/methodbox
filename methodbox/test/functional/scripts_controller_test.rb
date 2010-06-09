@@ -9,7 +9,7 @@ class ScriptsControllerTest < ActionController::TestCase
     assert_no_difference 'Script.count' do
       post :create, :title => 'test script', :data => ''
     end
-    assert_select "h1", "New Script"
+    assert_select "h1", /New Script/
   end
 
   def test_no_data_refused
@@ -93,7 +93,7 @@ protected
     login_as :normal_user
     assert_no_difference 'Script.count' do
       create_script(options)
-      assert_select "h1", "New Script"
+      assert_select "h1", /New Script/
     end
   end
 
