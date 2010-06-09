@@ -1,7 +1,7 @@
 class SurveysController < ApplicationController
-  
+
   before_filter :login_required, :except => [ :help, :index, :search_variables, :sort_variables, :show]
-  
+
   before_filter :find_previous_searches, :only => [ :index]
 
   before_filter :find_cart, :except => [ :help]
@@ -10,6 +10,8 @@ class SurveysController < ApplicationController
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
+
+  before_filter :check_search_parameters, :only => [:search_variables]
 
 #experimental code for doing jgrid table using jqgrid plugin
   def grid_view
@@ -65,16 +67,16 @@ class SurveysController < ApplicationController
     respond_to do |format|
       format.html
       format.json { render :json => @variables_json }
-       
+
     end
-  
+
     #     respond_to do |format|
     #        logger.info("rendering grid view")
     #        format.html
     #        format.xml
     #      end
   end
-  
+
   def index
     #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
 
@@ -95,7 +97,7 @@ class SurveysController < ApplicationController
   end
 
   def data
-    
+
     results = Variable.find_by_solr("height",:limit => 1000).docs do
       paginate :page => params[:page], :per_page => params[:rows]
       order_by "#{params[:sidx]} #{params[:sord]}"
@@ -189,12 +191,12 @@ class SurveysController < ApplicationController
           t.save
         end
       end
-      
+
       if search_terms.length > 1
         downcase_query = @survey_search_query.downcase
         search_terms.unshift(downcase_query)
       end
-      
+
       logger.info("searching for " + search_terms.to_s)
       temp_variables = Array.new
       search_terms.each do |term|
@@ -310,14 +312,14 @@ class SurveysController < ApplicationController
       #     format.html
       #   end
       #end
-    #rescue
-    #  puts "Searching failed: " + $!
-    #  respond_to do |format|
-    #    format.html {
-    #      flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-    #      redirect_to :action => "index"
-    #    }
-    #  end
+    rescue
+      puts "Searching failed: " + $!
+      respond_to do |format|
+        format.html {
+          flash[:error] = "Searching failed. Probably due to bad paramteres. Use the survey search box."
+          redirect_to :action => "index"
+        }
+      end
       #      render :update do |page|
       #      render :action => index
       #         page.reload_flash_error
@@ -335,7 +337,7 @@ class SurveysController < ApplicationController
   def sort_variables
     @survey_search_query = params[:survey_search_query]
     @survey_list = params[:survey_list]
-    
+
     @sorted_variables = params[:sorted_variables]
     @unsorted_vars = Array.new
     @sorted_variables.each do |var|
@@ -403,11 +405,11 @@ class SurveysController < ApplicationController
   def view_variables
     #    @surveys = Survey.find(params[:entry_ids])
     #    items_per_page = 10
-    
+
     @variables = Array.new
     @survey_list = Array.new(params[:entry_ids])
 
-    
+
 
     #    conditions = ["name LIKE ?", "%#{params[:query]}%"] unless params[:query].nil?
 
@@ -610,7 +612,7 @@ class SurveysController < ApplicationController
   end
 
   protected
-  
+
   #find any previous searches if you are looking at your own
   #profile
   def find_previous_searches
@@ -620,7 +622,7 @@ class SurveysController < ApplicationController
     end
     @recent_searches = search
   end
-  
+
 
   def find_surveys
     found = Survey.find(:all,
@@ -712,12 +714,25 @@ class SurveysController < ApplicationController
     @favourite_groups = current_user.favourite_groups
 
     @all_people_as_json = Person.get_all_as_json
-
-
   end
 
-  private
-  
+  def check_search_parameters
+    if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
+      error = "Searching requires a term to be entered in the survey search box."
+    elsif !params[:entry_ids] or params[:entry_ids].size == 0
+      error = "Searching requires at least one survey selected."
+    else
+      return true
+    end
+    respond_to do |format|
+      flash[:error] = error
+      format.html { redirect_to surveys_path }
+    end
+    return false
+  end
+
+ private
+
     #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
     def find_variables(term)
       if (SOLR_ENABLED)
