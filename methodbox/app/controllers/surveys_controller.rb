@@ -288,17 +288,17 @@ class SurveysController < ApplicationController
       #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
       #    end
       if logged_in?
-      user_search = UserSearch.new
-      user_search.person = Person.find(current_user.person_id)
-      user_search.terms = @survey_search_query
-      user_search.dataset_ids = @all_datasets
-      var_as_ints = Array.new
-      @sorted_variables.each do |temp_var|
-        var_as_ints.push(temp_var.id)
+        user_search = UserSearch.new
+        user_search.user = current_user
+        user_search.terms = @survey_search_query
+        user_search.dataset_ids = @all_datasets
+        var_as_ints = Array.new
+        @sorted_variables.each do |temp_var|
+          var_as_ints.push(temp_var.id)
+        end
+        user_search.variable_ids = var_as_ints
+        user_search.save
       end
-      user_search.variable_ids = var_as_ints
-      user_search.save
-    end
       respond_to do |format|
         logger.info("rendering survey search")
         format.html
