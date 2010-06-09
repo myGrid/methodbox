@@ -21,18 +21,20 @@
           <%= text_area_tag 'group[info]', group_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
 
-<div>
-	<p>          
-		<b>Add people to this group:</b>
-	<%= render :partial => "assets/group_people_selector", :locals => { :resource_id => "people", :resource_type => "People",   # this is only for presentation, not for any processing
-      :collection=>@people,:selected=>[],:authorization_for_showing_already_done => false } -%>
-</p>
-</div>
-<br/>
-<div style="clear:both;">
-</div>
-  <p style="text-align: center; margin-top: 1.5em;">
-    <%= submit_tag "Create this group", :id => "group_submit_btn", :onclick => "javascript: validateGroupFields(true); return(false);" -%> or <%= link_to 'Cancel', work_groups_path -%>
-  </p>
-<% end -%>
-</center>
+        <div>
+          <p>
+            <b>Add people to this group:</b>
+            <%= render :partial => "assets/group_people_selector", :locals => { :resource_id => "people", :resource_type => "People",   # this is only for presentation, not for any processing
+            :collection=>@people,:selected=>[],:authorization_for_showing_already_done => false } -%>
+          </p>
+        </div>
+        <br/>
+        <div style="clear:both;">
+        </div>
+        <p style="text-align: center; margin-top: 1.5em;">
+          <%= submit_tag "Create this group", :id => "group_submit_btn", :onclick => "javascript: validateGroupFields(true); return(false);" -%> or <%= link_to 'Cancel', work_groups_path -%>
+        </p>
+      </div>
+    </center>
+  <% end -%>
+</div>  

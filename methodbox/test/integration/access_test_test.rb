@@ -104,7 +104,7 @@ class AccessTestTest < ActionController::IntegrationTest
       login_can_get "work_groups"
    end
 
-   def est_workgroups_new
+   def test_workgroups_new
       login_can_get "work_groups/new"
       #more
       

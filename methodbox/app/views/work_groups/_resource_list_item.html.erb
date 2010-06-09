@@ -17,8 +17,6 @@
         <%= link_to(title, work_group_path(resource)) -%>
       </p>
 
-      </p>
-
       <div class="desc" style="font-size: 85%;">
         <% unless resource.info.blank? -%>
           <%= truncate(white_list(resource.info), :length=>500) -%>
