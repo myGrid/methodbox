@@ -203,7 +203,8 @@ class SurveysController < ApplicationController
         variables = results.docs
         variables.each do |item|
           @selected_surveys.each do |ids|
-            if Dataset.find(item.dataset_id).id.to_s == ids
+            #if Dataset.find(item.dataset_id).id.to_s == ids
+            if item.dataset_id.to_s == ids
               logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
               #              puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
               contains = false
