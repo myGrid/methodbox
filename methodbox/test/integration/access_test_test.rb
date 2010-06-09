@@ -39,31 +39,49 @@ class AccessTestTest < ActionController::IntegrationTest
    
    def test_people
       login_can_get "people"
-      #more
+   end   
       #login_can_get "people/1" unitialised constant sop
+   def test_people_edit_self
       login_can_get "people/1/edit" #person 1 is normal_user
+   end
+   
+   def test_people_show_other
       login_can_get "people/2"      
+   end
+   
+   def test_people_edit_other
       admin_can_get "people/2/edit", "Not the current person"  #person 2 is other_person
       #more
    end
    
-   def test_scripts
+   def test_scripts_home
       login_can_get "scripts"
-      login_can_get "scripts/new"   
+   end
    
-      #more
+   def test_scripts_new
+      login_can_get "scripts/new"   
+   end
+      
+   def test_scripts_help
       anyone_can_get "scripts/help"
+   end
+   
+   def test_scripts_help2
       anyone_can_get "scripts/help2" 
    end
    
-   def test_search      
+   def test_search_surveys
       anyone_can_get "/search/?search_query=age&search_type=Surveys"
-      login_can_get "/search/?search_query=age&search_type=people"
-      login_can_get "/search/?search_query=age&search_type=all"
-      anyone_can_get "/search/?search_query=age&search_type=Surveys"
-      #how to add variables?
    end
    
+   def test_search_people
+      login_can_get "/search/?search_query=age&search_type=people"
+   end
+   
+   def test_search_all
+      login_can_get "/search/?search_query=age&search_type=all"
+   end
+      
    def test_surveys
       anyone_can_get "surveys"
       
@@ -72,26 +90,35 @@ class AccessTestTest < ActionController::IntegrationTest
       anyone_can_get "surveys/1-hse1991-1992" 
    end
    
-   def test_variable
+   def test_variable_home
       login_can_get "variables"
       
+   end
+   
+   def test_variable_help
       #more
       anyone_can_get "variables/help"
    end
 
-   def xest_workgroups      
+   def test_workgroups_home
       login_can_get "work_groups"
+   end
+
+   def est_workgroups_new
+      login_can_get "work_groups/new"
       #more
       
       #My messages
    end
    
    def admin_can_get(path, adminError = "Admin rights required")      
+      login_admin
       get path
-      assert_equal "Please log in first",  flash[:error]
-      assert_response :redirect      
-      assert_redirected_to :controller => "session", :action => "new"
+      assert_nil flash[:error]
+      assert_response :success
       assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
+      logout
       
       login_normal
       get path
@@ -100,13 +127,11 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:notice]
       logout
 
-      login_admin
       get path
-      assert_nil flash[:error]
-      assert_response :success
+      assert_equal "Please log in first",  flash[:error]
+      assert_response :redirect      
+      assert_redirected_to :controller => "session", :action => "new"
       assert_nil flash[:notice]
-      assert_select "title",:text=>/MethodBox.*/, :count=>1
-      logout
    end
 
    def anyone_can_get(path)
@@ -134,12 +159,6 @@ class AccessTestTest < ActionController::IntegrationTest
    end
 
    def login_can_get(path)
-      get path
-      assert_equal "Please log in first",  flash[:error]
-      assert_response :redirect      
-      assert_redirected_to :controller => "session", :action => "new"
-      assert_nil flash[:notice]
-      
       login_normal
       get path
       assert_response :success
@@ -155,6 +174,12 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:notice]
       assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
+      get path
+      assert_equal "Please log in first",  flash[:error]
+      assert_response :redirect      
+      assert_redirected_to :controller => "session", :action => "new"
+      assert_nil flash[:notice]
+      
    end
 
    def login_admin
@@ -169,6 +194,7 @@ class AccessTestTest < ActionController::IntegrationTest
       post "sessions/destroy"
    end
    
+   #Activate this test to check login if all other tests fail.
    def est_login_and_logout
       login_normal
       assert_nil flash[:error]
