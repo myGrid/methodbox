@@ -4,21 +4,25 @@ class CartTestTest < ActionController::IntegrationTest
 
   def test_add_to_cart
     login_normal
-    assert_nil session[:cart]
+    puts CartItem.count
+    #normal_user = users(:normal_user)
+    assert_cart_size 0
     add_to_cart
     assert_nil flash[:error]
-    assert_equal 2, session[:cart].items.size
+    puts CartItem.count
+    #normal_user.reload
+    assert_cart_size 2
     add_to_cart(:variable_ids => ["6","8"])
-    assert_equal 3, session[:cart].items.size
+    assert_cart_size 3
     assert_nil flash[:error]
   end
 
   def test_show_cart
     login_normal
-    assert_nil session[:cart]
+    assert_cart_size 0
     add_to_cart
     assert_nil flash[:error]
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     get "cart"
     assert_nil flash[:error]
     assert_nil flash[:message]
@@ -29,15 +33,17 @@ class CartTestTest < ActionController::IntegrationTest
 
   def test_remove_from_cart
     login_normal
-    assert_nil session[:cart]
+    assert_cart_size 0
+    puts CartItem.count
     add_to_cart
+    puts CartItem.count
     assert_nil flash[:error]
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     get "cart"
     assert_select "title",:text=>/MethodBox.*/, :count=>1
     assert_nil flash[:error]
     remove_from_cart
-    assert_equal 1, session[:cart].items.size
+    assert_cart_size 1
     assert_response :success
     assert_nil flash[:message]
     get "cart"
@@ -48,15 +54,15 @@ class CartTestTest < ActionController::IntegrationTest
 
   def test_remove_not_in_cart
     login_normal
-    assert_nil session[:cart]
+    assert_cart_size 0
     add_to_cart
     assert_nil flash[:error]
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     get "cart"
     assert_select "title",:text=>/MethodBox.*/, :count=>1
     assert_nil flash[:error]
     remove_from_cart:variable_ids => ["4"]
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     assert_response :success
     assert_nil flash[:message]
     get "cart"
@@ -67,15 +73,15 @@ class CartTestTest < ActionController::IntegrationTest
 
   def test_remove_all_in_cart
     login_normal
-    assert_nil session[:cart]
+    assert_cart_size 0
     add_to_cart
     assert_nil flash[:error]
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     get "cart"
     assert_select "title",:text=>/MethodBox.*/, :count=>1
     assert_nil flash[:error]
     remove_from_cart:variable_ids => ["6","7"]
-    assert_equal 0, session[:cart].items.size
+    assert_cart_size 0
     assert_response :success
     assert_nil flash[:message]
     get "cart"
@@ -86,15 +92,15 @@ class CartTestTest < ActionController::IntegrationTest
 
   def test_create_csvarchives
     login_normal
-    assert_nil session[:cart]
+    assert_cart_size 0
     add_to_cart
     assert_nil flash[:error]
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     get "cart"
     assert_select "title",:text=>/MethodBox.*/, :count=>1
     assert_nil flash[:error]
     create_csvarchives
-    assert_equal 2, session[:cart].items.size
+    assert_cart_size 2
     assert_response :found
     assert_nil flash[:message]
 
@@ -140,6 +146,11 @@ class CartTestTest < ActionController::IntegrationTest
     post "sessions/destroy"
   end
 
+  def assert_cart_size(size)
+      normal_user = users(:normal_user)
+      normal_user.reload
+      assert_equal size, normal_user.cart_items.size
+  end
 end
 
 

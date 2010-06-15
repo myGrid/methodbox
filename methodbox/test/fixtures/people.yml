@@ -35,3 +35,8 @@ person_for_work_group_owner:
   first_name: "william"
   last_name: "brown"
   email: william@example.com
+
+person_for_cart_owner:
+  first_name: "cart"
+  last_name: "owner"
+  email: cart_owner@example.com

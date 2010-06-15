@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  user: cart_owner
+  variable: with_age1
+
+two:
+  user: cart_owner
+  variable: with_age2

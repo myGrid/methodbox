@@ -49,19 +49,6 @@ class SurveysControllerTest < ActionController::TestCase
     assert_equal "Searching failed. Probably due to bad paramteres. Use the survey search box.", flash[:error]
   end
 
-  def test_add_to_cart
-    login_as :normal_user
-    assert_nil session[:cart]
-    add_to_cart
-    assert_equal 2, session[:cart].items.size
-    assert_nil flash[:error]
-  end
-
-  def test_add_to_cart_not_logged_in
-    add_to_cart
-    assert_equal "Please log in first", flash[:error]
-  end
-
   #Test Currently fails
   #def test_add_bad_id_to_cart
   #  login_as :normal_user
@@ -72,10 +59,6 @@ class SurveysControllerTest < ActionController::TestCase
   protected
   def do_search(options = {})
     post :search_variables, {:commit => "Search selected surveys", :survey_search_query => "Age Sex", :entry_ids => ["3","4","5","20","21"], :HSE2000_survey_ids=>[{"9"=>nil}], :per_page =>"10", :page =>"1", :HSE1994_survey_ids=>[{"3"=>nil}]}.merge(options)
-  end
-
-  def add_to_cart(options = {})
-    post :add_to_cart, {:submit => "add", :variable_ids => ["6","7"] }.merge(options)
   end
 
 end
