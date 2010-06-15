@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100604104531) do
+ActiveRecord::Schema.define(:version => 20100614084448) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -96,6 +96,15 @@ ActiveRecord::Schema.define(:version => 20100604104531) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "cart_items", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "variable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cart_items", ["user_id"], :name => "index_cart_items_on_user_id"
 
   create_table "content_blobs", :force => true do |t|
     t.binary "data", :limit => 2147483647
