@@ -27,7 +27,6 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
   def index
-    find_cart
 
     if (!params[:expertise].nil?)
       @expertise=params[:expertise]
@@ -61,7 +60,6 @@ class PeopleController < ApplicationController
   # GET /people/1
   # GET /people/1.xml
   def show
-    find_cart
     @person = Person.find(params[:id])
 
     #    check each archive to see if it is complete or not

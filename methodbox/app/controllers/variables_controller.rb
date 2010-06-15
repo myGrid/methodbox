@@ -40,7 +40,16 @@ class VariablesController < ApplicationController
   def add_to_cart
     find_variable
 
-    session[:cart].add_variable(@variable.id)
+  
+    if CartItem.find_by_user_id_and_variable_id(current_user,@variable)
+      puts "User already has variable "+@variable.id.to_s
+    else  
+      an_item = CartItem.new
+      an_item.user = current_user
+      an_item.variable = @variable
+      an_item.save
+      current_user.reload
+    end
 
     respond_to do |format|
       flash[:notice] = "Variable has been added to the cart"
@@ -51,12 +60,18 @@ class VariablesController < ApplicationController
 
   def add_multiple_to_cart
     @variable_list = Array.new(params[:variable_ids])
-
-    @variable_list.each do |var|
-      variable = Variable.find(var)
-      session[:cart].add_variable(variable.id)
+    @variable_list.each do |var|       
+      if CartItem.find_by_user_id_and_variable_id(current_user,var)
+        puts "User already has variable "+var.to_s
+      else  
+        an_item = CartItem.new
+        an_item.user = current_user
+        an_item.variable_id = var
+        an_item.save
+        current_user.reload
+      end  
     end
-
+    
     render :update, :status=>:created do |page|
       #        TODO flash the cart
       #                page[:cart_button].reload

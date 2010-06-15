@@ -247,14 +247,14 @@ class CsvarchivesController < ApplicationController
     if existing_arcs.empty?
       all_variables_array = Array.new
       variable_hash = Hash.new
-      session[:cart].items.each do |var|
-        puts "downloading " + var.to_s
-        variable = Variable.find(var)
+      @current_user.cart_items.each do |item|
+        puts "downloading " + item.variable_id.to_s
+        variable = Variable.find(item.variable_id)
         if (!variable_hash.has_key?(variable.dataset_id))
           variable_hash[variable.dataset_id] = Array.new
         end
-        variable_hash[variable.dataset_id].push(var)
-        all_variables_array.push(Variable.find(var))
+        variable_hash[variable.dataset_id].push(item.variable_id)
+        all_variables_array.push(Variable.find(item.variable_id))
       end
 
       #create XML request to be sent with http post request

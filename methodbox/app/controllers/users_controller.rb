@@ -139,7 +139,6 @@ class UsersController < ApplicationController
   
   def edit
     @user = User.find(params[:id])
-    find_cart
     render :action=>:edit, :layout=>"main"
   end
   

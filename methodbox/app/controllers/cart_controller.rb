@@ -5,8 +5,8 @@ class CartController < ApplicationController
 
   def show
     @sorted_variables = Array.new
-    session[:cart].items.each do |item|
-      var = Variable.find(item)
+    current_user.cart_items.each do |item|
+      var = Variable.find(item.variable_id)
       @sorted_variables.push(var)
     end
   end
@@ -17,14 +17,18 @@ class CartController < ApplicationController
     @var_list = params[:variable_ids]
     unless @var_list.empty?
       @var_list.each do |var|
-        puts "delete" + var
-        session[:cart].remove_variable(var)
+        item = CartItem.find_by_user_id_and_variable_id(current_user,var)
+        if item
+          puts "delete" + var
+          item.destroy
+        end  
       end
+      current_user.reload
     end
 
      @sorted_variables = Array.new
-    session[:cart].items.each do |item|
-      var = Variable.find(item)
+    current_user.cart_items.each do |item|
+      var = Variable.find(item.variable_id)
       @sorted_variables.push(var)
     end
 
@@ -76,8 +80,13 @@ class CartController < ApplicationController
         end
       else
         @var_list.each do |var|
-          session[:cart].items.delete_if{|ci| ci.id.to_s == var.to_s}
+          item = CartItem.find_by_user_id_and_variable_id(current_user,var)
+          if item
+            puts "delete" + var
+            item.destroy
+          end  
         end
+        current_user.reload
         render :update, :status=>:created do |page|
           page.replace_html "cart-contents-inner", :partial=>"surveys/cart_item"
           page.replace_html "cart-total", :partial=>"surveys/cart_total"
@@ -125,7 +134,7 @@ class CartController < ApplicationController
   def download_all_variables
     logger.info("download all variables")
 
-    if session[:cart].items.empty?
+    if current_user.cart_items.empty?
       logger.info("cart was empty")
       render :update, :status=>:created do |page|
         page.replace_html "progress_bar", :partial =>"surveys/try_again"

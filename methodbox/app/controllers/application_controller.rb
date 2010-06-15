@@ -49,8 +49,6 @@ class ApplicationController < ActionController::Base
       #        logged_in? && current_user.admin?
       #      end
       
-  
-
   def deal_with_selected
     #        logger.info("commit: " + params[:myHiddenField])
     #    if params.has_key?(:download_button)
@@ -83,9 +81,13 @@ class ApplicationController < ActionController::Base
           page.replace_html "progress_bar", :partial =>"surveys/try_again"
         end
       else
-        @var_list.each do |var|
-          session[:cart].items.delete_if{|ci| ci.id.to_s == var.to_s}
-        end
+      @var_list.each do |var|
+        item = CartItem.find_by_user_id_and_variable_id(current_user,var)
+        if item
+          item.destroy
+        end  
+      end
+      current_user.reload
         render :update, :status=>:created do |page|
           page.replace_html "cart-contents-inner", :partial=>"surveys/cart_item"
           page.replace_html "cart-total", :partial=>"surveys/cart_total"
@@ -132,7 +134,7 @@ class ApplicationController < ActionController::Base
   def download_all_variables
     logger.info("download all variables")
 
-    if session[:cart].items.empty?
+    if current_user.cart_items.empty?
       logger.info("cart was empty")
       render :update, :status=>:created do |page|
         page.replace_html "progress_bar", :partial =>"surveys/try_again"
@@ -140,16 +142,16 @@ class ApplicationController < ActionController::Base
     else
       @variable_hash = Hash.new
       @all_variables_array = Array.new
-      session[:cart].items.each do |var|
-        puts "downloading " + var.to_s
-        variable = Variable.find(var)
+      current_user.cart_items do |item|
+        puts "downloading " + item.variable_id.to_s
+        variable = Variable.find(item.variable_id)
         if (!@variable_hash.has_key?(variable.survey_id))
           @variable_hash[variable.survey_id] = Array.new
         end
-        @variable_hash[variable.survey_id].push(var)
-        @all_variables_array.push(Variable.find(var))
-        #        variable_hash[var] = get_variable(var)
-        #        logger.info("Would have downloaded: " + var.to_s)
+        @variable_hash[variable.survey_id].push(item.variable_id)
+        @all_variables_array.push(Variable.find(item.variable_id))
+        #        variable_hash[var] = get_variable(item.variable_id)
+        #        logger.info("Would have downloaded: " + item.variable_id.to_s)
       end
      
 
@@ -208,8 +210,19 @@ class ApplicationController < ActionController::Base
       @variable_list = Array.new(params[:variable_ids])
 
       @variable_list.each do |var|
-        variable = Variable.find(var)
-        session[:cart].add_variable(variable.id)
+       
+       #uts CartItem.find(:first)
+       #uts CartItem.find_by_user_id(current_user)
+       if CartItem.find_by_user_id_and_variable_id(current_user,var)
+          puts "User already has variable "+var.to_s
+       else  
+	  an_item = CartItem.new
+          an_item.user = current_user
+          an_item.variable_id = var
+          an_item.save
+          current_user.reload
+          #uts "cart size is now "+ current_user.cart_items.size.to_s
+        end  
       end
 
       render :update, :status=>:created do |page|
@@ -432,7 +445,7 @@ class ApplicationController < ActionController::Base
   end
   
   def empty_cart
-    session[:cart].items.clear
+    current_user.cart_items.destroy
     render :update, :status=>:created do |page|
       page.replace_html "cart-contents-inner", :partial=>"surveys/cart_item"
       page.replace_html "cart-total", :partial=>"surveys/cart_total"
@@ -442,11 +455,16 @@ class ApplicationController < ActionController::Base
   def remove_selected
     logger.info("Remove selected")
 
-    @var_list = params[:cart_ids]
-    unless @var_list == nil
+    @var_list = params[:variable_ids]
+    unless @var_list.empty?
       @var_list.each do |var|
-        session[:cart].items.delete_if{|ci| ci.id.to_s == var.to_s}
+        item = CartItem.find_by_user_id_and_variable_id(current_user,var)
+        if item
+          puts "delete" + var
+          item.destroy
+        end  
       end
+      current_user.reload
     end
     render :update, :status=>:created do |page|
       page.replace_html "cart-contents-inner", :partial=>"surveys/cart_item"
@@ -520,7 +538,6 @@ class ApplicationController < ActionController::Base
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     session[:user_id]=nil
-    session[:cart] = nil
   end
 
   protected
@@ -602,16 +619,5 @@ class ApplicationController < ActionController::Base
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password").
   filter_parameter_logging :password
-
-  def find_cart
-    session[:cart] ||= Cart.new
-    #    @cart = session[:cart]
-    #    if (@cart == nil)
-    #      logger.info("Cart was nil, creating new")
-    #      @cart = Cart.new
-    #    end
-  end
-
-
 
 end

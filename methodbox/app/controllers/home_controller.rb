@@ -2,8 +2,6 @@ class HomeController < ApplicationController
   
   before_filter :login_required, :except=> [ :about ]
 
-  before_filter :find_cart
-  
   layout :select_layout
   
   def about

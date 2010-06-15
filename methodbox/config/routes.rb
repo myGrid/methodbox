@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :cart_items
+
 
   #  map.view_variables  '/surveys/view_variables', :controller => 'surveys',   :action => 'view_variables'
   #

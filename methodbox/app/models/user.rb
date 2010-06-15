@@ -48,6 +48,8 @@ class User < ActiveRecord::Base
   named_scope :without_profile,:conditions=>['person_id IS NULL']
   named_scope :admins,:conditions=>['is_admin = ?',true],:include=>:person
 
+  has_many :cart_items, :dependent => :destroy
+
 #savage_beast
   def display_name
           self.person.name

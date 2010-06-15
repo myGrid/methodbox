@@ -1,16 +1,16 @@
 
-<% unless session[:cart].items.empty? %>
+<% unless current_user.cart_items.empty? %>
   <table>
-    <% session[:cart].items.each do |item|%>
+    <% current_user.cart_items.each do |item|%>
       <tr style="text-align:left;">
         <td style="width:10px;text-align:left;">
 <%= check_box_tag "cart_ids[]", item -%>
 </td>
         <td style="width:30px;text-align:left;">
-<%= Variable.find(item).name -%>
+<%= item.variable.name -%>
 </td>
         <td style="width:30px">
-<%= Survey.find(Variable.find(item).survey_id).year -%>
+<%= item.variable.survey.year -%>
         </td>
       </tr>
     <% end %>

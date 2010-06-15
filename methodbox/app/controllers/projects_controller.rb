@@ -4,7 +4,6 @@ class ProjectsController < ApplicationController
   include WhiteListHelper
   
   before_filter :login_required
-  before_filter :find_cart
   before_filter :is_user_admin_auth, :except=>[:index, :show, :edit, :update, :request_institutions]
   before_filter :editable_by_user, :only=>[:edit,:update]
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]

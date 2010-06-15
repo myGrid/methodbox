@@ -3,7 +3,6 @@ class ScriptsController < ApplicationController
   before_filter :login_required, :except => [ :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
-  before_filter :find_cart, :except => [ :help, :help2]
   before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected ]
 
   # GET /script
