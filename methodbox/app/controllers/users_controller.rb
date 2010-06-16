@@ -117,10 +117,10 @@ class UsersController < ApplicationController
     if request.get?
       # forgot_password.rhtml
     elsif request.post?
-      user = User.find_by_email(params[:login])
+      user = User.find_by_email(params[:email])
 
       respond_to do |format|
-        if user && user.person && !user.email.blank? && !user.dormant?
+        if user && user.person && !user.dormant?
           user.reset_password_code_until = 1.day.from_now
           user.reset_password_code =  Digest::SHA1.hexdigest( "#{user.email}#{Time.now.to_s.split(//).sort_by {rand}.join}" )
           user.save!
@@ -128,8 +128,8 @@ class UsersController < ApplicationController
           flash[:notice] = "Instructions on how to reset your password have been sent to #{user.email}"
           format.html { render :action => "forgot_password" }
         else
-          flash[:error] = "Invalid user: #{params[:login]}" if !user
-          flash[:error] = "Unable to send you an email, as this information isn't available for #{params[:login]}" if user && (!user.person || user.email.blank? || user.dormant?)
+          flash[:error] = "Invalid email: #{params[:email]}" if !user
+          flash[:error] = "Account with email #{params[:email]} is corrupt. Please contact an admin." if user && (!user.person || user.dormant?)
           format.html { render :action => "forgot_password" }
         end
       end

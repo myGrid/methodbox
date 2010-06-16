@@ -95,6 +95,13 @@ class AccessTestTest < ActionController::IntegrationTest
       
    end
    
+   def test_user_new
+      #more
+      if !REGISTRATION_CLOSED
+	anyone_can_get "users/new"
+      end	
+   end
+
    def test_variable_help
       #more
       anyone_can_get "variables/help"
