@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
-  
+
   layout "main", :except=>[:edit]
-    
-  before_filter :is_current_user_auth, :only=>[:edit, :update]  
-  
+
+  before_filter :is_current_user_auth, :only=>[:edit, :update]
+  before_filter :can_create, :only=>[:new, :create]
+
   # render new.rhtml
   def new
     if !REGISTRATION_CLOSED
@@ -18,34 +19,54 @@ class UsersController < ApplicationController
   #    flash[:notice] = "You have been logged out."
       redirect_back_or_default('/')
     end
-    
+
   end
 
   def create
-    cookies.delete :auth_token
-    # protects against session fixation attacks, wreaks havoc with
-    # request forgery protection.
-    # uncomment at your own risk
-    reset_session
+    if !current_user
+      cookies.delete :auth_token
+      # protects against session fixation attacks, wreaks havoc with
+      # request forgery protection.
+      # uncomment at your own risk
+      reset_session
+    end
     @user = User.new(params[:user])
     user_person = Person.new(params[:person])
     user_person.email = @user.email
     @user.person=user_person
-    
+
     @user.save
     respond_to do |format|
     if @user.errors.empty?
-      self.current_user = @user
-      if !ACTIVATION_REQUIRED
-        @user.activate
-        
-        format.html {redirect_to(root_path)}
+      if current_user #and therefor by before_filter :can_create an admin
+        if params[:activate]
+          @user.activate
+          flash[:notice]="Activated new user with email: "+@user.email.to_s
+        else
+          Mailer.deliver_admin_created_account(current_user, @user, base_host)
+          flash[:notice]="Activation email sent to "+@user.email.to_s
+        end
+        format.html {redirect_to(admin_path)}
       else
-            # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
-            Mailer.deliver_signup(current_user,base_host)
-            flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
-            logout_user
-            format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+        if REGISTRATION_CLOSED
+          Mailer.deliver_signup_requested(params[:message],@user,base_host)
+          flash[:notice]="An email has been sent to the administor with your signup request."
+          user.dormant = true
+          user.activation_code = nil
+          format.html {redirect_to(root_path)}
+        else
+          self.current_user = @user
+          if !ACTIVATION_REQUIRED
+            @user.activate
+            format.html {redirect_to(root_path)}
+          else
+              # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
+              Mailer.deliver_signup(current_user,base_host)
+              flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
+              logout_user
+              format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+          end
+        end
       end
     else
       format.html {render :action => 'new'}
@@ -58,7 +79,7 @@ class UsersController < ApplicationController
     if self.current_user
       if self.current_user.person
         self.current_user.activate
-        if logged_in? 
+        if logged_in?
           puts current_user
           puts current_user.email
           puts self.current_user.person
@@ -72,11 +93,11 @@ class UsersController < ApplicationController
           flash[:error] = "login fialed"
           redirect_back_or_default('/')
         end
-      else  
+      else
         logger.info("No person record found for user "+current_user.person_id.to_s)
         flash[:error] = "Sorry account is corrupt. Please contact an admin."
         redirect_back_or_default('/')
-      end        
+      end
     else #if self.current_user
       logger.info("Activation code not found: "+params[:activation_code].to_s)
       flash[:error] = "Sorry account already activated or incorrect activation code. Please contact an admin."
@@ -136,19 +157,19 @@ class UsersController < ApplicationController
     end
   end
 
-  
+
   def edit
     @user = User.find(params[:id])
     render :action=>:edit, :layout=>"main"
   end
-  
+
   def update
     @user = User.find(params[:id])
-    
+
     person=Person.find(params[:user][:person_id]) unless (params[:user][:person_id]).nil?
-    
+
     @user.person=person if !person.nil?
-    
+
     @user.attributes=params[:user]
 
     if (!person.nil? && person.is_pal?)
@@ -157,7 +178,7 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      
+
       if @user.save
         #user has associated himself with a person, so activation email can now be sent
         if !current_user.active?
@@ -173,11 +194,16 @@ class UsersController < ApplicationController
         format.html { render :action => 'edit' }
       end
     end
-    
+
   end
 
   def activation_required
-    
+
   end
 
+protected
+  def can_create
+    return true if !current_user
+    is_user_admin_auth
+  end
 end

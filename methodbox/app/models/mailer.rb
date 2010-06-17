@@ -15,9 +15,9 @@ class Mailer < ActionMailer::Base
          :target => Person.find(message.to),
          :host=>base_host
   end
-  
+
   def admin_emails
-    begin      
+    begin
       User.admins.map { |a| a.person.email_with_name }
     rescue
       @@logger.error("Error determining admin email addresses")
@@ -32,7 +32,7 @@ class Mailer < ActionMailer::Base
     from NOREPLY_SENDER
     reply_to user.person.email_with_name
     sent_on Time.now
-    
+
     body :owner=>resource.contributor.person,:requester=>user.person,:resource=>resource,:host=>base_host
   end
 
@@ -50,7 +50,7 @@ class Mailer < ActionMailer::Base
     recipients user.person.email_with_name
     from       NOREPLY_SENDER
     sent_on    Time.now
-    
+
     body       :email=>user.email, :name=>user.person.name, :reset_code => user.reset_password_code, :host=>base_host
   end
 
@@ -59,18 +59,34 @@ class Mailer < ActionMailer::Base
     recipients user.person.email_with_name
     from       NOREPLY_SENDER
     sent_on    Time.now
-    
+
     body       :name=>user.person.name,:person=>user.person, :host=>base_host
   end
 
   def contact_admin_new_user_no_profile(details,user,base_host)
-    
     subject    'MethodBox Member signed up'
     recipients admin_emails
     from       NOREPLY_SENDER
     sent_on    Time.now
-    
+
     body       :details=>details, :person=>user.person, :user=>user, :host=>base_host
   end
 
+  def admin_created_account(admin, new_user, base_host)
+    subject    'MethodBox Member created by admin'
+    recipients admin_emails
+    from       NOREPLY_SENDER
+    sent_on    Time.now
+
+    body       :admin=>admin, :person=>new_user.person, :host=>base_host
+  end
+
+  def deliver_signup_requested(message, new_user,base_host)
+    subject    'MethodBox Signup Requested'
+    recipients admin_emails
+    from       NOREPLY_SENDER
+    sent_on    Time.now
+
+    body       :details=>details, :message=>message, :person=>user.person, :user=>user, :host=>base_host
+  end
 end
