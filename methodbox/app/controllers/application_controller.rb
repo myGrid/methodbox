@@ -486,25 +486,13 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  #Overridden from restful_authentication
-  #Does a second check that there is a profile assigned to the user, and if not goes to the profile
-  #selection page (GET people/select)
-  def authorized?
-    if super
-      if current_user.person.nil?
-        logger.info("No person record found for user "+current_user.person_id.to_s)
-        logger.info("Redirect applied by application_controller.authorized?")
-      	redirect_to(select_people_path) if current_user.person.nil?
-      end      	
-      true
-    else
-      false
-    end
-  end
-
   def is_user_activated
     if ACTIVATION_REQUIRED && current_user && !current_user.active?
-      error("Activation of this account it required for gaining full access","Activation required?")
+      if current_user.activation_code
+      	error("Activation of this account it required for gaining full access","Activation required?")
+      else	
+      	error("This account has not yet be authorized. You will be sent an email when it has been authorized","Authorization required?")	
+      end
       false
     end
   end

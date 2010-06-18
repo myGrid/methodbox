@@ -18,19 +18,19 @@ class SessionsController < ApplicationController
       #if the person has registered but has not yet selected a profile then go to the select person page
       #otherwise login normally
       if current_user.dormant?
-         self.current_user.forget_me if logged_in?
-          cookies.delete :auth_token
-          reset_session
-         flash[:notice] = "This account is no longer active.  If you wish access to any items belonging to this account within the MethodBox then please re-register using the same email address as before"
-          redirect_back_or_default('/')
-        
+        self.current_user.forget_me if logged_in?
+        cookies.delete :auth_token
+        reset_session
+        flash[:notice] = "This account is no longer active.  If you wish access to any items belonging to this account within the MethodBox then please re-register using the same email address as before"
+        redirect_back_or_default('/') 
       elsif current_user.person.nil?
-          logger.info("Attempt to access " + current_user.email + " but no person found.")
-          flash[:error]="Sorry your person record is missing. Please contact an admin"
-          session[:user_id]= nil
+        logger.info("Attempt to access " + current_user.email + " but no person found.")
+        flash[:error]="Sorry your person record is missing. Please contact an admin"
+        session[:user_id]= nil
+        redirect_to root_url
       else
         respond_to do |format|
-#          flash[:notice] = "Logged in successfully"
+#       flash[:notice] = "Logged in successfully"
           
           if !params[:called_from].blank? && params[:called_from][:controller] != "sessions"
             unless params[:called_from][:id].blank?
@@ -53,19 +53,30 @@ class SessionsController < ApplicationController
       #check if user is part way through registration processes      
       user=User.find_by_email(params[:login])   
       if user
-        if !user.authenticated?(params[:password])
-          logger.info("Attempt to access "+user.email+" with incorrect password.")
-          flash[:error] = "User name or password incorrect, please try again"
-          redirect_to :action => 'new'
-        elsif !user.active?        
-          logger.info("Attempt to access "+user.email+" but account was not active.")
-          flash[:error]="You still need to activate your account. You should have been sent a validation email."
-          redirect_to :action=>"new"
+        if !user.active?    
+          if user.approved?
+            logger.info("Attempt to access "+user.email+" but account was not active.")
+            flash[:error]=
+            "You still need to activate your account. You should have been sent a validation email."            
+          else
+            logger.info("Attempt to access "+user.email+" but account was not approved.")
+            if user.created_at < 1.week.ago
+              Mailer.deliver_signup_requested("Access requested over a week ago", user, base_host)
+              flash[:error]="This account still has not been approved. The administrators have been reminded of your request. You will be sent an email when it has been authorized"
+            else  
+              flash[:error]="This account has not yet beeen approved. You will be sent an email when it has been authorized"
+            end  
+          end
+          redirect_to root_url
         elsif (user.person.nil?)
           logger.info("Attempt to access "+user.email+" but no person found.")
           flash[:error]="Sorry your person record is missing. Please contact an admin"
           session[:user_id]= nil
           redirect_to root_url
+        elsif !user.authenticated?(params[:password])
+          logger.info("Attempt to access "+user.email+" with incorrect password.")
+          flash[:error] = "User name or password incorrect, please try again"
+          redirect_to :action => 'new'
         else  
           logger.info(user.email)
           logger.info(user.active?)

@@ -40,3 +40,13 @@ person_for_cart_owner:
   first_name: "cart"
   last_name: "owner"
   email: cart_owner@example.com
+
+person_for_awaiting_approval:
+  email: awaiting_approval@example.com
+  first_name: "awaiting"
+  last_name: "approval"
+  
+person_for_old_awaiting_approval:
+  email: old_awaiting_approval@example.com
+  first_name: "still"
+  last_name: "waiting"

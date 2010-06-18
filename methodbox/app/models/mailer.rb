@@ -81,12 +81,12 @@ class Mailer < ActionMailer::Base
     body       :admin=>admin, :person=>new_user.person, :host=>base_host
   end
 
-  def deliver_signup_requested(message, new_user,base_host)
+  def signup_requested(message, new_user,base_host)
     subject    'MethodBox Signup Requested'
     recipients admin_emails
     from       NOREPLY_SENDER
     sent_on    Time.now
 
-    body       :details=>details, :message=>message, :person=>user.person, :user=>user, :host=>base_host
+    body       :message=>message, :person=>new_user.person, :user=>new_user, :host=>base_host
   end
 end

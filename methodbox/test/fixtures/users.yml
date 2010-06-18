@@ -59,6 +59,36 @@ unactivated_missing_person:
   can_edit_projects: false
   can_edit_institutions: false
 
+missing_person:
+  email: MissingPerson@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
+  activated_at: <%= 1.days.ago.to_s :db %> 
+  is_admin: false
+  can_edit_projects: false
+  can_edit_institutions: false
+
+awaiting_approval:
+  email: awaiting_approval@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
+  is_admin: false
+  person: person_for_awaiting_approval
+  can_edit_projects: false
+  can_edit_institutions: false
+
+old_awaiting_approval:
+  email: old_awaiting_approval@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 10.days.ago.to_s :db %>
+  person: person_for_old_awaiting_approval
+  is_admin: false
+  can_edit_projects: false
+  can_edit_institutions: false
+
 with_age_in_name:
   person: person_for_with_age_in_name
   email: alex@example.com
@@ -84,3 +114,4 @@ cart_owner:
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
   is_admin: false
+

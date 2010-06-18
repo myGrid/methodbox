@@ -33,6 +33,22 @@ class SessionsControllerTest < ActionController::TestCase
     assert_redirected_to :controller => "session", :action => "new"
   end
 
+  def test_awaiting_approval_user
+    post :create, :login => 'awaiting_approval@example.com', :password => 'test'
+    assert_equal "This account has not yet beeen approved. You will be sent an email when it has been authorized", flash[:error]
+    assert_nil flash[:notice]
+    assert_nil session[:user_id]
+    assert_redirected_to root_url
+  end
+
+  def test_old_awaiting_approval_user
+    post :create, :login => 'old_awaiting_approval@example.com', :password => 'test'
+    assert_equal "This account still has not been approved. The administrators have been reminded of your request. You will be sent an email when it has been authorized", flash[:error]
+    assert_nil flash[:notice]
+    assert_nil session[:user_id]
+    assert_redirected_to root_url
+  end
+
   def test_unkown_user
     post :create, :login => 'badUser@example.com', :password => 'test'
     assert_equal "User name or password incorrect, please try again", flash[:error]
@@ -89,20 +105,20 @@ class SessionsControllerTest < ActionController::TestCase
   end
   
   def test_person_missing
-    post :create, :login => 'person_missing@example.com', :password => 'test'
-    assert_not_nil flash[:error]
+    post :create, :login => 'MissingPerson@example.com', :password => 'test'
+    assert_equal "Sorry your person record is missing. Please contact an admin", flash[:error]
     assert_nil flash[:notice]
     assert_nil session[:user_id]
-    #assert_redirected_to :controller => "session", :action => "new"
+    assert_redirected_to root_url
   end
 
-  def test_non_activated_user_should_redirect_to_new_with_message
+  def test_non_activated_user_should_redirect_with_message
     post :create, :login => 'unactivated@example.com', :password => 'test'
     assert_not_nil flash.now[:error]
     assert flash.now[:error].include?("need to activate")
     assert_nil flash.now[:notice]
     assert_nil session[:user_id]
-    assert_redirected_to :action=>"new"
+    assert_redirected_to root_url
   end
 
   protected

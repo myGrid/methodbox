@@ -81,10 +81,16 @@ class User < ActiveRecord::Base
   end
 
   def active?
-    # the existence of an activation code means they have not activated yet
+    # the existence of an activated at time means the use has been activated
+    # the existence of an activation code means they have not activated yet but has been authorized
     activated_at
   end
 
+  # Specifies if an account is either activated or has an activation code so it can be activated
+  def approved?
+    activated_at || activation_code
+  end
+  
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL', login] # need to get the salt

@@ -96,10 +96,7 @@ class AccessTestTest < ActionController::IntegrationTest
    end
    
    def test_user_new
-      #more
-      if !REGISTRATION_CLOSED
-	anyone_can_get "users/new"
-      end	
+      logged_out_and_admin_can_get "users/new"
    end
 
    def test_variable_help
@@ -129,7 +126,7 @@ class AccessTestTest < ActionController::IntegrationTest
       
       login_normal
       get path
-      assert_equal adminError,  flash[:error]
+      assert_equal adminError, flash[:error]
       assert_response :redirect      
       assert_nil flash[:notice]
       logout
@@ -181,6 +178,7 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:notice]
       assert_select "title",:text=>/MethodBox.*/, :count=>1
       logout
+
       get path
       assert_equal "Please log in first",  flash[:error]
       assert_response :redirect      
@@ -188,7 +186,31 @@ class AccessTestTest < ActionController::IntegrationTest
       assert_nil flash[:notice]
       
    end
+   
 
+   def logged_out_and_admin_can_get(path, adminError = "Admin rights required")
+      login_admin
+      get path
+      assert_response :success
+      assert_nil flash[:error]
+      assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
+      logout
+
+      get path
+      assert_nil flash[:error]
+      assert_response :success
+      assert_nil flash[:notice]
+      assert_select "title",:text=>/MethodBox.*/, :count=>1
+
+      login_normal
+      get path
+      assert_equal adminError,  flash[:error]
+      assert_response :redirect      
+      assert_nil flash[:notice]
+      logout      
+   end
+   
    def login_admin
       post "sessions/create", :login => 'quentin@example.com', :password => 'test'
    end
