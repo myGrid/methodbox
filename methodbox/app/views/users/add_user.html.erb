@@ -1,0 +1,98 @@
+<h1>Add a User<%= render :partial=>"layouts/sandbox_warning" %></h1>
+<h2>
+	Please provide their details (<font style="color: #FF0000;">*</font> <font style="font-size: small;"> compulsory field)</font>
+</h2>
+<div id="signup" style="float:right; width: 40%; margin: 1em;">
+
+  <p><b>Sign new user up</b></p>  <p>He/She wants to share <b>knowledge</b> and <b>expertise</b> with other MethodBox users</p>
+
+  <p class="box_infotext">
+    <b>By registering, you are indicating that:</b>
+    <br/>
+    <b>The new user has registered with <a href="http://www.esds.ac.uk/">ESDS</a> and is allowed to use the datasets they provide</b>
+    <br/>
+    The new user must be made aware that he/she is responsible for any content that he/she uploads. Also that we receive and store certain types of information whenever anyone interacts with us which we will use only for operational purposes. We will not make
+    personally identifiable data available to third parties without consent.
+    Please contact us if you have any queries about our terms or our privacy policy.
+    <br/><br/>
+    If they have previously registered but suspended/deleted your account and wish to re-claim their old 'assets then please re-register using the same email address as previously used.
+  </p>
+</div>    
+
+<div style="width:50%; margin: 1em; float: left;">
+  <% form_tag(:controller=>'users', :action=>'create') do -%>
+	
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 50%;">
+          <div style="width: 90%;">
+            <fieldset>
+              <legend>Email Address</legend>
+              <p>
+                <%= label :email, "New Users email address" %><font style="color: #FF0000;">*</font><br />
+                <%= text_field(:user, :email, :style => "width: 100%;") %>
+              </p>
+              <p>
+                <%= label :email_confirmation, "Confirm the email address" %><font style="color: #FF0000;">*</font><br />
+                <%= text_field(:user, :email_confirmation, :style => "width: 100%;") %>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>Password (New Users can use forgotten password link to rest it) </legend>
+              <p>
+                <%= label :password, "Password (should contain a minimum of 4 characters)" %><font style="color: #FF0000;">*</font><br/>
+                <%= password_field(:user, :password, :style => "width: 100%;") %>
+              </p>
+              <p>
+                <%= label :password_confirmation, "Confirm temporary password" %><font style="color: #FF0000;">*</font><br/>
+                <%= password_field(:user, :password_confirmation, :style => "width: 100%;") %>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>About new user</legend>
+              <p>
+                <%= label :first_name, "First name" -%><font style="color: #FF0000;">*</font><br/>
+                <%= text_field(:person, :first_name, :style => "width: 100%;") -%>
+              </p>
+              <p>
+                <%= label :last_name, "Last name" %><font style="color: #FF0000;">*</font><br/>
+                <%= text_field(:person, :last_name, :style => "width: 100%;") %>
+              </p>
+              <p>  
+                <%= label :description, "Description" %><br/>
+                <%= text_area(:person, :description, :class=>"description", :rows => 8, :style => "width: 100%;") -%>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>Authenticate</legend>
+              <p>
+                <%= check_box_tag('activate') %>
+                <%= label :activate, "Active the user" %>
+              </p>
+            </fieldset>
+            <fieldset>
+              <legend>Notifications</legend>
+              <p>
+                <%= check_box('person','send_notifications') %>
+                <%= label :send_notifications, "User would like to receive email notifications" %>
+              </p>
+              <div class="box_info_standout" style="margin-top: 0.6em; font-size: 93%;">
+                By ticking this box you know the new users agrees to receiving emails from us.
+                This may be announcements, maintenance notices and so on.
+                This will also include email notifications when other users message you.
+                Their email address is private and will not be available to other users and
+                will not be passed on to any third parties.
+              </div>
+            </fieldset>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <p style="text-align: center;">
+      <%= submit_tag 'Register' %>
+    </p>
+  <% end -%>  
+</div>  
+<div style="clear:both;">
+</div>
+<!-- </center> -->

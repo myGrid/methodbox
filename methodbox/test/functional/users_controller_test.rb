@@ -93,6 +93,21 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  def test_should_require_email_on_signup
+    assert_no_difference 'User.count' do
+      create_user(:email => nil)
+    end
+  end
+
+  def test_should_not_allow_creating_an_admin
+    assert_difference 'User.count' do
+      create_user(:is_admin => true)
+      u = User.find_by_email('quire@example.com')
+      assert u
+      assert !u.is_admin
+    end  
+  end
+
   #  def est_should_sign_up_user_with_activation_code
   #    create_user
   #    assigns(:user).reload
@@ -164,6 +179,62 @@ class UsersControllerTest < ActionController::TestCase
     assert User.authenticate("aaron@example.com","mmmmm")
   end
 
+  def test_reject_user
+    login_as :admin
+    u=users(:awaiting_approval)
+    name = u.person.name
+    assert_difference 'User.count', difference = -1 do
+      post :reject, :id => u.id
+      assert_nil flash[:error]
+      assert_equal name + " has been deleted." , flash[:notice] 
+    end  
+   end
+  
+  def test_reject_user_removes_person
+    login_as :admin
+    u=users(:awaiting_approval)
+    name = u.person.name
+    assert_difference 'Person.count', difference = -1 do
+      post :reject, :id => u.id
+      assert_nil flash[:error]
+      assert_equal name + " has been deleted." , flash[:notice] 
+    end  
+  end
+
+  def test_approve_and_activate_user
+    login_as :admin
+    u=users(:awaiting_approval)
+    post :approve, :id => u.id, :activate => true
+    assert_nil flash[:error]
+    assert_equal "Activated new user with email: "+u.email.to_s, flash[:notice]
+  end
+
+  #todo: activate by admin
+  def est_activate_user
+    login_as :admin
+    u=users(:unactivated_user)
+    post :active, :activation_code => u.activation_code
+    assert_nil flash[:error]
+    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice] 
+  end
+
+  def test_approve_but_not_activate_user
+    login_as :admin
+    u=users(:awaiting_approval)
+    post :approve, :id => u.id
+    assert_nil flash[:error]
+    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice] 
+  end
+
+  def test_resend_activation_code
+    login_as :admin
+    u=users(:unactivated_user)
+    post :resend_actiavtion_code, :id => u.id
+    assert_nil flash[:error]
+    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice] 
+  end
+  
+  
   protected
   def create_user(options = {})
     post :create, :user => { :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }.merge(options),:person=>{:first_name=>"fred"}

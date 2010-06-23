@@ -23,10 +23,20 @@ profile=user.person
     Normal User
   <% end %>  
   
-  <% if user.is_admin -%>
-    <%= button_to "Revoke Admin Rights", {:controller => "admin", :action => "change_admin_status", :id => user.id, :is_admin => false} -%>
-  <% else %>  
-    <%= button_to "Grant Admin Rights", {:controller => "admin", :action => "change_admin_status", :id => user.id, :is_admin => true} -%>
-  <% end -%>  
-    
+  <% if user.active? %>    
+    <% if user.is_admin -%>
+      <%= button_to "Revoke Admin Rights", {:controller => "admin", :action => "change_admin_status", :id => user.id, :is_admin => false} -%>
+    <% else %>  
+      <%= button_to "Grant Admin Rights", {:controller => "admin", :action => "change_admin_status", :id => user.id, :is_admin => true} -%>
+    <% end -%>  
+  <% else -%>
+    <% if user.approved? -%>
+      <%= button_to "Resend Activation Email", {:controller => "user", :action => "resend_activation_code", :id => user.id} -%>
+      <%= button_to "Activate User", {:controller => "user", :action => "activate", :activation_code => user.activation_code} -%>
+    <% else %>       
+      <%= button_to "Approve User and Send Activation Email.", {:controller => "user", :action => "approve", :id => user.id} -%>
+      <%= button_to "Approve and activate user", {:controller => "user", :action => "approve", :activate => true} -%>
+      <%= button_to "Reject User", {:controller => "user", :action => "reject", :activation_code => user.activation_code} -%>      
+    <% end %>  
+  <% end -%>    
 <br>

@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   # TODO uncomment the following line when SOPs are implemented
   # has_many :sops, :as => :contributor
   
-  belongs_to :person
+  belongs_to :person, :dependent => :destroy
   #validates_associated :person
   
   #restful_authentication plugin generated code ...

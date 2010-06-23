@@ -4,22 +4,23 @@ class UsersController < ApplicationController
 
   before_filter :is_current_user_auth, :only=>[:edit, :update]
   before_filter :can_create, :only=>[:new, :create]
+  before_filter :is_user_admin_auth, :only=>[:resend_actiavtion_code, :approve, :reject]
+  before_filter :request_for_unactive_user, :only=>[:resend_actiavtion_code, :approve, :reject]
 
   # render new.rhtml
   def new
-    if !REGISTRATION_CLOSED
-      @user=User.new
-      @user.person=Person.new
-
-    else
-      flash[:error] = "Registration of new accounts is currently closed"
-      self.current_user.forget_me if logged_in?
-      cookies.delete :auth_token
-      reset_session
-  #    flash[:notice] = "You have been logged out."
-      redirect_back_or_default('/')
+    @user=User.new
+    @user.person=Person.new
+    respond_to do |format|
+      if current_user #and therefor by before_filter :can_create an admin
+        #format.html {render :controller=>"users", :action => "new" }
+        format.html {render :controller=>"users", :action => "add_user" }
+      elsif !REGISTRATION_CLOSED
+        format.html {render :controller=>"users", :action => "request_access" }
+      else  
+        format.html {render :controller=>"users", :action => "new" }
+      end  
     end
-
   end
 
   def create
@@ -39,13 +40,8 @@ class UsersController < ApplicationController
     respond_to do |format|
     if @user.errors.empty?
       if current_user #and therefor by before_filter :can_create an admin
-        if params[:activate]
-          @user.activate
-          flash[:notice]="Activated new user with email: "+@user.email.to_s
-        else
-          Mailer.deliver_admin_created_account(current_user, @user, base_host)
-          flash[:notice]="Activation email sent to "+@user.email.to_s
-        end
+        do_approval(@user)
+        Mailer.deliver_admin_created_account(current_user, @user, base_host)
         format.html {redirect_to(admin_path)}
       else
         if REGISTRATION_CLOSED
@@ -59,7 +55,8 @@ class UsersController < ApplicationController
           if !ACTIVATION_REQUIRED
             @user.activate
             format.html {redirect_to(root_path)}
-          else
+            Mailer.deliver_welcome self.current_user, base_host
+         else
               # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
               Mailer.deliver_signup(current_user,base_host)
               flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
@@ -80,9 +77,6 @@ class UsersController < ApplicationController
       if self.current_user.person
         self.current_user.activate
         if logged_in?
-          puts current_user
-          puts current_user.email
-          puts self.current_user.person
           Mailer.deliver_welcome self.current_user, base_host
           logger.info("New user activated: " + current_user.person_id.to_s)
           flash[:notice] = "You have succesfully signed up"
@@ -157,7 +151,6 @@ class UsersController < ApplicationController
     end
   end
 
-
   def edit
     @user = User.find(params[:id])
     render :action=>:edit, :layout=>"main"
@@ -200,10 +193,61 @@ class UsersController < ApplicationController
   def activation_required
 
   end
+  
+  def resend_actiavtion_code   
+    user = User.find(params[:id])
+    if user.activation_code
+      flash[:notice]="Activation email sent to "+user.email.to_s
+      Mailer.deliver_signup(user, base_host)
+    else
+      flash[:error]="User "+user.name+ " does not have an activation code"
+    end
+    redirect_to admin_url
+  end
+  
+  def approve
+    do_approval(User.find(params[:id]))
+    redirect_to admin_url
+  end
+  
+  def reject
+    user = User.find(params[:id])
+    name =  user.person.name.to_s 
+    flash[:notice] = name + " has been deleted."
+    Mailer.deliver_signup_request_denied(user,base_host)
+    #user.person.destroy
+    user.destroy
+    redirect_to admin_url
+  end
 
-protected
+protected 
+  def request_for_unactive_user
+    user = User.find(params[:id])
+    if !user
+      error("No user found with id "+params[:id].to_s, "No user found")
+      return false
+    elsif user.active?
+      error("User with id "+params[:id].to_s+ " already active", "User already acritve")
+      return false
+    else
+      return true
+    end  
+  end
+
   def can_create
     return true if !current_user
     is_user_admin_auth
   end
+  
+  def do_approval(user)
+    if params[:activate]
+      user.activate
+      flash[:notice]="Activated new user with email: "+user.email.to_s
+      Mailer.deliver_welcome(user,base_host)
+    else
+      flash[:notice]="Activation email sent to "+user.email.to_s
+      Mailer.deliver_signup(user,base_host)
+    end
+  end
+  
 end

@@ -45,6 +45,15 @@ class Mailer < ActionMailer::Base
     body        :username=>user.email, :name=>user.person.name, :admins=>User.admins.collect{|u| u.person}, :activation_code=>user.activation_code, :host=>base_host
   end
 
+  def signup_request_denied(user,base_host)
+    subject     'MethodBox signup not possible'
+    recipients  user.person.email_with_name
+    from        NOREPLY_SENDER
+    sent_on     Time.now
+
+    body        :username=>user.email, :name=>user.person.name, :host=>base_host
+  end
+
   def forgot_password(user,base_host)
     subject    'MethodBox - Password reset'
     recipients user.person.email_with_name
