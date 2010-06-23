@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   layout "main", :except=>[:edit]
 
   before_filter :is_current_user_auth, :only=>[:edit, :update]
-  before_filter :can_create, :only=>[:new, :create]
+  before_filter :logged_out_or_admin, :only=>[:new, :create, :activate]
   before_filter :is_user_admin_auth, :only=>[:resend_actiavtion_code, :approve, :reject]
   before_filter :request_for_unactive_user, :only=>[:resend_actiavtion_code, :approve, :reject]
 
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
     @user.save
     respond_to do |format|
     if @user.errors.empty?
-      if current_user #and therefor by before_filter :can_create an admin
+      if current_user #and therefor by before_filter :logged_out_or_admin an admin
         do_approval(@user)
         Mailer.deliver_admin_created_account(current_user, @user, base_host)
         format.html {redirect_to(admin_path)}
@@ -72,32 +72,36 @@ class UsersController < ApplicationController
   end
 
   def activate
-    self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
-    if self.current_user
-      if self.current_user.person
-        self.current_user.activate
+    user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
+    if !user
+      logger.info("Activation code not found: "+params[:activation_code].to_s)
+      flash[:error] = "Sorry account already activated or incorrect activation code. Please contact an admin."
+      redirect_back_or_default('/')
+    elsif !user.person
+      logger.info("No person record found for user "+ user.person_id.to_s)
+      flash[:error] = "Sorry account is corrupt. Please contact an admin."
+      redirect_back_or_default('/')
+    else  
+      user.activate
+      logger.info("New user activated: " + user.person_id.to_s)
+      Mailer.deliver_welcome user, base_host
+      if current_user #and therefor by before_filter :logged_out_or_admin an admin
+         flash[:notice] = user.person.name.to_s+" has been activated"
+         redirect_to admin_url
+      else             
+        self.current_user = user
         if logged_in?
-          Mailer.deliver_welcome self.current_user, base_host
-          logger.info("New user activated: " + current_user.person_id.to_s)
-          flash[:notice] = "You have succesfully signed up"
+          flash[:notice] = "You have succesfully signed up!"
           redirect_to self.current_user.person
         else
           #logger_in should have set flash[:error]
           logger.info("Login Failed for "+ self.current_user.person_id.to_s)
           flash[:error] = "login fialed"
           redirect_back_or_default('/')
-        end
-      else
-        logger.info("No person record found for user "+current_user.person_id.to_s)
-        flash[:error] = "Sorry account is corrupt. Please contact an admin."
-        redirect_back_or_default('/')
-      end
-    else #if self.current_user
-      logger.info("Activation code not found: "+params[:activation_code].to_s)
-      flash[:error] = "Sorry account already activated or incorrect activation code. Please contact an admin."
-      redirect_back_or_default('/')
-    end
-  end
+        end #!logged_in?
+      end #!current_user   
+    end # user  &&  user.person
+  end #def
 
   def reset_password
     user = User.find_by_reset_password_code(params[:reset_code])
@@ -234,7 +238,7 @@ protected
     end  
   end
 
-  def can_create
+  def logged_out_or_admin
     return true if !current_user
     is_user_admin_auth
   end

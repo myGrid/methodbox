@@ -161,16 +161,6 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to root_url
   end
 
-  #FIXME:
-  #def est_associated_with_person
-  #  login_as :part_registered
-  #  u=users(:part_registered)
-  #  p=people(:not_registered)
-  #  post :update, :id=>u.id,:user=>{:id=>u.id,:person_id=>p.id}
-  #  assert_nil flash[:error]
-  #  assert_equal p,User.find(u.id).person
-  #end
-
   def test_update_password
     login_as :normal_user
     u=users(:normal_user)
@@ -209,13 +199,13 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal "Activated new user with email: "+u.email.to_s, flash[:notice]
   end
 
-  #todo: activate by admin
-  def est_activate_user
+  def test_activate_user
     login_as :admin
     u=users(:unactivated_user)
-    post :active, :activation_code => u.activation_code
+    post :activate, :activation_code => u.activation_code
+    assert u.active
     assert_nil flash[:error]
-    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice] 
+    assert_equal u.person.name.to_s + " has been activated", flash[:notice] 
   end
 
   def test_approve_but_not_activate_user
