@@ -15,7 +15,7 @@ class UsersController < ApplicationController
       if current_user #and therefor by before_filter :can_create an admin
         #format.html {render :controller=>"users", :action => "new" }
         format.html {render :controller=>"users", :action => "add_user" }
-      elsif !REGISTRATION_CLOSED
+      elsif REGISTRATION_CLOSED
         format.html {render :controller=>"users", :action => "request_access" }
       else  
         format.html {render :controller=>"users", :action => "new" }

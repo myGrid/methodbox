@@ -1,5 +1,15 @@
 <div style="text-align: center; margin-top: 1em;">
-	<b><%= link_to "Sign up", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open'); return false;} else return true;" %></b> / <b><%= link_to "Log in", login_url, :onclick => "showLoginBox('login_box'); return false;"%></b>
+	<b>
+		<% if REGISTRATION_CLOSED -%>
+			<%= link_to "Request Access", signup_url %>
+		<% else -%>
+			<%= link_to "Sign up", signup_url %>
+		<% end -%>		
+	</b>
+	/ 
+	<b>
+		<%= link_to "Log in", login_url, :onclick => "showLoginBox('login_box'); return false;"%>
+	</b>
 </div>
 <div id="login_box" style="display: none; z-index: 100; position: absolute;">
 	<%= render :partial=>"gadgets/sign_in_popup" %>
