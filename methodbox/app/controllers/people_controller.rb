@@ -212,19 +212,25 @@ class PeopleController < ApplicationController
   # DELETE /people/1
   # DELETE /people/1.xml
   def destroy
-    @person = Person.find(params[:id])
-    user = User.find(current_user.id)
+    person = Person.find(params[:id])
+    person.dormant=true
+    person.save
+    user = User.find_by_person_id(person)
     user.dormant = true
     user.save
-    @person.dormant=true
-    @person.save
-    current_user.forget_me
-    reset_session
-
-    respond_to do |format|
-      format.html { redirect_to(people_url) }
-      format.xml  { head :ok }
-    end
+    if current_user = user
+      current_user.forget_me
+      reset_session
+      respond_to do |format|
+        format.html { redirect_to(root_url) }
+        format.xml  { head :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to(admin_url) }
+        format.xml  { head :ok }
+      end
+    end  
   end
 
   def userless_project_selected_ajax

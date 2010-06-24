@@ -12,6 +12,7 @@ other_person:
   id: 2
   first_name: "fred"
   last_name: "blogs"
+  email: fred@example.com
 
 unactivated_person:
   id: 3

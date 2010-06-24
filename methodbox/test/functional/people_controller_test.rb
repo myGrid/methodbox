@@ -46,24 +46,6 @@ class PeopleControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  #What is pal flag
-  #def test_admin_can_set_pal_flag
-  #  login_as(:admin)
-  #  p=people(:fred)
-  #  assert !p.is_pal?
-  #  put :update,:id=>p.id,:person=>{:id=>p.id,:is_pal=>true,:email=>"ssfdsd@sdfsdf.com"}
-  #  assert Person.find(p.id).is_pal?
-  #end
-
-  #What is pal flag
-  #def test_non_admin_cant_set_pal_flag
-  #  login_as(:normal_user)
-  #  p=people(:fred)
-  #  assert !p.is_pal?
-  #  put :update,:id=>p.id,:person=>{:id=>p.id,:is_pal=>true,:email=>"ssfdsd@sdfsdf.com"}
-  #  assert !Person.find(p.id).is_pal?
-  #end
-
   #def test_can_edit_person_and_user_id_different
   #  #where a user_id for a person are not the same
   #  login_as(:fred)
@@ -96,11 +78,42 @@ class PeopleControllerTest < ActionController::TestCase
   #  assert_redirected_to person_path(assigns(:person))
   #end
 
-  #May 24 2010 Current code does not suppot deleting a person
-  #def test_should_destroy_person
-  #  assert_difference('Person.count', -1) do
-  #    delete :destroy, :id => people(:one)
-  #  end
-  #  assert_redirected_to people_path
-  #end
+  def test_can_dormant_self
+    login_as(:normal_user)
+    delete :destroy, :id => people(:normal_person)
+    assert_nil flash[:error]
+    p = Person.find(people(:normal_person))
+    assert p.dormant
+    u = User.find_by_person_id(p)
+    assert u.dormant
+  end
+  
+  def test_can_not_dormant_others
+    login_as(:normal_user)
+    delete :destroy, :id => people(:other_person)
+    assert_equal "Not the current person", flash[:error]
+    p = Person.find(people(:other_person))
+    assert !p.dormant
+    u = User.find_by_person_id(p)
+    assert !u.dormant
+    p = Person.find(people(:normal_person))
+    assert !p.dormant
+    u = User.find_by_person_id(p)
+    assert !u.dormant
+  end
+  
+  def test_admin_can_dormant_others
+    login_as(:admin)
+    delete :destroy, :id => people(:other_person)
+    assert_nil flash[:error]
+    p = Person.find(people(:admin_person))
+    assert !p.dormant
+    u = User.find_by_person_id(p)
+    assert !u.dormant
+    p = Person.find(people(:other_person))
+    assert p.dormant
+    u = User.find_by_person_id(p)
+    assert u.dormant
+  end
+
 end
