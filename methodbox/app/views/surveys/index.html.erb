@@ -18,7 +18,7 @@
       <%= hidden_field_tag "page", 1 -%>
       <%= hidden_field_tag "per_page", 10 -%>
       <% if !logged_in? -%>
-        <h2>Welcome, guest.  Please select some surveys and search for variables of interest to your research.  You can browse the metadata and see what is inside the MethodBox but only <%= link_to "registered users", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open'); return false;} else return true;" -%> can add variables to their cart and download them.</h2><br/>		
+        <h2>Welcome, guest.  Please select some surveys and search for variables of interest to your research.  You can browse the metadata and see what is inside the MethodBox but only <%= link_to "registered users", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open'); return false;} else return true;" -%> can add variables to their cart and download them.</h2><br/>
       <% else -%>
         <h2>Select some surveys, enter a search term and click the button to find some variables</h2><br/>
       <% end -%>
@@ -29,14 +29,14 @@
 		  <% if logged_in? && !@recent_searches.empty? -%>
 		  <div style="position: absolute; top:1em;left:30em">
 			Previous searches:
-		<%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>  
+		<%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>
 		</div>
 		<% end -%>
         <!-- jquery grid experiment -->
         <%#= submit_to_remote 'submit', 'JQ Grid', {:url=>{:controller => "variables", :action=> "grid_view"}} -%>
         <% if logged_in? -%>
           <div id="cart_button" style="position: absolute; top:1em; right:1em;">
-            <%= render :partial => "cart_button" -%>
+            <%= render :partial => "cart/button" -%>
           </div>
         <% end -%>
         <div style="position: absolute; bottom:1em; left:1em;">Select:

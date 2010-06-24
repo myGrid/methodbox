@@ -8,7 +8,7 @@ require 'xml'
 class ApplicationController < ActionController::Base
 
   include AuthenticatedSystem
-  
+
   helper :all # include all helpers, all the time
   layout "main"
   after_filter :discard_flash_if_xhr
@@ -16,18 +16,18 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery  :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
-  
+
 #savage_beast
   def update_last_seen_at
     #return unless logged_in?
     #User.update_all ['last_seen_at = ?', Time.now.utc], ['id = ?', current_user.id]
     #current_user.last_seen_at = Time.now.utc
   end
-  
+
   def admin?
     return current_user && current_user.is_admin?
   end
-  
+
   # #savage_beast
   # def login_required
   #       if !current_user
@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   #                                 return false
   #                         end
   #     end
-      
+
       # def current_user
       #         #@current_user ||= ((session[:user_id] && User.find_by_id(session[:user_id])) || 0)
       #         @current_user = current_user
@@ -44,11 +44,11 @@ class ApplicationController < ActionController::Base
       # def logged_in?
       #        current_user ? true : false #current_user != 0
       #      end
-      # 
+      #
       #      def admin?
       #        logged_in? && current_user.admin?
       #      end
-      
+
   def deal_with_selected
     #        logger.info("commit: " + params[:myHiddenField])
     #    if params.has_key?(:download_button)
@@ -85,7 +85,7 @@ class ApplicationController < ActionController::Base
         item = CartItem.find_by_user_id_and_variable_id(current_user,var)
         if item
           item.destroy
-        end  
+        end
       end
       current_user.reload
         render :update, :status=>:created do |page|
@@ -128,7 +128,7 @@ class ApplicationController < ActionController::Base
       end
 
     end
-   
+
   end
 
   def download_all_variables
@@ -153,7 +153,7 @@ class ApplicationController < ActionController::Base
         #        variable_hash[var] = get_variable(item.variable_id)
         #        logger.info("Would have downloaded: " + item.variable_id.to_s)
       end
-     
+
 
       @number_processed = 'Fill in the details for this new Archive'
       render :update, :status=>:created do |page|
@@ -167,7 +167,7 @@ class ApplicationController < ActionController::Base
 
   def add_to_pseudo_cart
     render :update, :status=>:created do |page|
-      
+
     end
   end
 
@@ -204,31 +204,31 @@ class ApplicationController < ActionController::Base
           #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
         end
       end
-     
+
     when "add"
       @selected_surveys = params[:survey_list]
       @variable_list = Array.new(params[:variable_ids])
 
       @variable_list.each do |var|
-       
+
        #uts CartItem.find(:first)
        #uts CartItem.find_by_user_id(current_user)
        if CartItem.find_by_user_id_and_variable_id(current_user,var)
           puts "User already has variable "+var.to_s
-       else  
+       else
 	  an_item = CartItem.new
           an_item.user = current_user
           an_item.variable_id = var
           an_item.save
           current_user.reload
           #uts "cart size is now "+ current_user.cart_items.size.to_s
-        end  
+        end
       end
 
       render :update, :status=>:created do |page|
         #        TODO flash the cart
         #                page[:cart_button].reload
-        page.replace_html "cart_button", :partial=>"surveys/cart_button"
+        page.replace_html "cart_button", :partial=>"cart/button"
         page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
         #                page.visual_effect :highlight, 'cart_button' ,:duration => 1
         #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
@@ -344,7 +344,7 @@ class ApplicationController < ActionController::Base
     #        page.replace_html "cart-contents-inner", :partial=>"surveys/cart_item"
     #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
     #      end
-      
+
     #    elsif params[:watch_variable]=="false"
     #      varname = params[:variable_name]
     #      varid = params[:variable_identifier]
@@ -443,7 +443,7 @@ class ApplicationController < ActionController::Base
     #    end
 
   end
-  
+
   def empty_cart
     current_user.cart_items.destroy
     render :update, :status=>:created do |page|
@@ -462,7 +462,7 @@ class ApplicationController < ActionController::Base
         if item
           puts "delete" + var
           item.destroy
-        end  
+        end
       end
       current_user.reload
     end
@@ -479,7 +479,7 @@ class ApplicationController < ActionController::Base
   def base_host
     request.host_with_port
   end
-  
+
   def self.fast_auto_complete_for(object, method, options = {})
     define_method("auto_complete_for_#{object}_#{method}") do
       render :json => object.to_s.camelize.constantize.find(:all).map(&method).to_json
@@ -490,8 +490,8 @@ class ApplicationController < ActionController::Base
     if ACTIVATION_REQUIRED && current_user && !current_user.active?
       if current_user.activation_code
       	error("Activation of this account it required for gaining full access","Activation required?")
-      else	
-      	error("This account has not yet be authorized. You will be sent an email when it has been authorized","Authorization required?")	
+      else
+      	error("This account has not yet be authorized. You will be sent an email when it has been authorized","Authorization required?")
       end
       false
     end
@@ -504,19 +504,19 @@ class ApplicationController < ActionController::Base
       error("User not found (id not authorized)", "is invalid (not owner)")
       return false
     end
-    
+
     unless @user
       error("User not found (or not authorized)", "is invalid (not owner)")
       return false
     end
   end
-  
+
   def is_user_admin_auth
     unless current_user.is_admin?
       if (User.count :conditions => "is_admin = true") == 0
       	flash[:notice] = "No Admin User found. Set a user to admin ASAP."
       	return true
-      end      	
+      end
       error("Admin rights required", "is invalid (not admin)")
       return false
     end
@@ -529,11 +529,11 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-  
+
   #maybe use the breadcrumbs in the future
   #add one to a controller with eg. add_breadcrumb 'Home', 'index_url'
-  
-  #add little breadcrumbs to the routes 
+
+  #add little breadcrumbs to the routes
   #based on http://szeryf.wordpress.com/2008/06/13/easy-and-flexible-breadcrumbs-for-rails/
   def add_breadcrumb name, url = ''
     @breadcrumbs ||= []
@@ -547,17 +547,17 @@ class ApplicationController < ActionController::Base
       controller.send(:add_breadcrumb, name, url)
     end
   end
-  
+
 
   def discard_flash_if_xhr
     flash.discard if request.xhr?
   end
-  
+
   private
 
   #Get all values for a particular variable
   def get_variable(variable)
-    
+
     survey_name = Survey.find(variable.survey_id).original_filename
     values_array = Array.new
     #open the dataset
@@ -588,7 +588,7 @@ class ApplicationController < ActionController::Base
   def error(notice, message)
     flash[:error] = notice
     (err = User.new.errors).add(:id, message)
-    
+
     respond_to do |format|
       format.html { redirect_to root_url }
     end
@@ -598,11 +598,11 @@ class ApplicationController < ActionController::Base
   def default_items_per_page
     7
   end
-  
+
   def default_variables_per_page
     30
   end
-  
+
   # See ActionController::Base for details
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password").

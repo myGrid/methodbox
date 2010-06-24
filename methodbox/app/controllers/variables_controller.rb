@@ -24,14 +24,14 @@ class VariablesController < ApplicationController
     else
       @variables = Variable.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:name)
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @variables.to_xml}
     end
-    
+
   end
-  
+
   def edit
     find_variable
     @all_tags = @variable.title_counts
@@ -40,10 +40,10 @@ class VariablesController < ApplicationController
   def add_to_cart
     find_variable
 
-  
+
     if CartItem.find_by_user_id_and_variable_id(current_user,@variable)
       puts "User already has variable "+@variable.id.to_s
-    else  
+    else
       an_item = CartItem.new
       an_item.user = current_user
       an_item.variable = @variable
@@ -60,22 +60,22 @@ class VariablesController < ApplicationController
 
   def add_multiple_to_cart
     @variable_list = Array.new(params[:variable_ids])
-    @variable_list.each do |var|       
+    @variable_list.each do |var|
       if CartItem.find_by_user_id_and_variable_id(current_user,var)
         puts "User already has variable "+var.to_s
-      else  
+      else
         an_item = CartItem.new
         an_item.user = current_user
         an_item.variable_id = var
         an_item.save
         current_user.reload
-      end  
+      end
     end
-    
+
     render :update, :status=>:created do |page|
       #        TODO flash the cart
       #                page[:cart_button].reload
-      page.replace_html "cart_button", :partial=>"surveys/cart_button"
+      page.replace_html "cart_button", :partial=>"cart/button"
       page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
       #                page.visual_effect :highlight, 'cart_button' ,:duration => 1
       #        page.replace_html "cart-total", :partial=>"surveys/cart_total"
@@ -85,7 +85,7 @@ class VariablesController < ApplicationController
 
   def update
     find_variable
-    
+
     curr_tags = @variable.title_list
 
     @all_tags_array = Array.new
@@ -97,11 +97,11 @@ class VariablesController < ApplicationController
     #        oldtaghash.each do |oldtag|
     #          @all_tags_array.push(Tag.find(oldtag).name)
     #        end
-      
+
 
     if taghash != nil
       if !taghash.empty?
-          
+
         taghash.each do |tag|
           @all_tags_array.push(tag.to_s)
           #            data = {"tag"=>[tag.to_s]}
@@ -109,22 +109,22 @@ class VariablesController < ApplicationController
           #            variable.create_annotations(data,person)
           puts "new tag: " + tag
         end
-          
-        
-          
+
+
+
       end
-      
+
     end
-      
+
     # cope with new tags that have been added by clicking on the suggestions box
 
     param1 = @variable.name+ @variable.survey_id.to_s + '_variable_autocompleter_selected_ids'
     taghash2 = params[param1]
-      
+
 
     if taghash2 != nil
       if !taghash2.empty?
-          
+
         taghash2.each do |tag|
           ntag = Tag.find(tag)
           @all_tags_array.push(ntag.name)
@@ -133,11 +133,11 @@ class VariablesController < ApplicationController
           #            variable.create_annotations(data,person)
           puts "new tag: " + tag
         end
-          
-        
-          
+
+
+
       end
-      
+
     end
 
     str = ""
@@ -154,9 +154,9 @@ class VariablesController < ApplicationController
     puts "tagged with " + str
     @variable.title_list = str
     @variable.save_tags
-    
-    
-    
+
+
+
     respond_to do |format|
       format.html { redirect_to variable_path(@variable) }
     end
@@ -195,9 +195,9 @@ class VariablesController < ApplicationController
     #    end
     @tag_array = @variable.title_counts
   end
-  
+
   def save_tags
-    
+
   end
 
   def find_variable
