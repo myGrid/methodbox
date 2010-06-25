@@ -4,6 +4,8 @@ class Asset < ActiveRecord::Base
   belongs_to :project
   
   belongs_to :policy
+  
+  has_and_belongs_to_many :creators,:join_table => 'assets_creators', :class_name => 'User', :association_foreign_key => 'creator_id'
 
   # TODO
   # add all required validations here
