@@ -91,6 +91,20 @@ function closeLoginBox(boxID) {
         }
 }
 
+function toggleAuthorAvatarList(objectId){
+    div = $('authorAvatarList'+objectId)
+    link = $('authorAvatarListLink'+objectId)
+    if (div.style.display == "none") { //EXPAND
+      div.style.display = "";
+      link.innerHTML = '(Hide)';
+    }
+    else { //COLLAPSE
+      div.style.display = "none";
+      link.innerHTML = '(Show All)';
+    }
+}
+
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  
