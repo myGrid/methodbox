@@ -8,6 +8,369 @@ module ApplicationHelper
   
   include TagsHelper
   
+  #used in publication views.  taken straight from sysmo. not use anywhere else
+  def list_item_title resource, title=nil, url=nil
+    if title.nil?
+      title = get_object_title(resource)
+    end
+    name = resource.class.name.split("::")[0]
+
+    html = "<div class=\"list_item_title\">"
+    case name
+      when "DataFile","Model","Sop"
+        image = image_tag(((name == "Model") ? icon_filename_for_key("model_avatar"): (file_type_icon_url(resource))), :style => "width: 24px; height: 24px; vertical-align: middle")
+        icon = link_to_draggable(image, show_resource_path(resource), :id=>model_to_drag_id(resource), :class=> "asset", :title=>tooltip_title_attrib(get_object_title(resource)))
+        html << "<p style=\"float:left;width:95%;\">#{icon} #{link_to title, (url.nil? ? show_resource_path(resource) : url)}</p>"
+        html << list_item_visibility(resource.asset.policy)
+        html << "<br style=\"clear:both\"/>"
+      when "Assay"
+        image = image_tag((resource.is_modelling? ? icon_filename_for_key("assay_modelling_avatar") : icon_filename_for_key("assay_experimental_avatar")), :style => "height: 24px; vertical-align: middle")
+        icon = link_to_draggable(image, show_resource_path(resource), :id=>model_to_drag_id(resource), :class=> "asset", :title=>tooltip_title_attrib(get_object_title(resource)))
+        html << "#{icon} #{link_to title, (url.nil? ? show_resource_path(resource) : url)}"
+      when "Person"
+        html << "#{link_to title, (url.nil? ? show_resource_path(resource) : url)} #{admin_icon(resource) + " " + pal_icon(resource)}"
+      else
+        html << "#{link_to title, (url.nil? ? show_resource_path(resource) : url)}"
+    end
+    html << "</div>"
+    return html
+  end
+  
+  #used in publication views.  taken straight from sysmo
+  def get_original_model_name(model)
+    class_name = model.class.name
+    if class_name.end_with?("::Version")
+      class_name = class_name.split("::")[0]
+    end
+    class_name
+  end
+  
+  #used in publication views.  taken straight from sysmo
+  def get_list_item_content_partial resource
+    return get_original_model_name(resource).pluralize.underscore + "/resource_list_item"
+  end
+  
+  #used in publication views.  taken straight from sysmo
+  def get_list_item_actions_partial resource
+    if ["Script"].include?(resource.class.name.split("::").first)
+      actions_partial = "assets/resource_actions_td"
+    else
+      actions_partial = nil
+    end
+    return actions_partial
+  end
+  
+  #used in publication views.  taken straight from sysmo
+  def get_list_item_avatar_partial resource
+    avatar_partial = ""
+    if ["Script"].include?(resource.class.name.split("::").first)
+      avatar_partial = "layouts/asset_resource_avatars"
+    elsif resource.class.name == "Publication"
+      unless resource.asset.creators.empty?
+        avatar_partial = "layouts/asset_resource_avatars"
+      end
+    # elsif resource.class.name == "Assay"
+    #   avatar_partial = "assays/resource_avatar"
+    else
+      avatar_partial = "layouts/resource_avatar"
+    end
+    return avatar_partial
+  end
+  
+  
+  #used in publication views.  taken straight from sysmo
+  def list_item_optional_attribute attribute, value, url=nil, missing_value_text="Not specified"
+    if value.blank?
+      value = "<span class='none_text'>#{missing_value_text}</span>"
+    else
+      unless url.nil?
+        value = link_to value, url
+      end
+    end
+    return missing_value_text.nil? ? "" : "<p class=\"list_item_attribute\"><b>#{attribute}</b>: #{value}</p>"
+  end
+  
+  #used in publication views.  taken straight from sysmo
+  def list_item_expandable_text attribute, text, length=200
+    full_text = text_or_not_specified(text, :description => false,:auto_link=>false)
+    trunc_text = text_or_not_specified(text, :description => false,:auto_link=>false, :length=>length)
+    #Don't bother with fancy stuff if not enough text to expand
+    if full_text == trunc_text
+      html = (attribute ? "<p class=\"list_item_attribute\"><b>#{attribute}</b>:</p>" : "") + "<div class=\"list_item_desc\">"
+      html << trunc_text
+      html << "</div>"
+    else
+      html = "<script type=\"text/javascript\">\n"
+      html << "fullResourceListItemExpandableText[#{text.object_id}] = '#{escape_javascript(full_text)}';\n"
+      html << "truncResourceListItemExpandableText[#{text.object_id}]  = '#{escape_javascript(trunc_text)}';\n"
+      html << "</script>\n"
+      html << (attribute ? "<p class=\"list_item_attribute\"><b>#{attribute}</b> " : "")
+      html << (link_to "(Expand)", "#", :id => "expandableLink#{text.object_id}", :onClick => "expandResourceListItemExpandableText(#{text.object_id});return false;")
+      html << "</p>"
+      html << "<div class=\"list_item_desc\"><div id=\"expandableText#{text.object_id}\">"
+      html << trunc_text
+      html << "</div>"
+      html << "</div>"
+    end
+  end
+  
+  #used in publication views.  taken straight from sysmo
+  def list_item_simple_list items, attribute
+    html = "<p class=\"list_item_attribute\"><b>#{(items.size > 1 ? attribute.pluralize : attribute)}:</b> "
+    if items.empty?
+      html << "<span class='none_text'>Not specified</span>"
+    else
+      items.each do |i|
+        if block_given?
+          value = yield(i)
+        else
+          value = (link_to get_object_title(i), show_resource_path(i))
+        end
+        html << value + (i == items.last ? "" : ", ")
+      end
+    end
+    return html + "</p>"
+  end 
+  
+  #used in publication views.  taken straight from sysmo
+  def list_item_attribute attribute, value, url=nil, url_options={}
+    unless url.nil?
+      value = link_to value, url, url_options
+    end
+    return "<p class=\"list_item_attribute\"><b>#{attribute}</b>: #{value}</p>"
+  end
+  
+  #used in publication views.  taken straight from sysmo images helper
+  def icon_filename_for_key(key)
+    case (key.to_s)
+    when "refresh"
+      "famfamfam_silk/arrow_refresh_small.png"
+    when "arrow_up"
+      "famfamfam_silk/arrow_up.png"
+    when "arrow_down"
+      "famfamfam_silk/arrow_down.png"
+    when "arrow_right", "next"
+      "famfamfam_silk/arrow_right.png"
+    when "arrow_left", "back"
+      "famfamfam_silk/arrow_left.png"
+    when "bioportal_logo"
+      "bioportal/bioportal_logo.png"
+    when "new"
+      "famfamfam_silk/add.png"
+    when "download"
+      "redmond_studio/arrow-down_16.png"
+    when "show"
+      "famfamfam_silk/zoom.png"
+    when "edit"
+      "famfamfam_silk/page_white_edit.png"
+    when "edit-off"
+      "stop_edit.png"
+    when "manage"
+      "famfamfam_silk/wrench.png"
+    when "destroy"
+      "famfamfam_silk/cross.png"
+    when "tag"
+      "famfamfam_silk/tag_blue.png"
+    when "favourite"
+      "famfamfam_silk/star.png"
+    when "comment"
+      "famfamfam_silk/comment.png"
+    when "comments"
+      "famfamfam_silk/comments.png"
+    when "info"
+      "famfamfam_silk/information.png"
+    when "help"
+      "famfamfam_silk/help.png"
+    when "confirm"
+      "famfamfam_silk/accept.png"
+    when "reject"
+      "famfamfam_silk/cancel.png"
+    when "user", "person"
+      "famfamfam_silk/user.png"
+    when "user-invite"
+      "famfamfam_silk/user_add.png"
+    when "avatar"
+      "famfamfam_silk/picture.png"
+    when "avatars"
+      "famfamfam_silk/photos.png"
+    when "save"
+      "famfamfam_silk/save.png"
+    when "message"
+      "famfamfam_silk/email.png"
+    when "message_read"
+      "famfamfam_silk/email_open.png"
+    when "reply"
+      "famfamfam_silk/email_go.png"
+    when "message_delete"
+      "famfamfam_silk/email_delete.png"
+    when "messages_outbox"
+      "famfamfam_silk/email_go.png"
+    when "file"
+      "redmond_studio/documents_16.png"
+    when "logout"
+      "famfamfam_silk/door_out.png"
+    when "login"
+      "famfamfam_silk/door_in.png"
+    when "picture"
+      "famfamfam_silk/picture.png"
+    when "pictures"
+      "famfamfam_silk/photos.png"
+    when "profile"
+      "famfamfam_silk/user_suit.png"
+    when "history"
+      "famfamfam_silk/time.png"
+    when "news"
+      "famfamfam_silk/newspaper.png"
+    when "view-all"
+      "famfamfam_silk/table_go.png"
+    when "announcement"
+      "famfamfam_silk/transmit.png"
+    when "denied"
+      "famfamfam_silk/exclamation.png"
+    when "institution"
+      "famfamfam_silk/house.png"
+    when "project"
+      "famfamfam_silk/report.png"
+    when "tick"
+      "crystal_project/22x22/apps/clean.png"
+    when "lock"
+      "famfamfam_silk/lock.png"
+    when "open"
+      "famfamfam_silk/lock_open.png"
+    when "no_user"
+      "famfamfam_silk/link_break.png"
+    when "sop"
+      "famfamfam_silk/page.png"
+    when "sops"
+      "famfamfam_silk/page_copy.png"
+    when "model"
+      "crystal_project/32x32/apps/kformula.png"
+    when "models"
+      "crystal_project/64x64/apps/kformula.png"
+    when "data_file","data_files"
+      "famfamfam_silk/database.png"
+    when "study"
+      "famfamfam_silk/page.png"
+    when "execute"
+      "famfamfam_silk/lightning.png"
+    when "warning"
+      "crystal_project/22x22/apps/alert.png"
+    when "skipped"
+      "crystal_project/22x22/actions/undo.png"
+    when "error"
+      "famfamfam_silk/exclamation.png"
+    when "feedback"
+      "famfamfam_silk/email.png"
+    when "spinner"
+      "ajax-loader.gif"
+    when "large-spinner"
+      "ajax-loader-large.gif"
+    when "current"
+      "famfamfam_silk/bullet_green.png"
+    when "collapse"
+      "folds/fold.png"
+    when "expand"
+      "folds/unfold.png"
+    when "pal"
+      "famfamfam_silk/rosette.png"
+    when "admin"
+      "famfamfam_silk/shield.png"
+    when "pdf_file"
+      "file_icons/small/pdf.png"
+    when "xls_file"
+      "file_icons/small/xls.png"
+    when "doc_file"
+      "file_icons/small/doc.png"
+    when "misc_file"
+      "file_icons/small/genericBlue.png"
+    when "ppt_file"
+      "file_icons/small/ppt.png"
+    when "xml_file"
+      "file_icons/small/xml.png"
+    when "zip_file"
+      "file_icons/small/zip.png"
+    when "jpg_file"
+      "file_icons/small/jpg.png"
+    when "gif_file"
+      "file_icons/small/gif.png"
+    when "png_file"
+      "file_icons/small/png.png"
+    when "txt_file"
+      "file_icons/small/txt.png"
+    when "investigation_avatar"
+      "crystal_project/64x64/apps/mydocuments.png"
+    when "study_avatar"
+      "crystal_project/64x64/apps/package_editors.png"
+    when "assay_avatar","assay_experimental_avatar"
+      "misc_icons/flask3-64x64.png"
+    when "assay_modelling_avatar"
+      "crystal_project/64x64/filesystems/desktop.png"
+    when "model_avatar"
+      "crystal_project/64x64/apps/kformula.png"
+    when "person_avatar"
+      "avatar.png"
+    when "jerm_logo"
+      "jerm_logo.png"
+    when "project_avatar"
+      "project_64x64.png"
+    when "institution_avatar"
+      "institution_64x64.png"
+    when "organism_avatar"
+      "misc_icons/green_virus-64x64.png"
+    when "saved_search"
+      "crystal_project/32x32/actions/find.png"
+    when "visit_pubmed"
+      "famfamfam_silk/page_white_go.png"
+    when "markup"
+      "famfamfam_silk/page_white_text.png"
+    when "atom_feed"
+      "misc_icons/feed_icon.png"
+    when "impersonate"
+      "famfamfam_silk/group_go.png"
+    when "world"
+      "famfamfam_silk/world.png"
+    else
+      return nil
+    end
+  end
+  
+  #used in publication views.  taken straight from sysmo images helper
+  def image_tag_for_key(key, url=nil, alt=nil, url_options={}, label=key.humanize, remote=false)
+
+    if (label == 'Destroy')
+      label = 'Delete';
+    end
+
+    return nil unless (filename = icon_filename_for_key(key.downcase))
+
+    image_options = alt ? { :alt => alt } : { :alt => key.humanize }
+    img_tag = image_tag(filename, image_options)
+
+    inner = img_tag;
+    inner = "#{img_tag} #{label}" unless label == nil
+
+    if (url)
+      if (remote)
+        inner = link_to_remote(inner, url, url_options);
+      else
+        inner = link_to(inner, url, url_options)
+      end
+    end
+
+    return '<span class="icon">' + inner + '</span>';
+  end
+  
+  #used in publication views.  taken straight from sysmo images helper
+  def get_object_title(item)
+    title = ""
+    if ["Person"].include? item.class.name
+      title = h(item.name)
+    else
+      title = h(item.title)
+    end
+    return title
+  end
+  
   #RedBox popup for adding new groups
   def work_group_popup_link_action_new
     return link_to_remote_redbox("Create new group", 
