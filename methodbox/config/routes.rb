@@ -27,6 +27,8 @@ ActionController::Routing::Routes.draw do |map|
    
   map.resources :work_groups
   
+  map.resources :user_searches
+  
   # map.resources :home
 
   map.resources :help
