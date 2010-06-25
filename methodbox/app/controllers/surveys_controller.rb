@@ -5,6 +5,9 @@ class SurveysController < ApplicationController
   before_filter :find_previous_searches, :only => [ :index]
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
+  
+  before_filter :find_previous_searches, :only => [ :index ]
+   
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
@@ -610,6 +613,14 @@ class SurveysController < ApplicationController
   end
 
   protected
+  
+  def find_previous_searches
+    search=[]
+    if logged_in?
+      search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
+  end
 
   #find any previous searches if you are looking at your own
   #profile
