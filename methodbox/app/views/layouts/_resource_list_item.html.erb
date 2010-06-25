@@ -1,0 +1,26 @@
+<% content_locals ||= {} %>
+<% actions_locals ||= {} %>
+<% resource = resource_list_item %>
+<% content_partial = get_list_item_content_partial(resource) %>
+<% actions_partial = get_list_item_actions_partial(resource) %>
+<% avatar_partial = get_list_item_avatar_partial(resource) %>
+<% box_width = 72 %>
+<% box_width += 13 if actions_partial.blank? %>
+<% box_width += 12 if avatar_partial.blank? %>
+
+<div class="list_item">
+  <% unless avatar_partial.blank? %>
+    <div class="list_item_avatar">
+      <%= render :partial=> avatar_partial,:locals=>content_locals.merge({:resource => resource}) %>
+    </div>
+  <% end %>
+  <div class="list_item_content" style="width:<%= box_width %>%">
+    <%= render :partial=> content_partial,:locals=>content_locals.merge({:resource => resource}) %>
+  </div>
+  <% unless actions_partial.blank? %>
+    <div class="list_item_actions">
+      <%= render :partial=> actions_partial, :locals=>actions_locals.merge({:resource => resource}) %>
+    </div>
+  <% end %>
+</div>
+<br style="clear:both"/>
