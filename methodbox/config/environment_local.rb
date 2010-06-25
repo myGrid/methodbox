@@ -1,3 +1,5 @@
+#used by the doi publication stuff
+ADMIN_EMAIL = "methodbox@gmail.com"
 SANDBOX = true
 EMAIL_ENABLED = true
 CSV_SERVER_LOCATION='localhost'
