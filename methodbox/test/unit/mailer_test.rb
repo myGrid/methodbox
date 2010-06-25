@@ -7,14 +7,14 @@ class MailerTest < ActionMailer::TestCase
   def setup
      @expected.from    = "methodbox+no-reply@googlemail.com"
   end
-  
+
   test "signup" do
     @expected.subject = 'MethodBox account activation'
     @expected.to = "Not_Yet Activated <unactivated@example.com>"
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('signup')
-    
+
     check_email @expected, Mailer.create_signup(users(:unactivated_user),"localhost")
   end
 
@@ -39,7 +39,7 @@ class MailerTest < ActionMailer::TestCase
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('forgot_password')
-    
+
     u=users(:normal_user)
     u.reset_password_code_until = 1.day.from_now
     u.reset_password_code="someCode"
@@ -52,7 +52,7 @@ class MailerTest < ActionMailer::TestCase
     @expected.date    = Time.now
 
     @expected.body    = read_fixture('contact_admin_new_user_no_profile')
-    
+
     check_email @expected, Mailer.create_contact_admin_new_user_no_profile("test message",users(:unactivated_user),"localhost")
   end
 
@@ -60,9 +60,9 @@ class MailerTest < ActionMailer::TestCase
     @expected.subject = 'Welcome to MethodBox'
     @expected.to = "Aaron Spiggle <aaron@example.com>"
     @expected.from    = "methodbox+no-reply@googlemail.com"
-    @expected.date = Time.now  
+    @expected.date = Time.now
     @expected.body = read_fixture('welcome')
-    
+
     check_email @expected, Mailer.create_welcome(users(:normal_user),"localhost")
   end
 
@@ -70,16 +70,16 @@ class MailerTest < ActionMailer::TestCase
     assert_equal expected.subject, response.subject
     assert_equal expected.to,      response.to
     assert_equal expected.from,    response.from
-    assert_equal expected.date,    response.date
-    
+    assert_in_delta(expected.date, response.date, 1.minute, "time does not match")
+
     expected_body = expected.body.split("\n")
     response_body = response.body.split("\n")
-    
+
     for i in 0..(expected_body.length-1)
       #puts expected_body[i]
       #puts response_body[i]
       assert_equal expected_body[i], response_body[i]
-    end  
+    end
     #puts " "
     assert_equal expected.body, response.body
     assert_equal expected.encoded, response.encoded

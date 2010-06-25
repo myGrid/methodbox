@@ -105,7 +105,7 @@ class UsersControllerTest < ActionController::TestCase
       u = User.find_by_email('quire@example.com')
       assert u
       assert !u.is_admin
-    end  
+    end
   end
 
   #  def est_should_sign_up_user_with_activation_code
@@ -176,10 +176,10 @@ class UsersControllerTest < ActionController::TestCase
     assert_difference 'User.count', difference = -1 do
       post :reject, :id => u.id
       assert_nil flash[:error]
-      assert_equal name + " has been deleted." , flash[:notice] 
-    end  
+      assert_equal name + " has been deleted." , flash[:notice]
+    end
    end
-  
+
   def test_reject_user_removes_person
     login_as :admin
     u=users(:awaiting_approval)
@@ -187,8 +187,8 @@ class UsersControllerTest < ActionController::TestCase
     assert_difference 'Person.count', difference = -1 do
       post :reject, :id => u.id
       assert_nil flash[:error]
-      assert_equal name + " has been deleted." , flash[:notice] 
-    end  
+      assert_equal name + " has been deleted." , flash[:notice]
+    end
   end
 
   def test_approve_and_activate_user
@@ -203,9 +203,10 @@ class UsersControllerTest < ActionController::TestCase
     login_as :admin
     u=users(:unactivated_user)
     post :activate, :activation_code => u.activation_code
-    assert u.active
     assert_nil flash[:error]
-    assert_equal u.person.name.to_s + " has been activated", flash[:notice] 
+    assert_equal u.person.name.to_s + " has been activated", flash[:notice]
+    user = User.find(u)
+    assert user.active?
   end
 
   def test_approve_but_not_activate_user
@@ -213,18 +214,22 @@ class UsersControllerTest < ActionController::TestCase
     u=users(:awaiting_approval)
     post :approve, :id => u.id
     assert_nil flash[:error]
-    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice] 
+    user = User.find(u)
+    assert !user.active?
+    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice]
   end
 
   def test_resend_activation_code
     login_as :admin
     u=users(:unactivated_user)
     post :resend_actiavtion_code, :id => u.id
+    user = User.find(u)
+    assert !user.active?
     assert_nil flash[:error]
-    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice] 
+    assert_equal "Activation email sent to "+u.email.to_s, flash[:notice]
   end
-  
-  
+
+
   protected
   def create_user(options = {})
     post :create, :user => { :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }.merge(options),:person=>{:first_name=>"fred"}
