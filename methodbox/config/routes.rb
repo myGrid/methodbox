@@ -29,6 +29,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :user_searches
   
+  map.resources :publications,:collection=>{:fetch_preview=>:post},:member=>{:disassociate_authors=>:post}
+  
   # map.resources :home
 
   map.resources :help
