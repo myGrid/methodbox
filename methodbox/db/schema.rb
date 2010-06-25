@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100614084448) do
+ActiveRecord::Schema.define(:version => 20100625144026) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -87,6 +87,11 @@ ActiveRecord::Schema.define(:version => 20100614084448) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "last_used_at"
+  end
+
+  create_table "assets_creators", :id => false, :force => true do |t|
+    t.integer "asset_id"
+    t.integer "creator_id"
   end
 
   create_table "avatars", :force => true do |t|
@@ -301,6 +306,30 @@ ActiveRecord::Schema.define(:version => 20100614084448) do
     t.text     "description"
     t.integer  "avatar_id"
     t.integer  "default_policy_id"
+  end
+
+  create_table "publication_authors", :force => true do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.integer  "publication_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "publications", :force => true do |t|
+    t.integer  "pubmed_id"
+    t.text     "title"
+    t.text     "abstract"
+    t.date     "published_date"
+    t.string   "journal"
+    t.string   "first_letter",     :limit => 1
+    t.string   "contributor_type"
+    t.integer  "contributor_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "last_used_at"
+    t.string   "doi"
+    t.string   "uuid"
   end
 
   create_table "relationships", :force => true do |t|
