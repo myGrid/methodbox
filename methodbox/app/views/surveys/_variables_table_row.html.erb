@@ -22,7 +22,7 @@
         <%= Dataset.find(item.dataset_id).survey.surveytype -%>
       </div>
       <div class="col7">
-        <%= Dataset.find(item.dataset_id).name -%>
+        <%= link_to Dataset.find(item.dataset_id).name, dataset_url(Dataset.find(item.dataset_id)) -%>
       </div>
       <div class="col8">
 	<!-- replace any '-' characters with space -->
