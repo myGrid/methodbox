@@ -6,13 +6,13 @@ class Survey < ActiveRecord::Base
 
   has_many :datasets
 
-  has_many :survey_lists
-
-  has_many :csvarchives, :through => :survey_lists
-
-  has_many :survey_to_script_lists
-
-  has_many :scripts, :through => :survey_to_script_lists
+  # has_many :survey_lists
+  # 
+  # has_many :csvarchives, :through => :survey_lists
+  # 
+  # has_many :survey_to_script_lists
+  # 
+  # has_many :scripts, :through => :survey_to_script_lists
   
   acts_as_solr(:fields=>[:description,:title,:year,:surveytype]) if SOLR_ENABLED
 

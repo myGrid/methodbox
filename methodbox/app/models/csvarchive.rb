@@ -5,22 +5,22 @@ class Csvarchive < ActiveRecord::Base
   acts_as_resource
   
   #based on http://blog.hasmanythrough.com/2006/4/21/self-referential-through
-  has_many :extracts_as_source, :foreign_key => 'source_id', :class_name => 'ExtractToExtractLink'
-  has_many :extracts_as_target,   :foreign_key => 'target_id',   :class_name => 'ExtractToExtractLink'
-  has_many :sources,  :through => :extracts_as_target
-  has_many :targets,    :through => :extracts_as_source
+  # has_many :extracts_as_source, :foreign_key => 'source_id', :class_name => 'ExtractToExtractLink'
+  # has_many :extracts_as_target,   :foreign_key => 'target_id',   :class_name => 'ExtractToExtractLink'
+  # has_many :sources,  :through => :extracts_as_target
+  # has_many :targets,    :through => :extracts_as_source
 
   has_many :variable_lists, :dependent => :destroy
   
   has_many :variables, :through => :variable_lists
 
-  has_many :script_lists, :dependent => :destroy
-
-  has_many :scripts, :through => :script_lists
-
-  has_many :survey_lists, :dependent => :destroy
-
-  has_many :surveys, :through => :survey_lists
+  # has_many :script_lists, :dependent => :destroy
+  # 
+  # has_many :scripts, :through => :script_lists
+  # 
+  # has_many :survey_lists, :dependent => :destroy
+  # 
+  # has_many :surveys, :through => :survey_lists
 
   belongs_to :content_blob,
     :dependent => :destroy
