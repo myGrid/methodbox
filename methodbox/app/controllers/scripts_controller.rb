@@ -56,6 +56,9 @@ class ScriptsController < ApplicationController
     target_archives = []
     target_surveys = []
     target_scripts = []
+    #publications link to something, not from
+    @publications = []
+    
 
     links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
 
@@ -67,6 +70,8 @@ class ScriptsController < ApplicationController
         source_scripts.push(link.object)
       when "Survey"
         source_surveys.push(link.object)
+      when "Publication"
+        @publications.push(link.object)
       end
     end
 
@@ -147,6 +152,8 @@ class ScriptsController < ApplicationController
         @selected_scripts.push(link.object.id)
       when "Survey"
         @selected_surveys.push(link.object.id)
+      when "Publication"
+        @selected_publications.push(link.object.id)
       end
     end
 
@@ -219,6 +226,16 @@ class ScriptsController < ApplicationController
                  link.predicate = "link"
                  link.save
               end
+          end
+          if params[:publications] != nil
+            # all_scripts_array = Array.new
+            params[:publications].each do |publication_id|
+            link = Link.new
+            link.subject = @script
+            link.object = Publication.find(publication_id)
+            link.predicate = "link"
+            link.save
+            end
           end
 
            if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
@@ -325,6 +342,15 @@ class ScriptsController < ApplicationController
              link.save
           end
       end
+      if params[:publications] != nil
+        params[:publications].each do |publication_id|
+        link = Link.new
+        link.subject = @script
+        link.object = Publication.find(publication_id)
+        link.predicate = "link"
+        link.save
+        end
+      end
 
       if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
         puts "custom sharing here"
@@ -429,6 +455,11 @@ class ScriptsController < ApplicationController
     @surveys = Survey.find(:all)
     #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
+  
+  def find_publications
+    @selected_publications = [] unless @selected_publications
+    @publications = Publication.all
+  end
 
 
   def find_script_auth
@@ -511,6 +542,7 @@ class ScriptsController < ApplicationController
     find_archives
     find_surveys
     find_groups
+    find_publications
 
     set_parameters_for_sharing_form
   end
