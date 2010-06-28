@@ -24,9 +24,9 @@ ActionController::Routing::Routes.draw do |map|
 
   # messages
    # page for cart
-   
+
   map.resources :work_groups
-  
+
   map.resources :user_searches
   
   map.resources :publications,:collection=>{:fetch_preview=>:post},:member=>{:disassociate_authors=>:post}
@@ -34,7 +34,7 @@ ActionController::Routing::Routes.draw do |map|
   # map.resources :home
 
   map.resources :help
-  
+
   map.resources :about
 
   map.cart '/cart/', :controller=>'cart',:action=>'show'
@@ -52,7 +52,7 @@ ActionController::Routing::Routes.draw do |map|
 #  end
 
   map.resources :csvarchives, :member => {:download => :get}, :collection =>{:recreate => :post, :help => :get, :help2 => :get}
-  
+
   #  map.resources :assays
 
   map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post, :open_pdf => :get}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}
@@ -94,10 +94,10 @@ ActionController::Routing::Routes.draw do |map|
   #    sop.resources :experimental_conditions
   #  end
 
-  map.resources :users, :collection=>{:activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get}
+  map.resources :users, :collection=>{:activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get]}
 
-  map.resource :session      
-  
+  map.resource :session
+
   # browsing by countries
   #  map.country '/countries/:country_name', :controller => 'countries', :action => 'show'
 
@@ -117,8 +117,8 @@ ActionController::Routing::Routes.draw do |map|
   #
   #  # review members of workgroup (also of a project / institution) popup
   #  map.review_work_group '/work_groups/review/:type/:id/:access_type', :controller => 'work_groups', :action => 'review_popup', :conditions => { :method => :post }
-  
-  
+
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
@@ -137,7 +137,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments
@@ -152,21 +152,21 @@ ActionController::Routing::Routes.draw do |map|
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   # map.root :controller => "welcome"
-  
+
   #
 
   #  map.tool_list_autocomplete '/tool_list_autocomplete', :controller=>'people', :action=>'auto_complete_for_tools_name'
   map.expertise_list_autocomplete '/expertise_list_autocomplete', :controller=>'people', :action=>'auto_complete_for_expertise_name'
   #  map.organism_list_autocomplete '/organism_list_autocomplete',:controller=>'projects',:action=>'auto_complete_for_organism_name'
-  
-  map.signup  '/signup', :controller => 'users',   :action => 'new' 
+
+  map.signup  '/signup', :controller => 'users',   :action => 'new'
   map.login  '/login',  :controller => 'sessions', :action => 'new'
-  map.logout '/logout', :controller => 'sessions', :action => 'destroy'  
-  
+  map.logout '/logout', :controller => 'sessions', :action => 'destroy'
+
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate', :activation_code => nil
   map.forgot_password '/forgot_password',:controller=>'users',:action=>'forgot_password'
-  
-  # used by the "sharing" form to get settings from an existing policy 
+
+  # used by the "sharing" form to get settings from an existing policy
   map.request_policy_settings '/policies/request_settings', :controller => 'policies', :action => 'send_policy_data'
   map.root :controller=>'home', :action=>'about'
   map.index '/index', :controller => 'home', :action=>'index'

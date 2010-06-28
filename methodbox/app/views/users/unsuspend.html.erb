@@ -1,0 +1,52 @@
+<% if logged_in? %>
+	<p style="text-align:center;">You are already logged in.</p>
+	<p style="text-align:center;"><%= link_to "Sign out", logout_url %></p>
+<% else %>
+  <center>
+    <div style="width:20em;">
+      <div id="favourites_gadget" class="myexperiment_gadget">
+        <b class="xtop"><b class="xb1"></b><b class="xb2"></b><b class="xb3"></b><b class="xb4"></b></b>
+        <div class="header">
+          Account is currently dormant.
+          Filling in this form will return the account to a normal state.
+        </div>
+        <div class="contents">
+          <% form_tag session_path do %>
+            <%= hidden_field_tag "called_from[controller]", controller.controller_name -%>
+            <%= hidden_field_tag "called_from[action]", controller.action_name -%>
+            <%= hidden_field_tag "called_from[id]", params[:id] -%>
+            <%= hidden_field_tag :cancel_dormant, "true" %>
+            <div class="box1">
+              <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+                Email:
+              </p>
+              <p>
+              <%= text_field_tag 'login', nil, :class => 'field', :style => "width: 140px;" %>
+              </p>
+              <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+                Password:
+              </p>
+              <p>
+                <%= password_field_tag 'password', nil, :class => 'field', :style => "width: 140px;" %>
+              </p>
+
+              <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+                Remember me: <%= check_box_tag 'remember_me' %>
+              </p>
+            </div>
+
+            <p>
+              <%= submit_tag "Reset account and Log in", :disable_with => "Restting and Logging in..." %>
+            </p>
+
+          <% end %>
+          <br/>
+          <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+            <b><%= link_to "Forgotten password?", forgot_password_url %></b>
+          </p>
+        </div>
+        <b class="xbottom"><b class="xb5"></b><b class="xb6"></b><b class="xb7"></b><b class="xb1"></b></b>
+      </div>
+    </div>
+  </center>
+<% end %>
