@@ -53,8 +53,14 @@ render_tabnav :main,
    t.links_to :controller => 'csvarchives'
   end unless !logged_in?
 
+  add_tab do |t|
+   t.named 'Publications'
+   t.titled "Publications added from PubMed"
+   t.links_to :controller => 'publications'
+  end
 
-	add_tab do |t|
+
+  add_tab do |t|
    t.named 'Groups'
    t.titled "Create groups to share things with"
    t.links_to :controller => 'work_groups'
