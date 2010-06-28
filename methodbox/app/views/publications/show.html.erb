@@ -28,15 +28,15 @@
           <%= link_to @publication.doi, "http://dx.doi.org/#{@publication.doi}",{:popup => true} %>
         <% end %>
       </p>
-      
-      <p>
-        <label>Project:</label>
-        <% if @publication.project.nil? -%>
-          <%= text_or_not_specified nil %>
-        <% else -%>
-          <%= link_to h(@publication.project.name),@publication.project %>
-        <% end -%>
-      </p>
+      <!-- no projects in methodbox -->
+      <!-- <p> -->
+        <!-- <label>Project:</label> -->
+        <%# if @publication.project.nil? -%>
+          <%#= text_or_not_specified nil %>
+        <%# else -%>
+          <%#= link_to h(@publication.project.name),@publication.project %>
+        <%# end -%>
+      <!-- </p> -->
       <p>
         <label>Author<%= @publication.asset.creators.size + @publication.non_seek_authors.size > 1 ? "s" : "" -%>:</label>
         <% if @publication.asset.creators.empty? && @publication.non_seek_authors.empty? %>
@@ -73,8 +73,8 @@
 
     </div>
   </div>
-
-  <div style="clear:both;padding-top:1em;">    
-    <%= render :partial=>"layouts/items_related_to",:object => @publication %>
-  </div>
+<!-- no related items for publications yet -->
+  <!-- <div style="clear:both;padding-top:1em;">     -->
+    <%#= render :partial=>"layouts/items_related_to",:object => @publication %>
+  <!-- </div> -->
 </div>

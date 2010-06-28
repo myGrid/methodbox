@@ -6,10 +6,10 @@
 <div class="show_basic">    
   <%= error_messages_for('publication', :message => nil) %>
   <% form_tag publication_path(@publication), :method => :put do %>
-    <p>
-      <label>Project:</label><br/>
-      <%= collection_select :publication, :project_id, Project.all,:id,:name,{ :include_blank => "None" }%>
-    </p>
+    <!-- <p> -->
+      <!-- <label>Project:</label><br/> -->
+      <%#= collection_select :publication, :project_id, Project.all,:id,:name,{ :include_blank => "None" }%>
+    <!-- </p> -->
     
     <% if @publication.pubmed_id.nil? && @publication.doi %>
       <p>
@@ -21,7 +21,7 @@
     
     <h2>Associate authors</h2>  
  
-    <% project = @publication.project %>
+    <%# project = @publication.project %>
     Using the form below, you can link the authors listed in PubMed to people registered in MethodBox.<br/><br/>
     
     MethodBox will try and suggest the correct person based on the author's name. If this suggestion is incorrect, please select the correct person from the dropdown menu, or choose "None" if this person isn't a member of MethodBox.<br/><br/>
