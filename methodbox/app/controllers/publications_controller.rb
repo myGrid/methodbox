@@ -141,6 +141,11 @@ class PublicationsController < ApplicationController
   # DELETE /publications/1
   # DELETE /publications/1.xml
   def destroy
+    #remove all the links for this publication
+    links = Link.find(:all, :conditions => { :object_type => "Publication", :object_id => @publication.id, :predicate => "link" })
+    links.each do |link|
+      link.destroy
+    end
     @publication.destroy
 
     respond_to do |format|
