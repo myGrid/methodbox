@@ -7,6 +7,29 @@ module ApplicationHelper
   include SavageBeast::ApplicationHelper
   
   include TagsHelper
+
+  #used in publication views.  taken straight from sysmo. not use anywhere else  
+  def resource_title_draggable_avatar resource
+    name = resource.class.name.split("::")[0]
+    icon=""
+    case name
+    when "DataFile","Model","Sop"
+      image = image_tag(((name == "Model") ? icon_filename_for_key("model_avatar"): (file_type_icon_url(resource))))
+      icon = link_to_draggable(image, show_resource_path(resource), :id=>model_to_drag_id(resource), :class=> "asset", :title=>tooltip_title_attrib(get_object_title(resource)))
+    when "Investigation","Study"
+      image = image "#{resource.class.name.downcase}_avatar",{}
+      icon = link_to_draggable(image, show_resource_path(resource), :id=>model_to_drag_id(resource), :class=> "asset", :title=>tooltip_title_attrib(get_object_title(resource)))
+    when "Assay"
+      type=resource.is_modelling? ? "modelling" : "experimental"
+      image = image "#{resource.class.name.downcase}_#{type}_avatar",{}
+      icon = link_to_draggable(image, show_resource_path(resource), :id=>model_to_drag_id(resource), :class=> "asset", :title=>tooltip_title_attrib(get_object_title(resource)))
+    when "Organism"
+      image = image "#{resource.class.name.downcase}_avatar",{}
+      icon = link_to_draggable(image, organism_path(resource), :id=>model_to_drag_id(resource), :class=> "asset", :title=>tooltip_title_attrib(get_object_title(resource)))
+    end
+    return icon
+  end
+  
   
   #used in publication views.  taken straight from sysmo. not use anywhere else
   def list_item_title resource, title=nil, url=nil
