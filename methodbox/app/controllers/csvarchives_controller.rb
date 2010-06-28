@@ -7,7 +7,7 @@ class CsvarchivesController < ApplicationController
 
   before_filter :login_required, :except => [ :help, :help2]
   before_filter :find_archives_by_page, :only => [ :index]
-  before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :only => [ :new,:edit ]
+  before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new,:edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :recreate, :download ]
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
@@ -73,8 +73,8 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     #    check_available
     @sorted_variables = @archive.variables
-    @surveys = @archive.surveys
-    @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
+    # @surveys = @archive.surveys
+    # @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
     
     source_archives = []
     source_surveys = []
@@ -82,6 +82,8 @@ class CsvarchivesController < ApplicationController
     target_archives = []
     target_surveys = []
     target_scripts = []
+    #publications link to something, not from
+    @publications = []
 
     links = Link.find(:all, :conditions => { :subject_type => "Csvarchive", :subject_id => @archive.id, :predicate => "link" })
 
@@ -93,6 +95,8 @@ class CsvarchivesController < ApplicationController
         source_scripts.push(link.object)
       when "Survey"
         source_surveys.push(link.object)
+      when "Publication"
+        @publications.push(link.object)
       end
     end
       
@@ -134,6 +138,7 @@ class CsvarchivesController < ApplicationController
      @selected_archives = []
       @selected_surveys = []
       @selected_scripts = []
+      @selected_publications = []
       #find links where this Script is the source
       links = Link.find(:all, :conditions => { :subject_type => "Csvarchive", :subject_id => @archive.id, :predicate => "link" })
 
@@ -145,6 +150,8 @@ class CsvarchivesController < ApplicationController
           @selected_scripts.push(link.object.id)
         when "Survey"
           @selected_surveys.push(link.object.id)
+        when "Publication"
+          @selected_publications.push(link.object.id)
         end
       end
     # this is not required any more since the required 'magic' to find sharing_mode is done above
@@ -192,6 +199,15 @@ class CsvarchivesController < ApplicationController
            link.save
         end
     end
+     if params[:publications] != nil
+        params[:publications].each do |publication_id|
+        link = Link.new
+        link.subject = @archive
+        link.object = Publication.find(publication_id)
+        link.predicate = "link"
+        link.save
+        end
+      end
     # generate the json encoding for the groups sharing permissions to go in the params
     if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
        puts "custom sharing here"
@@ -336,6 +352,16 @@ class CsvarchivesController < ApplicationController
                  link.predicate = "link"
                  link.save
               end
+          end
+          if params[:publications] != nil
+            # all_scripts_array = Array.new
+            params[:publications].each do |publication_id|
+            link = Link.new
+            link.subject = @archive
+            link.object = Publication.find(publication_id)
+            link.predicate = "link"
+            link.save
+            end
           end
           
           if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
@@ -522,6 +548,11 @@ class CsvarchivesController < ApplicationController
   def find_surveys
     @surveys = Survey.find(:all)
     #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
+  end
+  
+  def find_publications
+    @selected_publications = [] unless @selected_publications
+    @publications = Publication.all
   end
 
   def set_parameters_for_sharing_form
