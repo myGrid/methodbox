@@ -56,6 +56,16 @@
            :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
           </p>
         </div>
+		<br/>
+        <div style="clear:both;">
+        </div>
+        <div>
+          <p>
+            <b>Link with Publications:</b>
+            <%= render :partial => "assets/link_selector", :locals => { :resource_id => "publications", :resource_type => "Publications",   # this is only for presentation, not for any processing
+           :collection=>@publications,:selected=>@selected_publications,:authorization_for_showing_already_done => true } -%>
+          </p>
+        </div>
 
 
         <br/>

@@ -103,6 +103,16 @@
       <% else -%>
         None
       <% end -%>
+      <br/>
+	<br/>
+      <b>Linked with Publication(s):</b>
+		<% if !@publications.empty? -%>
+        <% @publications.each do |publication| -%>
+          <%= link_to(publication.title, publication_path(publication)) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>
     </div>
   </div>
 </div>
