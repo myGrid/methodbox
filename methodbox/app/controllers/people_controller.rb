@@ -28,25 +28,31 @@ class PeopleController < ApplicationController
   # GET /people.xml
   def index
 
+    if current_user.is_admin && ADMIN_CAN_SEE_DORMANT
+      condition = nil
+    else
+      condition = "dormant != ?",true
+    end
+
     if (!params[:expertise].nil?)
       @expertise=params[:expertise]
-      @people=Person.tagged_with(@expertise, :on=>:expertise)
+      @people=Person.tagged_with(@expertise, :on=>:expertise, conditions => condition)
     elsif (!params[:tools].nil?)
       @tools=params[:tools]
-      @people=Person.tagged_with(@tools, :on=>:tools)
+      @people=Person.tagged_with(@tools, :on=>:tools, conditions => condition)
     elsif (params[:discipline_id])
       @discipline=Discipline.find(params[:discipline_id])
       #FIXME: strips out the disciplines that don't match
-      @people=Person.find(:all,:include=>:disciplines,:conditions=>["disciplines.id=?",@discipline.id],:page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name)
+      @people=Person.find(:all,:include=>:disciplines,:conditions=>["disciplines.id=?",@discipline.id],:page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name, conditions => condition)
       #need to reload the people to get their full discipline list - otherwise only get those matched above. Must be a better solution to this
       @people=@people.collect{|p| Person.find(p.id)}
     elsif (params[:role_id])
       @role=Role.find(params[:role_id])
-      @people=Person.find(:all,:include=>[:group_memberships], :order=>:last_name)
+      @people=Person.find(:all,:include=>[:group_memberships], :order=>:last_name, conditions => condition)
       #FIXME: this needs double checking, (a) not sure its right, (b) can be paged when using find.
       @people=@people.select{|p| !(p.group_memberships & @role.group_memberships).empty?}
     else
-      @people = Person.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name,:conditions => ["dormant != ?", true])
+      @people = Person.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name, :conditions => condition)
     end
 
 
@@ -230,7 +236,7 @@ class PeopleController < ApplicationController
         format.html { redirect_to(admin_url) }
         format.xml  { head :ok }
       end
-    end  
+    end
   end
 
   def userless_project_selected_ajax
@@ -285,7 +291,7 @@ class PeopleController < ApplicationController
   end
 
   def current_user_dormant
-    if Person.find(params[:id]).dormant?
+    if Person.find(params[:id]).dormant && !(current_user.is_admin? && ADMIN_CAN_SEE_DORMANT)
       flash[:notice] = "/people/"+params[:id] + " is not a valid account.  Please try again"
       redirect_to(:controller=>:people,:action=>:index)
       return
