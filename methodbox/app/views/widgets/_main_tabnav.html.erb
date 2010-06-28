@@ -57,7 +57,7 @@ render_tabnav :main,
    t.named 'Publications'
    t.titled "Publications added from PubMed"
    t.links_to :controller => 'publications'
-  end
+  end unless !logged_in?
 
 
   add_tab do |t|
