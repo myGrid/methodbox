@@ -808,6 +808,9 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
     return nil unless contributor
     
     if contributor.class.name == "User"
+      if contributor.dormant &&!current_user.can_see_dormant?
+        return "Anonymous"
+      end  
       # this string will output " (you) " for current user next to the display name, when invoked with 'you_text == true'
       you_string = (you_text && logged_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>" : ""
       contributor_person = contributor.person
