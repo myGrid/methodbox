@@ -38,6 +38,18 @@
         </p>
       <% end -%>
       </p>
+<% if @variable.current_version >1 %>
+      <p>
+        <b>Dataset update:</b>
+<%#= old_ver_num -= @variable.current_version -%>
+        <span class="title"><%=h @variable.current_version -%>, </span>
+<% if !@old_var.empty?-%>
+  <b><%= link_to("previous version of this variable", variable_path(@old_var[0]),:title=>"Previous version of this variable") -%></b>
+<% else %>
+there was no previous variable with this name
+<% end %>
+</p>
+<% end -%>
       <p>
         <b>Documentation:</b>
         <% unless @variable.document.blank? -%>

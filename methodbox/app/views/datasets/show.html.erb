@@ -27,6 +27,10 @@
         <b>Parent Survey:</b>
         <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
       </p>
+      <p>
+        <b>Update:</b>
+        <span class="title"><%=h @dataset.current_version -%></span>
+      </p>
     </div>
   </div>
 </div>
