@@ -224,6 +224,10 @@ class SurveysController < ApplicationController
 
         end
       end
+      
+      #remove any variables which do not match the current dataset version number,ie those from a previous update
+      temp_variables.delete_if {|x| Dataset.find(x.dataset_id).current_version != x.current_version}
+      
       #      puts temp_variables.to_json
       @sorted_variables = temp_variables
       #      @all_variables = @sorted_variables
