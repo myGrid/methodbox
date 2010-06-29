@@ -394,6 +394,15 @@ class ScriptsController < ApplicationController
 
   # DELETE /scripts/1
   def destroy
+    #destroy any links to or from this script
+    links = Link.find(:all, :conditions => { :object_type => "Script", :object_id => @script.id, :predicate => "link" })
+    links.each do |link|
+      link.destroy
+    end
+    links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
+    links.each do |link|
+      link.destroy
+    end
     @script.destroy
 
     respond_to do |format|
