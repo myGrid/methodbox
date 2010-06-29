@@ -224,7 +224,7 @@ class PeopleController < ApplicationController
     user = User.find_by_person_id(person)
     user.dormant = true
     user.save
-    if current_user = user
+    if current_user == user
       current_user.forget_me
       reset_session
       respond_to do |format|
