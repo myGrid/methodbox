@@ -131,8 +131,12 @@ class Person < ActiveRecord::Base
     name + " <" + email + ">"
   end
   
-  def name
-    firstname=first_name
+  def name   
+    if dormant
+      firstname="(Dormant)"+first_name
+    else
+      firstname=first_name
+    end  
     firstname||=""
     lastname=last_name
     lastname||=""
