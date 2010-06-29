@@ -501,6 +501,15 @@ class CsvarchivesController < ApplicationController
   # DELETE /csvarchive/1
   def destroy
     find_archive
+    #destroy any links to or from this data extract
+    links = Link.find(:all, :conditions => { :object_type => "Csvarchive", :object_id => @archive.id, :predicate => "link" })
+    links.each do |link|
+      link.destroy
+    end
+    links = Link.find(:all, :conditions => { :subject_type => "Csvarchive", :subject_id => @archive.id, :predicate => "link" })
+    links.each do |link|
+      link.destroy
+    end
     @archive.destroy
 
     respond_to do |format|
