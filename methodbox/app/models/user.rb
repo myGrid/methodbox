@@ -156,6 +156,10 @@ class User < ActiveRecord::Base
     return FavouriteGroup.find(:first, :conditions => { :user_id => self.id, :name => FavouriteGroup::BLACKLIST_NAME } )
   end
 
+  def can_see_dormant?
+    return is_admin && ADMIN_CAN_SEE_DORMANT 
+  end
+  
   protected
     # before filter 
     def encrypt_password

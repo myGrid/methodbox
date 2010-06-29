@@ -64,10 +64,10 @@
 
               <% if current_user.is_admin? || mine?(@person) -%>
 <% if mine?(@person) -%>
-                <li><%= icon "destroy", person_path(@person), "Delete your account", { :confirm => 'Are you sure?', :method => :delete }, "Delete your account" -%>
+                <li><%= icon "destroy", person_path(@person), "Suspend your account", { :confirm => 'This will hide your personal information and make all your data aanonymous! Are you sure?', :method => :delete }, "Suspend your account" -%>
                 </li>
 	<% else -%>
-	 <li><%= icon "destroy", person_path(@person), "Delete Person", { :confirm => 'Are you sure?', :method => :delete }, "Delete Person" -%>
+	 <li><%= icon "destroy", person_path(@person), "Suspend account", { :confirm => "This will hide the user's personal information and make all their data aanonymous! Are you sure??", :method => :delete }, "Suspend Person" -%>
         </li>
 	<% end -%>
 
