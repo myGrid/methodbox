@@ -184,6 +184,11 @@ class VariablesController < ApplicationController
 
   def show
     find_variable
+    if @variable.current_version > 1
+      old_ver = @variable.current_version - 1
+      #there could be the chance that old_var doesn't exist eg. if the update defined it first time so need to check that in the view
+      @old_var = Variable.find(:all,:conditions=> "dataset_id=" + @variable.dataset_id.to_s + " and name='" + @variable.name+"' and current_version=" + old_ver.to_s)
+    end
     #    @tag_array = Array.new
     #    @variable.annotations_with_attribute("tag").each do |annotation|
     #
