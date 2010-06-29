@@ -82,30 +82,31 @@
           None
         <% end -%>
       </p>
-<% if logged_in? -%>
+<!--  should people get to see the links even of not logged in? what difference does it make? -->
+<%# if logged_in? -%>
       <br/>
       <b>Linked with Data Extracts(s):</b>
-      <% if !@survey.csvarchives.empty? -%>
+      <% if !@archives.empty? -%>
 
-        <% @survey.csvarchives.each do |archive| -%>
+        <% @archives.each do |archive| -%>
           <%= link_to(archive.title, csvarchive_path(archive)) -%>
         <% end -%>
       <% else -%>
         None
       <% end -%>
       <br/>
-      <br/>
-      <b>Linked with Method(s)/Script(s):</b>
-      <% if !@survey.scripts.empty? -%>
-
-        <% @survey.scripts.each do |script| -%>
+	<br/>
+      <b>Linked with Script(s):</b>
+		<% if !@scripts.empty? -%>
+        <% @scripts.each do |script| -%>
           <%= link_to(script.title, script_path(script)) -%>
         <% end -%>
       <% else -%>
         None
       <% end -%>
       <br/>
-<% end -%>
+      <br/>
+<%# end -%>
       <br/>
       <p>
         <b>Further information</b>
