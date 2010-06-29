@@ -535,6 +535,24 @@ class SurveysController < ApplicationController
 
     @survey = Survey.find(params[:id])
     @forum = Forum.all(:conditions=>["name=?", @survey.title])[0]
+    
+    source_archives = []
+    source_scripts = []
+
+    links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link" })
+
+    links.each do |link|
+      case link.subject.class.name
+      when "Csvarchive"
+        source_archives.push(link.subject)
+      when "Script"
+        source_scripts.push(link.subject)
+      end
+    end
+      
+    @archives = source_archives
+    @scripts = source_scripts
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@survey}
