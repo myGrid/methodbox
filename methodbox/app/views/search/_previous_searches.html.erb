@@ -7,7 +7,7 @@
 			</thead>
 			<tbody class="scrollContent">
 				<% @recent_searches.each do |recent_search| -%>
-				<tr><td><%= recent_search.created_at -%></td><td style="white-space: normal;"><%= link_to recent_search.terms, user_search_url(recent_search) -%></td><td>
+				<tr><td><%= recent_search.created_at.strftime('%d/%m/%Y @ %H:%M:%S') -%></td><td style="white-space: normal;"><%= link_to recent_search.terms, user_search_url(recent_search) -%></td><td>
 					<% recent_search.datasets.each do |dataset| %>
 					<%= link_to dataset.name, dataset_url(dataset) -%>
 					<% end -%>
