@@ -52,7 +52,11 @@ class User < ActiveRecord::Base
 
 #savage_beast
   def display_name
-          self.person.name
+    if self.dormant
+      "User "+id.to_s
+    else  
+      self.person.name
+    end  
   end
 
   # #savage_beast
