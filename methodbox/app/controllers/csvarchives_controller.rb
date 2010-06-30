@@ -678,28 +678,28 @@ class CsvarchivesController < ApplicationController
         end
         metadata = String.new
         variable_hash.each_key do |key|
-          metadata << "\n" + Dataset.find(key).survey.title + "\n---------------"
-          metadata << "\n" + Dataset.find(key).name + "\n---------------"
+          metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
+          metadata << "\r\n" + Dataset.find(key).name + "\r\n---------------"
           variable_hash[key].each do |var|
-            metadata << "\nName: " + var.name
+            metadata << "\r\nName: " + var.name
             if var.value != nil
-              metadata << "\nLabel: " + var.value
+              metadata << "\r\nLabel: " + var.value
             end
             if var.category!= nil
-              metadata << "\nCategory: " + var.category
+              metadata << "\r\nCategory: " + var.category
             end
             if var.dertype!= nil
-              metadata << "\nDerivation Type: " + var.dertype
+              metadata << "\r\nDerivation Type: " + var.dertype
             end
             if  var.dermethod!= nil
-              metadata << "\nDerivation Method: " + var.dermethod
+              metadata << "\r\nDerivation Method: " + var.dermethod
             end
             if var.info!=nil
-              metadata << "\nValue Information: " + var.info
+              metadata << "\r\nValue Information: " + var.info
             end
-            metadata << "\n---------------"
+            metadata << "\r\n---------------"
           end
-          metadata << "\n\n\n---------------\n---------------"
+          metadata << "\r\n\r\n\r\n---------------\r\n---------------"
         end
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts metadata}}
         begin
