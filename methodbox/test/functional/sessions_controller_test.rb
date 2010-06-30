@@ -121,6 +121,30 @@ class SessionsControllerTest < ActionController::TestCase
     assert_redirected_to root_url
   end
 
+  def test_old_login_correct_password
+    post :create, :login => 'aaron', :password => 'test'
+    assert_equal "Login has changed to using email. Yours is aaron@example.com", flash[:error]
+    assert_nil flash[:notice]
+    assert_nil session[:user_id]
+    assert_redirected_to :controller => "session", :action => "new"
+  end
+
+  def test_old_login_wrong_password
+    post :create, :login => 'aaron', :password => 'bad'
+    assert_equal "Login has changed to using email.", flash[:error]
+    assert_nil flash[:notice]
+    assert_nil session[:user_id]
+    assert_redirected_to :controller => "session", :action => "new"
+  end
+
+  def test_non_email
+    post :create, :login => 'junk', :password => 'bad'
+    assert_equal "Login has changed to using email.", flash[:error]
+    assert_nil flash[:notice]
+    assert_nil session[:user_id]
+    assert_redirected_to :controller => "session", :action => "new"
+  end
+
   protected
     def auth_token(token)
       CGI::Cookie.new('name' => 'auth_token', 'value' => token)

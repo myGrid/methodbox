@@ -93,8 +93,24 @@ class SessionsController < ApplicationController
           redirect_to root_url
         end
       else
-        logger.info("Attempt to access unknown account "+params[:login])
-        flash[:error] = "User name or password incorrect, please try again"
+        user = User.find_by_login(params[:login])
+        if user
+          if user.authenticated?(params[:password])
+            logger.info("Attempt to access account using login "+params[:login]+" with correct password")
+            flash[:error] = "Login has changed to using email. Yours is "+user.email.to_s
+          else  
+            logger.info("Attempt to access account using login "+params[:login]+" with incorrect password")
+            flash[:error] = "Login has changed to using email."
+          end
+        else   
+          if params[:login].match('@')
+            logger.info("Attempt to access unknown account "+params[:login])
+            flash[:error] = "User name or password incorrect, please try again"
+          else  
+            logger.info("Attempt to access account using unknown login "+params[:login])
+            flash[:error] = "Login has changed to using email."
+          end  
+        end          
         redirect_to :action => 'new'
       end
     end
