@@ -692,10 +692,10 @@ class CsvarchivesController < ApplicationController
               metadata << "\r\nDerivation Type: " + var.dertype
             end
             if  var.dermethod!= nil
-              metadata << "\r\nDerivation Method: " + var.dermethod
+              metadata << "\r\nDerivation Method: " + var.dermethod.gsub("\n", "\r\n")
             end
             if var.info!=nil
-              metadata << "\r\nValue Information: " + var.info
+              metadata << "\r\nValue Information: " + var.info.gsub("\n", "\r\n")
             end
             metadata << "\r\n---------------"
           end
