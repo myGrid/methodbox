@@ -38,7 +38,7 @@
         </p>
       <% end -%>
       </p>
-<% if @variable.current_version >1 %>
+<% if @variable.current_version >1 && !@old_var.empty?%>
       <p>
         <b>Dataset update:</b>
 <%#= old_ver_num -= @variable.current_version -%>
@@ -48,6 +48,14 @@
 <% else %>
 there was no previous variable with this name
 <% end %>
+</p>
+<% else -%>
+<p>
+  <b>Dataset update:</b>
+<span class="title"><%=h @variable.current_version -%></span>
+</p>
+	        <p class="none_text">
+	this may be a new variable added with this update since the previous version is not available within the MethodBox.
 </p>
 <% end -%>
       <p>
