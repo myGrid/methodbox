@@ -52,10 +52,12 @@ class CsvarchivesController < ApplicationController
 
     if @archive.complete
       retrieve_archive_from_server
+      record_download @archive
     else
       check_available
       if @archive.complete
         retrieve_archive_from_server
+        record_download @archive
       else
         flash[:notice] = "Your data extract is not yet ready for download, please check later"
         respond_to do |format|
@@ -703,7 +705,7 @@ class CsvarchivesController < ApplicationController
         end
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts metadata}}
         begin
-        send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + "_" + params[:type] + ".zip", :content_type => @archive.content_type, :disposition => 'attachment', :stream => false 
+        send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + "_" + params[:type] + ".zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
           
         rescue Exception => e
           

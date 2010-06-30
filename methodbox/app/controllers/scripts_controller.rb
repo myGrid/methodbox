@@ -108,6 +108,7 @@ class ScriptsController < ApplicationController
     # (this will also trigger timestamp update in the corresponding Asset)
     @script.last_used_at = Time.now
     @script.save_without_timestamping
+    record_download @script
 
     send_data @script.content_blob.data, :filename => @script.original_filename, :content_type => @script.content_type, :disposition => 'attachment'
   end

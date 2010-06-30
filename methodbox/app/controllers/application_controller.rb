@@ -17,6 +17,14 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery  :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
 
+  def record_download resource
+    download = Download.new
+    download.resource_type = resource.class.name
+    download.resource_id = resource.id
+    download.user = current_user
+    download.save
+  end
+  
 #savage_beast
   def update_last_seen_at
     #return unless logged_in?
