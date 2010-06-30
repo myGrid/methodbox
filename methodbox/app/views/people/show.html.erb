@@ -105,9 +105,10 @@
 
 <%# get, classify and authorize all assets for this person's user (assets belong to users, not people!) -%>
         <% persons_asset_hash = (@person.user ? Asset.classify_and_authorize(@person.user.assets, true, current_user) : {}) -%>
+<% persons_asset_hash.each_key {|key| persons_asset_hash[key].sort!{|x,y| y.created_at <=> x.created_at}}%>
 <%# persons_asset_hash.merge!(classify_for_tabs(@person.projects)) %>
 <%# persons_asset_hash.merge!(classify_for_tabs(@person.institutions)) %>
-        <% persons_asset_hash.merge!(classify_for_tabs(@person.csvarchives)) %>
+        <%# persons_asset_hash.merge!(classify_for_tabs(@person.csvarchives)) %>
 <%#= render :partial=>"layouts/items_related_to",:locals=>{:item_name=>@person.name,:item_hash=>persons_asset_hash} %>
 
       </div>
