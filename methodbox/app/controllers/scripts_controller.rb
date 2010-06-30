@@ -415,7 +415,7 @@ class ScriptsController < ApplicationController
 
   def find_scripts_by_page
     found = Script.find(:all,
-      :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
+      :order => "created_at DESC",:page=>{:size=>default_items_per_page,:current=>params[:page]})
     #    found = Script.find(:all,
     #      :order => "title")
 

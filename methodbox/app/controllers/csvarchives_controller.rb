@@ -523,9 +523,9 @@ class CsvarchivesController < ApplicationController
     @my_page = params[:my_page]
     @all_page = params[:all_page]
     @my_archives = Csvarchive.find(:all,
-      :order => "title",:conditions=>"person_id=" + current_user.person_id.to_s, :page=>{:size=>default_items_per_page,:current=>params[:my_page]})
+      :order => "created_at DESC",:conditions=>"person_id=" + current_user.person_id.to_s, :page=>{:size=>default_items_per_page,:current=>params[:my_page]})
     @all_archives = Csvarchive.find(:all,
-      :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:all_page]})
+      :order => "created_at DESC",:page=>{:size=>default_items_per_page,:current=>params[:all_page]})
   end
 
   private
