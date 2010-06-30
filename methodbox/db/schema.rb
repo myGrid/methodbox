@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100629125554) do
+ActiveRecord::Schema.define(:version => 20100630123620) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -188,11 +188,6 @@ ActiveRecord::Schema.define(:version => 20100629125554) do
     t.integer  "work_group_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "group_memberships_roles", :id => false, :force => true do |t|
-    t.integer "group_membership_id"
-    t.integer "role_id"
   end
 
   create_table "links", :force => true do |t|
