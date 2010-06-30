@@ -22,4 +22,10 @@ class VariablesControllerTest < ActionController::TestCase
     assert_nil flash[:error]
   end
 
+  #replicates bug for OBE-158
+  test "show_variable" do
+    post :show, :id => '89'
+    assert_response :success
+    assert_nil flash[:error]  
+  end
 end
