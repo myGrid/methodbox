@@ -7,6 +7,7 @@
       name: Auto Var (<%= s * 5 + i %>
       value: The <%= i.ordinalize %> automatically generated variable for dataset <%= s %>
       dataset_id: <%= s %>
+      current_version: 1
   <% end %>
 <% end %>
 
@@ -14,8 +15,10 @@
       name: myage
       value: "This is my own age"
       dataset_id: 3
+      current_version: 1
 
     with_age2:
       name: firstDrink
       value: "Age at which I had my first drink"
       dataset_id: 4
+      current_version: 1
