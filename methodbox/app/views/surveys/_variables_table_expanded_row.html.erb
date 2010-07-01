@@ -31,6 +31,32 @@
     </ul>
   </div>
   <div>
+    <% if item.current_version >1 %>
+      old_ver = item.current_version - 1
+      old_var = Variable.find(:all,:conditions=> "dataset_id=" + item.dataset_id.to_s + " and name='" + item.name+"' and current_version=" + old_ver.to_s)
+      <div style="width:875px;margin:auto;">Dataset update: 
+        <% if old_var %>
+          <%= link_to("previous version of this variable", variable_path(old_var[0]),:title=>"Previous version of this variable") -%>
+        <% else %>
+           There was no previous variable with this name
+        <% end %>
+      </div>
+    <% else -%>
+      <div style="width:875px;margin:auto;color:red;">Original version</div>
+    <% end -%>
+  </div>
+  <br/>
+  <div>
+    <% unless item.document.blank? -%>
+      <div style="width:875px;margin:auto;">Document: 
+        <%= link_to(item.document + ", page " + item.page, open_pdf_variable_url(item) + "#page=" + item.page,:title=>"Open the PDF document with information about this variable") -%>
+      </div>
+    <% else -%>
+      <div style="width:875px;margin:auto;color:red;">No documentation listed</div>
+    <% end -%>
+  </div>
+  <br/>
+  <div>
     <% if item.category != nil -%>
       <div style="width:875px;margin:auto;">Category: <%= item.category -%></div>
     <% else -%>
@@ -39,15 +65,15 @@
   </div>
   <br/>
   <div>
-    <% if item.dertype != nil -%>
-      <div style="width:875px;margin:auto;">Derivation type: <%= item.dertype -%></div>
+    <% unless item.dertype.blank? -%>
+      <div style="width:875px;margin:auto;">Variable source: <%= item.dertype %></div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No derivation recorded for this variable</div>
+      <div style="width:875px;margin:auto;color:red;">No source</div>
     <% end -%>
   </div>
   <br/>
   <div>
-    <% if item.dermethod != nil -%>
+    <% unless item.dermethod.blank? -%>
       <div style="width:875px;margin:auto;">Derivation method:</div>
       <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;"><pre><%=  item.dermethod -%></pre></div>
     <% else -%>
@@ -57,7 +83,7 @@
   <br/>
   <div>
     <% if item.info != nil -%>
-      <div style="width:875px;margin:auto;">Value information:</div>
+      <div style="width:875px;margin:auto;">Allowed values:</div>
       <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
     <% else -%>
       <div style="width:875px;margin:auto;color:red;">No value information recorded for this variable</div>
