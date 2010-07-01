@@ -403,7 +403,7 @@ class SurveysController < ApplicationController
     @item = Variable.find(@item_id)
 
     render :update, :status=>:created do |page|
-      page.replace_html @div, :partial=>"surveys/variables_table_replaced_row",:locals=>{:curr_cycle=>@curr_cycle,:item => @item}
+      page.replace_html @div, :partial=>"surveys/variables_table_row",:locals=>{:curr_cycle=>@curr_cycle,:item => @item}
     end
   end
 

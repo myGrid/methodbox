@@ -6,7 +6,11 @@
       <li>
         <div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}" -%></div>
         <div class="col2"><%= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript:if ($('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}').checked == true) {$('#{item.name + item.dataset_id.to_s + '_checkbox'}').checked =true} else {$('#{item.name + item.dataset_id.to_s + '_checkbox'}').checked=false};Field.disable('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}');Field.enable('#{item.name + item.dataset_id.to_s + '_checkbox'}');Element.hide($('#{item.name + item.dataset_id.to_s + '_expanded'}'));Element.show($('#{item.name + item.dataset_id.to_s}'));") -%></div>
-        <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
+        <% if item.name.size > 20 -%>
+          <div class="col3"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%></div>
+        <% else -%>
+          <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
+        <% end -%>  
         <div class="col4">
           <% if item.value != nil -%>
             <%= item.value -%>
@@ -30,6 +34,10 @@
 </li>
     </ul>
   </div>
+  <% if item.name.size > 20 -%>
+    <div style="width:875px;margin:auto;">Actual Variable name: <%= item.name -%></div>
+    <br/>
+  <% end -%>
   <div>
     <% if item.current_version >1 %>
       old_ver = item.current_version - 1
@@ -42,7 +50,7 @@
         <% end %>
       </div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">Original version</div>
+      <div style="width:875px;margin:auto;">Dataset update: Original version</div>
     <% end -%>
   </div>
   <br/>

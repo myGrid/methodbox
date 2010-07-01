@@ -20,4 +20,10 @@ class Variable < ActiveRecord::Base
     "#{id}-#{name.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
   end
 
+  def hyphenName
+    hyphened = name.gsub(/[a-z][A-Z][a-z]/){ |part| part.at(0) + '-' + part.at(1) + part.at(2) }
+    hyphened = hyphened.gsub(/[A-Z][A-Z][a-z]/){ |part| part.at(0) + '-' + part.at(1) + part.at(2) }
+    hyphened = hyphened.gsub(/[a-z][A-Z][A-Z]/){ |part| part.at(0) + '-' + part.at(1) + part.at(2) }
+    return hyphened
+  end
 end
