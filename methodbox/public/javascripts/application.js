@@ -104,6 +104,15 @@ function toggleAuthorAvatarList(objectId){
     }
 }
 
+function checkNotEmpty(textBox) {
+	if ($(textBox).value=="" || $(textBox).value=="Enter search terms") {
+		alert('Please enter a search term.');
+		$(textBox).focus();
+		return false;
+	} else {
+		return true;
+	}
+}
 
 
 // document.observe('dom:loaded', function() {  
