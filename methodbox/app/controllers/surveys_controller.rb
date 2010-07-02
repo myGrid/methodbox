@@ -631,13 +631,17 @@ class SurveysController < ApplicationController
 
   def check_search_parameters
     search_query = params[:survey_search_query]
-    puts "query is: " + search_query
     if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
       error = "Searching requires a term to be entered in the survey search box."
     elsif !params[:entry_ids] or params[:entry_ids].size == 0
       error = "Searching requires at least one survey selected."
     else
-      return true
+      dataset = Dataset.find_all_by_id(params[:entry_ids])
+      if dataset.length == params[:entry_ids].length
+        return true
+      else
+        error = "Incorrect dataset included. Please contact an admin if this reoccurs."
+      end
     end
     respond_to do |format|
       flash[:error] = error
