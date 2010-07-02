@@ -11,14 +11,15 @@ require 'xml'
 namespace :obesity do
   desc "load metadata from xml"
   task :load_single_metadata  => :environment do
-    parser = XML::Parser.file('/Users/Ian/scratch/hse_xml_metadata/hse2007.xml')
+    parser = XML::Parser.file('/Users/Ian/Downloads/output/HSE-2001-hse01ai--2010-06-30.xml')
     doc = parser.parse
-    survey_id = 16
-    survey = Survey.find(survey_id)
-    datasets = survey.datasets
-    datasets.each do |dataset|
-      puts "DATASET: " + dataset.name
-      dataset_id=dataset.id
+        missing_vars = []
+    # survey_id = 17
+    #    survey = Survey.find(survey_id)
+    #    datasets = survey.datasets
+    #    datasets.each do |dataset|
+      #puts "DATASET: " + dataset.name
+      dataset_id=22
       nodes = doc.find('//metadata/variable')
 
       nodes.each do |node|
@@ -91,16 +92,19 @@ namespace :obesity do
           end
 
         else
-          puts "Could not find " + variable_name + " in " + dataset.name
-          #        variable = Variable.new
-          #        variable.name = variable_name
-          #        variable.value= variable_value
-          #        variable.dertype = variable_dertype
-          #        variable.dermethod = variable_dermethod
-          #        variable.info = variable_info
-          #        variable.category = variable_category
-          #        variable.survey_id = survey_id;
-          #        variable.save
+          missing_vars.push(variable_name)
+          puts "Could not find " + variable_name
+                 variable = Variable.new
+                 variable.name = variable_name
+                 variable.value= variable_value
+                 variable.dertype = variable_dertype
+                 variable.dermethod = variable_dermethod
+                 variable.info = variable_info
+                 variable.category = variable_category
+                 variable.dataset_id = dataset_id;
+                 variable.page = page
+                 variable.document = document
+                 variable.save
         end
       
       
@@ -117,8 +121,11 @@ namespace :obesity do
         #      print labelvalue
         #    end
         #  end
-      end
+      # end
+
     end
+    puts "missing/new variables"
+    missing_vars.each {|missing_var| puts missing_var}
   end
 
 end
