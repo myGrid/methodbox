@@ -111,78 +111,16 @@ class SurveysController < ApplicationController
     end
   end
 
-  #  def hide_variables
-  #    puts "hiding variables"
-  #    variable_list = params[:sorted_variables]
-  #    puts "original list: " + params[:sorted_variables].to_json
-  #    puts "var list: " + variable_list.to_json
-  #    @all_variables = params[:all_variables]
-  #    current_datasets = params[:current_datasets]
-  #    @all_datasets = params[:all_datasets]
-  #    temp_variable_list = Array.new
-  #    dataset_to_remove = params[:dataset_id]
-  #    current_datasets.delete(dataset_to_remove)
-  #    puts "removing dataset " + dataset_to_remove
-  #    @sorted_variables = Array.new
-  #    variable_list.each do |var|
-  #      variable = Variable.find(var)
-  #      puts "var: " + variable.id.to_s + " dataset: " + variable.dataset_id.to_s
-  #      if !(variable.dataset_id.to_s == dataset_to_remove.to_s)
-  #        puts "adding" + var.to_s
-  #        @sorted_variables.push(variable)
-  #      end
-  #    end
-  #    puts @sorted_variables.to_json
-  ##    temp_variable_list.each do |id|
-  ##      puts "adding " + id.to_s
-  ##      @sorted_variables.push(Variable.find(id))
-  ##    end
-  ##    puts "sorted var list: " + @sorted_variables.to_json
-  #    @all_variables = variable_list
-  #    @current_datasets = current_datasets
-  #
-  #    render :update, :status=>:created do |page|
-  #      page.replace_html "dataset_checkbox_list", :partial => "surveys/dataset_checkbox_list",:locals=>{:current_datasets => @current_datasets, :all_variables => @all_variables, :sorted_variables => @sorted_variables, :all_datasets => @all_datasets}
-  #      page.replace_html "table_header", :partial=>"surveys/table_header"
-  #      page.replace_html "table_container", :partial=>"surveys/table", :locals => {:sorted_variables => @sorted_variables}
-  #    end
-  #  end
-
-  #  def show_variables
-  #    puts "showing variables"
-  #    render :update, :status=>:created do |page|
-  #      #      page.replace_html @div, :partial=>"surveys/variables_table_expanded_row",:locals=>{:curr_cycle=>@curr_cycle, :item => @item}
-  #    end
-  #  end
 
   def search_variables
 
     begin
-      #    items_per_page = 10
-      #  if (params[:search_query]== "" || params[:entry_ids]== nil)
-      #respond_to do |format|
-      #      flash.now[:notice] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-      #      format.html {
-      #        render :action => :index
-      #      }
-      #    end
-      #
-      #  else
-      #    case params['sort']
-      #    when nil
-      # page = params[:page]
-      #      number_per_page = params[:number_per_page]
+
       @survey_search_query = params[:survey_search_query]
       @selected_surveys = Array.new(params[:entry_ids])
       @current_datasets = Array.new(params[:entry_ids])
       @all_datasets = Array.new(params[:entry_ids])
-      #    logger.info("length " + @survey_list.size)
-      #    @search_query||=""
-      # user_search = UserSearch.new
-      #      user_search.person = Person.find(current_user.person_id)
-      #      user_search.terms = @survey_search_query
-      #      user_search.dataset_ids = @all_datasets
-      #      user_search.save
+
       search_terms = @survey_search_query.split(' ')
       search_terms.each do |search_term|
         t = SearchTerm.find(:all, :conditions=>["term=?",search_term])
@@ -236,27 +174,12 @@ class SurveysController < ApplicationController
       when "yes"
         new_variable_list = Array.new
         current_variables = params[:variable_list]
-        #        temp_variables.each do |temp_item|
-        #
-        #          contains = false
+
         current_variables.each do |var|
           temp_variables.delete_if {|x| x.id.to_s == var.to_s}
-          #            puts var.to_s + " " + temp_item.id.to_s
-          #            if var.to_s == temp_item.id.to_s
-          #              contains = true
-          #              puts contains.to_s
-          #              break
-          #            end
-          #            if contains == false
-          #              #              v = Variable.find(temp_item)
-          #              current_variables.push(temp_item.id)
-          #            end
+
         end
-        #        end
-        #        puts "curr var" + current_variables.to_json
-        #        @sorted_variables.each do |var|
-        #          new_variables.push(var)
-        #        end
+
         current_variables.each do |id|
           #          puts "pushing " + id.to_s
           v = Variable.find(id)
@@ -268,31 +191,6 @@ class SurveysController < ApplicationController
         #don't have to do anything
       end
 
-      #    when "variable"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }
-      #    when "dataset"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }
-      #    when "description"   then "description"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }
-      #    when "category"   then "category"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }
-      #    when "survey" then "survey"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
-      #    when "year" then "year"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
-      #    when "variable_reverse"  then "variable DESC"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
-      #    when "category_reverse"   then "category DESC"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.category.upcase }.reverse
-      #    when "description_reverse"   then "description DESC"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| m.value.upcase }.reverse
-      #    when "dataset_reverse"   then "dataset DESC"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
-      #    when "survey_reverse" then "survey DESC"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
-      #    when "year_reverse" then "year DESC"
-      #      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
-      #    end
       if logged_in?
         user_search = UserSearch.new
         user_search.user = current_user
@@ -310,32 +208,16 @@ class SurveysController < ApplicationController
         format.html
         format.xml
       end
-      #    render :update, :status=>:created do |page|
-      #      page.replace_html "table", :partial=>"surveys/variables_table"
-      #    end
-      #   respond_to do |format|
-      #     format.html
-      #   end
-      #end
+
     rescue
       puts "Searching failed: " + $!
       respond_to do |format|
         format.html {
-          flash[:error] = "Searching failed. Probably due to bad paramteres. Use the survey search box."
+          flash[:error] = "Searching failed. Possibly due to an internal server problem.  Please try again. If this problem persists please report it in the forum and/or contact an admin."
           redirect_to :action => "index"
         }
       end
-      #      render :update do |page|
-      #      render :action => index
-      #         page.reload_flash_error
-      #page.replace_html "survey_flash_error" , :partial => "layouts/flash_error",:locals=>{:error_message=>@error_message}
-      #page.show "error_flash"
-      #    page.visual_effect :highlight, 'error_flash'
-      #flash.discard
-      #      end
-      #    redirect_to :action => index
-      #    flash[:error] = "Searching requires a term to be entered in the survey search box and at least one survey selected."
-      #        render :action => :index
+
     end
   end
 
@@ -748,6 +630,8 @@ class SurveysController < ApplicationController
   end
 
   def check_search_parameters
+    search_query = params[:survey_search_query]
+    puts "query is: " + search_query
     if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
       error = "Searching requires a term to be entered in the survey search box."
     elsif !params[:entry_ids] or params[:entry_ids].size == 0
@@ -757,7 +641,7 @@ class SurveysController < ApplicationController
     end
     respond_to do |format|
       flash[:error] = error
-      format.html { redirect_to surveys_path }
+      format.html { redirect_to :action=>:index, :survey_search_query => search_query }
     end
     return false
   end
