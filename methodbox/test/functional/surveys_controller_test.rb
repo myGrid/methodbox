@@ -5,12 +5,14 @@ class SurveysControllerTest < ActionController::TestCase
   def test_search_logged_out
     do_search
     assert_nil flash[:error]
+    assert_nil flash[:message]
   end
 
   def test_search_logged_in
     login_as :normal_user
     do_search
     assert_nil flash[:error]
+    assert_nil flash[:message]
   end
 
   def test_search_nil_query

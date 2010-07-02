@@ -40,8 +40,8 @@
   <% end -%>
   <div>
     <% if item.current_version >1 %>
-      old_ver = item.current_version - 1
-      old_var = Variable.find(:all,:conditions=> "dataset_id=" + item.dataset_id.to_s + " and name='" + item.name+"' and current_version=" + old_ver.to_s)
+      <% old_ver = item.current_version - 1 %>
+      <% old_var = Variable.find(:all,:conditions=> "dataset_id=" + item.dataset_id.to_s + " and name='" + item.name+"' and current_version=" + old_ver.to_s) %>
       <div style="width:875px;margin:auto;">Dataset update: 
         <% if old_var %>
           <%= link_to("previous version of this variable", variable_path(old_var[0]),:title=>"Previous version of this variable") -%>

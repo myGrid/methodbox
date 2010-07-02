@@ -19,6 +19,18 @@
 
     with_age2:
       name: firstDrink
-      value: "Age at which I had my first drink"
+      value: "Age at which I claimed to have my first drink"
       dataset_id: 4
       current_version: 1
+
+    with_age3:
+      name: myage
+      value: "This is my new age"
+      dataset_id: 3
+      current_version: 2
+
+    with_age4:
+      name: firstDrink
+      value: "Age at which I had my first drink"
+      dataset_id: 4
+      current_version: 2
