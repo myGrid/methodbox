@@ -3,6 +3,7 @@
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
+<% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
 
 <ul class="sectionIcons">
 	<!-- might be able to upload user surveys in future -->
