@@ -5,7 +5,7 @@ class RemoveLinksThroughHasMany < ActiveRecord::Migration
     drop_table "survey_to_script_lists"
     drop_table "script_to_script_links"
     drop_table "extract_to_extract_links"
-    drop_table "extract_to_extract_lists"
+    # drop_table "extract_to_extract_lists"
   end
 
   def self.down
