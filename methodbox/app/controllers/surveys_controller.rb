@@ -13,6 +13,8 @@ class SurveysController < ApplicationController
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
   before_filter :check_search_parameters, :only => [:search_variables]
+  
+  before_filter :rerouted_search, :only => [:show]
 
 #experimental code for doing jgrid table using jqgrid plugin
   def grid_view
@@ -209,14 +211,14 @@ class SurveysController < ApplicationController
         format.xml
       end
 
-    rescue
-      puts "Searching failed: " + $!
-      respond_to do |format|
-        format.html {
-          flash[:error] = "Searching failed. Possibly due to an internal server problem.  Please try again. If this problem persists please report it in the forum and/or contact an admin."
-          redirect_to :action => "index"
-        }
-      end
+    #rescue
+    #  puts "Searching failed: " + $!
+    #  respond_to do |format|
+    #    format.html {
+    #      flash[:error] = "Searching failed. Possibly due to an internal server problem.  Please try again. If this problem persists please report it in the forum and/or contact an admin."
+    #      redirect_to :action => "index"
+    #    }
+    #  end
 
     end
   end
@@ -651,6 +653,29 @@ class SurveysController < ApplicationController
   end
 
  private
+ 
+   def rerouted_search
+     if "search_variables".eql?(params[:id])
+      respond_to do |format|
+        format.html do
+          store_location
+          if session[:return_to] != root_path 
+            flash[:message] = "Please reenter your search"
+          end  
+          redirect_to surveys_path
+        end        
+      end  
+       #return false
+       #find_surveys
+       #check_search_parameters
+       #params[:entry_ids] = params[:entry_ids].split(',') 
+       ##params[:survey_search_query] = "beer"
+       #bad = bad + 2
+       #action = search_variables
+     else
+	return true
+     end  
+   end
 
     #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
     def find_variables(term)
