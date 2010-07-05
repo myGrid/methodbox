@@ -187,7 +187,8 @@ class PeopleController < ApplicationController
     end
 
     respond_to do |format|
-      if @person.update_attributes(params[:person]) && set_group_membership_role_ids(@person,params)
+      if @person.update_attributes(params[:person]) 
+        # && set_group_membership_role_ids(@person,params)
         @person.user.email = @person.email
         @person.user.save
         #        flash[:notice] = 'Person was successfully updated.'
