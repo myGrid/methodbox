@@ -51,11 +51,14 @@ color: rgb(42,90,138);
 text-decoration: underline;
 }
 #search-bar-hd {
-	position: relative;
+/*	position: relative;*/
 	top: 0;
 	text-align: center; 
 	padding-top: 4px;
 	margin-top:1.5em;
+}
+.people_table th, td {
+	vertical-align:top;
 }
 
 
