@@ -10,13 +10,13 @@ class Script < ActiveRecord::Base
   # has_many :sources,  :through => :scripts_as_target
   # has_many :targets,    :through => :scripts_as_source
 
-  # has_many :script_lists
+  has_many :script_lists
 
-  # has_many :csvarchives, :through => :script_lists
+  has_many :csvarchives, :through => :script_lists
 
-  # has_many :survey_to_script_lists
+  has_many :survey_to_script_lists
 
-  # has_many :surveys, :through => :survey_to_script_lists
+  has_many :surveys, :through => :survey_to_script_lists
 
   acts_as_solr(:fields=>[:description,:title]) if SOLR_ENABLED
 
