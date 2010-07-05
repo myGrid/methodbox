@@ -28,11 +28,11 @@
 					<%#= link_to "My Variable Cart&nbsp;", cart_path -%>
 					</li>
 					<li style="list-style:none; line-height: 1;">
-						<%= icon "message", messages_path, nil, nil, "&nbsp;My Messages" %>
+						<%= icon("message", messages_path, "View your messages", nil, "My Messages") -%>
 					<%#= link_to "My Messages", messages_path -%>
 					</li>
 					<li style="list-style: none; line-height: 1;">
-						<%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" %>
+						<%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" -%>
 					<%#= link_to "Logout&nbsp;", logout_url -%>
 					</li>
 				</ul>
@@ -44,7 +44,7 @@
 			</div>
 		</div>
 	</div>
-<div id="search-bar-hd" style="text-align: center; padding-top: 4px;margin-top:1.5em;">
+<div id="search-bar-hd" style="padding-top: 4px;margin-top:1.5em;">
 	<%= render :partial=>"search/search_bar" %>
 </div>
 </div>
