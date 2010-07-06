@@ -30,7 +30,7 @@
 <%# end -%>
 <%#*</ul>%>
 
-<h1 class="contribution_title">Survey: <%= link_to(h(@survey.title), survey_path(@survey)) -%></h1>
+<h1 class="contribution_title">Survey: <%= h(@survey.title) -%></h1>
 
 <!-- This might be needed for future upload reasons -->
 <%#= render :partial => "assets/resource_datetime_info", :locals => { :resource => @survey } -%>

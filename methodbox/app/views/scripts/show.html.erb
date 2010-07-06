@@ -23,7 +23,7 @@
 <% end -%>
 </ul>
 
-<h1 class="contribution_title">Script: <%= link_to(h(@script.title), script_path(@script)) -%></h1>
+<h1 class="contribution_title">Script: <%= h (@script.title) -%></h1>
 
 <%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
 
