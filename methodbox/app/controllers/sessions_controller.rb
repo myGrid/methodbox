@@ -40,8 +40,10 @@ class SessionsController < ApplicationController
 #       flash[:notice] = "Logged in successfully"
 
           if !params[:called_from].blank? && params[:called_from][:controller] != "sessions"
-            unless params[:called_from][:id].blank?
+            if !params[:called_from][:id].blank?
               return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :id => params[:called_from][:id])
+            elsif !params[:called_from][:entry_ids].blank? && !params[:called_from][:survey_search_query].blank?             
+              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :entry_ids => params[:called_from][:entry_ids], :survey_search_query => params[:called_from][:survey_search_query])
             else
               return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action])
             end

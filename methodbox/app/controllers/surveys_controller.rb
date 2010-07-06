@@ -80,6 +80,10 @@ class SurveysController < ApplicationController
     #      end
   end
 
+  def search_variables
+    do_search_variables
+  end
+  
   def index
     #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
 
@@ -114,114 +118,7 @@ class SurveysController < ApplicationController
   end
 
 
-  def search_variables
 
-    begin
-
-      @survey_search_query = params[:survey_search_query]
-      @selected_surveys = Array.new(params[:entry_ids])
-      @current_datasets = Array.new(params[:entry_ids])
-      @all_datasets = Array.new(params[:entry_ids])
-
-      search_terms = @survey_search_query.split(' ')
-      search_terms.each do |search_term|
-        t = SearchTerm.find(:all, :conditions=>["term=?",search_term])
-        if t.size == 0
-          t = SearchTerm.new
-          t.term = search_term
-          t.save
-        end
-      end
-
-      if search_terms.length > 1
-        downcase_query = @survey_search_query.downcase
-        search_terms.unshift(downcase_query)
-      end
-
-      logger.info("searching for " + search_terms.to_s)
-      temp_variables = Array.new
-      search_terms.each do |term|
-        variables = find_variables(term)
-        variables.each do |item|
-          @selected_surveys.each do |ids|
-            #if Dataset.find(item.dataset_id).id.to_s == ids
-            if item.dataset_id.to_s == ids
-              logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-              #uts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
-              contains = false
-              temp_variables.each do |temp_item|
-                if temp_item.id == item.id
-                  contains = true
-                  break
-                end
-              end
-              if contains == false
-                temp_variables.push(item)
-              end
-              break
-            end
-          end
-
-        end
-      end
-      
-      #remove any variables which do not match the current dataset version number,ie those from a previous update
-      temp_variables.delete_if {|x| Dataset.find(x.dataset_id).current_version != x.current_version}
-      
-      #      puts temp_variables.to_json
-      @sorted_variables = temp_variables
-      #      @all_variables = @sorted_variables
-
-      case params['add_results']
-      when "yes"
-        new_variable_list = Array.new
-        current_variables = params[:variable_list]
-
-        current_variables.each do |var|
-          temp_variables.delete_if {|x| x.id.to_s == var.to_s}
-
-        end
-
-        current_variables.each do |id|
-          #          puts "pushing " + id.to_s
-          v = Variable.find(id)
-          new_variable_list.push(v)
-        end
-        new_variable_list.concat(temp_variables)
-        @sorted_variables = new_variable_list
-      when "no"
-        #don't have to do anything
-      end
-
-      if logged_in?
-        user_search = UserSearch.new
-        user_search.user = current_user
-        user_search.terms = @survey_search_query
-        user_search.dataset_ids = @all_datasets
-        var_as_ints = Array.new
-        @sorted_variables.each do |temp_var|
-          var_as_ints.push(temp_var.id)
-        end
-        user_search.variable_ids = var_as_ints
-        user_search.save
-      end
-      respond_to do |format|
-        logger.info("rendering survey search")
-        format.html
-        format.xml
-      end
-
-    #rescue
-    #  puts "Searching failed: " + $!
-    #  respond_to do |format|
-    #    format.html {
-    #      flash[:error] = "Searching failed. Possibly due to an internal server problem.  Please try again. If this problem persists please report it in the forum and/or contact an admin."
-    #      redirect_to :action => "index"
-    #    }
-    #  end
-
-    end
-  end
 
   def sort_variables
     @survey_search_query = params[:survey_search_query]
@@ -654,20 +551,131 @@ class SurveysController < ApplicationController
 
  private
  
-   def rerouted_search
-     if "search_variables".eql?(params[:id])
+  def do_search_variables
+
+    begin
+
+      @survey_search_query = params[:survey_search_query]
+      @selected_surveys = Array.new(params[:entry_ids])
+      @current_datasets = Array.new(params[:entry_ids])
+      @all_datasets = Array.new(params[:entry_ids])
+
+      search_terms = @survey_search_query.split(' ')
+      search_terms.each do |search_term|
+        t = SearchTerm.find(:all, :conditions=>["term=?",search_term])
+        if t.size == 0
+          t = SearchTerm.new
+          t.term = search_term
+          t.save
+        end
+      end
+
+      if search_terms.length > 1
+        downcase_query = @survey_search_query.downcase
+        search_terms.unshift(downcase_query)
+      end
+
+      logger.info("searching for " + search_terms.to_s)
+      temp_variables = Array.new
+      search_terms.each do |term|
+        variables = find_variables(term)
+        variables.each do |item|
+          @selected_surveys.each do |ids|
+            #if Dataset.find(item.dataset_id).id.to_s == ids
+            if item.dataset_id.to_s == ids
+              logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+              #uts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
+              contains = false
+              temp_variables.each do |temp_item|
+                if temp_item.id == item.id
+                  contains = true
+                  break
+                end
+              end
+              if contains == false
+                temp_variables.push(item)
+              end
+              break
+            end
+          end
+
+        end
+      end
+      
+      #remove any variables which do not match the current dataset version number,ie those from a previous update
+      temp_variables.delete_if {|x| Dataset.find(x.dataset_id).current_version != x.current_version}
+      
+      #      puts temp_variables.to_json
+      @sorted_variables = temp_variables
+      #      @all_variables = @sorted_variables
+
+      case params['add_results']
+      when "yes"
+        new_variable_list = Array.new
+        current_variables = params[:variable_list]
+
+        current_variables.each do |var|
+          temp_variables.delete_if {|x| x.id.to_s == var.to_s}
+
+        end
+
+        current_variables.each do |id|
+          #          puts "pushing " + id.to_s
+          v = Variable.find(id)
+          new_variable_list.push(v)
+        end
+        new_variable_list.concat(temp_variables)
+        @sorted_variables = new_variable_list
+      when "no"
+        #don't have to do anything
+      end
+
+      if logged_in?
+        user_search = UserSearch.new
+        user_search.user = current_user
+        user_search.terms = @survey_search_query
+        user_search.dataset_ids = @all_datasets
+        var_as_ints = Array.new
+        @sorted_variables.each do |temp_var|
+          var_as_ints.push(temp_var.id)
+        end
+        user_search.variable_ids = var_as_ints
+        user_search.save
+      end
       respond_to do |format|
-        format.html do
-          store_location
-          if session[:return_to] != root_path 
-            flash[:message] = "Please reenter your search"
-          end  
-          redirect_to surveys_path
-        end        
-      end  
+        logger.info("rendering survey search")
+        format.html { render :action =>:search_variables }
+        format.xml  { render :xml =>:search_variables }
+      end
+
+    #rescue
+    #  puts "Searching failed: " + $!
+    #  respond_to do |format|
+    #    format.html {
+    #      flash[:error] = "Searching failed. Possibly due to an internal server problem.  Please try again. If this problem persists please report it in the forum and/or contact an admin."
+    #      redirect_to :action => "index"
+    #    }
+    #  end
+
+    end
+  end
+  
+  def rerouted_search
+    if "search_variables".eql?(params[:id])
+      params[:entry_ids] = params[:entry_ids].split(',')
+      find_surveys
+      check_search_parameters
+      do_search_variables   
+      #respond_to do |format|
+      #  format.html do
+      #    store_location
+      #    if session[:return_to] != root_path 
+      #      flash[:message] = "Please reenter your search"
+      #    end  
+      #    redirect_to surveys_path
+      #  end        
+      #end  
        #return false
-       #find_surveys
-       #check_search_parameters
        #params[:entry_ids] = params[:entry_ids].split(',') 
        ##params[:survey_search_query] = "beer"
        #bad = bad + 2
