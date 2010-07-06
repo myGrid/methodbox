@@ -1,7 +1,7 @@
 <ul class="sectionIcons">
   <% if @group.user == current_user -%>
     <li><%= icon('edit', edit_work_group_path(@group), nil, nil, 'Edit Group') -%></li>
-    <li><%= icon('destroy', script_path(@group), nil, { :confirm => 'This deletes the group and all metadata. Are you sure?', :method => :delete }, 'Delete Group') -%></li>
+    <li><%= icon('destroy', work_group_path(@group), nil, { :confirm => 'This deletes the group and all metadata. Are you sure?', :method => :delete }, 'Delete Group') -%></li>
   <% end -%>
 </ul>
 
