@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   before_filter :logged_out_or_admin, :only=>[:new, :create, :activate]
   before_filter :is_user_admin_auth, :only=>[:resend_actiavtion_code, :approve, :reject]
   before_filter :request_for_unactive_user, :only=>[:resend_actiavtion_code, :approve, :reject]
-
+  before_filter :validate_create, :only=>[:create]
   # render new.rhtml
   def new
     @user=User.new
@@ -66,6 +66,7 @@ class UsersController < ApplicationController
         end
       end
     else
+      flash[:error] = "Something has gone wrong please check everything an try again"
       format.html {render :action => 'new'}
     end
   end
@@ -231,11 +232,49 @@ protected
       error("No user found with id "+params[:id].to_s, "No user found")
       return false
     elsif user.active?
-      error("User with id "+params[:id].to_s+ " already active", "User already acritve")
+      error("User with id "+params[:id].to_s+ " already active", "User already active")
       return false
     else
       return true
     end  
+  end
+
+  def validate_create
+    if !params[:user] || !params[:person] 
+      flash[:error] = "Please use the signup form"
+      redirect_to new_user_url    
+    elsif params[:user][:email].blank?
+      flash[:error] = "Email feild can not be blank"
+      redirect_to new_user_url    
+    elsif params[:user][:email_confirmation].blank?
+      flash[:error] = "Email confirmation feild can not be blank"
+      redirect_to new_user_url    
+    elsif !params[:user][:email].strip.downcase.eql?(params[:user][:email_confirmation].strip.downcase)
+      flash[:error] = "Email and Email confirmation must be the same"
+      redirect_to new_user_url    
+    elsif params[:user][:password].blank? || params[:user][:password].length < 4
+      flash[:error] = "Password must be at least 4 characters"
+      redirect_to new_user_url    
+    elsif !params[:user][:password].eql?(params[:user][:password_confirmation])
+      flash[:error] = "Password and Password confirmation must be the same"
+      redirect_to new_user_url    
+    elsif params[:person][:first_name].blank?
+      flash[:error] = "First name feild can not be blank"
+      redirect_to new_user_url    
+    elsif params[:person][:last_name].blank?
+      flash[:error] = "Last name feild can not be blank"
+      redirect_to new_user_url    
+    else  
+      user = User.find_by_email(params[:user][:email])
+      puts "existing"
+      puts user
+      if user
+        flash[:error] = "A user with this email already exists."
+        redirect_to forgot_password_url
+      else  
+        return true
+      end  
+    end      
   end
 
   def logged_out_or_admin

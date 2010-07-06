@@ -25,7 +25,8 @@ class User < ActiveRecord::Base
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
   
-  validates_confirmation_of :email
+  validates_confirmation_of :email, :message => "An account with this email address already exists."
+
   # validates_length_of       :login,    :within => 3..40
   
   validates_format_of :email,:with=>%r{^(?:[_a-z0-9-]+)(\.[_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
