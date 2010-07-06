@@ -386,8 +386,8 @@ module ApplicationHelper
   #used in publication views.  taken straight from sysmo images helper
   def get_object_title(item)
     title = ""
-    if ["Person"].include? item.class.name
-      title = h(item.name)
+    if ["User"].include? item.class.name
+      title = h(item.person.name)
     else
       title = h(item.title)
     end

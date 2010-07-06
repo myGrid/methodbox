@@ -43,7 +43,7 @@
           <span class='none_text'>Not specified</span>
         <% else %>
           <% @publication.asset.creators.each do |author| %>
-            <%= (link_to get_object_title(author), show_resource_path(author)) + ((author == @publication.asset.creators.last) && (@publication.non_seek_authors.empty?) ? "" : ", ") %>
+            <%= (link_to author.person.name, person_path(author.person)) %>
           <% end %>
           <% @publication.non_seek_authors.each do |author| %>
             <%= author.last_name + " " + author.first_name + ((author == @publication.non_seek_authors.last) ? "" : ", ") %>
