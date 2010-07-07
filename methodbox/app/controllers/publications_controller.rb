@@ -63,8 +63,9 @@ class PublicationsController < ApplicationController
         end
         
         #Make a policy
-        policy = Policy.create(:name => "publication_policy", :sharing_scope => 3, :access_type => 1, :use_custom_sharing => true)
+        policy = Policy.create(:name => "publication_policy", :sharing_scope => 3, :access_type => 1, :use_custom_sharing => true, :contributor => current_user)
         @publication.asset.policy = policy
+        policy.save
         @publication.asset.save
         #add managers (authors + contributor)
         @publication.asset.creators.each do |author|
@@ -89,6 +90,7 @@ class PublicationsController < ApplicationController
     valid = true
     to_add = []
     to_remove = []
+    unless params[:author] == nil
     params[:author].each_key do |author_id|
       author_assoc = params[:author][author_id]
       unless author_assoc.blank?
@@ -102,6 +104,7 @@ class PublicationsController < ApplicationController
         end
       end
     end
+  end
     
     #Check for duplicate authors
     if valid && (to_add.uniq.size != to_add.size)
@@ -122,12 +125,18 @@ class PublicationsController < ApplicationController
         
         #Update policy so current authors have manage permissions
         @publication.asset.creators.each do |author|
+          puts "author is " + author.person.name
           @publication.asset.policy.permissions.clear
-          @publication.asset.policy.permissions << Permission.create(:contributor => author, :policy => @publication.asset.policy, :access_type => 4)
+          # @publication.asset.policy.permissions << Permission.create(:contributor => author.person, :policy => @publication.asset.policy, :access_type => 4)
+          permis = Permission.create(:contributor => author.person, :policy => @publication.asset.policy, :access_type => 4)
+          permis.save
         end      
+        # @publication.asset.policy.save
         #Add contributor
         @publication.asset.policy.permissions << Permission.create(:contributor => @publication.contributor.person, :policy => @publication.asset.policy, :access_type => 4)
-        
+        permis = Permission.create(:contributor => @publication.contributor.person, :policy => @publication.asset.policy, :access_type => 4)
+        permis.save
+        # @publication.asset.save
         flash[:notice] = 'Publication was successfully updated.'
         format.html { redirect_to(@publication) }
         format.xml  { head :ok }
@@ -252,7 +261,7 @@ class PublicationsController < ApplicationController
     pubmed_id = @publication.pubmed_id
     doi = @publication.doi
     if pubmed_id
-      query = PubmedQuery.new("sysmo-seek",ADMIN_EMAIL)
+      query = PubmedQuery.new("methodbox",ADMIN_EMAIL)
       result = query.fetch(pubmed_id)      
     elsif doi
       query = DoiQuery.new(ADMIN_EMAIL)
@@ -267,6 +276,11 @@ class PublicationsController < ApplicationController
         pa.save
       end
     end
+    # TODO remove all the permissions if it is the owner who is removing everyone, the owner will still have read, write etc
+    # not sure what the flow should be
+    # if @publication.asset.contributor == current_user
+    #       @publication.asset.policy.permissions.clear
+    #     end
     respond_to do |format|
       format.html { redirect_to(edit_publication_url(@publication)) }
       format.xml  { head :ok }
