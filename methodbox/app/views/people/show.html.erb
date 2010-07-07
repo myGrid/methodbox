@@ -136,7 +136,7 @@
           <h3>	 <% if mine?(@person) -%>
 		        My
 		      <% else -%>
-		        <%= "#{@person.name.pluralize}" -%>
+		        <%= "#{@person.first_name.pluralize}" -%>
 
 		      <% end %> <%= "#{visible_resource_type} (#{resources.length})" -%></h3>
           <%= render :partial => "assets/resource_list", :locals => { :collection => resources, :narrow_view => true, :authorization_for_showing_already_done => true } -%>
