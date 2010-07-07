@@ -114,6 +114,28 @@ function checkNotEmpty(textBox) {
 	}
 }
 
+// used by the publications expand abstract.  probably easier to do it
+// the variables table way with some simple inline prototype but we can leave
+// that for when we have some spare time!
+// copied straight from sysmo
+
+var fullResourceListItemExpandableText = new Array();
+var truncResourceListItemExpandableText = new Array();
+
+function expandResourceListItemExpandableText(objectId){
+    link = $('expandableLink'+objectId)
+    text = $('expandableText'+objectId)
+    if (link.innerHTML == '(Expand)') { //EXPAND
+      link.innerHTML = '(Collapse)';
+      text.innerHTML = fullResourceListItemExpandableText[objectId];
+    }
+    else { //COLLAPSE
+      link.innerHTML = '(Expand)';
+      text.innerHTML = truncResourceListItemExpandableText[objectId];
+    }
+}
+
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  
