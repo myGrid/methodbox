@@ -39,7 +39,13 @@
           <% @publication.non_seek_authors.each do |author| %>
           <tr>    
             <td><%= author.last_name + " " + author.first_name -%></td>
-            <td><select name="author[<%= author.id -%>]"><option value="">None</option><option value="<%= @author_associations[author.id].id -%>"><%= @author_associations[author.id].name -%></option></select></td>
+            <td><select name="author[<%= author.id -%>]"><option value="">None</option>
+	<% if (@author_associations[author.id] != nil) %>
+	<option value="<%= @author_associations[author.id].id -%>">
+<%= @author_associations[author.id].name -%>
+</option>
+<% end -%>
+</select></td>
           </tr>
           <% end %>
         </table>
@@ -53,7 +59,7 @@
       <% unless @publication.asset.creators.empty? %>
         <ul class="related_asset_list">
           <% @publication.asset.creators.each do |creator| %>
-            <li><%= (link_to get_object_title(creator), show_resource_path(creator)) %></li>
+            <li><%= (link_to get_object_title(creator), show_resource_path(creator.person)) %></li>
           <% end %>
         </ul>
         <br/>
