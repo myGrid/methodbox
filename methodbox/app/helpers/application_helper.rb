@@ -7,6 +7,18 @@ module ApplicationHelper
   include SavageBeast::ApplicationHelper
   
   include TagsHelper
+  
+  #used in publication views.  taken straight from sysmo. not use anywhere else 
+  #an avatar with an image_tag_for_key in the corner to show it can be favourited
+  def favouritable_icon(item, size=100)
+    #the image_tag_for_key:
+    html = avatar(item.person, size, true)
+    html = "<div class='favouritable_icon'>#{html}</div>"
+
+    html = link_to_draggable(html, show_resource_path(item.person), :id=>model_to_drag_id(item.person), :class=> "asset", :title=>item.person.name)
+    return html
+  end
+  
 
   #used in publication views.  taken straight from sysmo. not use anywhere else  
   def resource_title_draggable_avatar resource
