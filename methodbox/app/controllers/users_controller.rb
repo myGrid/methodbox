@@ -32,23 +32,23 @@ class UsersController < ApplicationController
       reset_session
     end
     @user = User.new(params[:user])
-    user_person = Person.new(params[:person])
-    user_person.email = @user.email
-    @user.person=user_person
+    @person = Person.new(params[:person])
+    @person.email = @user.email
+    @user.person=@person
 
     @user.save
     respond_to do |format|
     if @user.errors.empty?
       if current_user #and therefor by before_filter :logged_out_or_admin an admin
-        do_approval(@user)
+        do_approval(user)
         Mailer.deliver_admin_created_account(current_user, @user, base_host)
         format.html {redirect_to(admin_path)}
       else
         if REGISTRATION_CLOSED
           Mailer.deliver_signup_requested(params[:message],@user,base_host)
           flash[:notice]="An email has been sent to the administor with your signup request."
-          user.dormant = true
-          user.activation_code = nil
+          @user.dormant = true
+          @user.activation_code = nil
           format.html {redirect_to(root_path)}
         else
           self.current_user = @user
@@ -66,8 +66,12 @@ class UsersController < ApplicationController
         end
       end
     else
-      flash[:error] = "Something has gone wrong please check everything an try again"
-      format.html {render :action => 'new'}
+      #flash[:error] = "Something has gone wrong please check everything an try again"
+      if REGISTRATION_CLOSED
+        format.html {render :action => 'request_access'}
+      else  
+        format.html {render :action => 'new'}
+      end  
     end
   end
   end
@@ -243,37 +247,8 @@ protected
     if !params[:user] || !params[:person] 
       flash[:error] = "Please use the signup form"
       redirect_to new_user_url    
-    elsif params[:user][:email].blank?
-      flash[:error] = "Email feild can not be blank"
-      redirect_to new_user_url    
-    elsif params[:user][:email_confirmation].blank?
-      flash[:error] = "Email confirmation feild can not be blank"
-      redirect_to new_user_url    
-    elsif !params[:user][:email].strip.downcase.eql?(params[:user][:email_confirmation].strip.downcase)
-      flash[:error] = "Email and Email confirmation must be the same"
-      redirect_to new_user_url    
-    elsif params[:user][:password].blank? || params[:user][:password].length < 4
-      flash[:error] = "Password must be at least 4 characters"
-      redirect_to new_user_url    
-    elsif !params[:user][:password].eql?(params[:user][:password_confirmation])
-      flash[:error] = "Password and Password confirmation must be the same"
-      redirect_to new_user_url    
-    elsif params[:person][:first_name].blank?
-      flash[:error] = "First name feild can not be blank"
-      redirect_to new_user_url    
-    elsif params[:person][:last_name].blank?
-      flash[:error] = "Last name feild can not be blank"
-      redirect_to new_user_url    
     else  
-      user = User.find_by_email(params[:user][:email])
-      puts "existing"
-      puts user
-      if user
-        flash[:error] = "A user with this email already exists."
-        redirect_to forgot_password_url
-      else  
-        return true
-      end  
+      return true
     end      
   end
 

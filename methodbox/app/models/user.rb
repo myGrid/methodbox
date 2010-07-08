@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
   
   belongs_to :person, :dependent => :destroy
   #validates_associated :person
-  
+  before_save :valid_person?
+   
   #restful_authentication plugin generated code ...
   # Virtual attribute for the unencrypted password
   attr_accessor :password
@@ -25,19 +26,20 @@ class User < ActiveRecord::Base
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
   
-  validates_confirmation_of :email, :message => "An account with this email address already exists."
+  validates_presence_of     :email
+  validates_presence_of     :email_confirmation
+  validates_confirmation_of :email
+  validates_format_of :email,:with=>%r{^(?:[_a-z0-9-]+)(\.[_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
+  validates_uniqueness_of   :email, :message => "An account with this email address already exists."
 
   # validates_length_of       :login,    :within => 3..40
-  
-  validates_format_of :email,:with=>%r{^(?:[_a-z0-9-]+)(\.[_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
-  validates_uniqueness_of   :email
   
   # validates_uniqueness_of   :login, :case_sensitive => false
   before_save :encrypt_password
   before_create :make_activation_code 
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :password, :password_confirmation
+  attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation
   
   has_many :favourites
   has_many :favourite_groups, :dependent => :destroy
@@ -180,5 +182,13 @@ class User < ActiveRecord::Base
     def make_activation_code
       self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
     end
-    
+  
+    def valid_person?
+      if !self.person.errors.empty?
+        self.person.errors.each do |error|
+          errors.add(error[0], error[1])
+        end
+        return false
+      end
+    end  
 end

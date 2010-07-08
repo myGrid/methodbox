@@ -17,17 +17,18 @@ class Person < ActiveRecord::Base
   
   acts_as_editable
     
-  validates_presence_of :name,:email
+  #Replace these two with one below if you only want at least a first or last name  
+  validates_presence_of   :last_name
+  validates_presence_of   :first_name
   # validates_presence_of :name
 
   #FIXME: consolidate these regular expressions into 1 holding class
   validates_format_of :email,:with=>%r{^(?:[_a-z0-9-]+)(\.[_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
   validates_uniqueness_of   :email
+  validates_presence_of    :email
 
   validates_format_of :web_page, :with=>/(^$)|(^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(([0-9]{1,5})?\/.*)?$)/ix,:allow_nil=>true,:allow_blank=>true
-
-  validates_uniqueness_of :email
-
+  
   validates_associated :avatars
 
   # has_and_belongs_to_many :disciplines
