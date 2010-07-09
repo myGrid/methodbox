@@ -118,7 +118,7 @@ class CsvarchivesController < ApplicationController
     @archives = source_archives | target_archives
     @scripts = source_scripts | target_scripts
     @surveys = source_surveys | target_surveys
-      
+    sort_into_datasets @archive
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@archives}
@@ -531,6 +531,19 @@ class CsvarchivesController < ApplicationController
   end
 
   private
+  
+  #find out how many variables there are for each dataset
+  def sort_into_datasets archive
+    @vars_by_dataset = Hash.new
+    @total_vars = 0
+    archive.variables.each do |variable|
+      if !@vars_by_dataset.has_key?(variable.dataset_id.to_s)
+        @vars_by_dataset[variable.dataset_id.to_s] = 0
+      end
+      @vars_by_dataset[variable.dataset_id.to_s] = @vars_by_dataset[variable.dataset_id.to_s] + 1
+      @total_vars =  @total_vars + 1
+    end
+  end
   
   def find_groups
     @groups = WorkGroup.find(:all)

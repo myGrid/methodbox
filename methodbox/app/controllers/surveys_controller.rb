@@ -582,7 +582,13 @@ class SurveysController < ApplicationController
       @selected_surveys = Array.new(params[:entry_ids])
       @current_datasets = Array.new(params[:entry_ids])
       @all_datasets = Array.new(params[:entry_ids])
-
+      #keep a hash of how many variables are in each dataset search
+      @vars_by_dataset = Hash.new
+      @selected_surveys.each do |dataset|
+        @vars_by_dataset[dataset] = 0
+      end
+      @total_vars = 0
+      
       search_terms = @survey_search_query.split(' ')
       search_terms.each do |search_term|
         t = SearchTerm.find(:all, :conditions=>["term=?",search_term])
@@ -606,7 +612,7 @@ class SurveysController < ApplicationController
           @selected_surveys.each do |ids|
             #if Dataset.find(item.dataset_id).id.to_s == ids
             if item.dataset_id.to_s == ids
-              logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
+              logger.info("Found " + item.name + ", from dataset " + item.dataset_id.to_s)
               #uts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
               contains = false
               temp_variables.each do |temp_item|
@@ -617,6 +623,9 @@ class SurveysController < ApplicationController
               end
               if contains == false
                 temp_variables.push(item)
+                #add one to the count of those vars found in this dataset
+                @vars_by_dataset[ids] = @vars_by_dataset[ids] + 1
+                @total_vars = @total_vars + 1
               end
               break
             end
@@ -626,7 +635,8 @@ class SurveysController < ApplicationController
       end
       
       #remove any variables which do not match the current dataset version number,ie those from a previous update
-      temp_variables.delete_if {|x| Dataset.find(x.dataset_id).current_version != x.current_version}
+      # THIS NEXT LINE IS NOT NEEDED AT THE MOMENT AND JUST ADDS A LITTLE BIT OF SLOWDOWN FOR NOTHING
+      # temp_variables.delete_if {|x| Dataset.find(x.dataset_id).current_version != x.current_version}
       
       #      puts temp_variables.to_json
       @sorted_variables = temp_variables
@@ -646,6 +656,8 @@ class SurveysController < ApplicationController
           #          puts "pushing " + id.to_s
           v = Variable.find(id)
           new_variable_list.push(v)
+          @vars_by_dataset[v.dataset_id.to_s] = @vars_by_dataset[v.dataset_id.to_s] + 1
+          @total_vars = @total_vars + 1
         end
         new_variable_list.concat(temp_variables)
         @sorted_variables = new_variable_list
