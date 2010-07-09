@@ -145,7 +145,7 @@ class SurveysController < ApplicationController
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
     when "year" then "year"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
-    when "frequency" then "frequency"
+    when "popularity" then "popularity"
       @sorted_variables = @unsorted_vars.sort_by { |m| VariableList.all(:conditions=>"variable_id=" + m.id.to_s).size}
     when "variable_reverse"  then "variable DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| m.name.upcase }.reverse
@@ -159,7 +159,7 @@ class SurveysController < ApplicationController
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
     when "year_reverse" then "year DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
-    when "frequency_reverse" then "frequency DESC"
+    when "popularity_reverse" then "popularity DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| VariableList.all(:conditions=>"variable_id=" + m.id.to_s).size}.reverse
     end
     render :update, :status=>:created do |page|
