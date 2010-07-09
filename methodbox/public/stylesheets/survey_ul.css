@@ -281,4 +281,12 @@ visibility:hidden
     background:#E2DDB5;
 }
 
+li.var_number_list
+{
+display: inline;
+list-style-type: none;
+padding-right: 20px;
+background-color: #EEEEEE;
+}
+
 
