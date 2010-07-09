@@ -14,12 +14,8 @@ class UsersControllerTest < ActionController::TestCase
 
   def test_title
    get :new
-   if REGISTRATION_CLOSED
-     assert_response :redirect
-   else
-     assert_response :success
-     assert_select "title",:text=>/MethodBox.*/, :count=>1
-   end
+   assert_response :success
+   assert_select "title",:text=>/MethodBox.*/, :count=>1
   end
 
   def test_should_allow_signup
@@ -47,9 +43,8 @@ class UsersControllerTest < ActionController::TestCase
 
   def test_admin_signup_activation_done
     login_as :admin
-    assert_difference 'User.count' do
-      post :create, :user => { :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }, :person=>{:first_name=>"fred"}, :activate => true
-      assert_response :redirect
+    assert_difference 'User.count' do                          
+      post :create, :user => { :email => 'quire@example.com', :email_confirmation => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }, :person=>{:first_name=>"fred", :last_name=>"Smith"}, :activate => true
       user = User.find_by_email("quire@example.com")
       assert user.authenticated?('quire')
       assert !user.dormant
@@ -62,7 +57,6 @@ class UsersControllerTest < ActionController::TestCase
     login_as :admin
     assert_difference 'User.count' do
       create_user
-      assert_response :redirect
       user = User.find_by_email("quire@example.com")
       assert user.authenticated?('quire')
       assert !user.dormant
@@ -232,6 +226,6 @@ class UsersControllerTest < ActionController::TestCase
 
   protected
   def create_user(options = {})
-    post :create, :user => { :email => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }.merge(options),:person=>{:first_name=>"fred"}
+    post :create, :user => { :email => 'quire@example.com', :email_confirmation => 'quire@example.com', :password => 'quire', :password_confirmation => 'quire' }.merge(options),:person=>{:first_name=>"fred", :last_name=>"smith"}
   end
 end

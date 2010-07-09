@@ -137,7 +137,11 @@ class Person < ActiveRecord::Base
   
   def name   
     if dormant
-      firstname="(Dormant)"+first_name
+      if user.activated_at = nil
+        firstname="(Awaiting Approval)"+first_name
+      else	      
+        firstname="(Dormant)"+first_name
+      end  
     else
       firstname=first_name
     end  

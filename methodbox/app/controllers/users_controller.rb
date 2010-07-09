@@ -40,7 +40,7 @@ class UsersController < ApplicationController
     respond_to do |format|
     if @user.errors.empty?
       if current_user #and therefor by before_filter :logged_out_or_admin an admin
-        do_approval(user)
+        do_approval(@user)
         Mailer.deliver_admin_created_account(current_user, @user, base_host)
         format.html {redirect_to(admin_path)}
       else
@@ -48,12 +48,15 @@ class UsersController < ApplicationController
           Mailer.deliver_signup_requested(params[:message],@user,base_host)
           flash[:notice]="An email has been sent to the administor with your signup request."
           @user.dormant = true
+          @user.person.dormant = true
           @user.activation_code = nil
+          @user.save
           format.html {redirect_to(root_path)}
         else
           self.current_user = @user
           if !ACTIVATION_REQUIRED
             @user.activate
+            @user.save
             format.html {redirect_to(root_path)}
             Mailer.deliver_welcome self.current_user, base_host
          else

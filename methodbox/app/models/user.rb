@@ -27,8 +27,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password,                   :if => :password_required?
   
   validates_presence_of     :email
-  validates_presence_of     :email_confirmation
-  validates_confirmation_of :email
+  validates_confirmation_of :email if :email_confirmation
   validates_format_of :email,:with=>%r{^(?:[_a-z0-9-]+)(\.[_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
   validates_uniqueness_of   :email, :message => "An account with this email address already exists."
 
@@ -84,6 +83,8 @@ class User < ActiveRecord::Base
     @activated = true
     self.activated_at = Time.now.utc
     self.activation_code = nil
+    self.dormant = false
+    self.person.dormant = false
     save(false)
   end
 
