@@ -1,2 +1,7 @@
-<h1>Surveys#edit</h1>
-<p>Find me in app/views/surveys/edit.html.erb</p>
+<% if current_user.is_admin? -%>
+<h1>Editing is not currently enabled for surveys</h1>
+<div style="text-align: center;"><%= link_to("Return to survey " + @survey.title, survey_path(@survey)) -%></div>
+<% else -%>
+<!-- The controller should take care of this anyway -->
+<h1>You do not have permission to edit surveys</h1>
+<% end -%>
