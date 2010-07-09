@@ -2,7 +2,7 @@ class DatasetsController < ApplicationController
 
   before_filter :login_required, :except => [ :show ]
   before_filter :find_datasets, :only => [ :index ]
-  before_filter :find_dataset, :only => [ :show ]
+  before_filter :find_dataset, :only => [ :show, :edit ]
 
   def index
 
@@ -10,6 +10,13 @@ class DatasetsController < ApplicationController
 
   def show
     
+  end
+  
+  def edit
+    flash[:error] = "No dataset editing is allowed at the moment"
+    respond_to do |format|
+      format.html { redirect_to dataset_path(@dataset) }
+    end
   end
 
   private
