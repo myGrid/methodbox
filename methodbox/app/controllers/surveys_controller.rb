@@ -15,6 +15,8 @@ class SurveysController < ApplicationController
   before_filter :check_search_parameters, :only => [:search_variables]
   
   before_filter :rerouted_search, :only => [:show]
+  
+  before_filter :find_survey, :only => [:show, :edit, :update]
 
 #experimental code for doing jgrid table using jqgrid plugin
   def grid_view
@@ -318,7 +320,7 @@ class SurveysController < ApplicationController
     #    @survey.last_used_at = Time.now
     #    @survey.save_without_timestamping
 
-    @survey = Survey.find(params[:id])
+    # @survey = Survey.find(params[:id])
     @forum = Forum.all(:conditions=>["name=?", @survey.title])[0]
     
     source_archives = []
@@ -345,10 +347,27 @@ class SurveysController < ApplicationController
   end
 
   def edit
+    if !current_user.is_admin?
+      flash[:error] = 'You do not have permission to edit survey metadata.'    
+      respond_to do |format|
+        format.html { redirect_to survey_path(@survey) }
+      end
+    else
+      respond_to do |format|
+        format.html # edit.html.erb
+        format.xml
+      end
+    end
 
   end
 
   def update
+    if !current_user.is_admin?
+      flash[:error] = 'You do not have permission to edit survey metadata.'    
+      respond_to do |format|
+        format.html { redirect_to survey_path(@survey) }
+      end
+    else
     # remove protected columns (including a "link" to content blob - actual data cannot be updated!)
     if params[:survey]
       [:contributor_id, :contributor_type, :original_filename, :content_type, :content_blob_id, :created_at, :updated_at, :last_used_at].each do |column_name|
@@ -388,6 +407,7 @@ class SurveysController < ApplicationController
         }
       end
     end
+  end
   end
 
   # GET /sops/1;download
@@ -434,7 +454,10 @@ class SurveysController < ApplicationController
     end
     @recent_searches = search
   end
-
+  
+  def find_survey
+        @survey = Survey.find(params[:id])
+  end
 
   def find_surveys
     found = Survey.find(:all,
