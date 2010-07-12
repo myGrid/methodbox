@@ -4,49 +4,49 @@ require 'acts_as_contributor'
 class User < ActiveRecord::Base
   #savage_beast
   include SavageBeast::UserInit
-  
+
   acts_as_contributor
   # TODO uncomment the following line when SOPs are implemented
   # has_many :sops, :as => :contributor
-  
+
   belongs_to :person, :dependent => :destroy
   #validates_associated :person
   before_save :valid_person?
-   
+
   #restful_authentication plugin generated code ...
   # Virtual attribute for the unencrypted password
   attr_accessor :password
 
   #validates_presence_of     :login, :email - removed requirement on email
   #validates_length_of       :email,    :within => 3..100
-  
+
   # validates_presence_of     :login
   validates_presence_of     :password,                   :if => :password_required?
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 4..40, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
-  
+
   validates_presence_of     :email
   validates_confirmation_of :email if :email_confirmation
   validates_format_of :email,:with=>%r{^(?:[_a-z0-9-]+)(\.[_a-z0-9-]+)*@([a-z0-9-]+)(\.[a-zA-Z0-9\-\.]+)*(\.[a-z]{2,4})$}i
   validates_uniqueness_of   :email, :message => "An account with this email address already exists."
 
   # validates_length_of       :login,    :within => 3..40
-  
+
   # validates_uniqueness_of   :login, :case_sensitive => false
   before_save :encrypt_password
-  before_create :make_activation_code 
+  before_create :make_activation_code
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation
-  
+
   has_many :favourites
   has_many :favourite_groups, :dependent => :destroy
-  
+
   # can't destroy the assets, because these might be valuable even in the absence of the parent project
   has_many :assets, :as => :contributor, :dependent => :nullify
 
-  named_scope :not_activated,:conditions=>['activation_code IS NOT NULL']
+  named_scope :not_activated,:conditions=>['activated_at IS NULL'],:include=>:person
   named_scope :without_profile,:conditions=>['person_id IS NULL']
   named_scope :admins,:conditions=>['is_admin = ?',true],:include=>:person
 
@@ -56,9 +56,9 @@ class User < ActiveRecord::Base
   def display_name
     if self.dormant
       "User "+id.to_s
-    else  
+    else
       self.person.name
-    end  
+    end
   end
 
   # #savage_beast
@@ -70,14 +70,14 @@ class User < ActiveRecord::Base
   def currently_online
     false
   end
-  
+
   #savage_beast
   def build_search_conditions(query)
     # query && ['LOWER(display_name) LIKE :q OR LOWER(login) LIKE :q', {:q => "%#{query}%"}]
     query
   end
-  
-  
+
+
   # Activates the user in the database.
   def activate
     @activated = true
@@ -86,6 +86,7 @@ class User < ActiveRecord::Base
     self.dormant = false
     self.person.dormant = false
     save(false)
+    self.person.save
   end
 
   def active?
@@ -98,7 +99,7 @@ class User < ActiveRecord::Base
   def approved?
     activated_at || activation_code
   end
-  
+
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
   def self.authenticate(login, password)
     u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL', login] # need to get the salt
@@ -120,7 +121,7 @@ class User < ActiveRecord::Base
   end
 
   def remember_token?
-    remember_token_expires_at && Time.now.utc < remember_token_expires_at 
+    remember_token_expires_at && Time.now.utc < remember_token_expires_at
   end
 
   # These create and unset the fields required for remembering users between browser closes
@@ -148,42 +149,42 @@ class User < ActiveRecord::Base
   def recently_activated?
     @activated
   end
-  
+
   # performs a simple conversion from an array of user's project instances into a hash { <project_id> => <project_name>, [...] }
   def generate_own_project_id_name_hash
     return Hash[*self.person.projects.collect{|p|; [p.id, p.name];}.flatten]
-  end  
-  
+  end
+
   # returns a 'whitelist' favourite group for the user (or 'nil' if not found)
   def get_whitelist
     return FavouriteGroup.find(:first, :conditions => { :user_id => self.id, :name => FavouriteGroup::WHITELIST_NAME } )
   end
-  
+
   # returns a 'blacklist' favourite group for the user (or 'nil' if not found)
   def get_blacklist
     return FavouriteGroup.find(:first, :conditions => { :user_id => self.id, :name => FavouriteGroup::BLACKLIST_NAME } )
   end
 
   def can_see_dormant?
-    return is_admin && ADMIN_CAN_SEE_DORMANT 
+    return is_admin && ADMIN_CAN_SEE_DORMANT
   end
-  
+
   protected
-    # before filter 
+    # before filter
     def encrypt_password
       return if password.blank?
       self.salt = Digest::SHA1.hexdigest("--#{Time.now.to_s}--#{login}--") if new_record?
       self.crypted_password = encrypt(password)
     end
-      
+
     def password_required?
       crypted_password.blank? || !password.blank?
     end
-    
+
     def make_activation_code
       self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
     end
-  
+
     def valid_person?
       if !self.person.errors.empty?
         self.person.errors.each do |error|
@@ -191,5 +192,5 @@ class User < ActiveRecord::Base
         end
         return false
       end
-    end  
+    end
 end
