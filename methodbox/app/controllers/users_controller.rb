@@ -266,7 +266,12 @@ protected
       user.activate
       flash[:notice]="Activated new user with email: "+user.email.to_s
       Mailer.deliver_welcome(user,base_host)
-    else
+    else     
+      user.dormant = false;
+      user.make_activation_code
+      user.save
+      user.person.dormant = false;
+      user.person.save
       flash[:notice]="Activation email sent to "+user.email.to_s
       Mailer.deliver_signup(user,base_host)
     end

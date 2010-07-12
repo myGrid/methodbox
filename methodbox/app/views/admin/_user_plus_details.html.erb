@@ -31,12 +31,12 @@ profile=user.person
     <% end -%>  
   <% else -%>
     <% if user.approved? -%>
-      <%= button_to "Resend Activation Email", {:controllesr => "users", :action => "resend_activation_code", :id => user.id} -%>
+      <%= button_to "Resend Activation Email", {:controller => "users", :action => "resend_activation_code", :id => user.id} -%>
       <%= button_to "Activate User", {:controller => "users", :action => "activate", :activation_code => user.activation_code} -%>
     <% else %>       
       <%= button_to "Approve User and Send Activation Email.", {:controller => "users", :action => "approve", :id => user.id} -%>
-      <%= button_to "Approve and activate user", {:controller => "users", :action => "approve", :activate => true} -%>
-      <%= button_to "Reject User", {:controller => "users", :action => "reject", :activation_code => user.activation_code} -%>      
+      <%= button_to "Approve and activate user", {:controller => "users", :action => "approve", :id => user.id, :activate => true} -%>
+      <%= button_to "Reject User", {:controller => "users", :action => "reject", :id => user.id} -%>      
     <% end %>  
   <% end -%>    
 <br>

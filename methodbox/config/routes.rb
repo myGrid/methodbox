@@ -94,7 +94,7 @@ ActionController::Routing::Routes.draw do |map|
   #    sop.resources :experimental_conditions
   #  end
 
-  map.resources :users, :collection=>{:activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get]}
+  map.resources :users, :collection=>{:activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get], :resend_actiavtion_code =>[:get]}
 
   map.resource :session
 
