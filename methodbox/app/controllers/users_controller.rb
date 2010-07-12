@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+ class UsersController < ApplicationController
 
   layout "main", :except=>[:edit]
 
@@ -17,9 +17,9 @@ class UsersController < ApplicationController
         format.html {render :controller=>"users", :action => "add_user" }
       elsif REGISTRATION_CLOSED
         format.html {render :controller=>"users", :action => "request_access" }
-      else  
+      else
         format.html {render :controller=>"users", :action => "new" }
-      end  
+      end
     end
   end
 
@@ -51,6 +51,7 @@ class UsersController < ApplicationController
           @user.person.dormant = true
           @user.activation_code = nil
           @user.save
+          @user.person.save
           format.html {redirect_to(root_path)}
         else
           self.current_user = @user
@@ -72,9 +73,9 @@ class UsersController < ApplicationController
       #flash[:error] = "Something has gone wrong please check everything an try again"
       if REGISTRATION_CLOSED
         format.html {render :action => 'request_access'}
-      else  
+      else
         format.html {render :action => 'new'}
-      end  
+      end
     end
   end
   end
@@ -89,14 +90,14 @@ class UsersController < ApplicationController
       logger.info("No person record found for user "+ user.person_id.to_s)
       flash[:error] = "Sorry account is corrupt. Please contact an admin."
       redirect_back_or_default('/')
-    else  
+    else
       user.activate
       logger.info("New user activated: " + user.person_id.to_s)
       Mailer.deliver_welcome user, base_host
       if current_user #and therefor by before_filter :logged_out_or_admin an admin
          flash[:notice] = user.person.name.to_s+" has been activated"
          redirect_to admin_url
-      else             
+      else
         self.current_user = user
         if logged_in?
           flash[:notice] = "You have succesfully signed up!"
@@ -107,7 +108,7 @@ class UsersController < ApplicationController
           flash[:error] = "login fialed"
           redirect_back_or_default('/')
         end #!logged_in?
-      end #!current_user   
+      end #!current_user
     end # user  &&  user.person
   end #def
 
@@ -205,8 +206,8 @@ class UsersController < ApplicationController
   def activation_required
 
   end
-  
-  def resend_actiavtion_code   
+
+  def resend_actiavtion_code
     user = User.find(params[:id])
     if user.activation_code
       flash[:notice]="Activation email sent to "+user.email.to_s
@@ -216,15 +217,15 @@ class UsersController < ApplicationController
     end
     redirect_to admin_url
   end
-  
+
   def approve
     do_approval(User.find(params[:id]))
     redirect_to admin_url
   end
-  
+
   def reject
     user = User.find(params[:id])
-    name =  user.person.name.to_s 
+    name =  user.person.name.to_s
     flash[:notice] = name + " has been deleted."
     Mailer.deliver_signup_request_denied(user,base_host)
     #user.person.destroy
@@ -232,7 +233,7 @@ class UsersController < ApplicationController
     redirect_to admin_url
   end
 
-protected 
+protected
   def request_for_unactive_user
     user = User.find(params[:id])
     if !user
@@ -243,23 +244,23 @@ protected
       return false
     else
       return true
-    end  
+    end
   end
 
   def validate_create
-    if !params[:user] || !params[:person] 
+    if !params[:user] || !params[:person]
       flash[:error] = "Please use the signup form"
-      redirect_to new_user_url    
-    else  
+      redirect_to new_user_url
+    else
       return true
-    end      
+    end
   end
 
   def logged_out_or_admin
     return true if !current_user
     is_user_admin_auth
   end
-  
+
   def do_approval(user)
     if params[:activate]
       user.activate
@@ -270,5 +271,5 @@ protected
       Mailer.deliver_signup(user,base_host)
     end
   end
-  
+
 end
