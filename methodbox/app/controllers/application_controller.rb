@@ -8,6 +8,8 @@ require 'xml'
 class ApplicationController < ActionController::Base
 
   include AuthenticatedSystem
+  #email exceptions to nominated users
+  include ExceptionNotification::Notifiable
 
   helper :all # include all helpers, all the time
   layout "main"
@@ -537,6 +539,14 @@ class ApplicationController < ActionController::Base
   end
 
   protected
+  
+  #had to override this to test the exception notifier plugin
+  #when running production locally.  Articles on web seem to say
+  #you don't need to do this but I couldn't figure out another way
+  def local_request?
+    LOCAL_REQUEST_ERROR
+  end
+  
 
   #maybe use the breadcrumbs in the future
   #add one to a controller with eg. add_breadcrumb 'Home', 'index_url'
