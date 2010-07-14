@@ -1,6 +1,6 @@
 <% sorted_variables.each do |item| %>
   <% dataset = Dataset.find(item.dataset_id) -%>
-  <%= popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
+  <% popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
 
   <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even","_odd")} %>
   <%= render :partial => "surveys/variables_table_expanded_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle} %>
