@@ -76,7 +76,7 @@ function subset() {
   return $H({ x: p1, y: p2, z: p3 });
 }
 
-function showLoginBox(boxID) {
+function showPopup(boxID) {
         var box = document.getElementById(boxID);
         if (box) {
 
@@ -84,7 +84,7 @@ function showLoginBox(boxID) {
         }
 }
 
-function closeLoginBox(boxID) {
+function closePopup(boxID) {
         var box = document.getElementById(boxID);
         if (box) {
                 $(boxID).blindUp({ duration: 0.6 });

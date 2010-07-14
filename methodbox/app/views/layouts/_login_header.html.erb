@@ -4,11 +4,11 @@
 			<%= link_to "Request Access", signup_url %>
 		<% else -%>
 			<%= link_to "Sign up", signup_url %>
-		<% end -%>		
+		<% end -%>
 	</b>
-	/ 
+	/
 	<b>
-		<%= link_to "Log in", login_url, :onclick => "showLoginBox('login_box'); return false;"%>
+		<%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
 	</b>
 </div>
 <div id="login_box" style="display: none; z-index: 100; position: absolute;">
