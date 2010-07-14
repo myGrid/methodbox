@@ -119,9 +119,6 @@ class SurveysController < ApplicationController
     end
   end
 
-
-
-
   def sort_variables
     @survey_search_query = params[:survey_search_query]
     @survey_list = params[:survey_list]
@@ -498,9 +495,6 @@ class SurveysController < ApplicationController
     end
   end
 
-
-
-
   def set_parameters_for_sharing_form
     policy = nil
     policy_type = ""
@@ -580,8 +574,6 @@ class SurveysController < ApplicationController
 
       @survey_search_query = params[:survey_search_query]
       @selected_surveys = Array.new(params[:entry_ids])
-      @current_datasets = Array.new(params[:entry_ids])
-      @all_datasets = Array.new(params[:entry_ids])
       #keep a hash of how many variables are in each dataset search
       @vars_by_dataset = Hash.new
       @selected_surveys.each do |dataset|
@@ -605,7 +597,7 @@ class SurveysController < ApplicationController
       end
 
       logger.info("searching for " + search_terms.to_s)
-      temp_variables = Array.new
+      @sorted_variables = Array.new
       search_terms.each do |term|
         variables = find_variables(term)
         variables.each do |item|
@@ -615,14 +607,14 @@ class SurveysController < ApplicationController
               logger.info("Found " + item.name + ", from dataset " + item.dataset_id.to_s)
               #uts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
               contains = false
-              temp_variables.each do |temp_item|
+              @sorted_variables.each do |temp_item|
                 if temp_item.id == item.id
                   contains = true
                   break
                 end
               end
               if contains == false
-                temp_variables.push(item)
+                @sorted_variables.push(item)
                 #add one to the count of those vars found in this dataset
                 @vars_by_dataset[ids] = @vars_by_dataset[ids] + 1
                 @total_vars = @total_vars + 1
@@ -634,32 +626,20 @@ class SurveysController < ApplicationController
         end
       end
       
-      #remove any variables which do not match the current dataset version number,ie those from a previous update
-      # THIS NEXT LINE IS NOT NEEDED AT THE MOMENT AND JUST ADDS A LITTLE BIT OF SLOWDOWN FOR NOTHING
-      # temp_variables.delete_if {|x| Dataset.find(x.dataset_id).current_version != x.current_version}
-      
-      #      puts temp_variables.to_json
-      @sorted_variables = temp_variables
-      #      @all_variables = @sorted_variables
-
       case params['add_results']
       when "yes"
-        new_variable_list = Array.new
-        current_variables = params[:variable_list]
+        previous_variables = params[:variable_list]
 
-        current_variables.each do |var|
-          temp_variables.delete_if {|x| x.id.to_s == var.to_s}
-
+        @sorted_variables.each do |var|
+          previous_variables.delete_if {|x| x.id.to_s == var.to_s}
         end
 
-        current_variables.each do |id|
-          #          puts "pushing " + id.to_s
+        previous_variables.each do |id|
           v = Variable.find(id)
-          new_variable_list.push(v)
+          @sorted_variables.push(v)
           @vars_by_dataset[v.dataset_id.to_s] = @vars_by_dataset[v.dataset_id.to_s] + 1
           @total_vars = @total_vars + 1
         end
-        new_variable_list.concat(temp_variables)
         @sorted_variables = new_variable_list
       when "no"
         #don't have to do anything
@@ -669,7 +649,7 @@ class SurveysController < ApplicationController
         user_search = UserSearch.new
         user_search.user = current_user
         user_search.terms = @survey_search_query
-        user_search.dataset_ids = @all_datasets
+        user_search.dataset_ids = @selected_surveys
         var_as_ints = Array.new
         @sorted_variables.each do |temp_var|
           var_as_ints.push(temp_var.id)
