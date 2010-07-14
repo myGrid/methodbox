@@ -626,6 +626,24 @@ class SurveysController < ApplicationController
         end
       end
       
+      if logged_in?
+        user_search = UserSearch.new
+        user_search.user = current_user
+        user_search.terms = @survey_search_query
+        user_search.dataset_ids = @selected_surveys
+        var_as_ints = Array.new
+        @sorted_variables.each do |temp_var|
+          var_as_ints.push(temp_var.id)
+        end
+        user_search.variable_ids = var_as_ints
+        user_search.save
+      end
+      respond_to do |format|
+        logger.info("rendering survey search")
+        format.html { render :action =>:search_variables }
+        format.xml  { render :xml =>:search_variables }
+      end
+
       case params['add_results']
       when "yes"
         previous_variables = params[:variable_list]
@@ -643,24 +661,6 @@ class SurveysController < ApplicationController
         @sorted_variables = new_variable_list
       when "no"
         #don't have to do anything
-      end
-
-      if logged_in?
-        user_search = UserSearch.new
-        user_search.user = current_user
-        user_search.terms = @survey_search_query
-        user_search.dataset_ids = @selected_surveys
-        var_as_ints = Array.new
-        @sorted_variables.each do |temp_var|
-          var_as_ints.push(temp_var.id)
-        end
-        user_search.variable_ids = var_as_ints
-        user_search.save
-      end
-      respond_to do |format|
-        logger.info("rendering survey search")
-        format.html { render :action =>:search_variables }
-        format.xml  { render :xml =>:search_variables }
       end
 
     #rescue
