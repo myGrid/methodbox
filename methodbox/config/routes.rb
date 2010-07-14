@@ -28,9 +28,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :work_groups
 
   map.resources :user_searches
-  
+
   map.resources :publications,:collection=>{:fetch_preview=>:post},:member=>{:disassociate_authors=>:post}
-  
+
   # map.resources :home
 
   map.resources :help
@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }
 
 
-  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :search_stuff=>:get, :grid_view => :get}
+  map.resources :surveys, :member => {:download => :get}, :collection => {:view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :search_stuff=>:get, :grid_view => :get}
 #  do |survey|
 #
 #  end

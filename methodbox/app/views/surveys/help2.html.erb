@@ -1,0 +1,86 @@
+<div>
+  <ul class="sectionIcons">
+    <li><%= icon('previous', help_surveys_path, 'Help with browsing surveys', nil, 'Previous') -%></li>
+  </ul>
+</div>
+<div class="contents" style="border: 2px black solid;">
+  <h1> Help on Search Terms</h1>
+  <h2> Search Options </h2>
+  <ul>
+    <li>Single word term: </li>
+      <ul>
+        <li>Returns all objects that contain this word</li>
+      </ul>
+    <li>Multiple word term</li>
+      <ul>
+        <li>
+          Returns all objects that contain the whole term including spaces and punctuation.
+          Similar to a google search in quotation marks.
+        </li>
+      </ul>
+    <li>Two terms seperated with " or "</li>
+      <ul>
+        <li>
+          Returns all objects that contain either term.
+          Similar to a google search without quotation marks.
+        </li>
+      </ul>
+    <li>Two terms seperated with " and "</li>
+      <ul>
+        <li>Returns only objects that contain both terms in any order, with or without other text between them.</li>
+      </ul>
+  </ul>
+  <h2> Example Searchs </h2>
+  <ul>
+    <li>age</li>
+    <li>age when</li>
+    <li>age or when</li>
+    <li>age and when</li>
+  </ul>
+  <h2> Example data </h2>
+  <ul>
+    <li>age of first child</li>
+    <li>age when had first beer</li>
+    <li>age of mother when born</li>
+    <li>weight when age 5</li>
+    <li>weight when born</li>
+    <li>heigth of first child</li>
+  </ul>
+  <h2> Example Search results </h2>
+  <ul>
+    <li>Single word term: age</li>
+      <ul>
+        <li>age of first child</li>
+        <li>age when had first beer</li>
+        <li>age of mother when born</li>
+        <li>weight when age 5</li>
+      </ul>
+    <li>Multiple word term: age when</li>
+      <ul>
+        <li>age when had first beer</li>
+      </ul>
+    <li>Two terms seperated with " or ": age or when</li>
+      <ul>
+        <li>age of first child</li>
+        <li>age when had first beer</li>
+        <li>age of mother when born</li>
+        <li>weight when age 5</li>
+        <li>weight when born</li>
+      </ul>
+    <li>Two terms seperated with " and " age and when</li>
+      <ul>
+        <li>age when had first beer</li>
+        <li>age of mother when born</li>
+        <li>weight when age 5</li>
+      </ul>
+  </ul>
+  <h2> Combining More than two terms</h2>
+  Any number of single or multiple word search can be combined using " and " and " or ".
+  <h3> Survey search </h3>
+  If both " and " and " or " are used in a single search then the " and " terms take presidence over the " or ".
+  For example search "age and when or weight and height", will search for all variables that have both the words age and when.
+  Then it will search for all variables that have both weight and heigth.
+  The result is the combination of the two searches without duplicates.
+  <h3> Other searches </h3>
+  Using both " and " and "or " in the same search is not supported and can lead to unexpected results.
+</div>

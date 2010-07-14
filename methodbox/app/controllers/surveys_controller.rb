@@ -1,21 +1,21 @@
 class SurveysController < ApplicationController
 
-  before_filter :login_required, :except => [ :help, :index, :search_variables, :sort_variables, :show]
+  before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show]
 
   before_filter :find_previous_searches, :only => [ :index]
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
-  
+
   before_filter :find_previous_searches, :only => [ :index ]
-   
+
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
   before_filter :check_search_parameters, :only => [:search_variables]
-  
+
   before_filter :rerouted_search, :only => [:show]
-  
+
   before_filter :find_survey, :only => [:show, :edit, :update]
 
 #experimental code for doing jgrid table using jqgrid plugin
@@ -85,7 +85,7 @@ class SurveysController < ApplicationController
   def search_variables
     do_search_variables
   end
-  
+
   def index
     #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
 
@@ -319,7 +319,7 @@ class SurveysController < ApplicationController
 
     # @survey = Survey.find(params[:id])
     @forum = Forum.all(:conditions=>["name=?", @survey.title])[0]
-    
+
     source_archives = []
     source_scripts = []
 
@@ -333,10 +333,10 @@ class SurveysController < ApplicationController
         source_scripts.push(link.subject)
       end
     end
-      
+
     @archives = source_archives
     @scripts = source_scripts
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@survey}
@@ -345,7 +345,7 @@ class SurveysController < ApplicationController
 
   def edit
     if !current_user.is_admin?
-      flash[:error] = 'You do not have permission to edit survey metadata.'    
+      flash[:error] = 'You do not have permission to edit survey metadata.'
       respond_to do |format|
         format.html { redirect_to survey_path(@survey) }
       end
@@ -360,7 +360,7 @@ class SurveysController < ApplicationController
 
   def update
     if !current_user.is_admin?
-      flash[:error] = 'You do not have permission to edit survey metadata.'    
+      flash[:error] = 'You do not have permission to edit survey metadata.'
       respond_to do |format|
         format.html { redirect_to survey_path(@survey) }
       end
@@ -433,7 +433,7 @@ class SurveysController < ApplicationController
   end
 
   protected
-  
+
   def find_previous_searches
     search=[]
     if logged_in?
@@ -451,7 +451,7 @@ class SurveysController < ApplicationController
     end
     @recent_searches = search
   end
-  
+
   def find_survey
         @survey = Survey.find(params[:id])
   end
@@ -567,7 +567,7 @@ class SurveysController < ApplicationController
   end
 
  private
- 
+
   def do_search_variables
 
     begin
@@ -580,7 +580,7 @@ class SurveysController < ApplicationController
         @vars_by_dataset[dataset] = 0
       end
       @total_vars = 0
-      
+
       #TODO case issue
       search_terms = @survey_search_query.downcase.split(' or ')
       search_terms.each do |search_term|
@@ -599,12 +599,12 @@ class SurveysController < ApplicationController
           variables = find_variables(term, ids)
           logger.info ("found "+variables.length.to_s)
           ids_variables = ids_variables | variables
-        end  
+        end
         @vars_by_dataset[ids] = ids_variables.length
         @total_vars = @total_vars + ids_variables.length
         @sorted_variables = @sorted_variables + ids_variables
       end #search_terms.each do |term|
-      
+
       if logged_in?
         user_search = UserSearch.new
         user_search.user = current_user
@@ -653,30 +653,30 @@ class SurveysController < ApplicationController
 
     end
   end
-  
+
   def rerouted_search
     if "search_variables".eql?(params[:id])
       params[:entry_ids] = params[:entry_ids].split(',')
       find_surveys
       check_search_parameters
-      do_search_variables   
+      do_search_variables
       #respond_to do |format|
       #  format.html do
       #    store_location
-      #    if session[:return_to] != root_path 
+      #    if session[:return_to] != root_path
       #      flash[:message] = "Please reenter your search"
-      #    end  
+      #    end
       #    redirect_to surveys_path
-      #  end        
-      #end  
+      #  end
+      #end
        #return false
-       #params[:entry_ids] = params[:entry_ids].split(',') 
+       #params[:entry_ids] = params[:entry_ids].split(',')
        ##params[:survey_search_query] = "beer"
        #bad = bad + 2
        #action = search_variables
      else
 	return true
-     end  
+     end
    end
 
    #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
