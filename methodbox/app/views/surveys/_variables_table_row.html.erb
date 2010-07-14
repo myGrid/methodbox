@@ -22,18 +22,18 @@
           <%= "NO CATEGORY" -%>
         <% end -%>
       </div>
-      <div class="col6">
-        <%= Dataset.find(item.dataset_id).survey.surveytype -%>
+       <div class="col6">
+        <%= dataset.survey.surveytype -%>
       </div>
       <div class="col7">
-        <%= link_to Dataset.find(item.dataset_id).name, dataset_url(Dataset.find(item.dataset_id)) -%>
+        <%= link_to dataset.name, dataset_url(dataset) -%>
       </div>
       <div class="col8">
 	<!-- replace any '-' characters with space -->
-        <%= Dataset.find(item.dataset_id).survey.year.tr('-',' ') -%>
+        <%= dataset.survey.year.tr('-',' ') -%>
       </div>
 	 <div class="col9">
-        <%= VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
+        <%= popularity -%>
       </div>
     </li>
   </ul>
