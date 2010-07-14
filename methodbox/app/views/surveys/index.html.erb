@@ -40,7 +40,12 @@
             <%= render :partial => "cart/button" -%>
           </div>
         <% end -%>
-        <div style="position: absolute; bottom:1em; left:1em;">Select:
+        <div style="position: absolute; bottom:1em; left:1em;">
+          <%= link_to "Help", help2_surveys_url, :onclick => "showPopup('help_box'); return false;"%>
+          <div id="help_box" style="display: none; z-index: 100; position: absolute;">
+            <%= render :partial=>"term_help_popup" %>
+          </div>
+          Select:
           <%= link_to_function 'All', "$$('input.survey_checkbox').each(function(checkbox){selectDatasets(checkbox, true);})" %>
           ,&nbsp
           <%= link_to_function 'None', "$$('input.survey_checkbox').each(function(checkbox) { selectDatasets(checkbox, false);})" %>
