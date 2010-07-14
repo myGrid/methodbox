@@ -3,12 +3,19 @@
 <%= stylesheet_link_tag 'faux_table'%>
 <% form_tag :url => { :action => "add_to_cart"} do -%>
   <div class="show_basic" style="padding-right: 2em;">
-	<% if !logged_in? -%>
-	    <h2>Welcome, guest. Browse the table, look at the variable metadata.  If you want to download any variables then you need to <%= link_to "register", signup_url, :onclick=>"if(#{REGISTRATION_CLOSED}==true){alert('registration is not currently open'); return false;} else return true;" -%>.<br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
-	<% else -%>
-    <h2>Browse the table, select some variables, look at the metadata and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
-<% end -%>
-        <%#= render :partial => "total_vars" -%>
+    <% if !logged_in? -%>
+      <h2>Welcome, guest. Browse the table, look at the variable metadata.  If you want to download any variables then you need to 
+        <% if REGISTRATION_CLOSED -%>
+          <%= link_to "Request Access", signup_url %>
+        <% else -%>
+          <%= link_to "Sign up", signup_url %>
+        <% end -%>		
+        <br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%>
+      </h2><br/>
+    <% else -%>
+      <h2>Browse the table, select some variables, look at the metadata and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%></h2><br/>
+    <% end -%>
+    <%#= render :partial => "total_vars" -%>
 <br/>
     <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:95px;">
       <div style="position: absolute; ;top:0.9em;left:1em">
