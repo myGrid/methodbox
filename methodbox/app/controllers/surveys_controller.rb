@@ -581,50 +581,29 @@ class SurveysController < ApplicationController
       end
       @total_vars = 0
       
-      search_terms = @survey_search_query.split(' ')
+      #TODO case issue
+      search_terms = @survey_search_query.downcase.split(' or ')
       search_terms.each do |search_term|
-        t = SearchTerm.find(:all, :conditions=>["term=?",search_term])
-        if t.size == 0
+        unless SearchTerm.find(:first, :conditions=>["term=?",search_term])
           t = SearchTerm.new
           t.term = search_term
           t.save
         end
       end
 
-      if search_terms.length > 1
-        downcase_query = @survey_search_query.downcase
-        search_terms.unshift(downcase_query)
-      end
-
-      logger.info("searching for " + search_terms.to_s)
       @sorted_variables = Array.new
-      search_terms.each do |term|
-        variables = find_variables(term)
-        variables.each do |item|
-          @selected_surveys.each do |ids|
-            #if Dataset.find(item.dataset_id).id.to_s == ids
-            if item.dataset_id.to_s == ids
-              logger.info("Found " + item.name + ", from dataset " + item.dataset_id.to_s)
-              #uts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
-              contains = false
-              @sorted_variables.each do |temp_item|
-                if temp_item.id == item.id
-                  contains = true
-                  break
-                end
-              end
-              if contains == false
-                @sorted_variables.push(item)
-                #add one to the count of those vars found in this dataset
-                @vars_by_dataset[ids] = @vars_by_dataset[ids] + 1
-                @total_vars = @total_vars + 1
-              end
-              break
-            end
-          end
-
-        end
-      end
+      @selected_surveys.each do |ids|
+        ids_variables = Array.new
+        search_terms.each do |term|
+          logger.info("searching for " + term)
+          variables = find_variables(term, ids)
+          logger.info ("found "+variables.length.to_s)
+          ids_variables = ids_variables | variables
+        end  
+        @vars_by_dataset[ids] = ids_variables.length
+        @total_vars = @total_vars + ids_variables.length
+        @sorted_variables = @sorted_variables + ids_variables
+      end #search_terms.each do |term|
       
       if logged_in?
         user_search = UserSearch.new
@@ -700,10 +679,11 @@ class SurveysController < ApplicationController
      end  
    end
 
-    #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
-    def find_variables(term)
-      if (SOLR_ENABLED)
-        results = Variable.find_by_solr(term,:limit => 1000)
+   #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
+   def find_variables(term, dataset)
+     if (SOLR_ENABLED)
+        query = term + " AND dataset_id:" + dataset.to_s
+        results = Variable.find_by_solr(query, :limit => 1000)
         results.docs
       else
         results = Variable.find(:all, :conditions => ["name like ? or value like ?", '%'+term+'%','%'+term+'%'])
