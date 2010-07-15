@@ -20,7 +20,7 @@
     <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:95px;">
       <div style="position: absolute; ;top:0.9em;left:1em">
         <%= hidden_field_tag 'previous_query', @survey_search_query %>
-        <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
+        <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();",:title=>@survey_search_query %>
 				<%= image_tag ( method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
         <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'search';};" %>
       </div>
