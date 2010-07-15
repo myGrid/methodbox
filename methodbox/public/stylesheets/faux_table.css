@@ -31,7 +31,7 @@ ul.faux_table_header_container {
 
 ul.faux_table_odd {
     float: left;
-    width: 900px;
+    width: 885px;
     list-style: none;
     padding-left: 0;
     margin-left: 0px;
@@ -40,7 +40,7 @@ ul.faux_table_odd {
 }
 ul.faux_table_even {
     float: left;
-    width: 900px;
+    width: 885px;
     list-style: none;
     padding-left: 0;
     margin-left: 0px;
@@ -55,12 +55,17 @@ ul.faux_table_even {
 }
 
 ul.faux_table_odd li {
-    width:900px;
+    width:880px;
     float: left;
+	padding: 0;
 }
 ul.faux_table_even li {
-    width:900px;
+    width:880px;
     float: left;
+	padding: 0;
+}
+li#faux_table_header {
+	padding: 0;
 }
 
 * html ul.faux_table_odd li {
