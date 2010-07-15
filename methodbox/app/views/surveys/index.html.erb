@@ -25,6 +25,7 @@
       <% end -%>
       <div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
         <div style="position: absolute; ;top:1em;left:1em"><%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
+				<%= image_tag ( method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
           <%= submit_tag 'Search selected surveys',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {return true;}" %>
         </div>
 		  <% if logged_in? && !@recent_searches.empty? -%>
@@ -40,8 +41,10 @@
             <%= render :partial => "cart/button" -%>
           </div>
         <% end -%>
-        <div style="position: absolute; bottom:1em; left:1em;">
-          <%= link_to "Help", help2_surveys_url, :onclick => "showPopup('help_box'); return false;"%>
+        <div style="position: absolute; bottom:0.9em; left:1em;">
+			<%#= image_tag ( method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms how to", :title=>"Search terms how to", :onclick => "showPopup('help_box'); return false;") -%>
+	
+          <%#= link_to "Help", help2_surveys_url, :onclick => "showPopup('help_box'); return false;"%>
           <div id="help_box" style="display: none; z-index: 100; position: absolute;">
             <%= render :partial=>"term_help_popup" %>
           </div>
