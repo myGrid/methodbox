@@ -1,8 +1,23 @@
-<% sorted_variables.each do |item| %>
+<% if @search_terms -%>
+  <% if @search_terms.length > 1 -%>
+    <% @search_terms.each do |search_term| -%>
+      <h4> <%= search_term -%> </h4>
+      <% @term_results[search_term].each do |item| -%>
+        <% dataset = Dataset.find(item.dataset_id) -%>
+        <% popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
+        <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even", "_odd"), :row_name => item.id.to_s + search_term} %>
+        <%= render :partial => "surveys/variables_table_expanded_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle, :row_name => item.id.to_s + search_term} %>
+      <% end %>
+    <% end %>
+    <h4> <%= @survey_search_query -%> </h4>
+  <% end %>
+<% end %>
+
+<% sorted_variables.each do |item| -%>
   <% dataset = Dataset.find(item.dataset_id) -%>
   <% popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
 
-  <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even","_odd")} %>
-  <%= render :partial => "surveys/variables_table_expanded_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle} %>
+  <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even","_odd"), :row_name => item.id.to_s} %>
+  <%= render :partial => "surveys/variables_table_expanded_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle, :row_name => item.id.to_s} %>
 <% end %>
 

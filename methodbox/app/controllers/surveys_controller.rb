@@ -566,49 +566,65 @@ class SurveysController < ApplicationController
     return false
   end
 
- private
+ private 
 
   def do_search_variables
+    @survey_search_query = params[:survey_search_query]
 
-    begin
+    #save only new search terms
+    new_search_terms = @survey_search_query.downcase.split(' or ')
+    #Check that the same term has been included twice by combining searches
+    new_search_terms.uniq!
+    new_search_terms.each do |search_term|
+      unless SearchTerm.find(:first, :conditions=>["term=?",search_term])
+        t = SearchTerm.new
+        t.term = search_term
+        t.save
+      end
+    end
 
-      @survey_search_query = params[:survey_search_query]
-      @selected_surveys = Array.new(params[:entry_ids])
-      #keep a hash of how many variables are in each dataset search
-      @vars_by_dataset = Hash.new
-      @selected_surveys.each do |dataset|
+    case params['add_results']
+      when "yes"
+        @survey_search_query = @survey_search_query + " or " +params[:previous_query]
+      when "no"
+        #don't have to do anything
+    end
+      
+    @selected_surveys = Array.new(params[:entry_ids])
+    @vars_by_dataset = Hash.new
+    @selected_surveys.each do |dataset|
         @vars_by_dataset[dataset] = 0
       end
-      @total_vars = 0
+    @total_vars = 0
+  
+    @search_terms = @survey_search_query.downcase.split(' or ')
+    @search_terms.uniq!
+      
+    @sorted_variables = Array.new
+    @term_results = Hash.new
 
-      #TODO case issue
-      search_terms = @survey_search_query.downcase.split(' or ')
-      search_terms.each do |search_term|
-        unless SearchTerm.find(:first, :conditions=>["term=?",search_term])
-          t = SearchTerm.new
-          t.term = search_term
-          t.save
-        end
-      end
-
-      @sorted_variables = Array.new
+    @search_terms.each do |term|
+      @term_results[term] = Array.new
       @selected_surveys.each do |ids|
-        ids_variables = Array.new
-        search_terms.each do |term|
-          logger.info("searching for " + term)
-          variables = find_variables(term, ids)
-          logger.info ("found "+variables.length.to_s)
-          ids_variables = ids_variables | variables
-        end
-        @vars_by_dataset[ids] = ids_variables.length
-        @total_vars = @total_vars + ids_variables.length
-        @sorted_variables = @sorted_variables + ids_variables
-      end #search_terms.each do |term|
-
-      if logged_in?
+        logger.info("searching for " + term)
+        variables = find_variables(term, ids)
+        logger.info ("found "+variables.length.to_s)
+        variables.each do | variable |
+          @term_results[term].push (variable) 
+          if !@sorted_variables.include?(variable)
+            @sorted_variables.push(variable)
+            #ogger.info("variable.dataset_id = "+variable.dataset_id.to_s)
+            #ogger.info("@vars_by_dataset[variable.dataset_id] = "+@vars_by_dataset[variable.dataset_id.to_s].to_s)
+            @vars_by_dataset[variable.dataset_id.to_s]+= 1
+            @total_vars+= 1
+          end  
+        end  
+      end
+      if logged_in? && new_search_terms.include?(term)
+      #TODO There must be a way to avoid duplicating the save if the search is repeated.
         user_search = UserSearch.new
         user_search.user = current_user
-        user_search.terms = @survey_search_query
+        user_search.terms = term
         user_search.dataset_ids = @selected_surveys
         var_as_ints = Array.new
         @sorted_variables.each do |temp_var|
@@ -616,40 +632,14 @@ class SurveysController < ApplicationController
         end
         user_search.variable_ids = var_as_ints
         user_search.save
-      end
-      respond_to do |format|
-        logger.info("rendering survey search")
-        format.html { render :action =>:search_variables }
-        format.xml  { render :xml =>:search_variables }
-      end
+      end   
+      
+    end #search_terms.each do |term|
 
-      case params['add_results']
-      when "yes"
-        previous_variables = params[:variable_list]
-
-        @sorted_variables.each do |var|
-          previous_variables.delete_if {|x| x.id.to_s == var.to_s}
-        end
-
-        previous_variables.each do |id|
-          v = Variable.find(id)
-          @sorted_variables.push(v)
-          @vars_by_dataset[v.dataset_id.to_s] = @vars_by_dataset[v.dataset_id.to_s] + 1
-          @total_vars = @total_vars + 1
-        end
-      when "no"
-        #don't have to do anything
-      end
-
-    #rescue
-    #  puts "Searching failed: " + $!
-    #  respond_to do |format|
-    #    format.html {
-    #      flash[:error] = "Searching failed. Possibly due to an internal server problem.  Please try again. If this problem persists please report it in the forum and/or contact an admin."
-    #      redirect_to :action => "index"
-    #    }
-    #  end
-
+    respond_to do |format|
+      logger.info("rendering survey search")
+      format.html { render :action =>:search_variables }
+      format.xml  { render :xml =>:search_variables }
     end
   end
 

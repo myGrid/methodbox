@@ -1,8 +1,7 @@
-
-<div id= "<%=item.name + item.dataset_id.to_s -%>">
+<div id= "<%= row_name -%>">
   <ul class="faux_table<%= curr_cycle %>">
-    <li><div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{item.name + item.dataset_id.to_s + '_checkbox'}" -%></div>
-      <div class="col2"><%= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:if ($('#{item.name + item.dataset_id.to_s + '_checkbox'}').checked == true) {$('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}').checked =true} else {$('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}').checked=false};Field.disable('#{item.name + item.dataset_id.to_s + '_checkbox'}');Field.enable('#{item.name + item.dataset_id.to_s + '_expanded_checkbox'}');Element.hide($('#{item.name + item.dataset_id.to_s}'));Element.show($('#{item.name + item.dataset_id.to_s + '_expanded'}'));") -%></div>
+    <li><div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_checkbox'}" -%></div>
+      <div class="col2"><%= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_checkbox'}').checked == true) {$('#{row_name + '_expanded_checkbox'}').checked =true} else {$('#{row_name + '_expanded_checkbox'}').checked=false};Field.disable('#{row_name + '_checkbox'}');Field.enable('#{row_name + '_expanded_checkbox'}');Element.hide($('#{row_name}'));Element.show($('#{row_name + '_expanded'}'));") -%></div>
       <% if item.name.size > 20 -%>
         <div class="col3"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%></div>
       <% else -%>

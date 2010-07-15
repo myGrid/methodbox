@@ -19,13 +19,7 @@
 <br/>
     <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:95px;">
       <div style="position: absolute; ;top:0.9em;left:1em">
-        <%= hidden_field_tag 'tag_button', 'tag' %>
-        <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
-        <%= hidden_field_tag 'variable_name', 'variable_name' %>
-        <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
-        <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
-        <% @link_reason="Reason for grouping" unless @link_reason -%>
-
+        <%= hidden_field_tag 'previous_query', @survey_search_query %>
         <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
 
         <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'search';};" %>
@@ -41,7 +35,6 @@
       <%= hidden_field_tag 'submit', 'add' -%>
       <% if @selected_surveys!=nil %>
         <% @selected_surveys.each do |val| -%>
-          <%= hidden_field_tag "survey_list[]", val -%>
           <%= hidden_field_tag "entry_ids[]", val -%>
         <% end -%>
       <% end -%>
@@ -66,7 +59,7 @@
         <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
         ,&nbsp
         <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
-
+        
       </div>
 <% if logged_in? -%>
       <div id="cart_button" style="position: absolute; top:1em; right:1em;">
@@ -76,6 +69,7 @@
     </div>
 	<br/>
 	<br/>
+    <%= render :partial =>  "total_vars" %>
     <div id="table_header" class="faux_table_header_container">
       <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
