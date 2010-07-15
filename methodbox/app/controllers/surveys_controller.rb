@@ -637,7 +637,6 @@ class SurveysController < ApplicationController
           @vars_by_dataset[v.dataset_id.to_s] = @vars_by_dataset[v.dataset_id.to_s] + 1
           @total_vars = @total_vars + 1
         end
-        @sorted_variables = new_variable_list
       when "no"
         #don't have to do anything
       end
