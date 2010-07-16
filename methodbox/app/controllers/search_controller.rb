@@ -11,34 +11,40 @@ class SearchController < ApplicationController
     @search_type = params[:search_type]
     type=@search_type.downcase unless @search_type.nil?
 
-    downcase_query = @search_query.downcase
+    #SOLR doesn't appear to support lower case "or"
+    query = @search_query.upcase
 
-    if (downcase_query.nil? or downcase_query.strip.empty?)
+    if (query.nil? or query.strip.empty?)
       flash.now[:notice]="Sorry your query appeared blank. Please try again"
+      return
+    end
+
+    if (query.include?(' OR ') && query.include?(' AND '))
+      flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
       return
     end
 
     @results=[]
     case(type)
     when("people")
-      find_people
+      find_people(query)
       @results = select_authorised @results
     when("surveys")
-      find_surveys
+      find_surveys(query)
       #    all surveys can be searched for the moment
     when("methods")
-      find_methods
+      find_methods(query)
       @results = select_authorised @results
     when("data extracts")
        find_csvarchive
        @results = select_authorised @results
     when("all")
       #slight fudge to allow all HSE datasets to come up since any users are already registered
-      find_people
-      find_methods
-      find_csvarchive
+      find_people(query)
+      find_methods(query)
+      find_csvarchive(query)
       @results = select_authorised @results
-      find_surveys
+      find_surveys(query)
     else
       logger.info("Unexpected search_type "+@search_query)
       flash[:error]="Unexpected search_type"
@@ -58,33 +64,36 @@ class SearchController < ApplicationController
   private
 
   #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
-  def find_surveys
+  def find_surveys(query)
     if (SOLR_ENABLED)
-      @results = @results + Survey.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Survey]).results
+      @results = @results + Survey.find_by_solr(query, :limit => 1000).results
     else
       @results = @results + Survey.find(:all, :conditions => ["description like ?", '%'+@search_query.downcase+'%'])
     end
   end
 
-  def find_people
+  def find_people(query)
+    puts "query = " + query
     if (SOLR_ENABLED)
-      @results = @results + Person.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Person]).results
+      #results = Variable.find_by_solr(query, :limit => 1000)
+      #@results = @results + results.docs
+      @results = @results + Person.find_by_solr(query, :limit => 1000).results
     else
       @results = @results + Person.find(:all, :conditions => ["last_name like ?", '%'+@search_query.downcase+'%'])
     end
   end
 
-  def find_methods
+  def find_methods(query)
     if (SOLR_ENABLED)
-      @results = @results + Script.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Script]).results
+      @results = @results + Script.find_by_solr(query, :limit => 1000).results
     #else
       #todo
     end
   end
 
-  def find_csvarchive
+  def find_csvarchive(query)
     if (SOLR_ENABLED)
-      @results = @results + Csvarchive.multi_solr_search(@search_query.downcase, :limit=>100, :models=>[Csvarchive]).results
+      @results = @results + Csvarchive.find_by_solr(query, :limit => 1000).results
     #else
       #todo
     end
