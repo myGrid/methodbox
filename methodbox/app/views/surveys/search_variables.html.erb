@@ -38,9 +38,6 @@
           <%= hidden_field_tag "entry_ids[]", val -%>
         <% end -%>
       <% end -%>
-      <div id="sorted_variables_div">
-        <%= render :partial => "sorted_variables_div", :locals=>{:sorted_variables => @sorted_variables}-%>
-      </div>
 <% if logged_in? -%>
       <div style="position: absolute; bottom:1em; right:1em;">
         <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
