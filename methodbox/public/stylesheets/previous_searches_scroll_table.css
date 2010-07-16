@@ -2,7 +2,7 @@
 div.tableContainer {
 	clear: both;
 	border: 1px solid #963;
-	height: 285px;
+	height: 500px;
 	overflow: auto;
 	width: 756px
 }
@@ -73,7 +73,7 @@ thead.fixedHeader a:hover {
 /* induced side effect is that child TDs no longer accept width: auto                     */
 html>body tbody.scrollContent {
 	display: block;
-	height: 262px;
+	height: 480px;
 	overflow: auto;
 	width: 100%
 }
