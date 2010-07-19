@@ -1,4 +1,5 @@
 <%= javascript_include_tag "checkbox_update.js" -%>
+<%= javascript_include_tag "variable_table_check.js" -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <% form_tag :url => { :action => "add_to_cart"} do -%>
@@ -70,6 +71,11 @@
     </div>
 	<br/>
 	<br/>
+	  <% if @search_terms.length > 1 -%>
+	    <% @search_terms.each do |search_term| -%>
+	<%= search_term -%><%= check_box_tag "search_terms[]", search_term, true,:onclick=>"clickTerm('#{search_term}')", :class=>'survey_checkbox', :id=>search_term +"_check" %>
+	<% end -%>
+	<% end -%>
     <%= render :partial =>  "total_vars" %>
     <div id="table_header" class="faux_table_header_container">
       <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
