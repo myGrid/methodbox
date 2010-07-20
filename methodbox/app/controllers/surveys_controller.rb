@@ -608,7 +608,7 @@ class SurveysController < ApplicationController
       @selected_surveys.each do |ids|
         logger.info("searching for " + term)
         variables = find_variables(term, ids)
-        logger.info ("found "+variables.length.to_s)
+        logger.info("found "+variables.length.to_s)
         variables.each do | variable |
           @term_results[term].push (variable) 
           if !@sorted_variables.include?(variable)
