@@ -610,7 +610,7 @@ class SurveysController < ApplicationController
         variables = find_variables(term, ids)
         logger.info("found "+variables.length.to_s)
         variables.each do | variable |
-          @term_results[term].push (variable) 
+          @term_results[term].push(variable) 
           if !@sorted_variables.include?(variable)
             @sorted_variables.push(variable)
             #ogger.info("variable.dataset_id = "+variable.dataset_id.to_s)
