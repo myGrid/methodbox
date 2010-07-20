@@ -1,7 +1,7 @@
 module SearchHelper
   
   def search_type_options
-    ["All","People","Surveys","Methods","Data Extracts"]
+    ["All","People","Surveys","Methods","Data Extracts", "Publications"]
   end
 
   #Classifies each result item into a hash with the class name as the key.
