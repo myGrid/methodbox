@@ -283,10 +283,18 @@ visibility:hidden
 
 li.var_number_list
 {
-display: inline;
-list-style-type: none;
-padding-right: 20px;
-background-color: #EEEEEE;
+	display: inline;
+	list-style-type: none;
+	padding-right: 20px;
+	background-color: #EEEEEE;
+}
+
+ul.search_terms_switcher
+{
+	padding-bottom: 5px;
+}
+ul.search_terms_switcher li {
+	background-color: #E2DDB5;
 }
 
 
