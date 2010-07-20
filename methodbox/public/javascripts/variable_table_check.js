@@ -33,10 +33,14 @@ function clickTerm(term) {
 						} else {
 							Element.hide($(x));//hide the variable
 							Element.hide($(x + '_expanded'));
+							//switch off the checkbox for that variable
+							$(x +'_checkbox').checked = false;
 						}	
 				} else {
 					Element.hide($(x));//hide the variable
 					Element.hide($(x + '_expanded'));
+					//switch off the checkbox for that variable
+					$(x +'_checkbox').checked = false;
 				}
 		}
 		});
