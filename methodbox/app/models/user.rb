@@ -8,6 +8,8 @@ class User < ActiveRecord::Base
   acts_as_contributor
   # TODO uncomment the following line when SOPs are implemented
   # has_many :sops, :as => :contributor
+  
+  has_many :links
 
   belongs_to :person, :dependent => :destroy
   #validates_associated :person
