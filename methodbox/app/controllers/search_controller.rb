@@ -36,13 +36,17 @@ class SearchController < ApplicationController
       find_methods(query)
       @results = select_authorised @results
     when("data extracts")
-       find_csvarchive
+       find_csvarchive(query)
        @results = select_authorised @results
+    when("publications")
+        find_publications(query)
+        @results = select_authorised @results
     when("all")
       #slight fudge to allow all HSE datasets to come up since any users are already registered
       find_people(query)
       find_methods(query)
       find_csvarchive(query)
+      find_publications(query)
       @results = select_authorised @results
       find_surveys(query)
     else
@@ -94,6 +98,14 @@ class SearchController < ApplicationController
   def find_csvarchive(query)
     if (SOLR_ENABLED)
       @results = @results + Csvarchive.find_by_solr(query, :limit => 1000).results
+    #else
+      #todo
+    end
+  end
+  
+  def find_publications(query)
+    if (SOLR_ENABLED)
+      @results = @results + Publication.find_by_solr(query, :limit => 1000).results
     #else
       #todo
     end
