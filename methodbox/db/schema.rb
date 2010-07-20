@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100630133024) do
+ActiveRecord::Schema.define(:version => 20100720145251) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(:version => 20100630133024) do
     t.datetime "updated_at"
     t.string   "subject_field_name"
     t.string   "object_field_name"
+    t.integer  "user_id"
   end
 
   create_table "messages", :force => true do |t|
@@ -330,6 +331,13 @@ ActiveRecord::Schema.define(:version => 20100630133024) do
     t.string   "predicate",    :null => false
     t.string   "object_type",  :null => false
     t.integer  "object_id",    :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "script_lists", :force => true do |t|
+    t.integer  "csvarchive_id"
+    t.integer  "script_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
