@@ -20,26 +20,25 @@ function clickTerm(term) {
 	
 	if (termsOn[term]) {
 		//show the variables
-		for(x in termsHash[term]) {
-			Element.show($(termsHash[term][x])); //something
-		}
+			termsHash[term].each(function(x) {
+				Element.show($(x));
+			});
 	} else {
 		//hide the variables
-		for(x in termsHash[term]) { //x is the variable from the term that has been unchecked
+		termsHash[term].each(function(x) {
 			for(var key in termsHash) {
-				if (key != term && termsOn[key]) {//if the checkbox for another term has been clicked previously
-					for (currvar in termsHash[key]) {//the variables in a term that has already been checked
-						//see if the variable is in the variable array for the checked term
-						// (are you following this - it seems a bit too complex!)
-						if (termsHash[key].indexOf(termsHash[term][x]) != -1) {//if the variable is visible but could be hidden due to the term that was clicked
-							Element.show($(termsHash[term][x]));//show the variable
+				if (key != term && termsOn[key]) {//if the checkbox for another term has been clicked previously					
+						if (termsHash[key].indexOf(x) != -1) {//if the variable is visible due to another term but could be hidden due to the term that was clicked
+							Element.show($(x));//make sure the variable shows
 						} else {
-							Element.hide($(termsHash[term][x]));//hide the variable
-							Element.hide($(termsHash[term][x] + '_expanded'));
-						}
-					}
+							Element.hide($(x));//hide the variable
+							Element.hide($(x + '_expanded'));
+						}	
+				} else {
+					Element.hide($(x));//hide the variable
+					Element.hide($(x + '_expanded'));
 				}
 		}
+		});
 	}
-}
 }
