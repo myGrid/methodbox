@@ -18,7 +18,7 @@
     <% end -%>
     <%#= render :partial => "total_vars" -%>
 <br/>
-    <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:95px;">
+    <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:85px;">
       <div style="position: absolute; ;top:0.9em;left:1em">
         <%= hidden_field_tag 'previous_query', @survey_search_query %>
         <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();",:title=>@survey_search_query %>
@@ -28,7 +28,7 @@
       <div style="position: absolute; bottom:-10em; left:26em;">
               <%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
       </div>
-      <div style="position: absolute; bottom:3.9em; left:1em;">
+      <div style="position: absolute; bottom:3em; left:1em;">
         Add results to current table?
         <%= radio_button_tag 'add_results', 'yes', false -%>Yes
         <%= radio_button_tag 'add_results', 'no', true -%>No
@@ -51,7 +51,7 @@
   <%#= submit_tag 'Group selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%>
       <!-- </div> -->
       <br/>
-      <div style="position: absolute; bottom:0.9em; left:1em;">
+      <div style="position: absolute; bottom:1em; left:1em;">
 	      <div id="help_box" style="display: none; z-index: 100; position: absolute;">
             <%= render :partial=>"term_help_popup" %>
           </div>
@@ -71,12 +71,8 @@
     </div>
 	<br/>
 	<br/>
-	  <% if @search_terms.length > 1 -%>
-	    <% @search_terms.each do |search_term| -%>
-	<%= search_term -%><%= check_box_tag "search_terms[]", search_term, true,:onclick=>"clickTerm('#{search_term}')", :class=>'survey_checkbox', :id=>search_term +"_check" %>
-	<% end -%>
-	<% end -%>
     <%= render :partial =>  "total_vars" %>
+	<%= render :partial => "search_terms_switcher", :locals=>{:search_terms => @search_terms} -%>
     <div id="table_header" class="faux_table_header_container">
       <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
