@@ -1,0 +1,13 @@
+  <% if search_terms.length > 1 -%> 
+<ul class="search_terms_switcher">
+	<li class="var_number_list">
+		Highlight: 
+	</li>
+    <% search_terms.each do |search_term| -%>
+<li class="var_number_list">
+<%= search_term-%><%= radio_button_tag 'search_highlighter', 'no', false, :onclick=>"highlightTerm('#{search_term}')" -%>
+</li>
+<% end -%>
+<li class="var_number_list">none<%= radio_button_tag 'search_highlighter', 'no', true, :onclick=>"highlightTerm('no_terms_to_highlight')" -%></li>
+</ul>
+<% end -%>

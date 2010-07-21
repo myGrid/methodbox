@@ -1,3 +1,4 @@
+<%= javascript_tag "setVariableStripe('#{item.id.to_s}', '#{curr_cycle}')"-%>
 <div id= "<%= row_name -%>">
   <ul class="faux_table<%= curr_cycle %>">
     <li><div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_checkbox'}" -%></div>
