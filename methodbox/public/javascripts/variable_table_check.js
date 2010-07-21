@@ -4,6 +4,12 @@ var termsHash = {};
 //keep track of what terms have been clicked
 var termsOn = {};
 
+//what terms are currently highlighted
+var termsHighlight = {};
+
+//variable to its striping odd/even colour
+var stripesHash = {};
+
 //add all the variables to the hash of search terms
 function addVariable(term, variable) {
 	if (termsHash[term] == null) {
@@ -45,4 +51,67 @@ function clickTerm(term) {
 		}
 		});
 	}
+}
+
+//when creating the table keep note of the striping so
+//we can reset it properly after highlighting any variables for
+//a particular term
+function setVariableStripe(variable, stripe) {
+	stripesHash[variable] = stripe;
+	//odd #EEEEEE
+	//even none
+}
+
+//highlight the rows for a particular term
+//only one can be highlighted at a time
+function highlightTerm(term) {
+	if (term=='no_terms_to_highlight') {
+		//user clicked on 'none'
+		for (var key in termsHighlight) {
+		if (termsHighlight[key] == true) {
+			//switch off the current highlight
+			termsHash[key].each(function(x) {
+				if (stripesHash[x] == "_odd") {
+					$(x).down('ul').setStyle({backgroundColor:"#EEEEEE"});
+					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#EEEEEE"});
+					$(x + '_expanded').setStyle({backgroundColor:"#EEEEEE"});
+				} else {
+					$(x).down('ul').setStyle({backgroundColor:"#FFFFFF"});
+					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#FFFFFF"});
+					$(x + '_expanded').setStyle({backgroundColor:"#FFFFFF"});
+				}
+			});
+			termsHighlight[key] = false;
+			//can only be one highlighted at a time
+			break;
+		}
+	}
+}	else {
+		for (var key in termsHighlight) {
+		if (termsHighlight[key] == true) {
+			//switch off the current highlight
+			termsHash[key].each(function(x) {
+				if (stripesHash[x] == "_odd") {
+					$(x).down('ul').setStyle({backgroundColor:"#EEEEEE"});
+					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#EEEEEE"});
+					$(x + '_expanded').setStyle({backgroundColor:"#EEEEEE"});
+				} else {
+					$(x).down('ul').setStyle({backgroundColor:"#FFFFFF"});
+					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#FFFFFF"});
+					$(x + '_expanded').setStyle({backgroundColor:"#FFFFFF"});
+				}
+			});
+			termsHighlight[key] = false;
+			//can only be one highlighted at a time
+			break;
+		}
+	}
+	//switch on highlighting for the newly selected term
+	termsHash[term].each(function(x) {
+		$(x).down('ul').setStyle({backgroundColor:"#E2DDB5"});
+		$(x + '_expanded').down('ul').setStyle({backgroundColor:"#E2DDB5"});
+		$(x + '_expanded').setStyle({backgroundColor:"#E2DDB5"});
+	});
+	termsHighlight[term] = true;
+}
 }
