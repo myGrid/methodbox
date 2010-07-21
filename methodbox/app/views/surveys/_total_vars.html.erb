@@ -10,5 +10,7 @@ Number of variables in search by dataset:
     <li class="var_number_list"><%= link_to(dataset.name, dataset_url(dataset)) -%> has <%= @vars_by_dataset[key].to_s -%> <%= @vars_by_dataset[key] ==  1 ? 'variable' : 'variables' -%></li>
   <% end %>
 </ul>
+<%= render :partial => "search_terms_switcher", :locals=>{:search_terms => @search_terms} -%>
+<%= render :partial => "search_terms_highlighter", :locals=>{:search_terms => @search_terms} -%>
 </div>
 </div>
