@@ -141,7 +141,7 @@ class CsvarchivesController < ApplicationController
       @selected_surveys = []
       @selected_scripts = []
       @selected_publications = []
-      #find links where this Script is the source
+      #find links where this extract is the source
       links = Link.find(:all, :conditions => { :subject_type => "Csvarchive", :subject_id => @archive.id, :predicate => "link" })
 
       links.each do |link|
@@ -180,6 +180,7 @@ class CsvarchivesController < ApplicationController
       link.subject = @archive
       link.object = Script.find(script_id)
       link.predicate = "link"
+      link.user = current_user
       link.save
       end
     end
@@ -189,6 +190,7 @@ class CsvarchivesController < ApplicationController
            link.subject = @archive
            link.object = Survey.find(survey_id)
            link.predicate = "link"
+           link.user = current_user
            link.save
         end
     end
@@ -198,6 +200,7 @@ class CsvarchivesController < ApplicationController
            link.subject = @archive
            link.object = Csvarchive.find(extract_id)
            link.predicate = "link"
+           link.user = current_user
            link.save
         end
     end
@@ -207,6 +210,7 @@ class CsvarchivesController < ApplicationController
         link.subject = @archive
         link.object = Publication.find(publication_id)
         link.predicate = "link"
+        link.user = current_user
         link.save
         end
       end
@@ -334,6 +338,7 @@ class CsvarchivesController < ApplicationController
             link.subject = @archive
             link.object = Script.find(script_id)
             link.predicate = "link"
+            link.user = current_user
             link.save
             end
           end
@@ -343,6 +348,7 @@ class CsvarchivesController < ApplicationController
                  link.subject = @archive
                  link.object = Survey.find(survey_id)
                  link.predicate = "link"
+                 link.user = current_user
                  link.save
               end
           end
@@ -352,6 +358,7 @@ class CsvarchivesController < ApplicationController
                  link.subject = @archive
                  link.object = Csvarchive.find(extract_id)
                  link.predicate = "link"
+                 link.user = current_user
                  link.save
               end
           end
@@ -362,6 +369,7 @@ class CsvarchivesController < ApplicationController
             link.subject = @archive
             link.object = Publication.find(publication_id)
             link.predicate = "link"
+            link.user = current_user
             link.save
             end
           end

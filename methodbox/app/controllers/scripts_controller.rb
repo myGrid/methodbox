@@ -207,6 +207,7 @@ class ScriptsController < ApplicationController
             link.subject = @script
             link.object = Script.find(script_id)
             link.predicate = "link"
+            link.user = current_user
             link.save
             end
           end
@@ -216,6 +217,7 @@ class ScriptsController < ApplicationController
                  link.subject = @script
                  link.object = Survey.find(survey_id)
                  link.predicate = "link"
+                 link.user = current_user
                  link.save
               end
           end
@@ -225,6 +227,7 @@ class ScriptsController < ApplicationController
                  link.subject = @script
                  link.object = Csvarchive.find(extract_id)
                  link.predicate = "link"
+                 link.user = current_user
                  link.save
               end
           end
@@ -235,6 +238,7 @@ class ScriptsController < ApplicationController
             link.subject = @script
             link.object = Publication.find(publication_id)
             link.predicate = "link"
+            link.user = current_user
             link.save
             end
           end
@@ -322,6 +326,7 @@ class ScriptsController < ApplicationController
         link.subject = @script
         link.object = Script.find(script_id)
         link.predicate = "link"
+        link.user = current_user
         link.save
         end
       end
@@ -331,6 +336,7 @@ class ScriptsController < ApplicationController
              link.subject = @script
              link.object = Survey.find(survey_id)
              link.predicate = "link"
+             link.user = current_user
              link.save
           end
       end
@@ -340,6 +346,7 @@ class ScriptsController < ApplicationController
              link.subject = @script
              link.object = Csvarchive.find(extract_id)
              link.predicate = "link"
+             link.user = current_user
              link.save
           end
       end
@@ -349,6 +356,7 @@ class ScriptsController < ApplicationController
         link.subject = @script
         link.object = Publication.find(publication_id)
         link.predicate = "link"
+        link.user = current_user
         link.save
         end
       end
