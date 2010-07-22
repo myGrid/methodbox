@@ -221,6 +221,12 @@ class SurveysController < ApplicationController
 
   #no auth for the moment,login is enough
   def new
+    types =Survey.find(:all, :select => "distinct(surveytype)")
+    @survey_types = []
+    types.each do |s_type|
+      @survey_types.push(s_type.surveytype)
+    end
+    
     respond_to do |format|
       # if Authorization.is_member?(current_user.person_id, nil, nil)
       format.html # new.html.erb
@@ -677,6 +683,66 @@ class SurveysController < ApplicationController
       else
         results = Variable.find(:all, :conditions => ["name like ? or value like ?", '%'+term+'%','%'+term+'%'])
       end
+    end
+    
+    #new - not tested via ui yet
+    #Load a new CSV/Tabbed file for a survey.
+    #Create the dataset and the variables from the header line
+    def load_new_dataset file, survey, dataset_name
+      dataset = Dataset.new
+      dataset.survey = survey
+      dataset.name = dataset_name
+      dataset.save
+      header = File.open(file) {|f| f.readline}
+      #split by tab
+      headers = header.split("\t")
+      headers.each do |var|
+        variable = Variable.new
+        variable.name = name
+        variable.dataset = dataset
+        variable.save
+      end
+      
+      #TODO - push the file over to the CSV server (or just copy it to a directory somewhere?!?)
+      
+    end
+    
+    #new - not tested via ui yet
+    #Read the metadata from a ccsr type xml file for a particular survey
+    def read_ccsr_metadata file,dataset_id
+      
+      data = file.read
+      parser = XML::Parser.io(file, :encoding => XML::Encoding::ISO_8859_1)
+      doc = parser.parse
+
+        nodes = doc.find('//ccsrmetadata/variables')
+        # doc.close
+
+        nodes[0].each_element do |node|
+          if (/^id_/.match(node.name)) 
+            name = node["variable_name"]
+            label = node["variable_label"]
+            puts name + " " + label
+            value_map = String.new
+            node.each_element do |child_node| 
+              if (!child_node.empty?) 
+                value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
+              end
+            end
+            variable = Variable.new
+                     variable.name = name
+                     variable.value= label
+            #          variable.dertype = variable_dertype
+            #          variable.dermethod = variable_dermethod
+                     variable.info = value_map
+            #          variable.category = variable_category
+                     variable.dataset_id = dataset_id;
+            #          variable.page = page
+            #          variable.document = document
+                     variable.save
+            end
+          end
+          
     end
 
 end
