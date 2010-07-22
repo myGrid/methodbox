@@ -24,6 +24,7 @@ class Link < ActiveRecord::Base
   
   belongs_to :subject , :polymorphic => true  #e.g service
   belongs_to :object, :polymorphic => true    #e.g soaplab_server
+  belongs_to :user
   
   protected
 
