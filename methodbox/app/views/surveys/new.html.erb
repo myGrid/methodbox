@@ -13,6 +13,17 @@
           <b>File to upload:&nbsp;</b>
           <%= file_field :survey, :data -%>
         </p>
+<p>
+	<b>Survey type</b>
+			<%= select_tag 'survey_type' ,options_for_select(@survey_types) -%>
+			</p>
+<p>
+Or
+</p>
+<p>
+<b>New</b>
+<%= text_field_tag 'survey[type]', 'Enter survey name here', :style => "width: 100%;" -%>
+	</p>
 
         <p style="margin-top: 1.5em;">
           <b>Title:</b><br/>
@@ -26,7 +37,7 @@
           <%= text_area_tag 'survey[description]', survey_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
 
-        <%= render :partial => "assets/project_selector", :locals => { :resource_type => "Survey",   # this is only for presentation, not for any processing
+        <%#= render :partial => "assets/project_selector", :locals => { :resource_type => "Survey",   # this is only for presentation, not for any processing
           :project_hash => current_user.generate_own_project_id_name_hash } -%>
 
       </div>
@@ -36,15 +47,15 @@
 
 
 
-    <p style="margin: 2.5em 0 0 0;">
-      <%= render :partial => "assets/sharing_form" -%>
-    </p>
+    <!-- <p style="margin: 2.5em 0 0 0;"> -->
+      <%#= render :partial => "assets/sharing_form" -%>
+    <!-- </p> -->
 
-    <p style="margin: 0;">
-      <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Survey",  # this is only for presentation, not for any processing
+    <!-- <p style="margin: 0;"> -->
+      <%#= render :partial => "assets/attribution_form", :locals => { :resource_type => "Survey",  # this is only for presentation, not for any processing
         :existing_attributions => [],
         :attribution_suggestions => Survey.get_all_as_json(current_user) } -%>
-    </p>
+    <!-- </p> -->
 
     <p style="text-align: center; margin-top: 1.5em;">
       <%= submit_tag "Upload and Save", :id => "survey_submit_btn", :onclick => "javascript: validateSurveyFields(true); return(false);" -%> or <%= link_to 'Cancel', surveys_path -%>
