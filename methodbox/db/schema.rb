@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100720145251) do
+ActiveRecord::Schema.define(:version => 20100722134115) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -73,6 +73,13 @@ ActiveRecord::Schema.define(:version => 20100720145251) do
   add_index "annotations", ["annotatable_type", "annotatable_id"], :name => "index_annotations_on_annotatable_type_and_annotatable_id"
   add_index "annotations", ["attribute_id"], :name => "index_annotations_on_attribute_id"
   add_index "annotations", ["source_type", "source_id"], :name => "index_annotations_on_source_type_and_source_id"
+
+  create_table "archived_variables", :force => true do |t|
+    t.integer  "variable_id"
+    t.string   "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "assets", :force => true do |t|
     t.string   "contributor_type"
