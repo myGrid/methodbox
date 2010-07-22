@@ -2,6 +2,7 @@ require 'acts_as_solr'
 
 class Variable < ActiveRecord::Base
 
+  has_many :archived_variables
   belongs_to :survey
   has_many :variable_linkages
   has_many :variable_lists
