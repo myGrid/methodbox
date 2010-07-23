@@ -4,7 +4,7 @@ class VariablesController < ApplicationController
 
   def open_pdf
     find_variable
-    type = Survey.find(Dataset.find(@variable.dataset_id).survey_id).surveytype.downcase
+    type = Survey.find(Dataset.find(@variable.dataset_id).survey_id).survey_type.shortname.downcase
     year = Survey.find(Dataset.find(@variable.dataset_id).survey_id).year
     send_file(RAILS_ROOT + "/" + "filestore" + "/docs" + "/" + type + "/" + year + "/" + @variable.document, :type => 'application/pdf', :disposition => 'inline')
   end

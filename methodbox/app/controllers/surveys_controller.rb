@@ -1,4 +1,6 @@
 class SurveysController < ApplicationController
+  
+  before_filter :is_admin?, :only =>[ :new, :create]
 
   before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show]
 
@@ -91,10 +93,10 @@ class SurveysController < ApplicationController
 
     @survey_hash = Hash.new
     @surveys.each do |survey|
-      if (!@survey_hash.has_key?(survey.surveytype))
-        @survey_hash[survey.surveytype] = Array.new
+      if (!@survey_hash.has_key?(survey.survey_type.shortname))
+        @survey_hash[survey.survey_type.shortname] = Array.new
       end
-      @survey_hash[survey.surveytype].push(survey)
+      @survey_hash[survey.survey_type.shortname].push(survey)
     end
     puts @survey_hash
 
@@ -115,7 +117,7 @@ class SurveysController < ApplicationController
     respond_to do |format|
       logger.info("rendering")
       format.html
-      format.json {render :json => results.to_jqgrid_json([:name,:value,"survey.title","survey.surveytype"], params[:page], params[:rows], results.size)}
+      format.json {render :json => results.to_jqgrid_json([:name,:value,"survey.title","survey.survey_type.shortname"], params[:page], params[:rows], results.size)}
     end
   end
 
@@ -139,7 +141,7 @@ class SurveysController < ApplicationController
     when "category"   then "category"
       @sorted_variables = @unsorted_vars.sort_by { |m| if m.category then m.category.upcase else "ZZZZ" end }
     when "survey" then "survey"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.survey_type.shortname.upcase }
     when "year" then "year"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
     when "popularity" then "popularity"
@@ -153,7 +155,7 @@ class SurveysController < ApplicationController
     when "dataset_reverse"   then "dataset DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
     when "survey_reverse" then "survey DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.surveytype.upcase }.reverse
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.survey_type.shortname.upcase }.reverse
     when "year_reverse" then "year DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
     when "popularity_reverse" then "popularity DESC"
@@ -221,11 +223,7 @@ class SurveysController < ApplicationController
 
   #no auth for the moment,login is enough
   def new
-    types =Survey.find(:all, :select => "distinct(surveytype)")
-    @survey_types = []
-    types.each do |s_type|
-      @survey_types.push(s_type.surveytype)
-    end
+    @survey_types =SurveyType.find(:all)
     
     respond_to do |format|
       # if Authorization.is_member?(current_user.person_id, nil, nil)
@@ -238,55 +236,67 @@ class SurveysController < ApplicationController
   end
 
   def create
-    if (params[:survey][:data]).blank?
-      respond_to do |format|
-        flash.now[:error] = "Please select a file to upload."
-        format.html {
-          set_parameters_for_sharing_form()
-          render :action => "new"
-        }
-      end
-    elsif (params[:survey][:data]).size == 0
-      respond_to do |format|
-        flash.now[:error] = "The file that you have selected is empty. Please check your selection and try again!"
-        format.html {
-          set_parameters_for_sharing_form()
-          render :action => "new"
-        }
-      end
+    
+    if (params[:survey_type_name])!= "Enter full survey name here" && (params[:survey_type_shortname]) != "Enter short survey name here"
+      s_type = SurveyType.new
+      s_type.name = params[:survey_type_name]
+      s_type.shortname = params[:survey_type_shortname]
+      s_type.description = params[:survey_type_description]
+      s_type.save
+      params[:survey][:survey_type] = s_type
     else
+      params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
+    end
+    # if (params[:survey][:data]).blank?
+    #   respond_to do |format|
+    #     flash.now[:error] = "Please select a file to upload."
+    #     format.html {
+    #       set_parameters_for_sharing_form()
+    #       render :action => "new"
+    #     }
+    #   end
+    # elsif (params[:survey][:data]).size == 0
+    #   respond_to do |format|
+    #     flash.now[:error] = "The file that you have selected is empty. Please check your selection and try again!"
+    #     format.html {
+    #       set_parameters_for_sharing_form()
+    #       render :action => "new"
+    #     }
+    #   end
+    # else
       # create new Survey file and content blob - non-empty file was selected
 
       # prepare some extra metadata to store in Survey files instance
       params[:survey][:contributor_type] = "User"
       params[:survey][:contributor_id] = current_user.id
 
+
       # store properties and contents of the file temporarily and remove the latter from params[],
       # so that when saving main object params[] wouldn't contain the binary data anymore
-      params[:survey][:content_type] = (params[:survey][:data]).content_type
-      params[:survey][:original_filename] = (params[:survey][:data]).original_filename
-      data = params[:survey][:data].read
-      name = (params[:survey][:data]).original_filename
-      params[:survey].delete('data')
+      # params[:survey][:content_type] = (params[:survey][:data]).content_type
+      # params[:survey][:original_filename] = (params[:survey][:data]).original_filename
+      # data = params[:survey][:data].read
+      # name = (params[:survey][:data]).original_filename
+      # params[:survey].delete('data')
 
-      directory = "public/data"
-      # create the file path
-      path = File.join(directory, name)
-      # write the file
-      File.open(path, "wb") do |f|
-        f.write(data)
-      end
+      # directory = "public/data"
+      #      # create the file path
+      #      path = File.join(directory, name)
+      #      # write the file
+      #      File.open(path, "wb") do |f|
+      #        f.write(data)
+      #      end
 
 
       # store source and quality of the new Survey file (this will be kept in the corresponding asset object eventually)
       # TODO set these values to something more meaningful, if required for Survey files
-      params[:survey][:source_type] = "upload"
-      params[:survey][:source_id] = nil
-      params[:survey][:quality] = nil
+      # params[:survey][:source_type] = "upload"
+      #      params[:survey][:source_id] = nil
+      #      params[:survey][:quality] = nil
 
 
       @survey = Survey.new(params[:survey])
-      @survey.
+
         #      @survey.content_blob = ContentBlob.new(:data => data)
 
       respond_to do |format|
@@ -311,7 +321,7 @@ class SurveysController < ApplicationController
           }
         end
       end
-    end
+    # end
   end
 
   def show

@@ -12,6 +12,10 @@ class DatasetsController < ApplicationController
     
   end
   
+  def new
+    @survey = Survey.find(params[:survey])
+  end
+  
   def edit
     flash[:error] = "No dataset editing is allowed at the moment"
     respond_to do |format|
