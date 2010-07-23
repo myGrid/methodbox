@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_filter :is_admin?, :only =>[ :new, :create]
+  before_filter :is_user_admin_auth, :only =>[ :new, :create]
 
   before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show]
 
