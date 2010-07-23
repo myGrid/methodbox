@@ -30,6 +30,15 @@
 <%# end -%>
 <%#*</ul>%>
 
+<ul class="sectionIcons">
+<% if current_user.is_admin? -%>
+<li>
+	<%= link_to "Add new dataset to this survey", {:action => "new", :controller=> "datasets",:survey => @survey.id} -%>
+<%#= icon('manage', new_dataset_path, nil, {:survey => @survey.id}, 'Add new dataset to this survey') -%>
+</li>
+<% end -%>
+</ul>
+
 <h1 class="contribution_title">Survey: <%= h(@survey.title) -%></h1>
 
 <!-- This might be needed for future upload reasons -->
@@ -45,7 +54,7 @@
       </p>
       <p>
         <b>Type:</b>
-        <%=h @survey.surveytype -%>
+        <%=h @survey.survey_type.shortname -%>
       </p>
 
 <!-- This might be needed for future upload reasons -->

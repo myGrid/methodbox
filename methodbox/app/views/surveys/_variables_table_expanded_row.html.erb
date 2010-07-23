@@ -25,7 +25,7 @@
             <%= "NO CATEGORY" -%>
           <%  end -%>
         </div>
-        <div class="col6"><%= dataset.survey.surveytype -%></div>
+        <div class="col6"><%= dataset.survey.survey_type.shortname -%></div>
         <div class="col7"><%= link_to dataset.name, dataset_url(dataset) -%></div>
         <div class="col8"><%= dataset.survey.year -%> </div>
 	 <div class="col9">

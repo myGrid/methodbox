@@ -1,0 +1,41 @@
+<%= javascript_include_tag "sharing.js" -%>
+
+<h1>New Dataset</h1>
+
+<div class="show_basic">
+  <% form_tag({:action => :create}, :multipart => true) do -%>
+    <%= error_messages_for :dataset -%>
+
+    <center>
+      <div style="width: 60%;">
+
+        <p>
+          <b>File to upload:&nbsp;</b>
+          <%= file_field :dataset, :data -%>
+        </p>
+		<p>
+			<b>Format</b>
+					<%= select_tag 'dataset_format' ,options_for_select(dataset_format_options) -%>
+					</p>
+<!-- Survey type will be automatically inserted since this page will only be available from the parent survey page -->
+
+
+        <p style="margin-top: 1.5em;">
+          <b>Title:</b><br/>
+          <%= text_field_tag 'dataset[title]', 'Enter dataset title here', :style => "width: 100%;" -%>
+        </p>
+
+        <p style="margin-top: 0.5em;">
+          <b>Description:</b><br/>
+          <%= text_area_tag 'dataset[description]', 'Enter a description of the dataset here', :style => "width: 100%;", :rows => 5 -%>
+        </p>
+
+      </div>
+
+    </center>
+
+    <p style="text-align: center; margin-top: 1.5em;">
+      <%= submit_tag "Upload and Save", :id => "dataset_submit_btn", :onclick => "javascript: validateDatasetFields(true); return(false);" -%> or <%= link_to 'Cancel', survey_path(@survey) -%>
+    </p>
+  <% end -%>
+</div>

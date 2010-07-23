@@ -9,32 +9,31 @@
     <center>
       <div style="width: 60%;">
 
-        <p>
-          <b>File to upload:&nbsp;</b>
-          <%= file_field :survey, :data -%>
-        </p>
 <p>
 	<b>Survey type</b>
-			<%= select_tag 'survey_type' ,options_for_select(@survey_types) -%>
+			<%= select_tag 'survey[survey_type]' ,options_from_collection_for_select(@survey_types, 'id', 'shortname')
+			 -%>
 			</p>
-<p>
-Or
-</p>
-<p>
-<b>New</b>
-<%= text_field_tag 'survey[type]', 'Enter survey name here', :style => "width: 100%;" -%>
-	</p>
-
-        <p style="margin-top: 1.5em;">
-          <b>Title:</b><br/>
-          <% survey_title_value = (params[:survey].blank? || params[:survey][:title].blank?) ? nil : params[:survey][:title] -%>
-          <%= text_field_tag 'survey[title]', survey_title_value, :style => "width: 100%;" -%>
-        </p>
-
+			<p>
+			Or
+			</p>
+			<p>
+			<b>New</b>
+			<%= text_field_tag 'survey_type_name', 'Enter full survey name here', :style => "width: 100%;" -%>
+			<%= text_field_tag 'survey_type_shortname', 'Enter short survey name here', :style => "width: 40%;" -%>
+			<%= text_area_tag 'survey_type_description', 'Enter a description of the new survey type here', :style => "width: 100%;", :rows => 5 -%>
+				</p>
+		        <p style="margin-top: 0.5em;">
+		          <b>Title:</b><br/>
+		          <%= text_area_tag 'survey[title]', 'Enter the name of the survey here', :style => "width: 100%;", :rows => 5 -%>
+		        </p>
         <p style="margin-top: 0.5em;">
           <b>Description:</b><br/>
-          <% survey_description_value = (params[:survey].blank? || params[:survey][:description].blank?) ? nil : params[:survey][:description] -%>
-          <%= text_area_tag 'survey[description]', survey_description_value, :style => "width: 100%;", :rows => 5 -%>
+          <%= text_area_tag 'survey[description]', 'Enter a description of the survey here', :style => "width: 100%;", :rows => 5 -%>
+        </p>
+        <p style="margin-top: 0.5em;">
+          <b>Year:</b><br/>
+          <%= text_field_tag 'survey[year]', 'Enter the year of the survey here', :style => "width: 40%;" -%>
         </p>
 
         <%#= render :partial => "assets/project_selector", :locals => { :resource_type => "Survey",   # this is only for presentation, not for any processing
