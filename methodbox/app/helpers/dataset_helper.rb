@@ -4,4 +4,8 @@ module DatasetHelper
     ["Tab Separated","Comma Separated"]
   end
   
+  def dataset_metadata_options
+    #only one at the moment, more to come
+    ["CCSR"]
+  end
 end
