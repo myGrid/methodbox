@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100722134115) do
+ActiveRecord::Schema.define(:version => 20100723095004) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -164,6 +164,11 @@ ActiveRecord::Schema.define(:version => 20100722134115) do
     t.integer  "resource_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "extract_to_extract_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
   end
 
   create_table "favourite_group_memberships", :force => true do |t|
@@ -349,6 +354,11 @@ ActiveRecord::Schema.define(:version => 20100722134115) do
     t.datetime "updated_at"
   end
 
+  create_table "script_to_script_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
+  end
+
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
@@ -387,6 +397,28 @@ ActiveRecord::Schema.define(:version => 20100722134115) do
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
+  create_table "survey_lists", :force => true do |t|
+    t.integer  "csvarchive_id"
+    t.integer  "survey_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_to_script_lists", :force => true do |t|
+    t.integer  "script_id"
+    t.integer  "survey_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_types", :force => true do |t|
+    t.string   "description"
+    t.string   "name"
+    t.string   "shortname"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "surveys", :force => true do |t|
     t.string   "title"
     t.datetime "created_at"
@@ -400,9 +432,9 @@ ActiveRecord::Schema.define(:version => 20100722134115) do
     t.text     "description"
     t.datetime "last_used_at"
     t.string   "year"
-    t.string   "surveytype"
     t.string   "UKDA_summary"
     t.string   "headline_report"
+    t.integer  "survey_type_id"
   end
 
   create_table "taggings", :force => true do |t|
