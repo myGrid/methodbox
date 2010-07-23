@@ -1182,6 +1182,9 @@ function validateSopFields(is_new_file) {
 // ***************  Dataset Upload Validation  *****************
 
 function validateDatasetFields() {
+	$('dataset_submit_btn').disabled = true;
+    $('dataset_submit_btn').value = ("Uploading and Saving...");
+	$('dataset_submit_btn').form.submit();
 	return(true);
 }
 
