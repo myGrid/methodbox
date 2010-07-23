@@ -3,7 +3,7 @@ require 'acts_as_solr'
 class Variable < ActiveRecord::Base
 
   has_many :archived_variables
-  belongs_to :survey
+  belongs_to :dataset
   has_many :variable_linkages
   has_many :variable_lists
   has_many :search_variable_lists
