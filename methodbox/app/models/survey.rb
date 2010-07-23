@@ -3,6 +3,8 @@ require 'acts_as_resource'
 class Survey < ActiveRecord::Base
 
   acts_as_resource
+  
+  belongs_to :survey_type
 
   has_many :datasets
 
@@ -14,7 +16,7 @@ class Survey < ActiveRecord::Base
   # 
   has_many :scripts, :through => :survey_to_script_lists
   
-  acts_as_solr(:fields=>[:description,:title,:year,:surveytype]) if SOLR_ENABLED
+  acts_as_solr(:fields=>[:description,:title,:year]) if SOLR_ENABLED
 
 #  belongs_to :content_blob,
 #             :dependent => :destroy
