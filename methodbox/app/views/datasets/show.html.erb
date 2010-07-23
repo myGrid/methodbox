@@ -1,3 +1,11 @@
+<ul class="sectionIcons">
+<% if current_user.is_admin? -%>
+<li>
+<%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit Dataset') -%>
+</li>
+</ul>
+<% end -%>
+
 <h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1>
 
 <div class="show_basic">

@@ -1,1 +1,38 @@
-<h1>No dataset editing is allowed at the moment</h1>
+<%= javascript_include_tag "sharing.js" %>
+
+
+<ul class="sectionIcons">
+  <li><%= icon('script', dataset_path(@dataset), 'Return to Dataset', nil, 'Return to Dataset') -%></li>
+</ul>
+
+<div class="show_basic">
+	<center>
+      <div style="width: 90%;">
+		  <% form_for(@dataset, :html => {:multipart => true}) do |f| %>
+		    <%= f.error_messages %>
+  	<p style="margin-top: 1.5em;">
+      <b>Metadata file:&nbsp;</b>
+      <%= file_field :file, :metadata -%>
+    </p>
+	<p>
+		<b>Metadata Format</b>
+				<%= select_tag 'dataset_metadata_format' ,options_for_select(dataset_metadata_options) -%>
+				</p>
+		
+		<%#= button_to_remote 'Update Dataset Metadata',:url => { :action => "update_metadata", :controller => "datasets", :id=>@dataset.id }, :with=> "'file='+$F('dataset_metadata')"  -%>
+        <p style="margin-top: 1.5em;">
+          <b>Title:</b><br/>
+          <%= f.text_field :name, :style => "width: 100%;" -%>
+        </p>
+
+        <p style="margin-top: 0.5em;">
+          <b>Description:</b><br/>
+          <%= f.text_area :description, :style => "width: 100%;", :rows => 5 -%>
+        </p>
+
+    <p style="text-align: center;">
+      <%= f.submit "Update", :id => "dataset_submit_btn", :onclick => "javascript: validateDatasetFields(false); return(false);"  -%> or <%= link_to "Cancel", dataset_path(@dataset) -%>
+    </p>
+  <% end %>
+  </center>
+</div>

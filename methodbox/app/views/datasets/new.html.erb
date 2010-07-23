@@ -5,7 +5,7 @@
 <div class="show_basic">
   <% form_tag({:action => :create}, :multipart => true) do -%>
     <%= error_messages_for :dataset -%>
-
+<%= hidden_field_tag "dataset[survey]", @survey.id -%>
     <center>
       <div style="width: 60%;">
 
