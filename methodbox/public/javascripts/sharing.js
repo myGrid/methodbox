@@ -1179,6 +1179,12 @@ function validateSopFields(is_new_file) {
     return(true);
 }
 
+// ***************  Dataset Upload Validation  *****************
+
+function validateDatasetFields() {
+	return(true);
+}
+
 // ***************  Script Upload Validation  *****************
 
 function validateScriptFields(is_new_file) {
