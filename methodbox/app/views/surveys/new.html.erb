@@ -1,6 +1,8 @@
 <%= javascript_include_tag "sharing.js" -%>
 
+        <h2>Add a new survey to an already existing survey series or create a brand new survey series.  Once you have added the survey you can add datasets to it.</h2><br/>
 <h1>New Survey</h1>
+
 
 <div class="show_basic">
   <% form_tag({:action => :create}, :multipart => true) do -%>
@@ -8,34 +10,49 @@
 
     <center>
       <div style="width: 60%;">
-
+	<fieldset style="background-color: #FFFFCC;">
+		<legend>Choose the Survey type</legend>
+		<% if SurveyType.all.size >=1 %>
 <p>
-	<b>Survey type</b>
+	<b>Select an existing Survey type</b><br/>
 			<%= select_tag 'survey[survey_type]' ,options_from_collection_for_select(@survey_types, 'id', 'shortname')
 			 -%>
 			</p>
+
 			<p>
-			Or
+			<b style="font-size:larger;">OR</b>
 			</p>
-			<p>
-			<b>New</b>
-			<%= text_field_tag 'survey_type_name', 'Enter full survey name here', :style => "width: 100%;" -%>
-			<%= text_field_tag 'survey_type_shortname', 'Enter short survey name here', :style => "width: 40%;" -%>
-			<%= text_area_tag 'survey_type_description', 'Enter a description of the new survey type here', :style => "width: 100%;", :rows => 5 -%>
+			<% else -%>
+			<br/>
+<b style="font-style: italic; background-color: red;">There are no existing survey types, please enter the details for a new one when loading your new survey.</b><br/><br/>
+						<% end %>
+						<p>
+<b>Create a new Survey type</b><br/>
+
+
+				<b>Name:</b> (Enter full survey name here eg Health Survey for England)<br/>
+			<%= text_field_tag 'survey_type_name', '', :style => "width: 100%;margin-bottom:0.5em;" -%><br/>
+			<b>Short Name:</b> (Enter short survey name here eg HSE)<br/>
+			<%= text_field_tag 'survey_type_shortname', '', :style => "width: 40%;margin-bottom:0.5em;" -%><br/>
+			<b>Description:</b> (Enter a description of the new survey type here)<br/>
+			<%= text_area_tag 'survey_type_description', '', :style => "width: 100%;margin-bottom:0.5em;", :rows => 5 -%>
 				</p>
+			</fieldset>
+			<fieldset style="background-color: #FFFFCC;">
+				<legend>Details for the new Survey</legend>
 		        <p style="margin-top: 0.5em;">
-		          <b>Title:</b><br/>
-		          <%= text_area_tag 'survey[title]', 'Enter the name of the survey here', :style => "width: 100%;", :rows => 5 -%>
+		          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
+		          <%= text_field_tag 'survey[title]','', :style => "width: 100%;" -%>
 		        </p>
         <p style="margin-top: 0.5em;">
-          <b>Description:</b><br/>
-          <%= text_area_tag 'survey[description]', 'Enter a description of the survey here', :style => "width: 100%;", :rows => 5 -%>
+          <b>Description:</b> (Enter a description of the survey here)<br/>
+          <%= text_area_tag 'survey[description]', '', :style => "width: 100%;", :rows => 5 -%>
         </p>
         <p style="margin-top: 0.5em;">
-          <b>Year:</b><br/>
-          <%= text_field_tag 'survey[year]', 'Enter the year of the survey here', :style => "width: 40%;" -%>
+          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
+          <%= text_field_tag 'survey[year]', '', :style => "width: 40%;" -%>
         </p>
-
+</fieldset>
         <%#= render :partial => "assets/project_selector", :locals => { :resource_type => "Survey",   # this is only for presentation, not for any processing
           :project_hash => current_user.generate_own_project_id_name_hash } -%>
 

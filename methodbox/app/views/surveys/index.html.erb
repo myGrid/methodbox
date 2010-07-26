@@ -2,6 +2,8 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
+<% if Survey.all.size >=1 -%>
+
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
 <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
 
@@ -78,6 +80,13 @@
     <% end -%>
   </div>
 </div>
+<% else %>
+<% if logged_in? && current_user.is_admin? -%>
+        <h2>There are no surveys loaded into the methodbox at the moment.  Why not <%= link_to "upload a new survey", new_survey_path -%></h2>
+<% else %>
+        <h2>There are no surveys loaded into the methodbox at the moment.  Contact an administrator to get one loaded in.</h2>
+<% end -%>
+<% end -%>
 <!-- jquery grid experiment -->
   <%# form_tag(:action => "grid_view") do -%>
   <%#= submit_tag 'Show grid view',:id => "grid_button" %>

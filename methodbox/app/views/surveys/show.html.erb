@@ -113,22 +113,38 @@
       <% else -%>
         None
       <% end -%>
+<!-- no survey link to publications yet, maybe in the future -->
+      <!-- <br/> -->
+      <!-- <br/> -->
+	<!-- <b>Linked with Publications(s):</b> -->
+		<%# if !@publications.empty? -%>
+        <%# @publications.each do |publication| -%>
+          <%#= link_to(publication.title, publication_path(publication)) -%>
+        <%# end -%>
+      <%# else -%>
+        <!-- None -->
+      <%# end -%>
       <br/>
       <br/>
 <%# end -%>
       <br/>
+<% if @survey.UKDA_summary || @survey.headline_report -%>
       <p>
         <b>Further information</b>
-      <div class="box_standout">
+      <div class="box_standout">        
+<% if @survey.UKDA_summary -%>
         <a href="<%= @survey.UKDA_summary%>">ESDS Summary</a><br/>
+<% end -%>
         <% if @survey.headline_report -%>
           <a href="<%= @survey.headline_report%>">Headline Report</a>
         <% end -%>  
+<% end -%>
       </div>
 <br/>
 <% if logged_in? -%>
-<b>Forum</b>
 <% if @forum != nil -%>
+<b>Forum</b>
+
 	<div class="box_standout">
 		<%= link_to h("View the forum"), forum_path(@forum), :class => "title" %>
     </div>

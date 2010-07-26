@@ -1,5 +1,7 @@
 <%= javascript_include_tag "sharing.js" -%>
 
+        <h2>Create a new dataset by uploading a CSV/tabbed dataset file which has the column/variable names.  Once it has loaded you can add metadata for the columns/variables.</h2><br/>
+
 <h1>New Dataset</h1>
 
 <div class="show_basic">
@@ -21,13 +23,13 @@
 
 
         <p style="margin-top: 1.5em;">
-          <b>Title:</b><br/>
-          <%= text_field_tag 'dataset[title]', 'Enter dataset title here', :style => "width: 100%;" -%>
+          <b>Title:</b> (Enter dataset title here)<br/>
+          <%= text_field_tag 'dataset[title]', '', :style => "width: 100%;" -%>
         </p>
 
         <p style="margin-top: 0.5em;">
-          <b>Description:</b><br/>
-          <%= text_area_tag 'dataset[description]', 'Enter a description of the dataset here', :style => "width: 100%;", :rows => 5 -%>
+          <b>Description:</b> (Enter a description of the dataset here)<br/>
+          <%= text_area_tag 'dataset[description]', '', :style => "width: 100%;", :rows => 5 -%>
         </p>
 
       </div>

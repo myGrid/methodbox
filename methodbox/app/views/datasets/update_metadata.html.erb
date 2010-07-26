@@ -1,0 +1,31 @@
+<%= javascript_include_tag "sharing.js" %>
+
+
+<ul class="sectionIcons">
+  <li><%= icon('script', dataset_path(@dataset), 'Return to Dataset', nil, 'Return to Dataset') -%></li>
+</ul>
+
+<div class="show_basic">
+	<center>
+      <div style="width: 90%;">
+		  <% form_tag(load_new_metadata_dataset_url, :multipart => true) do %>
+
+  	<p style="margin-top: 1.5em;">
+      <b>Metadata file:&nbsp;</b>
+      <%= file_field :file, :metadata -%>
+    </p>
+	<p>
+		<% if @dataset.has_variables -%>
+		<b><%= @dataset.name -%> already has metadata, uploading a new file will overwrite the old metadata.</b>
+		<% end -%>
+		<b>Metadata Format</b>
+				<%= select_tag 'dataset_metadata_format' ,options_for_select(dataset_metadata_options) -%>
+				</p>
+				<br/>
+
+    <p style="text-align: center;">
+      <%= submit_tag "Upload metadata file", :id => "dataset_submit_btn", :onclick => "javascript: validateDatasetFields(false); return(false);"  -%> or <%= link_to "Cancel", dataset_path(@dataset) -%>
+    </p>
+  <% end %>
+  </center>
+</div>

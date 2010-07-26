@@ -10,14 +10,6 @@
       <div style="width: 90%;">
 		  <% form_for(@dataset, :html => {:multipart => true}) do |f| %>
 		    <%= f.error_messages %>
-  	<p style="margin-top: 1.5em;">
-      <b>Metadata file:&nbsp;</b>
-      <%= file_field :file, :metadata -%>
-    </p>
-	<p>
-		<b>Metadata Format</b>
-				<%= select_tag 'dataset_metadata_format' ,options_for_select(dataset_metadata_options) -%>
-				</p>
 		
 		<%#= button_to_remote 'Update Dataset Metadata',:url => { :action => "update_metadata", :controller => "datasets", :id=>@dataset.id }, :with=> "'file='+$F('dataset_metadata')"  -%>
         <p style="margin-top: 1.5em;">

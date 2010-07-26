@@ -1,9 +1,27 @@
 <ul class="sectionIcons">
 <% if current_user.is_admin? -%>
 <li>
-<%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit Dataset') -%>
+<%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit Dataset details') -%>
+</li>
+<li>
+<%= icon('manage', update_data_dataset_path(@dataset), nil, nil, 'Upload variable data') -%>
+</li>
+<li>
+<%= icon('manage', update_metadata_dataset_path(@dataset), nil, nil, 'Upload variable metadata') -%>
 </li>
 </ul>
+<% end -%>
+<% if @missing_vars && @missing_vars.size>=1 -%>
+The following variables were in the previous uploaded dataset but were missing in the new dataset.
+<% @missing_vars.each do |missing_variable| -%>
+<%= missing_variable.name %> <%= link_to_remote "Archive this variable", deprecate_variable_path(missing_variable)%> 
+<% end -%>
+<% end -%>
+<% if @new_variables && @new_variables.size>=1 -%>
+The following variables have been added in the new dataset.
+<% @new_variables.each do |new_variable| -%>
+<%= link_to new_variable.name, variable_path(new_variable) %>
+<% end -%>
 <% end -%>
 
 <h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1>
@@ -35,10 +53,12 @@
         <b>Parent Survey:</b>
         <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
       </p>
+<% if @dataset.current_version -%>
       <p>
         <b>Update:</b>
         <span class="title"><%=h @dataset.current_version -%></span>
       </p>
+<% end -%>
     </div>
   </div>
 </div>

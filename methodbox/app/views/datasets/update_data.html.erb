@@ -1,0 +1,32 @@
+<%= javascript_include_tag "sharing.js" %>
+
+
+<ul class="sectionIcons">
+  <li><%= icon('script', dataset_path(@dataset), 'Return to Dataset', nil, 'Return to Dataset') -%></li>
+</ul>
+
+<div class="show_basic">
+	<center>
+      <div style="width: 90%;">
+		  <% form_tag(load_new_data_dataset_url, :multipart => true) do %>
+	<p>
+
+				<% if @dataset.has_data -%>
+				<b><%= @dataset.name -%> already has a data file, uploading a new file will replace the old data file.</b>
+				<% end -%>
+				<p>
+		          <b>Data file:&nbsp;</b>
+		          <%= file_field :file, :data -%>
+		        </p>
+				<p>
+					<b>Format</b>
+							<%= select_tag 'dataset_format' ,options_for_select(dataset_format_options) -%>
+							</p>
+	</p>	
+
+    <p style="text-align: center;">
+      <%= submit_tag "Upload data file", :id => "dataset_submit_btn", :onclick => "javascript: validateDatasetFields(false); return(false);"  -%> or <%= link_to "Cancel", dataset_path(@dataset) -%>
+    </p>
+  <% end %>
+  </center>
+</div>
