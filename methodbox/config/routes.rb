@@ -39,7 +39,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.cart '/cart/', :controller=>'cart',:action=>'show'
 
-  map.resources :datasets
+  map.resources :datasets, :member => {:update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}
 
   map.resources :variable_links
 
@@ -55,7 +55,7 @@ ActionController::Routing::Routes.draw do |map|
 
   #  map.resources :assays
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post, :open_pdf => :get}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}
 
 #  map.resources :methods, :collection => {:help => :get}
 
