@@ -1,6 +1,11 @@
 class VariablesController < ApplicationController
 
   before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show]
+  before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
+
+  def deprecate_variable
+    
+  end
 
   def open_pdf
     find_variable

@@ -338,6 +338,8 @@ class SurveysController < ApplicationController
 
     source_archives = []
     source_scripts = []
+    # no survey link to publications yet, maybe in the future
+    # source_publications = []
 
     links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link" })
 
@@ -347,11 +349,14 @@ class SurveysController < ApplicationController
         source_archives.push(link.subject)
       when "Script"
         source_scripts.push(link.subject)
+      # when "Publication"
+      #         source_publications.push(link.subject)
       end
     end
 
     @archives = source_archives
     @scripts = source_scripts
+    # @publications = source_publications
 
     respond_to do |format|
       format.html # show.html.erb
