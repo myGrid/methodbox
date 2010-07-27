@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100726105632) do
+ActiveRecord::Schema.define(:version => 20100727151830) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -79,6 +79,17 @@ ActiveRecord::Schema.define(:version => 20100726105632) do
     t.string   "reason"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "name"
+    t.string   "value"
+    t.integer  "dataset_id"
+    t.string   "label"
+    t.string   "category"
+    t.string   "dertype"
+    t.text     "dermethod"
+    t.text     "info"
+    t.string   "document"
+    t.string   "page"
+    t.integer  "user_id"
   end
 
   create_table "assets", :force => true do |t|
