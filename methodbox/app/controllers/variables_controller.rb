@@ -3,7 +3,28 @@ class VariablesController < ApplicationController
   before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
 
-  def deprecate_variable
+  def deprecate
+    find_variable
+    deleted_id = @variable.id
+    archived_variable = ArchivedVariable.new
+    archived_variable.name = @variable.name
+    archived_variable.value = @variable.value
+    archived_variable.info = @variable.info
+    archived_variable.dataset_id = @variable.dataset_id
+    archived_variable.label = @variable.label
+    archived_variable.category = @variable.category
+    archived_variable.dermethod = @variable.dermethod
+    archived_variable.dertype = @variable.dertype
+    archived_variable.document = @variable.document
+    archived_variable.page = @variable.page
+    archived_variable.variable = @variable
+    archived_variable.user_id = current_user.id
+    archived_variable.save
+    @variable.delete
+    
+    render :update, :status=>:created do |page|
+      page.replace_html "#{deleted_id}", :partial=>"datasets/archived_variable"
+    end
     
   end
 

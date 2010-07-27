@@ -8,7 +8,8 @@ class DatasetsController < ApplicationController
   def load_new_data
     load_new_dataset 
     respond_to do |format|
-      format.html { redirect_to dataset_path(@dataset) }
+      flash[:notice] = "New data file was applied to dataset"
+      format.html
     end
   end
   
@@ -172,7 +173,7 @@ class DatasetsController < ApplicationController
     @missing_vars = []
     missing_variables.each do |missing_var|
       v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + missing_var+"'")
-      @missing_vars.push(v.id)
+      @missing_vars.push(v[0].id)
     end
     
     @new_variables = []
@@ -182,9 +183,11 @@ class DatasetsController < ApplicationController
         variable.name = var
         variable.dataset = @dataset
         variable.save
-        @new_variables.push(var.id)
+        @new_variables.push(variable.id)
     end
     
+    @missing_vars.each {|var| puts var.to_s}
+    @new_variables.each {|var| puts var.to_s}
     #TODO - push the file over to the CSV server (or just copy it to a directory somewhere?!?)
     
   end
