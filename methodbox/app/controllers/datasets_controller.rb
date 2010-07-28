@@ -1,4 +1,6 @@
 class DatasetsController < ApplicationController
+  
+  require 'rest_client'
 
   before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit]
   before_filter :login_required, :except => [ :show ]
@@ -6,7 +8,18 @@ class DatasetsController < ApplicationController
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   
   def load_new_data
-    load_new_dataset 
+    uuid = UUIDTools::UUID.random_create.to_s
+    #create directory and zip file for the archive
+    filename=RAILS_ROOT + "/" + "filestore" + "/" + uuid + ".data"
+    uf = File.open(filename,"w")
+    uf.write(params[:file][:data])
+    uf.close
+    
+    file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
+     
+    send_to_server file_uuid, filename
+    load_new_dataset filename
+    @dataset.update_attributes(:updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
       format.html
@@ -57,6 +70,7 @@ class DatasetsController < ApplicationController
     dataset.name = params[:dataset][:title]
     dataset.description = params[:dataset][:description]
     dataset.filename = params[:dataset][:data].original_filename
+    dataset.uuid_filename = UUIDTools::UUID.random_create.to_s
     dataset.save
     @dataset = dataset
     respond_to do |format|
@@ -151,9 +165,10 @@ class DatasetsController < ApplicationController
   #new - not tested via ui yet
   #Load a new CSV/Tabbed file for a survey.
   #Create the dataset and the variables from the header line
-  def load_new_dataset
+  def load_new_dataset filename
+    datafile = File.open("filename", "r")
     @new_variables =[]
-    header =  params[:file][:data].readline
+    header =  datafile.readline
     #split by tab
     if params[:dataset_format] == "Tab Separated"
         headers = header.split("\t")
@@ -161,6 +176,8 @@ class DatasetsController < ApplicationController
         headers = header.split(",")
     end
     
+    headers.collect!{|item| item.strip}
+          
     #need to find variables which are missing from the exisitng set and variables which are 'new'
     all_var = Variable.all(:conditions=> "dataset_id=" + @dataset.id.to_s, :select => "name")
 
@@ -182,6 +199,7 @@ class DatasetsController < ApplicationController
         variable = Variable.new
         variable.name = var
         variable.dataset = @dataset
+        variable.updated_by = current_user.id
         variable.save
         @new_variables.push(variable.id)
     end
@@ -218,13 +236,19 @@ class DatasetsController < ApplicationController
           end
         v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + name+"'")
         if (v[0]!= nil)
-          v[0].update_attributes(:value=>label, :info=>value_map)
+          v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id)
           
         # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
         end
         end
         
   end
-end
+  end
+  
+# send the new dataset file over to the csv server
+  def send_to_server file_uuid, filename
+    RestClient.post 'http://' + CSV_SERVER_LOCATION + ':' + CSV_SERVER_PORT  + CSV_SERVER_PATH + '/dataset?filename=' + file_uuid, :dataset => File.new(filename, 'rb')
+    
+  end
   
 end

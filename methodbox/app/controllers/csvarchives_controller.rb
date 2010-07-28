@@ -292,7 +292,8 @@ class CsvarchivesController < ApplicationController
       variable_hash.each_key do |key|
 
         root << dataset = XML::Node.new('Dataset')
-        dataset['name']= Dataset.find(key).filename
+        dataset['datasetname'] = Dataset.find(key).filename
+        dataset['name']= Dataset.find(key).uuid_filename
         dataset['year']= Survey.find(Dataset.find(key).survey_id).year
         dataset['survey']= Survey.find(Dataset.find(key).survey_id).survey_type.shortname
         dataset << variables = XML::Node.new('Variables')
