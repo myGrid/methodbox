@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100727151830) do
+ActiveRecord::Schema.define(:version => 20100728150520) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -169,6 +169,8 @@ ActiveRecord::Schema.define(:version => 20100727151830) do
     t.integer  "current_version"
     t.boolean  "has_variables"
     t.boolean  "has_data"
+    t.integer  "updated_by"
+    t.string   "uuid_filename"
   end
 
   create_table "downloads", :force => true do |t|
@@ -177,6 +179,11 @@ ActiveRecord::Schema.define(:version => 20100727151830) do
     t.integer  "resource_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "extract_to_extract_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
   end
 
   create_table "favourite_group_memberships", :force => true do |t|
@@ -362,6 +369,11 @@ ActiveRecord::Schema.define(:version => 20100727151830) do
     t.datetime "updated_at"
   end
 
+  create_table "script_to_script_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
+  end
+
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
@@ -399,6 +411,20 @@ ActiveRecord::Schema.define(:version => 20100727151830) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
+
+  create_table "survey_lists", :force => true do |t|
+    t.integer  "csvarchive_id"
+    t.integer  "survey_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_to_script_lists", :force => true do |t|
+    t.integer  "script_id"
+    t.integer  "survey_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "survey_types", :force => true do |t|
     t.string   "description"
@@ -527,6 +553,7 @@ ActiveRecord::Schema.define(:version => 20100727151830) do
     t.string   "document"
     t.string   "page"
     t.integer  "current_version"
+    t.integer  "updated_by"
   end
 
   create_table "watched_variables", :force => true do |t|
