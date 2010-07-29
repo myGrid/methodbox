@@ -12,14 +12,17 @@ class DatasetsController < ApplicationController
     #create directory and zip file for the archive
     filename=RAILS_ROOT + "/" + "filestore" + "/" + uuid + ".data"
     uf = File.open(filename,"w")
-    uf.write(params[:file][:data])
+    params[:file][:data].each_line do |line|                
+      uf.write(line)
+    end
     uf.close
     
     file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
-     
+             
     send_to_server file_uuid, filename
     load_new_dataset filename
     @dataset.update_attributes(:updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid)
+    File.delete(filename)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
       format.html
@@ -27,14 +30,23 @@ class DatasetsController < ApplicationController
   end
   
   def load_new_metadata
+    if @dataset.filename != nil
     case params[:dataset_metadata_format]
     when "CCSR"
       read_ccsr_metadata
+    when "Methodbox"
+      read_methodbox_metadata
     end
     respond_to do |format|
       flash[:notice] = "The metadata has been updated."  
       format.html { redirect_to dataset_path(@dataset) }
     end
+  else
+    respond_to do |format|
+      flash[:error] = "There are no variables in this dataset.  Please upload a dataset"
+      format.html { redirect_to dataset_path(@dataset) }
+    end
+  end
   end
   
   def update_data
@@ -42,14 +54,7 @@ class DatasetsController < ApplicationController
   end
   
   def update_metadata
-    case params[:dataset_metadata_format]
-    when "CCSR"
-      read_ccsr_metadata
-    end
-    respond_to do |format|
-      flash[:notice] = "The metadata has been updated."  
-      format.html { redirect_to dataset_path(@dataset) }
-    end
+   
   end
 
   def index
@@ -65,13 +70,29 @@ class DatasetsController < ApplicationController
   end
   
   def create
+    uuid = UUIDTools::UUID.random_create.to_s
+    #create directory and zip file for the archive
+    filename=RAILS_ROOT + "/" + "filestore" + "/" + uuid + ".data"
+    uf = File.open(filename,"w")
+    params[:dataset][:data].each_line do |line|                
+      uf.write(line)
+    end
+    uf.close
+    
+    file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
+             
+    send_to_server file_uuid, filename
     dataset = Dataset.new
     dataset.survey = Survey.find(params[:dataset][:survey])
     dataset.name = params[:dataset][:title]
     dataset.description = params[:dataset][:description]
     dataset.filename = params[:dataset][:data].original_filename
-    dataset.uuid_filename = UUIDTools::UUID.random_create.to_s
+    dataset.uuid_filename = file_uuid
     dataset.save
+
+    load_dataset filename, dataset
+
+    File.delete(filename)
     @dataset = dataset
     respond_to do |format|
       format.html { redirect_to dataset_path(@dataset) }
@@ -153,7 +174,7 @@ class DatasetsController < ApplicationController
       if new_vars.include?(var)  
         variable = Variable.new
         variable.name = var
-        variable.dataset = dataset
+        variable.dataset = @dataset
         variable.save
         puts "this was new " + variable.name
         @new_variables.push(variable)
@@ -162,11 +183,57 @@ class DatasetsController < ApplicationController
     @new_variables.each {|new_variable| puts new_variable.name}
   end
   
-  #new - not tested via ui yet
+  #Load the first CSV/Tabbed file for a survey.
+  #Create the variables from the header line
+  def load_dataset filename, dataset
+    datafile = File.open(filename, "r")
+    @new_variables =[]
+    header =  datafile.readline
+    #split by tab
+    if params[:dataset_format] == "Tab Separated"
+        headers = header.split("\t")
+    else
+        headers = header.split(",")
+    end
+    
+    headers.collect!{|item| item.strip}
+          
+    #need to find variables which are missing from the exisitng set and variables which are 'new'
+    # all_var = Variable.all(:conditions=> "dataset_id=" + dataset.id.to_s, :select => "name")
+    # 
+    #     all_variables = Array.new(all_var.size){|i| all_var[i].name}
+    
+    # missing_variables = all_variables - headers
+    # 
+    # added_variables = headers - all_variables
+    # 
+    # @missing_vars = []
+    # missing_variables.each do |missing_var|
+    #   v = Variable.find(:all,:conditions=> "dataset_id=" + dataset.id.to_s + " and name='" + missing_var+"'")
+    #   @missing_vars.push(v[0].id)
+    # end
+    
+    @new_variables = []
+ 
+    headers.each do |var|
+        variable = Variable.new
+        variable.name = var
+        variable.dataset = dataset
+        variable.updated_by = current_user.id
+        variable.save
+        @new_variables.push(variable.id)
+    end
+    
+    # @missing_vars.each {|var| puts var.to_s}
+    # @new_variables.each {|var| puts var.to_s}
+    #TODO - push the file over to the CSV server (or just copy it to a directory somewhere?!?)
+    
+  end
+  
   #Load a new CSV/Tabbed file for a survey.
   #Create the dataset and the variables from the header line
   def load_new_dataset filename
-    datafile = File.open("filename", "r")
+    datafile = File.open(filename, "r")
     @new_variables =[]
     header =  datafile.readline
     #split by tab
@@ -210,7 +277,73 @@ class DatasetsController < ApplicationController
     
   end
   
-  #new - not tested via ui yet
+  #Read the metadata from a methodbox internal formatted xml file for a particular survey
+  def read_methodbox_metadata
+    #don't think we need encoding here
+    parser = XML::Parser.io(params[:file][:metadata])
+    doc = parser.parse
+    
+    nodes = doc.find('//metadata/variable')
+
+    nodes.each do |node|
+    
+      namenode = node.find('child::name')
+      namecontent = namenode.first.content
+              print " NAME: " + namecontent
+
+      variable_name = namecontent
+
+      descnode = node.find('child::description')
+      desccontent = descnode.first.content
+              print " DESC: " + desccontent
+      variable_value = desccontent
+    
+      catnode = node.find('child::category')
+      catcontent = catnode.first.content
+              print " CAT: " + catcontent
+      variable_category = catcontent
+      
+      dernode = node.find('child::derivation')
+      dercontent = dernode.first
+    
+      dertype = dercontent.find('child::type')
+      if dertype.first != nil
+        dertypecontent = dertype.first.content
+        variable_dertype = dertypecontent
+                  print " TYPE: " + dertypecontent
+      else
+                  print "TYPE: NIL"
+      end
+    
+      dermethod = dercontent.find('child::method')
+      if dermethod.first != nil
+        dermethodcontent = dermethod.first.content
+        variable_dermethod = dermethodcontent
+
+        page = dermethod[0].[]("page")
+
+        document = dermethod[0].[]("document")
+
+                  print "METHOD: " + dermethodcontent
+        if page != nil
+                       print " page: " + page + " document: " + document
+        end
+      else
+                  print "METHOD: NIL"
+      end
+      
+      infonode = node.find('child::information')
+      infocontent = infonode.first.content
+      variable_info = infocontent
+      print "INFO: " + infocontent
+      v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + variable_name+"'")
+      if (v[0]!= nil)
+        v[0].update_attributes(:value=>variable_value, :dertype=>variable_dertype, :dermethod=>variable_dermethod, :info=>variable_info,:category=>variable_category, :page=>page, :document=>document)
+        
+        end
+      end
+  end
+  
   #Read the metadata from a ccsr type xml file for a particular survey
   def read_ccsr_metadata
     # puts params[:dataset][:metadata].class
@@ -233,17 +366,16 @@ class DatasetsController < ApplicationController
               value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
             end
             # puts value_map
-          end
+        end
         v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + name+"'")
         if (v[0]!= nil)
           v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id)
           
         # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
         end
-        end
-        
+      end  
   end
-  end
+end
   
 # send the new dataset file over to the csv server
   def send_to_server file_uuid, filename

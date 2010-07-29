@@ -237,7 +237,7 @@ class SurveysController < ApplicationController
 
   def create
     
-    if (params[:survey_type_name])!= "Enter full survey name here" && (params[:survey_type_shortname]) != "Enter short survey name here"
+    if (params[:survey_type_name])!= "" && (params[:survey_type_shortname]) != ""
       s_type = SurveyType.new
       s_type.name = params[:survey_type_name]
       s_type.shortname = params[:survey_type_shortname]
@@ -571,7 +571,7 @@ class SurveysController < ApplicationController
     if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
       error = "Searching requires a term to be entered in the survey search box."
     elsif !params[:entry_ids] or params[:entry_ids].size == 0
-      error = "Searching requires at least one survey selected."
+      error = "Searching requires at least one survey/dataset selected."
     else
       dataset = Dataset.find_all_by_id(params[:entry_ids])
       if dataset.length == params[:entry_ids].length
