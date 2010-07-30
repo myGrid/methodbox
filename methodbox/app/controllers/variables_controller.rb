@@ -21,7 +21,7 @@ class VariablesController < ApplicationController
     archived_variable.variable = @variable
     archived_variable.user_id = current_user.id
     archived_variable.save
-    @variable.delete
+    @variable.destroy
     
     render :update, :status=>:created do |page|
       page.replace_html "#{deleted_id}", :partial=>"datasets/archived_variable"
