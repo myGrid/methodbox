@@ -25,8 +25,8 @@ The following variables were in the previous uploaded dataset but were missing i
 <% @missing_vars.each do |missing_variable| -%>
 <div id="<%= Variable.find(missing_variable).id %>">
 <%= link_to Variable.find(missing_variable).name, variable_path(Variable.find(missing_variable)) %>
-<%= link_to_remote "Archive this variable", :url=> deprecate_variable_path(Variable.find(missing_variable)), :with=> "'reason=' + $(#{Variable.find(missing_variable).id.to_s + "_reason"}).value" %> <b>Reason:</b><br/>
-  <%= f.text_field :reason, :style => "width: 100%;",:id=> Variable.find(missing_variable).id.to_s + "_reason" -%><br/>
+<%= link_to_remote "Archive this variable", :url=> deprecate_variable_path(Variable.find(missing_variable)), :with=> "'reason=' + $('#{Variable.find(missing_variable).id.to_s + "_reason"}').value" %> <b>Reason:</b><br/>
+  <%= text_field :archive,:reason ,:id=> Variable.find(missing_variable).id.to_s + "_reason" -%><br/>
 </div>
 <% end -%>
 <% end -%>
