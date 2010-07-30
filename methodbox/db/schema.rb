@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100728150520) do
+ActiveRecord::Schema.define(:version => 20100730092943) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -171,6 +171,7 @@ ActiveRecord::Schema.define(:version => 20100728150520) do
     t.boolean  "has_data"
     t.integer  "updated_by"
     t.string   "uuid_filename"
+    t.string   "reason_for_update"
   end
 
   create_table "downloads", :force => true do |t|
