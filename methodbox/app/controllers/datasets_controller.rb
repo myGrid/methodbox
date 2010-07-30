@@ -2,7 +2,7 @@ class DatasetsController < ApplicationController
   
   require 'rest_client'
 
-  before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit]
+  before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :login_required, :except => [ :show ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
@@ -108,19 +108,6 @@ class DatasetsController < ApplicationController
   end
   
   def update
-    #not sure if this is really the way to check for nil param but
-    #everything else threw an error about NoMethodError (undefined method `[]' for nil:NilClass):
-    # if (params[:file][:data] rescue nil)
-    #       
-    #     else
-    #       update_dataset
-    #     end
-    #     if (params[:file][:metadata] rescue nil)
-    #       case params[:dataset_metadata_format]
-    #       when "CCSR"
-    #         read_ccsr_metadata
-    #       end
-    #     end
     
     if @dataset.update_attributes(params[:dataset])
       respond_to do |format|
