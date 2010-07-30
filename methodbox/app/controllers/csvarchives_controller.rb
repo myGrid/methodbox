@@ -319,6 +319,34 @@ class CsvarchivesController < ApplicationController
         root = xmldoc.root
         @jobid = root.child.to_s
         
+        # create metadata file and save it
+         metadata = String.new
+          variable_hash.each_key do |key|
+            metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
+            metadata << "\r\n" + Dataset.find(key).name + "\r\n---------------"
+            variable_hash[key].each do |var|
+              variable = Variable.find(var)
+              metadata << "\r\nName: " + variable.name
+              if variable.value != nil
+                metadata << "\r\nLabel: " + variable.value
+              end
+              if variable.category!= nil
+                metadata << "\r\nCategory: " + variable.category
+              end
+              if variable.dertype!= nil
+                metadata << "\r\nDerivation Type: " + variable.dertype
+              end
+              if  variable.dermethod!= nil
+                metadata << "\r\nDerivation Method: " + variable.dermethod.gsub("\n", "\r\n")
+              end
+              if variable.info!=nil
+                metadata << "\r\nValue Information: " + variable.info.gsub("\n", "\r\n")
+              end
+              metadata << "\r\n---------------"
+            end
+            metadata << "\r\n\r\n\r\n---------------\r\n---------------"
+          end
+
         params[:archive][:filename] = @jobid
         params[:archive][:complete] = false
         params[:archive][:last_used_at] = Time.now
@@ -331,6 +359,7 @@ class CsvarchivesController < ApplicationController
         params[:archive][:contributor_id] = current_user.id
       
         @archive = Csvarchive.new(params[:archive])
+        @archive.content_blob = ContentBlob.new(:data => metadata)
         @archive.save
         #we now have an id for the extract so save all of its links with other things
          if params[:scripts] != nil
@@ -689,6 +718,8 @@ class CsvarchivesController < ApplicationController
         uf = File.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip","w")
         uf.write(response.body)
         uf.close
+        
+        if @archive.content_blob == nil
         variable_hash = Hash.new
         @archive.variables.each do |var|
           puts "downloading " + var.to_s
@@ -699,33 +730,37 @@ class CsvarchivesController < ApplicationController
           variable_hash[variable.dataset_id].push(var)
           #        variable_hash[var] = get_variable(var)
           #        logger.info("Would have downloaded: " + var.to_s)
-        end
+        end  
         metadata = String.new
-        variable_hash.each_key do |key|
-          metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
-          metadata << "\r\n" + Dataset.find(key).name + "\r\n---------------"
-          variable_hash[key].each do |var|
-            metadata << "\r\nName: " + var.name
-            if var.value != nil
-              metadata << "\r\nLabel: " + var.value
+          variable_hash.each_key do |key|
+            metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
+            metadata << "\r\n" + Dataset.find(key).name + "\r\n---------------"
+            variable_hash[key].each do |var|
+              metadata << "\r\nName: " + var.name
+              if var.value != nil
+                metadata << "\r\nLabel: " + var.value
+              end
+              if var.category!= nil
+                metadata << "\r\nCategory: " + var.category
+              end
+              if var.dertype!= nil
+                metadata << "\r\nDerivation Type: " + var.dertype
+              end
+              if  var.dermethod!= nil
+                metadata << "\r\nDerivation Method: " + var.dermethod.gsub("\n", "\r\n")
+              end
+              if var.info!=nil
+                metadata << "\r\nValue Information: " + var.info.gsub("\n", "\r\n")
+              end
+              metadata << "\r\n---------------"
             end
-            if var.category!= nil
-              metadata << "\r\nCategory: " + var.category
-            end
-            if var.dertype!= nil
-              metadata << "\r\nDerivation Type: " + var.dertype
-            end
-            if  var.dermethod!= nil
-              metadata << "\r\nDerivation Method: " + var.dermethod.gsub("\n", "\r\n")
-            end
-            if var.info!=nil
-              metadata << "\r\nValue Information: " + var.info.gsub("\n", "\r\n")
-            end
-            metadata << "\r\n---------------"
+            metadata << "\r\n\r\n\r\n---------------\r\n---------------"
           end
-          metadata << "\r\n\r\n\r\n---------------\r\n---------------"
+          content_blob = ContentBlob.new(:data => metadata)
+          @archive.update_attributes(:content_blob=>content_blob)
         end
-        Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts metadata}}
+        
+        Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}}
         begin
         send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + "_" + params[:type] + ".zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
           
