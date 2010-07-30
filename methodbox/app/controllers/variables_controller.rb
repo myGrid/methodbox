@@ -7,6 +7,7 @@ class VariablesController < ApplicationController
     find_variable
     deleted_id = @variable.id
     archived_variable = ArchivedVariable.new
+    archived_variable.reason = params[:reason]
     archived_variable.name = @variable.name
     archived_variable.value = @variable.value
     archived_variable.info = @variable.info
