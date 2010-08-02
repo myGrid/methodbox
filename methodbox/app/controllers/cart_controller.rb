@@ -4,10 +4,19 @@ class CartController < ApplicationController
   #  before_filter :find_archives, :only => [ :index ]
 
   def show
+    missing_vars=[]
     @sorted_variables = Array.new
     current_user.cart_items.each do |item|
-      var = Variable.find(item.variable_id)
-      @sorted_variables.push(var)
+      begin
+        var = Variable.find(item.variable_id)
+        @sorted_variables.push(var)
+      rescue ActiveRecord::RecordNotFound
+        missing_vars.push(item.variable_id)
+        current_user.cart_items.delete(item)
+      end
+    end
+    if !missing_vars.empty?
+      flash[:notice] = "Your cart contained some variables which no longer/have been archived. They have been removed from your cart."
     end
   end
 
