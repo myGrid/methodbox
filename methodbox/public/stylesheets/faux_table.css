@@ -46,11 +46,23 @@ ul.faux_table_even {
     margin-left: 0px;
     margin: 0;
 }
+ul.faux_table_archived {
+	float: left;
+    width: 885px;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
+    background-color: red;
+}
 
 * html ul.faux_table_odd {
     display: inline;
 }
 * html ul.faux_table_even {
+    display: inline;
+}
+* html ul.faux_table_archived {
     display: inline;
 }
 
@@ -60,6 +72,11 @@ ul.faux_table_odd li {
 	padding: 0;
 }
 ul.faux_table_even li {
+    width:880px;
+    float: left;
+	padding: 0;
+}
+ul.faux_table_archived li {
     width:880px;
     float: left;
 	padding: 0;
@@ -74,6 +91,10 @@ li#faux_table_header {
 * html ul.faux_table_even li {
     display: inline;
 }
+* html ul.faux_table_archived li {
+    display: inline;
+}
+
 li div {
     float: left;
 }
