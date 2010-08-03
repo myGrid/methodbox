@@ -2,7 +2,6 @@ require 'acts_as_solr'
 
 class Variable < ActiveRecord::Base
 
-  has_many :archived_variables
   belongs_to :dataset
   has_many :variable_linkages
   has_many :variable_lists
@@ -13,7 +12,8 @@ class Variable < ActiveRecord::Base
   has_many :user_searches, :through => :search_variable_lists
   has_many :cart_items, :dependent => :destroy
 
-  acts_as_solr(:fields=>[:name,:value,:dataset_id]) if SOLR_ENABLED
+  acts_as_solr(:fields=>[:name,:value,:dataset_id], :if => proc{|record| !record.is_archived?}) if SOLR_ENABLED
+  
   acts_as_taggable_on :title
   acts_as_annotatable
   
@@ -27,4 +27,5 @@ class Variable < ActiveRecord::Base
     hyphened = hyphened.gsub(/[a-z][A-Z][A-Z]/){ |part| part.at(0) + '-' + part.at(1) + part.at(2) }
     return hyphened
   end
+  
 end

@@ -10,7 +10,7 @@ class Csvarchive < ActiveRecord::Base
   # has_many :sources,  :through => :extracts_as_target
   # has_many :targets,    :through => :extracts_as_source
 
-  has_many :variable_lists, :dependent => :destroy
+  has_many :variable_lists
   
   has_many :variables, :through => :variable_lists
 
@@ -25,7 +25,7 @@ class Csvarchive < ActiveRecord::Base
   belongs_to :content_blob,
     :dependent => :destroy
 
-  belongs_to :person, :dependent => :destroy
+  belongs_to :person
 
   acts_as_solr(:fields=>[:title,:description]) if SOLR_ENABLED
   
