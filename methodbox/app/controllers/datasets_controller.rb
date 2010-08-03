@@ -325,7 +325,7 @@ class DatasetsController < ApplicationController
       print "INFO: " + infocontent
       v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>variable_name})
       if (v[0]!= nil)
-        v[0].update_attributes(:value=>variable_value, :dertype=>variable_dertype, :dermethod=>variable_dermethod, :info=>variable_info,:category=>variable_category, :page=>page, :document=>document)
+        v[0].update_attributes(:value=>variable_value, :dertype=>variable_dertype, :dermethod=>variable_dermethod, :info=>variable_info,:category=>variable_category, :page=>page, :document=>document, :update_reason=>params[:update][:reason])
         
         end
       end
@@ -356,7 +356,7 @@ class DatasetsController < ApplicationController
         end
         v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
         if (v[0]!= nil)
-          v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id)
+          v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
           
         # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
         end
