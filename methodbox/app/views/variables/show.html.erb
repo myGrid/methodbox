@@ -130,6 +130,7 @@
         <%= link_to(Dataset.find(@variable.dataset_id).survey.survey_type.shortname + " " + Dataset.find(@variable.dataset_id).survey.year, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
       </p>
+<% unless @variable.updated_by.blank? %>
 	<p><b>Metadata last updated by:
 		<div class="box_standout">
           <%= link_to User.find(@variable.updated_by).person.name, person_path(User.find(@variable.archived_by).person) -%>
@@ -146,6 +147,7 @@
         </p>
 <% end %>
 </p>
+<% end -%>
       <!-- <p> -->
         <%# if !@variable.variable_links.empty? -%>
           <!-- <b>Grouped by:</b> -->
