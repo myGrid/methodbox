@@ -146,7 +146,7 @@ class DatasetsController < ApplicationController
     end
     #Look at existing vars, find the differences - could be quite slow I guess?
     #need to find variables which are missing from the exisitng set and variables which are 'new'
-    all_var = Variable.all(:conditions=> "dataset_id=" + @dataset.id.to_s, :select => "name")
+    all_var = Variable.all(:conditions=> {:dataset_id => @dataset.id, :is_archived=>false}, :select => "name")
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
     
@@ -233,7 +233,7 @@ class DatasetsController < ApplicationController
     headers.collect!{|item| item.strip}
           
     #need to find variables which are missing from the exisitng set and variables which are 'new'
-    all_var = Variable.all(:conditions=> "dataset_id=" + @dataset.id.to_s, :select => "name")
+    all_var = Variable.all(:conditions=> {:dataset_id => @dataset.id, :is_archived=>false}, :select => "name")
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
     
@@ -323,7 +323,7 @@ class DatasetsController < ApplicationController
       infocontent = infonode.first.content
       variable_info = infocontent
       print "INFO: " + infocontent
-      v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + variable_name+"'")
+      v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>variable_name})
       if (v[0]!= nil)
         v[0].update_attributes(:value=>variable_value, :dertype=>variable_dertype, :dermethod=>variable_dermethod, :info=>variable_info,:category=>variable_category, :page=>page, :document=>document)
         
@@ -354,7 +354,7 @@ class DatasetsController < ApplicationController
             end
             # puts value_map
         end
-        v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + name+"'")
+        v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
         if (v[0]!= nil)
           v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id)
           
