@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100803095948) do
+ActiveRecord::Schema.define(:version => 20100803144103) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -516,6 +516,8 @@ ActiveRecord::Schema.define(:version => 20100803095948) do
     t.boolean  "is_archived",     :default => false
     t.string   "archived_reason"
     t.integer  "archived_by"
+    t.datetime "archived_on"
+    t.string   "update_reason"
   end
 
   create_table "watched_variables", :force => true do |t|
