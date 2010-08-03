@@ -17,8 +17,18 @@
 <% end -%>
 </ul>
 <% if @variable.is_archived? %>
-<h1 style="background-color: red;">THIS VARIABLE HAS BEEN ARCHIVED
-	</p>
+<h1 style="background-color: red;">THIS VARIABLE HAS BEEN ARCHIVED</h1>
+	<p><b>Archived by:
+		<div class="box_standout">
+          <%= link_to User.find(@variable.archived_by).person.name -%> on <%= h @variable.archived_on.strftime('%d/%m/%Y @ %H:%M:%S') -%>
+        </div>
+</p>
+<br/>
+		<p><b>Reason:
+			<div class="box_standout">
+				<%= @variable.archived_reason -%>
+				</div>
+		</p>
 	<% end -%>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
 <div class="show_basic">
@@ -114,6 +124,16 @@
         <%= link_to(Dataset.find(@variable.dataset_id).survey.survey_type.shortname + " " + Dataset.find(@variable.dataset_id).survey.year, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
       </p>
+	<p><b>Metadata last updated by:
+		<div class="box_standout">
+          <%= link_to User.find(@variable.updated_by).person.name -%>
+        </div>
+</p>
+	<p><b>Reason:
+		<div class="box_standout">
+          <%= @variable.update_reason -%>
+        </div>
+</p>
       <!-- <p> -->
         <%# if !@variable.variable_links.empty? -%>
           <!-- <b>Grouped by:</b> -->

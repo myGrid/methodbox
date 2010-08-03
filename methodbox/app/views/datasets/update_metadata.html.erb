@@ -22,6 +22,10 @@
 				<%= select_tag 'dataset_metadata_format' ,options_for_select(dataset_metadata_options) -%>
 				</p>
 				<br/>
+				<p>
+		          <b>Reason for update:&nbsp;</b>
+		          <%= text_field :update, :reason  -%>
+		        </p>
 
     <p style="text-align: center;">
       <%= submit_tag "Upload metadata file", :id => "dataset_submit_btn", :onclick => "javascript: validateDatasetFields(false); return(false);"  -%> or <%= link_to "Cancel", dataset_path(@dataset) -%>
