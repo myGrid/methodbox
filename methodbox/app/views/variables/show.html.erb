@@ -20,14 +20,20 @@
 <h1 style="background-color: red;">THIS VARIABLE HAS BEEN ARCHIVED</h1>
 	<p><b>Archived by:
 		<div class="box_standout">
-          <%= link_to User.find(@variable.archived_by).person.name -%> on <%= h @variable.archived_on.strftime('%d/%m/%Y @ %H:%M:%S') -%>
+          <%= link_to User.find(@variable.archived_by).person.name, person_path(User.find(@variable.archived_by).person) -%> on <%= h @variable.archived_on.strftime('%d/%m/%Y @ %H:%M:%S') -%>
         </div>
 </p>
 <br/>
 		<p><b>Reason:
+					        <% unless @variable.archived_reason.blank? -%>
 			<div class="box_standout">
 				<%= @variable.archived_reason -%>
 				</div>
+				<% else %>
+				<p class="none_text">
+		          No reason given
+		        </p>
+				<% end %>
 		</p>
 	<% end -%>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
@@ -126,13 +132,19 @@
       </p>
 	<p><b>Metadata last updated by:
 		<div class="box_standout">
-          <%= link_to User.find(@variable.updated_by).person.name -%>
+          <%= link_to User.find(@variable.updated_by).person.name, person_path(User.find(@variable.archived_by).person) -%>
         </div>
 </p>
 	<p><b>Reason:
+		        <% unless @variable.update_reason.blank? -%>
 		<div class="box_standout">
           <%= @variable.update_reason -%>
         </div>
+      <% else -%>
+        <p class="none_text">
+          No reason given
+        </p>
+<% end %>
 </p>
       <!-- <p> -->
         <%# if !@variable.variable_links.empty? -%>
