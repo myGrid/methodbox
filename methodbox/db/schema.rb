@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100730092943) do
+ActiveRecord::Schema.define(:version => 20100803095948) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -73,24 +73,6 @@ ActiveRecord::Schema.define(:version => 20100730092943) do
   add_index "annotations", ["annotatable_type", "annotatable_id"], :name => "index_annotations_on_annotatable_type_and_annotatable_id"
   add_index "annotations", ["attribute_id"], :name => "index_annotations_on_attribute_id"
   add_index "annotations", ["source_type", "source_id"], :name => "index_annotations_on_source_type_and_source_id"
-
-  create_table "archived_variables", :force => true do |t|
-    t.integer  "variable_id"
-    t.string   "reason"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "name"
-    t.string   "value"
-    t.integer  "dataset_id"
-    t.string   "label"
-    t.string   "category"
-    t.string   "dertype"
-    t.text     "dermethod"
-    t.text     "info"
-    t.string   "document"
-    t.string   "page"
-    t.integer  "user_id"
-  end
 
   create_table "assets", :force => true do |t|
     t.string   "contributor_type"
@@ -180,11 +162,6 @@ ActiveRecord::Schema.define(:version => 20100730092943) do
     t.integer  "resource_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "extract_to_extract_links", :force => true do |t|
-    t.integer "source_id", :null => false
-    t.integer "target_id", :null => false
   end
 
   create_table "favourite_group_memberships", :force => true do |t|
@@ -370,11 +347,6 @@ ActiveRecord::Schema.define(:version => 20100730092943) do
     t.datetime "updated_at"
   end
 
-  create_table "script_to_script_links", :force => true do |t|
-    t.integer "source_id", :null => false
-    t.integer "target_id", :null => false
-  end
-
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
@@ -412,20 +384,6 @@ ActiveRecord::Schema.define(:version => 20100730092943) do
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
   add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
-
-  create_table "survey_lists", :force => true do |t|
-    t.integer  "csvarchive_id"
-    t.integer  "survey_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "survey_to_script_lists", :force => true do |t|
-    t.integer  "script_id"
-    t.integer  "survey_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "survey_types", :force => true do |t|
     t.string   "description"
@@ -555,6 +513,9 @@ ActiveRecord::Schema.define(:version => 20100730092943) do
     t.string   "page"
     t.integer  "current_version"
     t.integer  "updated_by"
+    t.boolean  "is_archived",     :default => false
+    t.string   "archived_reason"
+    t.integer  "archived_by"
   end
 
   create_table "watched_variables", :force => true do |t|
