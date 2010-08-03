@@ -6,22 +6,26 @@ class VariablesController < ApplicationController
   def deprecate
     find_variable
     deleted_id = @variable.id
-    archived_variable = ArchivedVariable.new
-    archived_variable.reason = params[:reason]
-    archived_variable.name = @variable.name
-    archived_variable.value = @variable.value
-    archived_variable.info = @variable.info
-    archived_variable.dataset_id = @variable.dataset_id
-    archived_variable.label = @variable.label
-    archived_variable.category = @variable.category
-    archived_variable.dermethod = @variable.dermethod
-    archived_variable.dertype = @variable.dertype
-    archived_variable.document = @variable.document
-    archived_variable.page = @variable.page
-    archived_variable.variable = @variable
-    archived_variable.user_id = current_user.id
-    archived_variable.save
-    @variable.destroy
+    # archived_variable = ArchivedVariable.new
+    # archived_variable.reason = params[:reason]
+    # archived_variable.name = @variable.name
+    # archived_variable.value = @variable.value
+    # archived_variable.info = @variable.info
+    # archived_variable.dataset_id = @variable.dataset_id
+    # archived_variable.label = @variable.label
+    # archived_variable.category = @variable.category
+    # archived_variable.dermethod = @variable.dermethod
+    # archived_variable.dertype = @variable.dertype
+    # archived_variable.document = @variable.document
+    # archived_variable.page = @variable.page
+    # archived_variable.variable = @variable
+    # archived_variable.user_id = current_user.id
+    # archived_variable.save
+    @variable.solr_destroy
+    @variable.archived_by = current_user.id
+    @variable.archived_reason = params[:reason]
+    @variable.is_archived = true
+    @variable.save
     
     render :update, :status=>:created do |page|
       page.replace_html "#{deleted_id}", :partial=>"datasets/archived_variable"
@@ -211,11 +215,11 @@ class VariablesController < ApplicationController
 
   def show
     find_variable
-    if @variable.current_version > 1
-      old_ver = @variable.current_version - 1
+    # if @variable.current_version > 1
+      # old_ver = @variable.current_version - 1
       #there could be the chance that old_var doesn't exist eg. if the update defined it first time so need to check that in the view
-      @old_var = Variable.find(:all,:conditions=> "dataset_id=" + @variable.dataset_id.to_s + " and name='" + @variable.name+"' and current_version=" + old_ver.to_s)
-    end
+      # @old_var = Variable.find(:all,:conditions=> "dataset_id=" + @variable.dataset_id.to_s + " and name='" + @variable.name+"' and current_version=" + old_ver.to_s)
+    # end
     #    @tag_array = Array.new
     #    @variable.annotations_with_attribute("tag").each do |annotation|
     #
