@@ -6,7 +6,13 @@
 <%= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
 <%= hidden_field_tag 'watch_variable', 'watch_variable' %>
 <div class="show_basic" style="padding-right: 2em;">
-	
+	<% if !@archived_vars.empty? %>
+	The following variables have been archived and have been removed from your cart:
+	<% @archived_vars.each do |item| %>
+		<%= link_to item.variable.name, variable_path(item.variable) -%>
+		<% end -%>
+		<br/>
+		<% end -%>
   <% form_remote_tag :url => { :action => "remove_from_cart"} do -%>
 	<% if !@sorted_variables.empty? -%>
     <%= hidden_field_tag 'submit', 'remove_variables' %>
