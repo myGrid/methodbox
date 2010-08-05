@@ -278,6 +278,14 @@ class CsvarchivesController < ApplicationController
         variable_hash[variable.dataset_id].push(item.variable_id)
         all_variables_array.push(Variable.find(item.variable_id))
       end
+      
+      selected_surveys = Array.new
+      variable_hash.each_key do |dataset_id|
+        survey_id = Dataset.find(dataset_id).survey.id
+        if !selected_surveys.include?(survey_id)
+          selected_surveys.push(survey_id)
+        end
+      end
 
       #create XML request to be sent with http post request
       doc = XML::Document.new()
@@ -372,15 +380,14 @@ class CsvarchivesController < ApplicationController
             link.save
             end
           end
-          if params[:surveys] != nil
-              params[:surveys].each do |survey_id|
-                 link = Link.new
-                 link.subject = @archive
-                 link.object = Survey.find(survey_id)
-                 link.predicate = "link"
-                 link.user = current_user
-                 link.save
-              end
+          #automatically link from the selected datasets/surveys
+          selected_surveys.each do |survey_id|
+             link = Link.new
+             link.subject = @archive
+             link.object = Survey.find(survey_id)
+             link.predicate = "link"
+             link.user = current_user
+             link.save
           end
           if params[:data_extracts] != nil
               params[:data_extracts].each do |extract_id|
