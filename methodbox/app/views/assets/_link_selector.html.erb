@@ -1,58 +1,92 @@
-<%= stylesheet_link_tag 'full_scroll_table' -%>
+<%= stylesheet_link_tag 'new_scroll_table' -%>
 <% unless collection.empty? -%>
 <div id="<%= resource_id -%>_hidden">
 	</div>
 <div  style="float:left;margin-left:60px;">
-<div id="tableContainer" class="tableContainer">
-<table id="<%= resource_id + "_source_table" -%>" border="0" cellpadding="0" cellspacing="0" width="100px" class="scrollTable">
-<thead class="fixedHeader">
-
-<!-- <div style="height:50px;"> -->
-<!-- <table id="<%= resource_type + "_source_table" -%>"> -->
-	<tr><th><%= resource_type -%></th></tr>
-	</thead>
-	<tbody class="scrollContent" id="<%= resource_id + "_source_table_body"-%>">
-  	<% collection.each do |item| -%>
-		  <% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-		<tr id="<%= resource_id + "_" + item.id.to_s + "_source_row" -%>" <%= hide_style(true)  unless !selected.include?(item.id) -%>>
-			<td id="<%= resource_id + "_" + item.id.to_s + "_source_cell"
-			 -%>" onclick="javascript:checkItem('<%= item.id.to_s -%>', 'source', '<%= resource_id -%>')">
-				<%= item.title -%>
-			</td>
-			</tr>
-			<%= javascript_tag "addInstanceOfObject('#{resource_id}','#{item.id.to_s}', '#{escape_javascript(item.title)}')" -%>
+	
+	
+	<!-- <div id="fullScreenTable" class="fullScreenTable" style="position: relative; border-bottom:1px solid #999999;"> -->
+			<div id="fullScreenTable" class="fullScreenTable">
+		<div class="fht_parent">
+			<div class="fht_fixed_header_table_parent">
+				<!--[if IE]><div class='fht_top_right_header'></div><![endif]--><!--[if IE]><div class='fht_top_left_header'></div><![endif]-->
+				<div class="fht_fixed_header_table_border">
+						<table class="fht_fixed_header_table">
+							<thead>
+			      				<tr style="">
+			      					<th class="th0">
+										<div class="tableHeader">
+											<p class="tableHeader"><%= resource_type -%></p>
+										</div>
+									</th>
+			      				</tr>
+			    			</thead>
+						</table>
+					</div>
+			</div>
 			
-		<% end -%>
-		<% end -%>
-		</tbody>
-</table>
-</div>
-</div>
+			<div class="fht_table_body">
+				<table class="fht_orig_table" id="<%= resource_id + "_source_table" -%>">
+			    	<thead>
+			      		<tr style="display: none;">
+			      			<th class="th0">
+								<div class="tableHeader">
+									<p class="tableHeader"><%= resource_type -%></p>
+								</div>
+							</th>
+			      		</tr>
+			    	</thead>
+			    	<tbody id="<%= resource_id + "_source_table_body"-%>">
+				  		<% collection.each do |item| -%>
+							<% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
+							<tr id="<%= resource_id + "_" + item.id.to_s + "_source_row" -%>" <%= hide_style(true)  unless !selected.include?(item.id) -%>>
+								<td id="<%= resource_id + "_" + item.id.to_s + "_source_cell" -%>" onclick="javascript:checkItem('<%= item.id.to_s -%>', 'source', '<%= resource_id -%>')"class="firstCell">
+									<div class="tableData" style="width: auto;">
+										<p class="tableData"><%= item.title -%></p>
+									</div>
+								</td>
+							</tr>
+							<%= javascript_tag "addInstanceOfObject('#{resource_id}','#{item.id.to_s}', '#{escape_javascript(item.title)}')" -%>
+							<% end -%>
+						<% end -%>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>					
+					
 <div  style="float:right;margin-right:60px;">
-<div id="tableContainer" class="tableContainer">
-<table id="<%= resource_id + "_target_table" -%>" border="0" cellpadding="0" cellspacing="0" width="100px" class="scrollTable">
-<thead class="fixedHeader">
-
-	<tr><th>Link with these <%= resource_type -%></th></tr>
-	</thead>
-	<tbody class="scrollContent" id="<%= resource_id + "_target_table_body"-%>">
-  	<% collection.each do |item| -%>
-		  <% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-		<tr id="<%= resource_id + "_" + item.id.to_s + "_target_row" -%>" <%= hide_style(true) unless selected.include?(item.id) -%>>
-			<td id="<%= resource_id + "_" + item.id.to_s + "_target_cell"
-			 -%>" onclick="javascript:checkItem('<%= item.id.to_s -%>', 'target', '<%= resource_id -%>')">
-				<%= item.title -%>
-			</td>
-			</tr>
-			<% if selected.include?(item.id) -%>
-				<%= javascript_tag "alreadySelected('#{resource_id}','#{item.id.to_s}', '#{escape_javascript(item.title)}')" -%>
-			<% end -%>
-		<% end -%>
-		<% end -%>
-		</tbody>
-</table>
-</div>
-</div>
+	
+	<div id="fullScreenTable" class="fullScreenTable">
+	<div class="fht_parent"><div class="fht_fixed_header_table_parent"><!--[if IE]><div class='fht_top_right_header'></div><![endif]--><!--[if IE]><div class='fht_top_left_header'></div><![endif]--><div class="fht_fixed_header_table_border"><table class="fht_fixed_header_table"><thead>
+			      <tr style="">
+			      <th class="borderRight th0"><div class="tableHeader"><p class="tableHeader">Link with these <%= resource_type -%></p></div></th>
+			      </tr>
+			    </thead></table></div></div>
+			
+				<div class="fht_table_body"><table class="fht_orig_table" id="<%= resource_id + "_target_table" -%>">
+			    <thead>
+			      <tr style="display: none;">
+			      <th class="th0"><div class="tableHeader"><p class="tableHeader">Link with these <%= resource_type -%></p></div></th>
+			      </tr>
+			    </thead>
+			    <tbody id="<%= resource_id + "_target_table_body"-%>">
+				  	<% collection.each do |item| -%>
+						  <% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
+				<tr id="<%= resource_id + "_" + item.id.to_s + "_target_row" -%>" <%= hide_style(true)  unless selected.include?(item.id) -%>>
+					<td id="<%= resource_id + "_" + item.id.to_s + "_target_cell" -%>" onclick="javascript:checkItem('<%= item.id.to_s -%>', 'target', '<%= resource_id -%>')"class="firstCell"><div class="tableData" style="width: auto;"><p class="tableData"><%= item.title -%></p></div></td></tr>
+					<% if selected.include?(item.id) -%>
+						<%= javascript_tag "alreadySelected('#{resource_id}','#{item.id.to_s}', '#{escape_javascript(item.title)}')" -%>
+					<% end -%>
+					<% end -%>
+					<% end -%>
+					</tbody>
+			</table>
+			</div>
+			</div>
+			</div>
+</div>			
 
 <div>	<ul style="margin-top:30px;margin-bottom:30px;">
 	<li>
