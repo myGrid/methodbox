@@ -169,7 +169,7 @@ function changeColour (resource_type, id, source_or_target, change) {
 	if (change){
 		$(resource_type +"_"+id + source_or_target).setStyle({backgroundColor: '#900'});
 	} else {
-		$(resource_type +"_"+id + source_or_target).setStyle({backgroundColor: '#FFFFFF'});
+		$(resource_type +"_"+id + source_or_target).setStyle({backgroundColor: '#DFE9F4'});
 	}
 }
 
