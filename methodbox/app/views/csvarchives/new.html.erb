@@ -26,22 +26,12 @@
           <% archive_description_value = (params[:description].blank?) ? nil : params[:description] -%>
           <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
         </p>
-
+		<h2>Data Extract will be automatically linked with the surveys that its variables are from</h2>
 		<div>
 			<p>          
 				<b>Link with Data Extracts:</b>
 			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
 		      :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
-		</p>
-		</div>
-			<br/>
-			<div style="clear:both;">
-				</div>
-		<div>
-			<p>
-				<b>Link with Surveys:</b>
-			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
-		      :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
 		</p>
 		</div>
 		<br/>
