@@ -341,11 +341,16 @@ class DatasetsController < ApplicationController
 
       nodes = doc.find('//ccsrmetadata/variables')
       # doc.close
-
+      if nodes.size == 1
       nodes[0].each_element do |node|
         if (/^id_/.match(node.name)) 
           name = node["variable_name"]
           label = node["variable_label"]
+          v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
+          if (v[0]!= nil)
+            v[0].value_domains.each do |valdom|
+              valdom.delete
+            end
           # puts name + " " + label
           value_map = String.new
           node.each_element do |child_node| 
@@ -354,14 +359,41 @@ class DatasetsController < ApplicationController
             end
             # puts value_map
         end
-        v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
-        if (v[0]!= nil)
           v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
           
         # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
         end
       end  
   end
+else
+      nodes.each do |node|
+          name = node["variable_name"]
+          label = node["variable_label"]
+          v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
+          if (v[0]!= nil)
+            v[0].value_domains.each do |valdom|
+              valdom.delete
+            end
+          # puts name + " " + label
+          value_map = String.new
+          node.each_element do |child_node| 
+            if (!child_node.empty?) 
+              valDom = ValueDomain.new
+              valDom.variable = v[0]
+              valDom.label = child_node["value_name"]
+              valDom.value = child_node["value"]
+              value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
+              valDom.save
+            end
+            # puts value_map
+        end
+
+          v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
+          
+        # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
+        end 
+  end
+end
 end
   
 # send the new dataset file over to the csv server

@@ -790,7 +790,18 @@ class CsvarchivesController < ApplicationController
             do_file << "***Variables\r\n\r\n"
             variable_hash[key].each do |var|
                 do_file << "*" + var.name + "\r\n"
-                do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n\r\n"
+                do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n"
+                if !var.value_domains.empty?
+                  val_doms = String.new
+                  var.value_domains.each do |value_domain|
+                   
+                  val_doms << value_domain.value + " \"" + value_domain.label + "\" "
+                  end
+                  do_file << "label define " + var.name + "_value_domain " + val_doms +"\r\n"
+                  do_file << "label value " + var.name + " " + var.name + "_value_domain\r\n\r\n"
+                else 
+                  do_file << "\r\n"
+                end
             end
             #finally stick the do file in the hash
             puts do_file
