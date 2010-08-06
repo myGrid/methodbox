@@ -300,7 +300,7 @@ class CsvarchivesController < ApplicationController
       variable_hash.each_key do |key|
 
         root << dataset = XML::Node.new('Dataset')
-        dataset['datasetname'] = Dataset.find(key).filename
+        dataset['datasetname'] = Dataset.find(key).name
         dataset['name']= Dataset.find(key).uuid_filename
         dataset['year']= Survey.find(Dataset.find(key).survey_id).year
         dataset['survey']= Survey.find(Dataset.find(key).survey_id).survey_type.shortname
@@ -715,6 +715,13 @@ class CsvarchivesController < ApplicationController
 
     http = Net::HTTP.new(CSV_SERVER_LOCATION,CSV_SERVER_PORT.to_i)
     http.read_timeout=6000
+    stata_download = false
+    #a stata download is the csv plus the do file it needs to load in the metadata
+    if params[:type] == "Stata"
+      stata_download = true
+      params[:type] = "CSV"
+    end
+    
     response = http.get(CSV_SERVER_PATH + '/download/' + @archive.filename + "?type=" + params[:type])
     if response.response.class == Net::HTTPOK
       if response.content_type == 'application/zip'
@@ -726,7 +733,6 @@ class CsvarchivesController < ApplicationController
         uf.write(response.body)
         uf.close
         
-        if @archive.content_blob == nil
         variable_hash = Hash.new
         @archive.variables.each do |var|
           puts "downloading " + var.to_s
@@ -737,7 +743,9 @@ class CsvarchivesController < ApplicationController
           variable_hash[variable.dataset_id].push(var)
           #        variable_hash[var] = get_variable(var)
           #        logger.info("Would have downloaded: " + var.to_s)
-        end  
+        end
+        if @archive.content_blob == nil
+ 
         metadata = String.new
           variable_hash.each_key do |key|
             metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
@@ -765,6 +773,32 @@ class CsvarchivesController < ApplicationController
           end
           content_blob = ContentBlob.new(:data => metadata)
           @archive.update_attributes(:content_blob=>content_blob)
+        end
+        
+        if stata_download
+          #create the do file with the metadata
+          do_file_hash = Hash.new
+          variable_hash.each_key do |key|
+            d = Dataset.find(key)
+            do_file = String.new
+            do_file << "***Extract title:  " + @archive.title + "\r\n"
+            do_file << "*** " + d.name + " (dataset)\r\n"
+            do_file << "*** " + d.survey.title + " (survey)\r\n"
+            do_file << "*** Created on: " + @archive.created_at.to_s(:rfc822) + "\r\n"
+            do_file << "version 11.0\r\nset more off\r\n"
+            do_file << "insheet using \""  + d.filename.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
+            do_file << "***Variables\r\n\r\n"
+            variable_hash[key].each do |var|
+                do_file << "*" + var.name + "\r\n"
+                do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n\r\n"
+            end
+            #finally stick the do file in the hash
+            puts do_file
+            do_file_hash[key] = do_file
+          end
+          do_file_hash.each_key do |key|
+            Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream(Dataset.find(key).name + "_do_file.txt") { |f| f.puts do_file_hash[key]}}
+          end
         end
         
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}}
