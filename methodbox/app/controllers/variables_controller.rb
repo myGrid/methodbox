@@ -21,6 +21,7 @@ class VariablesController < ApplicationController
     # archived_variable.variable = @variable
     # archived_variable.user_id = current_user.id
     # archived_variable.save
+    @variable.replaced_by = params[:replaces].to_i
     @variable.solr_destroy
     @variable.archived_by = current_user.id
     @variable.archived_reason = params[:reason]
