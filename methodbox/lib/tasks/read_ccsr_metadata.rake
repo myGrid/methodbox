@@ -11,24 +11,56 @@ require 'xml'
 namespace :obesity do
   desc "load metadata from xml"
   task :read_ccsr_metadata  => :environment do
-    parser = XML::Parser.file('/Users/Ian/scratch/ccsr_metadata_xml/lf1997.xml', :encoding => XML::Encoding::ISO_8859_1)
+    parser = XML::Parser.file('/Users/Ian/scratch/ccsr_metadata/hse2007.xml', :encoding => XML::Encoding::ISO_8859_1)
+    dataset_id=35
     doc = parser.parse
 
       nodes = doc.find('//ccsrmetadata/variables')
       # doc.close
-
+      if nodes.size == 1
       nodes[0].each_element do |node|
         if (/^id_/.match(node.name)) 
           name = node["variable_name"]
           label = node["variable_label"]
-          puts name + " " + label
-          node.each_element do |child_node| 
-            if (!child_node.empty?) 
-              puts  "value " + child_node["value"] + " label " + child_node["value_name"]
+           puts name + " " + label
+          v = Variable.find(:all,:conditions=> {:dataset_id=> dataset_id, :name=>name})
+          if !v[0].empty?
+            puts name + " " + label
+            node.each_element do |child_node| 
+              if (!child_node.empty?) 
+                valDom = ValueDomain.new
+                valDom.variable = v[0]
+                valDom.label = child_node["value_name"]
+                valDom.value = child_node["value"]
+                valDom.save
+                puts  "value " + child_node["value"] + " label " + child_node["value_name"]
+              end
             end
           end
-          end
         end
+        end
+      else
+        nodes.each do |node|
+            name = node["variable_name"]
+            label = node["variable_label"]
+             puts name + " " + label
+            v = Variable.find(:all,:conditions=> {:dataset_id=> dataset_id, :name=>name})
+            if !v.empty?
+              puts name + " " + label
+              node.each_element do |child_node| 
+                if (!child_node.empty?) 
+                  valDom = ValueDomain.new
+                  valDom.variable = v[0]
+                  valDom.label = child_node["value_name"]
+                  valDom.value = child_node["value"]
+                  valDom.save
+                  puts  "value " + child_node["value"] + " label " + child_node["value_name"]
+                end
+              end
+            
+          end
+          end
+      end
         
         # variable = Variable.new
         #          variable.name = name
