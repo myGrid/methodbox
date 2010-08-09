@@ -354,6 +354,37 @@ class CsvarchivesController < ApplicationController
             end
             metadata << "\r\n\r\n\r\n---------------\r\n---------------"
           end
+          
+          do_file_hash = Hash.new
+          variable_hash.each_key do |key|
+            d = Dataset.find(key)
+            do_file = String.new
+            do_file << "***Extract title:  " + params[:archive][:title] + "\r\n"
+            do_file << "*** " + d.name + " (dataset)\r\n"
+            do_file << "*** " + d.survey.title + " (survey)\r\n"
+            do_file << "version 11.0\r\nset more off\r\n"
+            do_file << "insheet using \""  + d.name.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
+            do_file << "***Variables\r\n\r\n"
+            variable_hash[key].each do |var|
+              variable = Variable.find(var)
+                do_file << "*" + variable.name + "\r\n"
+                do_file << "label var " + variable.name + " " + "\"" + variable.value + "\"\r\n"
+                if !variable.value_domains.empty?
+                  val_doms = String.new
+                  variable.value_domains.each do |value_domain|
+                   
+                  val_doms << value_domain.value + " \"" + value_domain.label + "\" "
+                  end
+                  do_file << "label define " + variable.name + "_value_domain " + val_doms +"\r\n"
+                  do_file << "label value " + variable.name + " " + var.name + "_value_domain\r\n\r\n"
+                else 
+                  do_file << "\r\n"
+                end
+            end
+            #finally stick the do file in the hash
+            puts do_file
+            do_file_hash[key] = do_file
+          end
 
         params[:archive][:filename] = @jobid
         params[:archive][:complete] = false
@@ -369,6 +400,13 @@ class CsvarchivesController < ApplicationController
         @archive = Csvarchive.new(params[:archive])
         @archive.content_blob = ContentBlob.new(:data => metadata)
         @archive.save
+        do_file_hash.each_key do |key|
+          stata_do_file = StataDoFile.new
+          stata_do_file.name = Dataset.find(key).name + "_do_file.txt"
+          stata_do_file.csvarchive = @archive
+          stata_do_file.data = do_file_hash[key]
+          stata_do_file.save
+        end
         #we now have an id for the extract so save all of its links with other things
          if params[:scripts] != nil
             params[:scripts].each do |script_id|
@@ -776,40 +814,44 @@ class CsvarchivesController < ApplicationController
         end
         
         if stata_download
+          @archive.stata_do_files.each do |do_file|
+            Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream(do_file.name) { |f| f.puts do_file.data}}
+            
+          end
           #create the do file with the metadata
-          do_file_hash = Hash.new
-          variable_hash.each_key do |key|
-            d = Dataset.find(key)
-            do_file = String.new
-            do_file << "***Extract title:  " + @archive.title + "\r\n"
-            do_file << "*** " + d.name + " (dataset)\r\n"
-            do_file << "*** " + d.survey.title + " (survey)\r\n"
-            do_file << "*** Created on: " + @archive.created_at.to_s(:rfc822) + "\r\n"
-            do_file << "version 11.0\r\nset more off\r\n"
-            do_file << "insheet using \""  + d.filename.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
-            do_file << "***Variables\r\n\r\n"
-            variable_hash[key].each do |var|
-                do_file << "*" + var.name + "\r\n"
-                do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n"
-                if !var.value_domains.empty?
-                  val_doms = String.new
-                  var.value_domains.each do |value_domain|
-                   
-                  val_doms << value_domain.value + " \"" + value_domain.label + "\" "
-                  end
-                  do_file << "label define " + var.name + "_value_domain " + val_doms +"\r\n"
-                  do_file << "label value " + var.name + " " + var.name + "_value_domain\r\n\r\n"
-                else 
-                  do_file << "\r\n"
-                end
-            end
-            #finally stick the do file in the hash
-            puts do_file
-            do_file_hash[key] = do_file
-          end
-          do_file_hash.each_key do |key|
-            Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream(Dataset.find(key).name + "_do_file.txt") { |f| f.puts do_file_hash[key]}}
-          end
+          # do_file_hash = Hash.new
+          # variable_hash.each_key do |key|
+          #   d = Dataset.find(key)
+          #   do_file = String.new
+          #   do_file << "***Extract title:  " + @archive.title + "\r\n"
+          #   do_file << "*** " + d.name + " (dataset)\r\n"
+          #   do_file << "*** " + d.survey.title + " (survey)\r\n"
+          #   do_file << "*** Created on: " + @archive.created_at.to_s(:rfc822) + "\r\n"
+          #   do_file << "version 11.0\r\nset more off\r\n"
+          #   do_file << "insheet using \""  + d.filename.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
+          #   do_file << "***Variables\r\n\r\n"
+          #   variable_hash[key].each do |var|
+          #       do_file << "*" + var.name + "\r\n"
+          #       do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n"
+          #       if !var.value_domains.empty?
+          #         val_doms = String.new
+          #         var.value_domains.each do |value_domain|
+          #          
+          #         val_doms << value_domain.value + " \"" + value_domain.label + "\" "
+          #         end
+          #         do_file << "label define " + var.name + "_value_domain " + val_doms +"\r\n"
+          #         do_file << "label value " + var.name + " " + var.name + "_value_domain\r\n\r\n"
+          #       else 
+          #         do_file << "\r\n"
+          #       end
+          #   end
+          #   #finally stick the do file in the hash
+          #   puts do_file
+          #   do_file_hash[key] = do_file
+          # end
+          # do_file_hash.each_key do |key|
+          #   Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream(Dataset.find(key).name + "_do_file.txt") { |f| f.puts do_file_hash[key]}}
+          # end
         end
         
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}}

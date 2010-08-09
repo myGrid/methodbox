@@ -26,6 +26,8 @@ class Csvarchive < ActiveRecord::Base
     :dependent => :destroy
 
   belongs_to :person
+  
+  has_many :stata_do_files
 
   acts_as_solr(:fields=>[:title,:description]) if SOLR_ENABLED
   
