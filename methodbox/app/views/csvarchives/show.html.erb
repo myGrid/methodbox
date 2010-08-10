@@ -69,6 +69,14 @@
 	<b>Total number of variables in extract: </b><%= @total_vars -%>
 	</div>
 	<br/>
+	<div class="link_box">
+	Show: 
+	<%= link_to_remote "Only my links", :url=> show_links_csvarchives_path, :with=> "'link_state=mine&extract_id=#{@archive.id}'" %>, 
+	<%= link_to_remote "All links", :url=> show_links_csvarchives_path, :with=> "'link_state=all&extract_id=#{@archive.id}'" %>
+	</div>
+		<div class="actual_link_box">
+
+	  <div id="links">
 	  <b>Linked with Data Extracts(s):</b>
       <% if !@archives.empty? -%>
 
@@ -109,6 +117,8 @@
       <% else -%>
         None
       <% end -%>
+</div>
+</div>
 <br/>
 <br/>
     <b>Status:</b>

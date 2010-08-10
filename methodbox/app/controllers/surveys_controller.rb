@@ -20,6 +20,66 @@ class SurveysController < ApplicationController
 
   before_filter :find_survey, :only => [:show, :edit, :update]
 
+  #only show 'my' links or 'all' links
+  def show_links
+    source_archives = []
+    source_surveys = []
+    source_scripts = []
+    target_archives = []
+    target_surveys = []
+    target_scripts = []
+    #publications link to something, not from
+    @publications = []
+    case params[:link_state]
+    when "mine"
+      source_archives = []
+      source_scripts = []
+      # no survey link to publications yet, maybe in the future
+      # source_publications = []
+
+      links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link",:user_id=>current_user.id })
+
+      links.each do |link|
+        case link.subject.class.name
+        when "Csvarchive"
+          source_archives.push(link.subject)
+        when "Script"
+          source_scripts.push(link.subject)
+        # when "Publication"
+        #         source_publications.push(link.subject)
+        end
+      end
+
+      @archives = source_archives
+      @scripts = source_scripts
+    when "all"
+      source_archives = []
+      source_scripts = []
+      # no survey link to publications yet, maybe in the future
+      # source_publications = []
+
+      links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => params[:survey_id], :predicate => "link" })
+
+      links.each do |link|
+        case link.subject.class.name
+        when "Csvarchive"
+          source_archives.push(link.subject)
+        when "Script"
+          source_scripts.push(link.subject)
+        # when "Publication"
+        #         source_publications.push(link.subject)
+        end
+      end
+
+      @archives = source_archives
+      @scripts = source_scripts
+    end
+    
+    render :update do |page|
+        page.replace_html "links",:partial=>"assets/link_view",:locals=>{:archives=>@archives, :scripts=>@scripts}
+    end
+  end
+    
 #experimental code for doing jgrid table using jqgrid plugin
   def grid_view
     puts "doing some stuff"

@@ -94,6 +94,14 @@
 <!--  should people get to see the links even of not logged in? what difference does it make? -->
 <%# if logged_in? -%>
       <br/>
+	<div class="link_box">
+	Show: 
+	<%= link_to_remote "Only my links", :url=> show_links_surveys_path, :with=> "'link_state=mine&survey_id=#{@survey.id}'" %>, 
+	<%= link_to_remote "All links", :url=> show_links_surveys_path, :with=> "'link_state=all&survey_id=#{@survey.id}'" %>
+	</div>
+		<div class="actual_link_box">
+
+	  <div id="links">
       <b>Linked with Data Extracts(s):</b>
       <% if !@archives.empty? -%>
 
@@ -113,6 +121,8 @@
       <% else -%>
         None
       <% end -%>
+</div>
+</div>
 <!-- no survey link to publications yet, maybe in the future -->
       <!-- <br/> -->
       <!-- <br/> -->
