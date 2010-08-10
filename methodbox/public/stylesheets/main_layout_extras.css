@@ -67,6 +67,16 @@ text-decoration: underline;
 .help_image {
 	vertical-align: top;
 }
+.link_box {
+	padding-bottom: 0.5em;
+}
+.link_box a {
+	font-weight: normal;
+}
+.actual_link_box {
+	border: 1px dotted gray;
+	padding: 5px;
+}
 
 
 
