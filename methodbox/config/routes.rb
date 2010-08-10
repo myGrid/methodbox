@@ -82,7 +82,7 @@ ActionController::Routing::Routes.draw do |map|
     person.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }
   end
 
-  map.resources :scripts, :member => { :download => :get }, :collection => {:help => :get, :help2 => :get}
+  map.resources :scripts, :member => { :download => :get }, :collection => {:help => :get, :help2 => :get,:show_links=>:post}
 
   map.resources :projects,
     :collection => { :request_institutions => :get } do |project|
