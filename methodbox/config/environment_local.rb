@@ -1,14 +1,14 @@
-LOCAL_REQUEST_ERROR = false
+STATA_VERSION = 10.0
+LOCAL_REQUEST_ERROR = true
 ADMIN_CAN_SEE_DORMANT = true
 #used by the doi publication stuff
 ADMIN_EMAIL = "methodbox@gmail.com"
-SANDBOX = false
+SANDBOX = true
 EMAIL_ENABLED = true
 CSV_SERVER_LOCATION='localhost'
 CSV_SERVER_PORT='25000'
 CSV_SERVER_PATH='/csv-server/eos'
-CSV_FILE_PATH='/Users/Ian/obesity_data/csv/'
+CSV_FILE_PATH='/Users/Ian/csv'
 REGISTRATION_CLOSED = true
-NEW_CSV_FILE_PATH='/Users/Ian/obesity_data/csv/complete'
-METADATA_PATH='/Users/Ian/obesity_data/metadata/'
-UKDA_EMAIL_ADDRESS='http://oai.esds.ac.uk:8080/NesstarLogin/login.do'
+NEW_CSV_FILE_PATH='/Users/Ian/csv/complete'
+SOLR_JVM_OPTIONS='-Xms512M -Xmx1024M'
