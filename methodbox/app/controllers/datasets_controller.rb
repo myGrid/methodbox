@@ -21,7 +21,7 @@ class DatasetsController < ApplicationController
              
     send_to_server file_uuid, filename
     load_new_dataset filename
-    @dataset.update_attributes(:reason_for_update=>params[:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid)
+    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision])
     File.delete(filename)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
@@ -71,7 +71,7 @@ class DatasetsController < ApplicationController
   
   def create
     uuid = UUIDTools::UUID.random_create.to_s
-    #create directory and zip file for the archive
+    #write out the dataset into a new file
     filename=RAILS_ROOT + "/" + "filestore" + "/" + uuid + ".data"
     uf = File.open(filename,"w")
     params[:dataset][:data].each_line do |line|                
@@ -83,6 +83,7 @@ class DatasetsController < ApplicationController
              
     send_to_server file_uuid, filename
     dataset = Dataset.new
+    dataset.current_version = 1
     dataset.survey = Survey.find(params[:dataset][:survey])
     dataset.name = params[:dataset][:title]
     dataset.description = params[:dataset][:description]

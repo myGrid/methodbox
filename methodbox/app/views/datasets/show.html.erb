@@ -55,10 +55,17 @@ The following variables have been added in the new dataset.
       </p>
 <% if @dataset.current_version -%>
       <p>
-        <b>Update:</b>
+        <b>Revision:</b>
         <span class="title"><%=h @dataset.current_version -%></span>
       </p>
 <% end -%>
+<% if @dataset.current_version > 1 -%>
+<p>
+<b>Reason for update:</b>
+        <span class="title"><%=h @dataset.reason_for_update -%></span>
+</p>
+<% end -%>
+
     </div>
   </div>
 </div>
