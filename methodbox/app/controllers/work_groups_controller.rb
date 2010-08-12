@@ -12,6 +12,36 @@ class WorkGroupsController < ApplicationController
   
   protect_from_forgery :except => [ :review_popup ]
   
+  def request_access
+    @group = WorkGroup.find(params[:id])
+    
+      @message = Message.new
+      @message.from ||= User.find(current_user.id).person_id
+      @message.to = User.find(@group.user_id).person_id
+      # set initial datetimes
+      @message.read_at = nil
+      @message.subject = "Request for group access"
+      @message.body = User.find(current_user.id).person.name + " would like access to your MethodBox group " + @group.name + "\nTo add them to your group go to " + base_host + "/work_groups/" + @group.id.to_s + "/edit"     
+      
+      puts "message " + @message.from.to_s + @message.to.to_s + @message.subject
+    respond_to do |format|
+        if @message.save
+          begin
+            Mailer.deliver_new_message(@message,base_host) if EMAIL_ENABLED && Person.find(@message.u_to).send_notifications?
+          rescue Exception => e
+            logger.error("ERROR: failed to send New Message email notification. Message ID: #{@message.id}")
+            logger.error("EXCEPTION: " + e)
+          end
+          #internal message will work even if the email doesn't
+          flash[:notice] = 'Message was successfully sent.'
+          format.html { redirect_to work_group_url(@group) }
+        else 
+          puts @message.errors.full_messages.to_sentence
+          flash[:error] = "Message could not be sent, please try later."
+          format.html { redirect_to work_group_url(@group) }
+        end
+      end  
+  end
   
   # GET /groups
   # GET /groups.xml
