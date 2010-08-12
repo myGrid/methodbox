@@ -25,7 +25,7 @@ ActionController::Routing::Routes.draw do |map|
   # messages
    # page for cart
 
-  map.resources :work_groups
+  map.resources :work_groups, :member=>{:request_access=>:post}
 
   map.resources :user_searches
 
