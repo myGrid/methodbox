@@ -64,7 +64,7 @@
         <b>Description</b>
         <% unless @script.description.blank? -%>
         <div class="box_standout">
-          <%= simple_format(white_list(@script.description)) -%>
+          <%= auto_link(simple_format(white_list(@script.description))) -%>
         </div>
       <% else -%>
         <p class="none_text">
