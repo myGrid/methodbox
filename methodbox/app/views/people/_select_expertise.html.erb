@@ -52,7 +52,7 @@
 
 <script type="text/javascript">
   var expertise_list = <%= @all_expertise_as_json -%>;
-  var prepopulate_with = <%= @person.expertise.sort{|a,b| a.id<=>b.id}.collect{|t| t.id}.to_json -%>;
+  var prepopulate_with = <%= @expertise_autocompleter_selected_ids && !@expertise_autocompleter_selected_ids.empty?  ? @expertise_autocompleter_selected_ids.to_json : @person.expertise.sort{|a,b| a.id<=>b.id}.collect{|t| t.id}.to_json -%>;
   var expertise_autocompleter_id='expertise_autocompleter'
   var expertise_autocompleter = new Autocompleter.LocalAdvanced(
   expertise_autocompleter_id, 'expertise_autocomplete_input', 'expertise_autocomplete_display', 'expertise_autocomplete_populate', expertise_list, prepopulate_with, {
@@ -65,4 +65,9 @@
   var hidden_input = new HiddenInput('expertise_hidden_input',expertise_autocompleter);
 
   autocompleters[expertise_autocompleter_id] = expertise_autocompleter;
+ var remember_expertise_list = <%= @expertise_autocompleter_unrecognized_items ? @expertise_autocompleter_unrecognized_items.to_json : '[]' -%>;
+remember_expertise_list.each(function(item) {
+  expertise_autocompleter.addUnrecognizedItemToList(item);
+});
+
 </script>

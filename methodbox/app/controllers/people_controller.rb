@@ -132,8 +132,10 @@ class PeopleController < ApplicationController
 
         # update those attributes of a person that we want to be updated from the session
         @person.attributes = session[possible_unsaved_data][:person]
+        @expertise_autocompleter_selected_ids = session[possible_unsaved_data][:expertise_autocompleter_selected_ids]
+        @expertise_autocompleter_unrecognized_items = session[possible_unsaved_data][:expertise_autocompleter_unrecognized_items]
         #        @person.tool_list = session[possible_unsaved_data][:tool][:list]
-        #        @person.expertise_list = session[possible_unsaved_data][:expertise][:list]
+               # @person.expertise_list = session[possible_unsaved_data][:expertise][:list]
       end
 
       # clear the session data anyway
@@ -195,6 +197,8 @@ class PeopleController < ApplicationController
         format.html { redirect_to(@person) }
         format.xml  { head :ok }
       else
+        @expertise_autocompleter_selected_ids = params[:expertise_autocompleter_selected_ids]
+        @expertise_autocompleter_unrecognized_items = params[:expertise_autocompleter_unrecognized_items]
         format.html { render :action => "edit" }
         format.xml  { render :xml => @person.errors, :status => :unprocessable_entity }
       end

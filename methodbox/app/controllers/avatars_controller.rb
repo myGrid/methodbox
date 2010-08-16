@@ -254,6 +254,7 @@ class AvatarsController < ApplicationController
   # to allow users to go to "upload new avatar" screen without loosing any new data
   # that wasn't yet saved
   def store_unsaved_person_proj_inst_data_to_session
+    
     data_hash = {}
 
     return if params["#{@avatar_for.downcase}".to_sym].nil?
@@ -266,15 +267,22 @@ class AvatarsController < ApplicationController
     case @avatar_for
       when "Person"
         data_hash[:description] = params[:description]
-        data_hash[:tool] = params[:tool]
+        # data_hash[:tool] = params[:tool]
+        # expertise_autocompleter_selected_ids
         data_hash[:expertise] = params[:expertise]
-        data_hash[:can_edit_projects] = params[:can_edit_projects]
-        data_hash[:can_edit_institutions] = params[:can_edit_institutions]
+        data_hash[:phone] = params[:phone]
+        data_hash[:web_page] = params[:web_page]
+        data_hash[:email] = params[:email]
+        data_hash[:send_notifications] = params[:send_notifications]
+        data_hash[:expertise_autocompleter_unrecognized_items] = params[:expertise_autocompleter_unrecognized_items]
+        data_hash[:expertise_autocompleter_selected_ids] = params[:expertise_autocompleter_selected_ids]
+        # data_hash[:can_edit_projects] = params[:can_edit_projects]
+        #         data_hash[:can_edit_institutions] = params[:can_edit_institutions]
         
-      when "Project"
-        data_hash[:organism] = params[:organism]
-        
-      when "Institution"
+      # when "Project"
+      #         data_hash[:organism] = params[:organism]
+      #         
+      #       when "Institution"
         # no specific data to store for institutions so far
         
     end
