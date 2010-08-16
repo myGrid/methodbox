@@ -3,6 +3,9 @@
     <li><%= icon('edit', edit_work_group_path(@group), nil, nil, 'Edit Group') -%></li>
     <li><%= icon('destroy', work_group_path(@group), nil, { :confirm => 'This deletes the group and all metadata. Are you sure?', :method => :delete }, 'Delete Group') -%></li>
   <% end -%>
+ <% if !@group.people.include?(User.find(current_user).person) %>
+	<li><%= icon('user-invite', request_access_work_group_path(@group), nil, { :method => :post}, 'Request access to this group') -%></li>
+<% end -%>
 </ul>
 
 <div class="show_basic">
