@@ -159,7 +159,7 @@ class MessagesController < ApplicationController
       if sending_allowed && !errors && @message.save
         
         begin
-          Mailer.deliver_new_message(@message,base_host) if EMAIL_ENABLED && Person.find(@message.u_to).send_notifications?
+          Mailer.deliver_new_message(@message,base_host) if EMAIL_ENABLED && Person.find(@message.to).send_notifications?
         rescue Exception => e
           logger.error("ERROR: failed to send New Message email notification. Message ID: #{@message.id}")
           logger.error("EXCEPTION: " + e)

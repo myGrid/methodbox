@@ -13,7 +13,23 @@ class Mailer < ActionMailer::Base
          :subject => message.subject,
          :message_id => message.id,
          :target => Person.find(message.to),
-         :host=>base_host
+         :host=>base_host,
+         :message => message.body
+  end
+  
+  def work_group_request(message, base_host)
+    recipients Person.find(message.to).email
+    from NOREPLY_SENDER
+    subject "#{Person.find(message.from).name} has requested access to your group"
+    sent_on    Time.now
+    puts " message is " + message.body
+    body :name => Person.find(message.to).name,
+         :from_name => Person.find(message.from).name,
+         :subject => message.subject,
+         :message_id => message.id,
+         :target => Person.find(message.to),
+         :host=>base_host,
+         :message => message.body
   end
 
   def admin_emails

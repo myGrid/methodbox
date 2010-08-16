@@ -21,13 +21,12 @@ class WorkGroupsController < ApplicationController
       # set initial datetimes
       @message.read_at = nil
       @message.subject = "Request for group access"
-      @message.body = User.find(current_user.id).person.name + " would like access to your MethodBox group " + @group.name + "\nTo add them to your group go to " + base_host + "/work_groups/" + @group.id.to_s + "/edit"     
+      @message.body = User.find(current_user.id).person.name + " would like access to your MethodBox group " + @group.name + "\nTo add them to your group go to " + "http://" + base_host + "/work_groups/" + @group.id.to_s + "/edit"     
       
-      puts "message " + @message.from.to_s + @message.to.to_s + @message.subject
     respond_to do |format|
         if @message.save
           begin
-            Mailer.deliver_new_message(@message,base_host) if EMAIL_ENABLED && Person.find(@message.u_to).send_notifications?
+            Mailer.deliver_work_group_request(@message,base_host) if EMAIL_ENABLED && Person.find(@message.to).send_notifications?
           rescue Exception => e
             logger.error("ERROR: failed to send New Message email notification. Message ID: #{@message.id}")
             logger.error("EXCEPTION: " + e)
