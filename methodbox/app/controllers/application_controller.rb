@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   include AuthenticatedSystem
   #email exceptions to nominated users
   include ExceptionNotification::Notifiable
+  #https/ssl
+  include SslRequirement
 
   helper :all # include all helpers, all the time
   layout "main"
