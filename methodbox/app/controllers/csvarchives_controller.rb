@@ -683,10 +683,13 @@ class CsvarchivesController < ApplicationController
   def find_archives_by_page
     @my_page = params[:my_page]
     @all_page = params[:all_page]
-    @my_archives = Csvarchive.find(:all,
-      :order => "created_at DESC",:conditions=>"person_id=" + current_user.person_id.to_s, :page=>{:size=>default_items_per_page,:current=>params[:my_page]})
-    @all_archives = Csvarchive.find(:all,
-      :order => "created_at DESC",:page=>{:size=>default_items_per_page,:current=>params[:all_page]})
+    my_archives = Csvarchive.find(:all,
+      :order => "created_at DESC",:conditions=>"person_id=" + current_user.person_id.to_s)
+    @my_archives = my_archives.paginate(:page=>params[:my_page] ? params[:my_page] : 1, :per_page=>default_items_per_page)
+    all_archives = Csvarchive.find(:all,
+      :order => "created_at DESC")     
+    all_authorized_archives = Authorization.authorize_collection("view", all_archives, current_user, keep_nil_records=false)
+    @all_archives = all_authorized_archives.paginate(:page=>params[:all_page] ? params[:all_page] : 1, :per_page=>default_items_per_page)
   end
 
   private

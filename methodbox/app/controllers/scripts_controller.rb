@@ -499,20 +499,12 @@ class ScriptsController < ApplicationController
 
   protected
 
+#find all scripts, authorize them for view by the user, paginate them 
   def find_scripts_by_page
-    found = Script.find(:all,
-      :order => "created_at DESC",:page=>{:size=>default_items_per_page,:current=>params[:page]})
-    #    found = Script.find(:all,
-    #      :order => "title")
-
-    # this is only to make sure that actual binary data isn't sent if download is not
-    # allowed - this is to increase security & speed of page rendering;
-    # further authorization will be done for each item when collection is rendered
-    found.each do |script|
-      script.content_blob.data = nil unless Authorization.is_authorized?("download", nil, script, current_user)
-    end
-
-    @scripts = found
+    
+    scripts = Script.find(:all)
+    authorized_scripts = Authorization.authorize_collection("view", scripts, current_user, keep_nil_records=false)
+    @scripts = authorized_scripts.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
   end
 
   def find_scripts

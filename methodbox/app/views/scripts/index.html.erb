@@ -13,14 +13,18 @@
 <%#= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %>
 
 
-<% if @scripts.public_methods.include?("page_count") %>
+<%# if @scripts.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
-  <%= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
-<% end %>
+  <%#= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
+<%# end %>
 
-<%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>false } %>
+<%#= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>false } %>
 
-<% if @scripts.public_methods.include?("page_count") %>
+<%# if @scripts.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
-  <%= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
-<% end %>
+  <%#= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
+<%# end %>
+
+<%= will_paginate(@scripts) %>
+<%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
+<%= will_paginate(@scripts) %>
