@@ -59,7 +59,7 @@ namespace :obesity do
         do_file << "***Extract title:  " + archive.title + "\r\n"
         do_file << "*** " + d.name + " (dataset)\r\n"
         do_file << "*** " + d.survey.title + " (survey)\r\n"
-        do_file << "version 11.0\r\nset more off\r\n"
+        do_file << "version" + STATA_VERSION +  "\r\nset more off\r\n"
         do_file << "insheet using \""  + d.name.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
         do_file << "***Variables\r\n\r\n"
         variable_hash[key].each do |var|
