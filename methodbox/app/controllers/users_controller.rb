@@ -4,8 +4,8 @@
 
   before_filter :is_current_user_auth, :only=>[:edit, :update]
   before_filter :logged_out_or_admin, :only=>[:new, :create, :activate]
-  before_filter :is_user_admin_auth, :only=>[:resend_actiavtion_code, :approve, :reject]
-  before_filter :request_for_unactive_user, :only=>[:resend_actiavtion_code, :approve, :reject]
+  before_filter :is_user_admin_auth, :only=>[:resend_activation_code, :approve, :reject]
+  before_filter :request_for_unactive_user, :only=>[:resend_activation_code, :approve, :reject]
   before_filter :validate_create, :only=>[:create]
   # render new.rhtml
   def new
@@ -52,13 +52,13 @@
           @user.activation_code = nil
           @user.save
           @user.person.save
-          format.html {redirect_to(root_path)}
+          format.html {redirect_to(root_url)}
         else
           self.current_user = @user
           if !ACTIVATION_REQUIRED
             @user.activate
             @user.save
-            format.html {redirect_to(root_path)}
+            format.html {redirect_to(root_url)}
             Mailer.deliver_welcome self.current_user, base_host
          else
               # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
@@ -194,7 +194,7 @@
           format.html { redirect_to :action=>"activation_required" }
         else
           flash[:notice]="Your account details have been updated"
-          format.html { redirect_to person_path(@user.person) }
+          format.html { redirect_to person_url(@user.person) }
         end
       else
         format.html { render :action => 'edit' }
@@ -207,7 +207,7 @@
 
   end
 
-  def resend_actiavtion_code
+  def resend_activation_code
     user = User.find(params[:id])
     if user.activation_code
       flash[:notice]="Activation email sent to "+user.email.to_s
