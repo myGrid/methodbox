@@ -64,7 +64,9 @@ namespace :obesity do
         do_file << "***Variables\r\n\r\n"
         variable_hash[key].each do |var|
           do_file << "*" + var.name + "\r\n"
-          do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n"
+          if var.value != nil
+            do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n"
+          end
           if !var.value_domains.empty?
             val_doms = String.new
             var.value_domains.each do |value_domain|
