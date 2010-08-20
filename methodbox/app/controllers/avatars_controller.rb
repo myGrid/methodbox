@@ -1,5 +1,9 @@
 class AvatarsController < ApplicationController
   
+  #if people routes are https then they will request avatar picture from https
+  #so we have to allow that
+  ssl_allowed :show
+  
   before_filter :login_required, :except => [ :show ]
   before_filter :check_owner_specified
   before_filter :find_avatars, :only => [ :index ]
