@@ -502,7 +502,7 @@ class ScriptsController < ApplicationController
 #find all scripts, authorize them for view by the user, paginate them 
   def find_scripts_by_page
     
-    scripts = Script.find(:all)
+    scripts = Script.find(:all,:order => "created_at DESC")
     authorized_scripts = Authorization.authorize_collection("view", scripts, current_user, keep_nil_records=false)
     @scripts = authorized_scripts.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
   end
