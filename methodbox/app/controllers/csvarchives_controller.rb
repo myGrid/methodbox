@@ -935,8 +935,11 @@ class CsvarchivesController < ApplicationController
         
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}}
         begin
-        send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + "_" + params[:type] + ".zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
-          
+          if stata_download
+            send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
+          else  
+            send_file RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", :filename => @archive.title + "_" + params[:type] + ".zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
+          end
         rescue Exception => e
           
         ensure
