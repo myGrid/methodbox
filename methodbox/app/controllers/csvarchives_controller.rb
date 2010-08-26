@@ -452,7 +452,7 @@ class CsvarchivesController < ApplicationController
                   val_doms << value_domain.value + " \"" + value_domain.label + "\" "
                   end
                   do_file << "label define " + variable.name + "_value_domain " + val_doms +"\r\n"
-                  do_file << "label value " + variable.name + " " + var.name + "_value_domain\r\n\r\n"
+                  do_file << "label value " + variable.name + " " + variable.name + "_value_domain\r\n\r\n"
                 else 
                   do_file << "\r\n"
                 end
