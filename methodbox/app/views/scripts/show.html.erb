@@ -124,6 +124,12 @@
 	</div>
 	</div>
     </div>
+  <%= render :partial => "comments/add_comment" -%>
+		<% @comments.each do |comment| %>
+		<%= render :partial => "comments/comment", :locals=>{:words=>comment.words} %>
+		<% end %>
+		<div id="new_comment">
+			</div>
   </div>
 </div>
 
