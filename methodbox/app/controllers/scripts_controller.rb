@@ -3,8 +3,21 @@ class ScriptsController < ApplicationController
   before_filter :login_required, :except => [ :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
-  before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links ]
+  before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment ]
+  before_filter :find_comments, :only=>[ :show ]
+  
+  #add a user owned comment to a script and add it to the view
+  def add_comment
+    @script = Script.find(params[:id])
+    comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :resource_id=>@script.id, :resource_type=>"Script")
+    comment.save
+    render :partial=>"comments/comment", :locals=>{:words=>params[:words]}
+  end
+  
+  def save_comment
 
+  end
+  
   #only show 'my' links or 'all' links
   def show_links
     puts "doing stuff"
@@ -642,6 +655,11 @@ class ScriptsController < ApplicationController
         render :action => "new"
       }
     end
+  end
+  
+  def find_comments
+    @script =Script.find(params[:id])
+    @comments = Comment.all(:conditions=>{:resource_type=>"Script",:resource_id=>@script.id})
   end
 
 end
