@@ -21,7 +21,7 @@ class DatasetsController < ApplicationController
              
     send_to_server file_uuid, filename
     load_new_dataset filename
-    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision])
+    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision],:has_data=>true,:has_variables=>true)
     File.delete(filename)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
