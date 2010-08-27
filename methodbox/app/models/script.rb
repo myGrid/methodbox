@@ -9,6 +9,8 @@ class Script < ActiveRecord::Base
   # has_many :scripts_as_target,   :foreign_key => 'target_id',   :class_name => 'ScriptToScriptLink'
   # has_many :sources,  :through => :scripts_as_target
   # has_many :targets,    :through => :scripts_as_source
+  
+  has_many :comments
 
   has_many :script_lists
 
