@@ -1,3 +1,27 @@
-<p>
-<%= words %>
-</p>
+<% odd_row ||= false -%>
+<% narrow_view ||= false -%>
+
+<table class="list_item">
+  <tr class="<%= odd_row ? "odd_row" : "even_row" -%>">
+    <td style="width: 125px;">
+      <!-- <p style="margin-top:0; padding-top:0; text-align: center;"><b>Uploader:</b></p> -->
+      <center><%= contributor(comment.user, true, 60) -%></center>
+    </td>
+
+    <td style="text-align: left;">
+
+      <p style="font-size: 85%; margin-top: 0.4em;">
+        <b>Created:</b> <%= comment.created_at.strftime('%d/%m/%Y @ %H:%M:%S') -%>
+      </p>
+
+      <div class="desc" style="font-size: 85%;">
+        <% unless comment.words.blank? -%>
+          <%= truncate(white_list(comment.words), :length=>500) -%>
+        <% else -%>
+          <span class="none_text">No comment</span>
+        <% end -%>
+      </div>
+    </td>
+
+  </tr>
+</table>
