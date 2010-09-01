@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100809104349) do
+ActiveRecord::Schema.define(:version => 20100827093948) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -111,6 +111,15 @@ ActiveRecord::Schema.define(:version => 20100809104349) do
 
   add_index "cart_items", ["user_id"], :name => "index_cart_items_on_user_id"
 
+  create_table "comments", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.text     "words"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "content_blobs", :force => true do |t|
     t.binary "data", :limit => 2147483647
   end
@@ -162,6 +171,11 @@ ActiveRecord::Schema.define(:version => 20100809104349) do
     t.integer  "resource_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "extract_to_extract_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
   end
 
   create_table "favourite_group_memberships", :force => true do |t|
@@ -256,7 +270,7 @@ ActiveRecord::Schema.define(:version => 20100809104349) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false
+    t.boolean  "dormant",            :default => false, :null => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -347,6 +361,11 @@ ActiveRecord::Schema.define(:version => 20100809104349) do
     t.datetime "updated_at"
   end
 
+  create_table "script_to_script_links", :force => true do |t|
+    t.integer "source_id", :null => false
+    t.integer "target_id", :null => false
+  end
+
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
@@ -389,6 +408,20 @@ ActiveRecord::Schema.define(:version => 20100809104349) do
     t.binary  "data",          :limit => 2147483647
     t.string  "name"
     t.integer "csvarchive_id"
+  end
+
+  create_table "survey_lists", :force => true do |t|
+    t.integer  "csvarchive_id"
+    t.integer  "survey_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "survey_to_script_lists", :force => true do |t|
+    t.integer  "script_id"
+    t.integer  "survey_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "survey_types", :force => true do |t|
@@ -479,7 +512,7 @@ ActiveRecord::Schema.define(:version => 20100809104349) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false
+    t.boolean  "dormant",                                 :default => false, :null => false
   end
 
   create_table "value_domains", :force => true do |t|
