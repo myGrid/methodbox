@@ -11,7 +11,7 @@ class ScriptsController < ApplicationController
     @script = Script.find(params[:id])
     comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :resource_id=>@script.id, :resource_type=>"Script")
     comment.save
-    render :partial=>"comments/comment", :locals=>{:words=>params[:words]}
+    render :partial=>"comments/comment", :locals=>{:comment=>comment}
   end
   
   def save_comment
