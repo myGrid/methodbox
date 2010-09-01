@@ -8,7 +8,7 @@ class ScriptsController < ApplicationController
   
   #add a user owned comment to a script and add it to the view
   def add_comment
-    @script = Script.find(params[:id])
+    @script = Script.find(params[:resource_id])
     comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :resource_id=>@script.id, :resource_type=>"Script")
     comment.save
     render :partial=>"comments/comment", :locals=>{:comment=>comment}
