@@ -21,7 +21,7 @@ class DatasetsController < ApplicationController
              
     send_to_server file_uuid, filename
     load_new_dataset filename
-    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision],:has_data=>true,:has_variables=>true)
+    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision],:has_data=>true)
     File.delete(filename)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
@@ -37,6 +37,7 @@ class DatasetsController < ApplicationController
     when "Methodbox"
       read_methodbox_metadata
     end
+    @dataset.update_attributes(:has_variables=>true)
     respond_to do |format|
       flash[:notice] = "The metadata has been updated."  
       format.html { redirect_to dataset_path(@dataset) }
@@ -93,6 +94,7 @@ class DatasetsController < ApplicationController
 
     load_dataset filename, dataset
 
+    dataset.update_attributes(:has_variables=>false, :has_data=>true)
     File.delete(filename)
     @dataset = dataset
     respond_to do |format|
@@ -356,6 +358,12 @@ class DatasetsController < ApplicationController
           value_map = String.new
           node.each_element do |child_node| 
             if (!child_node.empty?) 
+              valDom = ValueDomain.new
+              valDom.variable = v[0]
+              valDom.label = child_node["value_name"]
+              valDom.value = child_node["value"]
+              value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
+              valDom.save
               value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
             end
             # puts value_map
