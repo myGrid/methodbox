@@ -65,7 +65,7 @@
 
       <div class="tabber">
         <% @survey_hash.each_key do |key| -%>
-          <div class="tabbertab">
+          <div class="tabbertab" title="<%= @survey_hash[key][0].survey_type.name -%>">
             <h3>
               <%= key -%>
             </h3>
