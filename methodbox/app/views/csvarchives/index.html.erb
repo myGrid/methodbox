@@ -10,7 +10,7 @@
 </div>
 <% unless @all_archives.empty? %>
   <div class="tabber" id="archivestab">
-    <div id="my_archives_tab" class="tabbertab">
+    <div id="my_archives_tab" class="tabbertab" title="All of the data extracts you have created">
       <h3>
         My Data Extracts
       </h3>
@@ -27,7 +27,7 @@
         <%#= render :partial => "csvarchives/paginate_my_archives", :locals => { :collection => @my_archives,:all_page=>@al_page } -%>
       <%# end -%>
     </div>
-    <div id="all_archives_tab" class="tabbertab">
+    <div id="all_archives_tab" class="tabbertab" title="Data extracts from all the users in the MethodBox">
       <h3>
         All Data Extracts
       </h3>
