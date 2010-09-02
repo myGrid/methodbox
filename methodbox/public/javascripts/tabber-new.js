@@ -86,6 +86,19 @@ function tabberObj(argsObj)
   */
   this.removeTitle = true;
 
+  /* Instead of using the tab header as the tooltip you can get it
+     to use the div title like folows if this is set to true:
+     	<div class="tabbertab" title="I am a tab">
+         <h3>
+           Interesting Tab
+         </h3>...
+     'Interesting Tab' would be the title of the tab and 'I am a tab'
+     would be the tooltip.
+     If this is set to false then whatever is in the div title would
+     be both the tab title and the tooltip.
+  */
+  this.differentTooltip = true;
+
   /* If you want to add an id to each link set this to true */
   this.addLinkId = false;
 
@@ -208,7 +221,12 @@ tabberObj.prototype.init = function(e)
        Or from one of the this.titleElements[] elements,
        Or use an automatically generated number.
      */
-    t.headingText = t.div.title;
+	t.tooltipText = t.div.title;
+	
+	// tooltip and title are to be the same so ignore any headings etc.
+	if (!this.differentTooltip) {
+    	t.headingText = t.div.title;
+	}
 
     /* Remove the title attribute to prevent a tooltip from appearing */
     if (this.removeTitle) { t.div.title = ''; }
@@ -251,7 +269,13 @@ tabberObj.prototype.init = function(e)
     DOM_a = document.createElement("a");
     DOM_a.appendChild(document.createTextNode(t.headingText));
     DOM_a.href = "javascript:void(null);";
-    DOM_a.title = t.headingText;
+
+	// Tooltip is to be the same as the div title
+	if (this.differentTooltip) {
+		DOM_a.title = t.tooltipText;
+	} else {
+		DOM_a.title = t.headingText;
+	}
     DOM_a.onclick = this.navClick;
 
     /* Add some properties to the link so we can identify which tab
