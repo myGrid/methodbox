@@ -208,6 +208,7 @@ class DatasetsController < ApplicationController
     headers.each do |var|
         variable = Variable.new
         variable.name = var
+        variable.value = "No label"
         variable.dataset = dataset
         variable.updated_by = current_user.id
         variable.save
@@ -255,6 +256,7 @@ class DatasetsController < ApplicationController
     added_variables.each do |var|
         variable = Variable.new
         variable.name = var
+        variable.value = "No label"
         variable.dataset = @dataset
         variable.updated_by = current_user.id
         variable.save
