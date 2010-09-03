@@ -9,8 +9,9 @@
 <li>
 <%= icon('manage', update_metadata_dataset_path(@dataset), nil, nil, 'Upload variable metadata') -%>
 </li>
-</ul>
 <% end -%>
+</ul>
+
 <% if @missing_vars && @missing_vars.size>=1 -%>
 The following variables were in the previous uploaded dataset but were missing in the new dataset.
 <% @missing_vars.each do |missing_variable| -%>
