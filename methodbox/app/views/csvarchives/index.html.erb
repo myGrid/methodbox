@@ -1,54 +1,27 @@
-<%# if @archives.public_methods.include?("page_count") %>
-<%#*<!-- only do the page links if the collection supports it -->%>
-<%#= render :partial => "layouts/paginate", :locals => { :collection => @archives } -%>
-<%# end %>
-<div><div style="padding-left:7px;text-align: center;width:100%"><% form_tag '/search/' do -%>
-  <%= hidden_field_tag 'search_type', 'data extracts' -%>
-  <%= text_field_tag :search_query, @search_query -%>
-  <%= submit_tag "Search" ,:title=> "Enter a term and click to search all data extracts"-%>
-<% end  -%>
+<div>
+	<div style="padding-left:7px;text-align: center;width:100%">
+		<% form_tag '/search/' do -%>
+  			<%= hidden_field_tag 'search_type', 'data extracts' -%>
+  			<%= text_field_tag :search_query, @search_query -%>
+  			<%= submit_tag "Search" ,:title=> "Enter a term and click to search all data extracts"-%>
+		<% end  -%>
+	</div>
+	<% unless @all_archives.empty? %>
+  		<div class="tabber" id="archivestab">
+    		<div id="my_archives_tab" class="tabbertab" title="All of the data extracts you have created">
+      			<h3>My Data Extracts</h3>
+				<%= will_paginate @my_archives, :param_name=>'my_page' %>
+      			<%= render :partial => "assets/resource_list", :locals => { :collection => @my_archives, :authorization_for_showing_already_done=>true } %>
+				<%= will_paginate @my_archives, :param_name=>'my_page' %>
+    		</div>
+    		<div id="all_archives_tab" class="tabbertab" title="Data extracts from all the users in the MethodBox">
+      			<h3>All Data Extracts</h3>
+				<%= will_paginate @all_archives, :param_name=>'all_page' %>
+      			<%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>true} %>
+				<%= will_paginate @all_archives, :param_name=>'all_page' %>
+			</div>
+  		</div>
+		<% else %>
+  			<p>There are no CSV archives available to view.  To create one add <%= link_to "survey variables", surveys_path -%> to your cart and then create one from all or a subset of these variables</p>
+		<% end %>
 </div>
-<% unless @all_archives.empty? %>
-  <div class="tabber" id="archivestab">
-    <div id="my_archives_tab" class="tabbertab" title="All of the data extracts you have created">
-      <h3>
-        My Data Extracts
-      </h3>
-<%= will_paginate @my_archives, :param_name=>'my_page' %>
-      <%= render :partial => "assets/resource_list", :locals => { :collection => @my_archives, :authorization_for_showing_already_done=>true } %>
-<%= will_paginate @my_archives, :param_name=>'my_page' %>
-      <%# if @my_archives.public_methods.include?("page_count") -%>
-        <!-- only do the page links if the collection supports it -->
-        <%#= render :partial => "csvarchives/paginate_my_archives", :locals => { :collection => @my_archives,:all_page=>@my_page } -%>
-      <%# end -%>
-      <%#= render :partial => "assets/resource_list", :locals => { :collection => @my_archives, :authorization_for_showing_already_done=>true } %>
-      <%# if @my_archives.public_methods.include?("page_count") -%>
-        <!-- only do the page links if the collection supports it -->
-        <%#= render :partial => "csvarchives/paginate_my_archives", :locals => { :collection => @my_archives,:all_page=>@al_page } -%>
-      <%# end -%>
-    </div>
-    <div id="all_archives_tab" class="tabbertab" title="Data extracts from all the users in the MethodBox">
-      <h3>
-        All Data Extracts
-      </h3>
-      <%# if @all_archives.public_methods.include?("page_count") -%>
-        <!-- only do the page links if the collection supports it -->
-        <%#= render :partial => "csvarchives/paginate_all_archives", :locals => { :collection => @all_archives,:my_page=>@my_page } -%>
-      <%# end -%>
-<%= will_paginate @all_archives, :param_name=>'all_page' %>
-      <%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>true} %>
-<%= will_paginate @all_archives, :param_name=>'all_page' %>
-      <%# if @all_archives.public_methods.include?("page_count") -%>
-        <!-- only do the page links if the collection supports it -->
-        <%#= render :partial => "csvarchives/paginate_all_archives", :locals => { :collection => @all_archives,:my_page=>@my_page } -%>
-      <%# end -%>
-    </div>
-  </div>
-  <%#= render :partial => "assets/resource_list", :locals => { :collection => @archives, :authorization_for_showing_already_done=>true, :mine=>false } %>
-<% else %>
-  <p>There are no CSV archives available to view.  To create one add <%= link_to "survey variables", surveys_path -%> to your cart and then create one from all or a subset of these variables</p>
-<% end %>
-<%# if @archives.public_methods.include?("page_count") %>
-<%#*<!-- only do the page links if the collection supports it -->%>
-<%#= render :partial => "layouts/paginate", :locals => { :collection => @archives } -%>
-<%# end %>
