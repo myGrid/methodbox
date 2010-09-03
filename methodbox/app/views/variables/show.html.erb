@@ -133,7 +133,7 @@
 <% unless @variable.updated_by.blank? %>
 	<p><b>Metadata last updated by:
 		<div class="box_standout">
-          <%= link_to User.find(@variable.updated_by).person.name, person_path(User.find(@variable.archived_by).person) -%>
+          <%= link_to User.find(@variable.updated_by).person.name, person_path(User.find(@variable.updated_by).person) -%>
         </div>
 </p>
 	<p><b>Reason:
