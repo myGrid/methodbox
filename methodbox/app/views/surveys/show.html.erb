@@ -31,7 +31,7 @@
 <%#*</ul>%>
 
 <ul class="sectionIcons">
-<% if current_user.is_admin? -%>
+<% if current_user && current_user.is_admin? -%>
 <li>
 	<%= link_to "Add new dataset to this survey", {:action => "new", :controller=> "datasets",:survey => @survey.id} -%>
 <%#= icon('manage', new_dataset_path, nil, {:survey => @survey.id}, 'Add new dataset to this survey') -%>
@@ -94,11 +94,13 @@
 <!--  should people get to see the links even of not logged in? what difference does it make? -->
 <%# if logged_in? -%>
       <br/>
+<% if logged_in? %>
 	<div class="link_box">
 	Show: 
 	<%= link_to_remote "Only my links", :url=> show_links_surveys_path, :with=> "'link_state=mine&survey_id=#{@survey.id}'" %>, 
 	<%= link_to_remote "All links", :url=> show_links_surveys_path, :with=> "'link_state=all&survey_id=#{@survey.id}'" %>
 	</div>
+	<% end -%>
 		<div class="actual_link_box">
 
 	  <div id="links">
