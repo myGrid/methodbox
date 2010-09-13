@@ -386,7 +386,7 @@ class CsvarchivesController < ApplicationController
           variable << Variable.find(var).name
         end
       end
-
+      puts doc
       http = Net::HTTP.new('localhost',25000)
       http.read_timeout=6000
       # maybe we should log this instead
