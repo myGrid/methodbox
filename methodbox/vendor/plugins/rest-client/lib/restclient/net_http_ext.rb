@@ -11,7 +11,7 @@ module Net
 
     def request(req, body=nil, &block)
       if body != nil && body.respond_to?(:read)
-        self.content_length = body.bytesize
+        # self.content_length = body.bytesize
         req.body_stream = body
         return __request__(req, nil, &block)
       else
