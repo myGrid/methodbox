@@ -346,7 +346,7 @@ class CsvarchivesController < ApplicationController
       all_variables_array = Array.new
       variable_hash = Hash.new
       @current_user.cart_items.each do |item|
-        puts "downloading " + item.variable_id.to_s
+        # puts "downloading " + item.variable_id.to_s
         variable = Variable.find(item.variable_id)
         if (!variable_hash.has_key?(variable.dataset_id))
           variable_hash[variable.dataset_id] = Array.new
@@ -364,203 +364,35 @@ class CsvarchivesController < ApplicationController
       end
 
       #create XML request to be sent with http post request
-      doc = XML::Document.new()
-      doc.root = XML::Node.new('Datasets')
-      root = doc.root
-      root << mail = XML::Node.new('Email')
-      mail << User.find(current_user.id).person.email
+      doc = create_request_document variable_hash
 
-      root << filename = XML::Node.new('Filename')
-      filename << params[:archive][:title]
-    
-      variable_hash.each_key do |key|
+      logger.info doc
 
-        root << dataset = XML::Node.new('Dataset')
-        dataset['datasetname'] = Dataset.find(key).name
-        dataset['name']= Dataset.find(key).uuid_filename
-        dataset['year']= Survey.find(Dataset.find(key).survey_id).year
-        dataset['survey']= Survey.find(Dataset.find(key).survey_id).survey_type.shortname
-        dataset << variables = XML::Node.new('Variables')
-        variable_hash[key].each do |var|
-          variables << variable = XML::Node.new('Variable')
-          variable << Variable.find(var).name
+      # create temporary file with xmlrequest inside
+      f = Tempfile.new(UUIDTools::UUID.random_create.to_s)
+      f << doc.to_s
+      f.flush
+      request_path = 'http://' + CSV_SERVER_LOCATION + ':' + CSV_SERVER_PORT  + CSV_SERVER_PATH + '/download'
+
+      response = RestClient.post request_path, :datasetrequest => File.new(f.path, 'rb') 
+      # {|response, request, &block|
+        #delete the temp file
+        f.close
+        # puts response
+        case response.code
+          when 200
+            process_response response, all_variables_array, variable_hash, selected_surveys
+          respond_to do |format|
+            format.html { redirect_to csvarchive_path(@archive) }
+          end
+        else
+          flash[:error] = "An error occurred during creation. The MethodBox team are investigating the problem.\nSorry for any inconvenience."
+          redirect_to csvarchives_url
         end
+      else
+        flash[:error] = "You already have an archive with such a title"
+        redirect_to(:controller => "csvarchives", :action => "new", :all_variables_array => params[:all_variables_array],:title =>params[:archive][:title], :description => params[:archive][:description])
       end
-      puts doc
-      http = Net::HTTP.new('localhost',25000)
-      http.read_timeout=6000
-      # maybe we should log this instead
-      # puts doc.to_s
-      response = http.post(CSV_SERVER_PATH + '/download', doc.to_s)
-      if response.response.class == Net::HTTPOK
-        xmlstring = String.new
-        response.body.each do |str|
-          xmlstring = xmlstring + str
-        end
-        puts xmlstring
-        xmlparser = XML::Parser.string(xmlstring)
-        xmldoc = xmlparser.parse
-        root = xmldoc.root
-        @jobid = root.child.to_s
-        
-        # create metadata file and save it
-         metadata = String.new
-          variable_hash.each_key do |key|
-            metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
-            metadata << "\r\n" + Dataset.find(key).name + "\r\n---------------"
-            variable_hash[key].each do |var|
-              variable = Variable.find(var)
-              metadata << "\r\nName: " + variable.name
-              if variable.value != nil
-                metadata << "\r\nLabel: " + variable.value
-              end
-              if variable.category!= nil
-                metadata << "\r\nCategory: " + variable.category
-              end
-              if variable.dertype!= nil
-                metadata << "\r\nDerivation Type: " + variable.dertype
-              end
-              if  variable.dermethod!= nil
-                metadata << "\r\nDerivation Method: " + variable.dermethod.gsub("\n", "\r\n")
-              end
-              if variable.info!=nil
-                metadata << "\r\nValue Information: " + variable.info.gsub("\n", "\r\n")
-              end
-              metadata << "\r\n---------------"
-            end
-            metadata << "\r\n\r\n\r\n---------------\r\n---------------"
-          end
-          
-          do_file_hash = Hash.new
-          variable_hash.each_key do |key|
-            d = Dataset.find(key)
-            do_file = String.new
-            do_file << "***Extract title:  " + params[:archive][:title] + "\r\n"
-            do_file << "*** " + d.name + " (dataset)\r\n"
-            do_file << "*** " + d.survey.title + " (survey)\r\n"
-            do_file << "version" + STATA_VERSION + "\r\nset more off\r\n"
-            do_file << "insheet using \""  + d.name.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
-            do_file << "***Variables\r\n\r\n"
-            variable_hash[key].each do |var|
-              variable = Variable.find(var)
-                do_file << "*" + variable.name + "\r\n"
-                do_file << "label var " + variable.name + " " + "\"" + variable.value + "\"\r\n"
-                if !variable.value_domains.empty?
-                  val_doms = String.new
-                  variable.value_domains.each do |value_domain|
-                   
-                  val_doms << value_domain.value + " \"" + value_domain.label + "\" "
-                  end
-                  do_file << "label define " + variable.name + "_value_domain " + val_doms +"\r\n"
-                  do_file << "label value " + variable.name + " " + variable.name + "_value_domain\r\n\r\n"
-                else 
-                  do_file << "\r\n"
-                end
-            end
-            #finally stick the do file in the hash
-            puts do_file
-            do_file_hash[key] = do_file
-          end
-
-        params[:archive][:filename] = @jobid
-        params[:archive][:complete] = false
-        params[:archive][:last_used_at] = Time.now
-        # could store the request as the content blob?
-        # @archive.content_blob = ContentBlob.new(:data => file.body)
-        params[:archive][:content_type] = "application/zip"
-        params[:archive][:person_id] = User.find(current_user.id).person.id
-        params[:archive][:variables] = all_variables_array
-        params[:archive][:contributor_type] = "User"
-        params[:archive][:contributor_id] = current_user.id
-      
-        @archive = Csvarchive.new(params[:archive])
-        @archive.content_blob = ContentBlob.new(:data => metadata)
-        @archive.save
-        do_file_hash.each_key do |key|
-          stata_do_file = StataDoFile.new
-          stata_do_file.name = Dataset.find(key).name + "_do_file.txt"
-          stata_do_file.csvarchive = @archive
-          stata_do_file.data = do_file_hash[key]
-          stata_do_file.save
-        end
-        #we now have an id for the extract so save all of its links with other things
-         if params[:scripts] != nil
-            params[:scripts].each do |script_id|
-            link = Link.new
-            link.subject = @archive
-            link.object = Script.find(script_id)
-            link.predicate = "link"
-            link.user = current_user
-            link.save
-            end
-          end
-          #automatically link from the selected datasets/surveys
-          selected_surveys.each do |survey_id|
-             link = Link.new
-             link.subject = @archive
-             link.object = Survey.find(survey_id)
-             link.predicate = "link"
-             link.user = current_user
-             link.save
-          end
-          if params[:data_extracts] != nil
-              params[:data_extracts].each do |extract_id|
-                 link = Link.new
-                 link.subject = @archive
-                 link.object = Csvarchive.find(extract_id)
-                 link.predicate = "link"
-                 link.user = current_user
-                 link.save
-              end
-          end
-          if params[:publications] != nil
-            # all_scripts_array = Array.new
-            params[:publications].each do |publication_id|
-            link = Link.new
-            link.subject = @archive
-            link.object = Publication.find(publication_id)
-            link.predicate = "link"
-            link.user = current_user
-            link.save
-            end
-          end
-          
-          if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-             puts "custom sharing here"
-             values = "{"
-                params[:groups].each do |workgroup_id|
-                   values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
-                end
-                values = values.chop
-                values << "}}"
-                values.insert(0,"{\"WorkGroup\":")
-                params[:sharing][:permissions][:values] = values
-                params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
-                logger.info "custom permissions: " + values
-                puts params[:sharing][:permissions][:values]
-                puts params[:sharing][:permissions][:contributor_types]
-            end
-      
-        policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
-
-        # update attributions
-        Relationship.create_or_update_attributions(@archive, params[:attributions])
-        puts "policy error: " + policy_err_msg
-
-      end
-
-      respond_to do |format|
-
-        format.html { redirect_to csvarchive_path(@archive) }
-
-      end
-    else
-      #      respond_to do |format|
-
-      flash[:error] = "You already have an archive with such a title"
-      redirect_to(:controller => "csvarchives", :action => "new", :all_variables_array => params[:all_variables_array],:title =>params[:archive][:title], :description => params[:archive][:description])
-      #    end
-    end
   end
 
   # some experimental code for creating the archive on the rails side.
@@ -575,7 +407,7 @@ class CsvarchivesController < ApplicationController
     all_variables_array = Array.new
     variable_hash = Hash.new
     params[:all_variables_array].each do |var|
-      puts "downloading " + var.to_s
+      # puts "downloading " + var.to_s
       variable = Variable.find(var)
       if (!variable_hash.has_key?(variable.survey_id))
         variable_hash[variable.survey_id] = Array.new
@@ -809,14 +641,6 @@ class CsvarchivesController < ApplicationController
           @archive.update_attributes(:complete => true)
       
         end
-        #            elsif response.response.class == Net::HTTPInternalServerError
-        #
-        #              logger.info( 'archive creation failed ' + @archive.object_id.to_s)
-        #              @archive.update_attributes(:failure => true)
-        #              flash[:error] = "Server reports that CSV archive creation failed, it is recommended that you recreate it"
-        #        respond_to do |format|
-        #          format.html { redirect_to csvarchive_path(@archive) }
-        #        end
       end
     end
   end
@@ -852,7 +676,7 @@ class CsvarchivesController < ApplicationController
         
         variable_hash = Hash.new
         @archive.variables.each do |var|
-          puts "downloading " + var.to_s
+          # puts "downloading " + var.to_s
           variable = Variable.find(var)
           if (!variable_hash.has_key?(variable.dataset_id))
             variable_hash[variable.dataset_id] = Array.new
@@ -897,40 +721,6 @@ class CsvarchivesController < ApplicationController
             Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream(do_file.name) { |f| f.puts do_file.data}}
             
           end
-          #create the do file with the metadata
-          # do_file_hash = Hash.new
-          # variable_hash.each_key do |key|
-          #   d = Dataset.find(key)
-          #   do_file = String.new
-          #   do_file << "***Extract title:  " + @archive.title + "\r\n"
-          #   do_file << "*** " + d.name + " (dataset)\r\n"
-          #   do_file << "*** " + d.survey.title + " (survey)\r\n"
-          #   do_file << "*** Created on: " + @archive.created_at.to_s(:rfc822) + "\r\n"
-          #   do_file << "version 11.0\r\nset more off\r\n"
-          #   do_file << "insheet using \""  + d.filename.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
-          #   do_file << "***Variables\r\n\r\n"
-          #   variable_hash[key].each do |var|
-          #       do_file << "*" + var.name + "\r\n"
-          #       do_file << "label var " + var.name + " " + "\"" + var.value + "\"\r\n"
-          #       if !var.value_domains.empty?
-          #         val_doms = String.new
-          #         var.value_domains.each do |value_domain|
-          #          
-          #         val_doms << value_domain.value + " \"" + value_domain.label + "\" "
-          #         end
-          #         do_file << "label define " + var.name + "_value_domain " + val_doms +"\r\n"
-          #         do_file << "label value " + var.name + " " + var.name + "_value_domain\r\n\r\n"
-          #       else 
-          #         do_file << "\r\n"
-          #       end
-          #   end
-          #   #finally stick the do file in the hash
-          #   puts do_file
-          #   do_file_hash[key] = do_file
-          # end
-          # do_file_hash.each_key do |key|
-          #   Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream(Dataset.find(key).name + "_do_file.txt") { |f| f.puts do_file_hash[key]}}
-          # end
         end
         
         Zip::ZipFile.open(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip", Zip::ZipFile::CREATE) {|zip| zip.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}}
@@ -946,18 +736,7 @@ class CsvarchivesController < ApplicationController
         File.delete(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip")
           
         end
-        
-        #        File.delete(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename  + "/" + uuid+ ".zip")
-        #        Dir.rmdir(RAILS_ROOT + "/" + "filestore" + "/" + @archive.filename)
-        #        send_data response.body, :filename => "csv.zip", :content_type => @archive.content_type, :disposition => 'attachment'
       end
-      #      elsif response.response.class == Net::HTTPInternalServerError
-      #
-      #        logger.info( 'archive creation failed ' + @archive.object_id.to_s)
-      #        @archive.update_attributes(:failure => true)
-      #        render :update, :status=>:created do |page|
-      #          page.redirect_to(:controller => 'csvarchives', :action => 'show', :id=>@archive.id)
-      #        end
     elsif params[:type]!="CSV"
       flash[:notice] = "This data extract is only available in CSV format."
        respond_to do |format|
@@ -971,6 +750,207 @@ class CsvarchivesController < ApplicationController
         format.html { redirect_to csvarchive_path(@archive) }
       end
     end
+  end
+  
+  #create the xml request for the csv server for this
+  #new data extract
+  def create_request_document variable_hash
+    doc = XML::Document.new()
+    doc.root = XML::Node.new('Datasets')
+    root = doc.root
+    root << mail = XML::Node.new('Email')
+    mail << User.find(current_user.id).person.email
+
+    root << filename = XML::Node.new('Filename')
+    filename << params[:archive][:title]
+  
+    variable_hash.each_key do |key|
+
+      root << dataset = XML::Node.new('Dataset')
+      dataset['datasetname'] = Dataset.find(key).name
+      dataset['name']= Dataset.find(key).uuid_filename
+      dataset['year']= Survey.find(Dataset.find(key).survey_id).year
+      dataset['survey']= Survey.find(Dataset.find(key).survey_id).survey_type.shortname
+      dataset << variables = XML::Node.new('Variables')
+      variable_hash[key].each do |var|
+        variables << variable = XML::Node.new('Variable')
+        variable << Variable.find(var).name
+      end
+    end
+    return doc
+  end
+  
+  #create the metadata file for this new extract
+  def create_metadata_file variable_hash
+    metadata = String.new
+     variable_hash.each_key do |key|
+       metadata << "\r\n" + Dataset.find(key).survey.title + "\r\n---------------"
+       metadata << "\r\n" + Dataset.find(key).name + "\r\n---------------"
+       variable_hash[key].each do |var|
+         variable = Variable.find(var)
+         metadata << "\r\nName: " + variable.name
+         if variable.value != nil
+           metadata << "\r\nLabel: " + variable.value
+         end
+         if variable.category!= nil
+           metadata << "\r\nCategory: " + variable.category
+         end
+         if variable.dertype!= nil
+           metadata << "\r\nDerivation Type: " + variable.dertype
+         end
+         if  variable.dermethod!= nil
+           metadata << "\r\nDerivation Method: " + variable.dermethod.gsub("\n", "\r\n")
+         end
+         if variable.info!=nil
+           metadata << "\r\nValue Information: " + variable.info.gsub("\n", "\r\n")
+         end
+         metadata << "\r\n---------------"
+       end
+       metadata << "\r\n\r\n\r\n---------------\r\n---------------"
+     end
+     return metadata
+  end
+  
+  #create stata do files for this new extract
+  def create_stata_do_files variable_hash
+    do_file_hash = Hash.new
+    variable_hash.each_key do |key|
+      d = Dataset.find(key)
+      do_file = String.new
+      do_file << "***Extract title:  " + params[:archive][:title] + "\r\n"
+      do_file << "*** " + d.name + " (dataset)\r\n"
+      do_file << "*** " + d.survey.title + " (survey)\r\n"
+      do_file << "version" + STATA_VERSION + "\r\nset more off\r\n"
+      do_file << "insheet using \""  + d.name.split(".")[0] + "_selection.csv\", clear\r\n\r\n"
+      do_file << "***Variables\r\n\r\n"
+      variable_hash[key].each do |var|
+        variable = Variable.find(var)
+          do_file << "*" + variable.name + "\r\n"
+          do_file << "label var " + variable.name + " " + "\"" + variable.value + "\"\r\n"
+          if !variable.value_domains.empty?
+            val_doms = String.new
+            variable.value_domains.each do |value_domain|
+             
+            val_doms << value_domain.value + " \"" + value_domain.label + "\" "
+            end
+            do_file << "label define " + variable.name + "_value_domain " + val_doms +"\r\n"
+            do_file << "label value " + variable.name + " " + variable.name + "_value_domain\r\n\r\n"
+          else 
+            do_file << "\r\n"
+          end
+      end
+      #finally stick the do file in the hash
+      # puts do_file
+      do_file_hash[key] = do_file
+    end
+    return do_file_hash
+  end
+  
+  #save any links to other 'things' for this new data extract
+  def save_all_links selected_surveys
+    if params[:scripts] != nil
+       params[:scripts].each do |script_id|
+       link = Link.new
+       link.subject = @archive
+       link.object = Script.find(script_id)
+       link.predicate = "link"
+       link.user = current_user
+       link.save
+       end
+     end
+     #automatically link from the selected datasets/surveys
+     selected_surveys.each do |survey_id|
+        link = Link.new
+        link.subject = @archive
+        link.object = Survey.find(survey_id)
+        link.predicate = "link"
+        link.user = current_user
+        link.save
+     end
+     if params[:data_extracts] != nil
+         params[:data_extracts].each do |extract_id|
+            link = Link.new
+            link.subject = @archive
+            link.object = Csvarchive.find(extract_id)
+            link.predicate = "link"
+            link.user = current_user
+            link.save
+         end
+     end
+     if params[:publications] != nil
+       # all_scripts_array = Array.new
+       params[:publications].each do |publication_id|
+       link = Link.new
+       link.subject = @archive
+       link.object = Publication.find(publication_id)
+       link.predicate = "link"
+       link.user = current_user
+       link.save
+       end
+     end
+  end
+  
+  #process the response to the create archive request from the csv server
+  def process_response response, all_variables_array, variable_hash, selected_surveys
+      xmlstring = String.new
+      # response.body.each do |str|
+        xmlstring = response
+      # end    
+
+      logger.info xmlstring
+      xmlparser = XML::Parser.string(xmlstring)
+      xmldoc = xmlparser.parse
+      root = xmldoc.root
+      @jobid = root.child.to_s
+  
+      # create metadata file and save it to the db 
+      metadata = create_metadata_file variable_hash
+    
+      #create a hash map containing the stata do files
+      do_file_hash = create_stata_do_files variable_hash
+
+      params[:archive][:filename] = @jobid
+      params[:archive][:complete] = false
+      params[:archive][:last_used_at] = Time.now
+      params[:archive][:content_type] = "application/zip"
+      params[:archive][:person_id] = User.find(current_user.id).person.id
+      params[:archive][:variables] = all_variables_array
+      params[:archive][:contributor_type] = "User"
+      params[:archive][:contributor_id] = current_user.id
+
+      @archive = Csvarchive.new(params[:archive])
+      @archive.content_blob = ContentBlob.new(:data => metadata)
+      @archive.save
+      do_file_hash.each_key do |key|
+        stata_do_file = StataDoFile.new
+        stata_do_file.name = Dataset.find(key).name + "_do_file.txt"
+        stata_do_file.csvarchive = @archive
+        stata_do_file.data = do_file_hash[key]
+        stata_do_file.save
+      end
+  
+      #we now have an id for the extract so save all of its links with other things
+      save_all_links selected_surveys
+    
+      if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+        puts "custom sharing here"
+        values = "{"
+        params[:groups].each do |workgroup_id|
+          values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+        end
+        values = values.chop
+        values << "}}"
+        values.insert(0,"{\"WorkGroup\":")
+        params[:sharing][:permissions][:values] = values
+        params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+        logger.info "custom permissions: " + values
+        puts params[:sharing][:permissions][:values]
+        puts params[:sharing][:permissions][:contributor_types]
+      end
+      policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
+      # update attributions
+      Relationship.create_or_update_attributions(@archive, params[:attributions])
+      puts "policy error: " + policy_err_msg    
   end
 
 end
