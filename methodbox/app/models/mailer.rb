@@ -2,6 +2,15 @@ class Mailer < ActionMailer::Base
   helper UsersHelper
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
+  
+  def data_extract_complete(data_extract_id, user_id)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Data Extract " + Csvarchive.find(data_extract_id).title + " ready"
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :data_extract => Csvarchive.find(data_extract_id)
+  end
 
   def new_message(message, base_host)
     recipients Person.find(message.to).email

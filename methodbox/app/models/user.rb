@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   # has_many :sops, :as => :contributor
   
   has_many :links
+  
+  has_many :csvarchives
 
   belongs_to :person, :dependent => :destroy
   #validates_associated :person

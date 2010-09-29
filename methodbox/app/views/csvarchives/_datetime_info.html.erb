@@ -1,6 +1,6 @@
 <div class="contribution_aftertitle" style="line-height: 1.5; margin-bottom: 0.8em;">
   <b>Created at:</b> <%= resource.created_at.strftime('%d/%m/%Y @ %H:%M:%S') -%>
-  <b>by </b><%= link_to h(resource.person.first_name + " " + resource.person.last_name), person_path(resource.person) -%>
+  <b>by </b><%= link_to h(resource.user.person.first_name + " " + resource.user.person.last_name), person_path(resource.user.person) -%>
   <br/>
   <b>Last updated at: </b>
 <%= resource.updated_at.blank? ? "never" : resource.updated_at.strftime('%d/%m/%Y @ %H:%M:%S') -%>

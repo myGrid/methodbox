@@ -1,0 +1,6 @@
+Hi <%= @name %>,
+
+Your data extract, <%= @data_extract.title %>, is ready for download.
+Find it at <%= link_to @data_extract.title, csvarchive_url(@data_extract) %> 
+
+- The MethodBox Team

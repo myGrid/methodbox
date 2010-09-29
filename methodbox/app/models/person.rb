@@ -37,8 +37,6 @@ class Person < ActiveRecord::Base
     :as => :owner,
     :dependent => :destroy
 
-  has_many :csvarchives
-
   has_many :group_memberships
 
   has_many :work_groups, :through=>:group_memberships

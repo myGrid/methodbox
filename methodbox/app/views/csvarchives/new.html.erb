@@ -17,7 +17,7 @@
 
         <p style="margin-top: 1.5em;">
           <b>Title:</b><font style="color: #FF0000;">*</font><br/>
-          <% archive_title_value = (params[:title].blank?) ? nil : params[:title] -%>
+          <% archive_title_value = (params[:archive].blank? || params[:archive][:title].blank?) ? nil : params[:archive][:title]-%>
           <%= text_field_tag 'archive[title]', archive_title_value, :style => "width: 100%;" -%>
         </p>
 
