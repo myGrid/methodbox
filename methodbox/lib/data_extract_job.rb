@@ -33,7 +33,7 @@ module DataExtractJob
         dataset = Dataset.find(key)
         csv_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_extract.csv")
         spss_csv_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_data.txt")
-        spss_code_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_code.sps"
+        spss_code_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_code.sps")
         FileUtils.remove_file(csv_path)
         FileUtils.remove_file(spss_csv_path)
         FileUtils.remove_file(spss_code_path)

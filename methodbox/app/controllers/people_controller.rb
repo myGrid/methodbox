@@ -69,7 +69,7 @@ class PeopleController < ApplicationController
     @person = Person.find(params[:id])
 
     #    check each archive to see if it is complete or not
-    archives = Csvarchive.find_all_by_person_id(params[:id])
+    archives = Csvarchive.find_all_by_user_id(@person.user)
 
     archives.each do |a|
       if !a.complete
