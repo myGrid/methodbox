@@ -35,6 +35,7 @@ Add Gems
 	gem install -v=2.3.3 rails
 	gem install rubygems-update
 	gem install mysql
+	gem install mime-types
 	
 Setup Mysql
 	Create user 'userName'@'localhost' identified by 'password';
