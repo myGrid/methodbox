@@ -82,6 +82,10 @@ config.gem 'RedCloth'
   # this will make the Authorization module available throughout the codebase
   require 'authorization'
   
+  #seems to fix the "A copy of AuthenticatedSystem has been removed from the module tree but is still active" problem - http://yanpritzker.com/2008/02/27/rails-20-dependency-system-problems/
+  #also need to set config.cache_classes = false in development.rb
+  config.load_once_paths += %W( #{RAILS_ROOT}/lib )
+  
 end
 
 require "will_paginate"
