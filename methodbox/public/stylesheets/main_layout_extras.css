@@ -77,6 +77,17 @@ text-decoration: underline;
 	border: 1px dotted gray;
 	padding: 5px;
 }
-
+.view-content {
+        width:60%;
+        float:left;
+}
+.facet-view-content {
+        width:30%;
+        margin-right: 2em;
+        float:right;
+}
+ol.exhibit-tileView-body li{
+        list-style: none outside none;
+}
 
 
