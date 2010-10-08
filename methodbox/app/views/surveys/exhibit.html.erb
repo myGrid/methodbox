@@ -1,0 +1,89 @@
+<%= javascript_include_tag 'survey_checkbox.js' -%>
+<% @survey_search_query="Enter search terms" unless @survey_search_query -%>
+<% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
+<% if !logged_in? -%>
+  <h2>Welcome, guest.  Please select some surveys and search for variables of interest to your research.  You can browse the metadata and see what is inside the MethodBox but only <%= link_to "registered users", signup_url -%> can add variables to their cart and download them.</h2><br/>
+<% else -%>
+  <h2>Select some surveys, enter a search term and click the button to find some variables</h2><br/>
+<% end -%>
+<% form_tag(:action => "search_variables") do -%>
+<!-- <div class="search-box-header">Find variables in selected surveys
+</div> -->
+<div class="survey-search-box">
+<%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
+<%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
+</div>
+<div ex:role="viewPanel" class="view-content">
+	<div ex:role="lens" class="content" ex:onshow="prepareLens(this);">
+		<div class="exhibit-checkbox-div" style="float:left;">
+		</div>
+		<div class="inner-view-content-block">
+		<div class="inner-view-content-description">
+			<!-- <b>Description:</b> -->
+			<span ex:content=".dataset-description" ></span>
+		</div>
+		<div class="inner-view-content">
+      		<!-- <b>Dataset Name:</b> -->
+      		<!-- <em><span ex:content=".name" ></span></em> -->
+      		<!-- <b>Year:</b> -->
+      		<span ex:content=".survey-type" ></span><span ex:content=".year" ></span>
+    	</div>
+    	<div class="inner-view-content">
+			<!-- <b>Survey Type:</b> -->
+    		<span ex:content=".url"></span>
+		</div>
+		</div>
+		<div style="clear:both;">
+		</div>
+	</div>
+	<div ex:role="view" ex:possibleOrders=".survey-type, .dataset-description, .year">
+	</div>
+	<div ex:role="exhibit-view"
+        ex:viewClass="Exhibit.TabularView"
+        ex:columns=".survey-type, .dataset-description, .year"
+        ex:columnLabels="survey, description, year"
+        ex:columnFormats="list, list, list"
+        ex:sortColumn="2"
+        ex:sortAscending="false">
+    </div>
+</div>
+<div class="facet-view-content">
+	<div class="facet-wrapper">
+		<div class="exhibit-facet-header">Search for surveys</div>
+		<div ex:role="facet" ex:facetClass="TextSearch"></div>
+	</div>
+	<div class="facet-wrapper">
+		<div ex:role="facet" ex:expression=".survey-type" ex:facetLabel="Survey type"></div>
+	</div>
+	<div class="facet-wrapper">
+		<div ex:role="facet" ex:expression=".year" ex:facetLabel="Year of survey"></div>
+	</div>
+</div>
+<div style="clear:all;"></div>
+
+<% end %>
+
+<script type="text/javascript">
+	var userdata=(<%= @surveys_json -%>);
+	window.database = Exhibit.Database.create();
+	window.database.loadData(userdata);
+	window.exhibit = Exhibit.create();
+	window.exhibit.configureFromDOM();
+	// window.exhibit = Exhibit.create();
+	//     window.exhibit.configureFromDOM();
+	// window.database = Exhibit.Database.create();
+	// Exhibit.InlineImporter = { };
+	// Exhibit.importers["inline"] = Exhibit.InlineImporter;
+	// Exhibit.InlineImporter.load = function(link, database, cont) {
+	// Exhibit.UI.showBusyIndicator(Exhibit.InlineImporter.userdata);
+	// database.loadData(Exhibit.InlineImporter.userdata);
+	// Exhibit.UI.hideBusyIndicator();
+	// if (cont) cont();
+	// };
+	function prepareLens(elmt) {
+		var itemID = elmt.readAttribute("ex:itemID");
+		var checkbox = new Element('input', {'type': 'checkbox', name: 'entry_ids[]', value: itemID});
+		var checkbox_div = elmt.select('.exhibit-checkbox-div');
+		checkbox_div[0].insert({top: checkbox});
+	}
+</script>
