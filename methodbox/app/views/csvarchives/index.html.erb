@@ -1,11 +1,4 @@
 <div>
-	<div style="padding-left:7px;text-align: center;width:100%">
-		<% form_tag '/search/' do -%>
-  			<%= hidden_field_tag 'search_type', 'data extracts' -%>
-  			<%= text_field_tag :search_query, @search_query -%>
-  			<%= submit_tag "Search" ,:title=> "Enter a term and click to search all data extracts"-%>
-		<% end  -%>
-	</div>
 	<% unless @all_archives.empty? %>
   		<div class="tabber" id="archivestab">
     		<div id="my_archives_tab" class="tabbertab" title="All of the data extracts you have created">

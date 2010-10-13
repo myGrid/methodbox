@@ -6,13 +6,6 @@
 
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
 <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
-
-<ul class="sectionIcons">
-	<% if current_user && current_user.is_admin? %>
-	  <li><%= icon "new", new_survey_path, "Create a new survey", nil, "Create a new survey" %></li>
-	<% end -%>
-	  <!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
-	</ul>
 	<!-- might be able to upload user surveys in future -->
   <!--<li><%#= icon "new", new_survey_path, "Upload New Survey", nil, "Upload New Survey" %></li>-->
   <!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->

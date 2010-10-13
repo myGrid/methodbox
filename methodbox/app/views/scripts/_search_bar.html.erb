@@ -1,0 +1,6 @@
+<div class="center"><% form_tag '/search/' do -%>
+  <%= hidden_field_tag 'search_type', 'methods' -%>
+  <%= text_field_tag :search_query, @search_query, :class=>"search_button" -%>
+  <%= submit_tag "Search for methods" ,:title=> "Enter a term and click to search all methods and scripts" -%>
+<% end  -%>
+</div>

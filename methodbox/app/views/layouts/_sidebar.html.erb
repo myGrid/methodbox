@@ -1,21 +1,23 @@
+<div class="sidebar">
+	<ul class="vbuttons">
 <% if logged_in? -%>
-  <%#= render :partial => "gadgets/new_object_gadget" -%>
-
-  <%= render :partial => "gadgets/who_am_i" -%>
-<div id="cart">
-    <%= render :partial => "surveys/cart", :object => @cart -%>
-</div>
-<%= render :partial=>"gadgets/tag_cloud_gadget", :object=>Person.expertise_counts, :locals=>{:type=>"expertise",:title=>"Expertise"} -%>
-<%#= render :partial=>"gadgets/tag_cloud_gadget", :object=>Variable.title_counts, :locals=>{:type=>"variable",:title=>"Variables"} -%>
-
-<%#= render :partial=>"gadgets/search_gadget" %>
+	<% if controller.controller_name.downcase == 'scripts' %>
+		<li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
+	<% end %>
+	<% if controller.controller_name.downcase == 'csvarchives' %>
+		<li><%= icon "new", new_script_url, "Create a data extract", nil, "Create a data extract" %></li>
+	<% end %>
+	<% if controller.controller_name.downcase == 'surveys' && current_user && current_user.is_admin? %>
+	  <li><%= icon "new", new_survey_path, "Create a new survey", nil, "Create a new survey" %></li>
+	<% end -%>
 <% else -%>
-  <%= render :partial => "gadgets/sign_in" -%>
-<% end -%>
+		<li><%= icon "show", surveys_url, "Search for variables", nil, "Search for variables" %></li>
+<% end %>
+	</ul>
+<% if controller.controller_name.downcase == 'csvarchives' ||  controller.controller_name.downcase == 'scripts' %>
+	<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
+<% end %>
+</div>
 
-
-
-<%#= render :partial=>"gadgets/tag_cloud_gadget", :object=>Person.tool_counts, :locals=>{:type=>"tools",:title=>"Tools and Techniques"} %>
-<%#= render :partial=>"gadgets/tag_cloud_gadget", :object=>Project.organism_counts, :locals=>{:type=>"organisms",:title=>"Studies"} %>
 
 

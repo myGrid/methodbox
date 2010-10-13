@@ -169,6 +169,7 @@ table.list_item p.section_header {
 
 table.list_item td {
     vertical-align: top;
+	background-color:#FFFFFF;
 }
 
 table.list_item .item_avatar {
@@ -359,7 +360,7 @@ table.list_item .tags {
 }
 
 .tabberlive {
-	margin-top: 1em;
+	margin-top: 0em;
 }
 
 /*--------------------------------------------------
@@ -395,7 +396,7 @@ ul.tabbernav li a
 /*	background-image: url('/images/tab-bg.png');*/
 	background-position: top;
 	background-repeat: repeat-x;
-	background-color: #CCCCff;
+	background-color: #ACCBE0;
 	text-decoration: none;
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
@@ -416,7 +417,7 @@ ul.tabbernav li a:hover
 
 ul.tabbernav li.tabberactive a
 {
-	background: #fff;
+	background: #F8F2E5;
 	border-bottom: 1px solid #fff;
 }
 
@@ -435,6 +436,7 @@ ul.tabbernav li.tabberactive a:hover
 	padding: 1em;
 	border: 1px solid #CCC;
 	border-top: 0;
+	background-color: #F8F2E5;
 
  /* If you don't want the tab size changing whenever a tab is changed
     you can set a fixed height */

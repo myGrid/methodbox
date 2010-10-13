@@ -8,6 +8,7 @@
 	padding-left: 10px;
 /* IE needs this or it might centre the tabs */ 
 	text-align: left;
+	margin-left: 15em;
 	}
 
 .main_tabnav ul {

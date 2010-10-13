@@ -54,11 +54,11 @@ class HomeController < ApplicationController
   end
   
   def select_layout
-    # if logged_in?
+    if logged_in?
       return 'main'
-    # else
-      # return 'logged_out'
-    # end
+    else
+      return 'main_without_sidebar'
+    end
   end
 
   private

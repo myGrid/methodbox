@@ -1,30 +1,3 @@
-<div><div style="padding-left:7px;float:left;width:50%"><% form_tag '/search/' do -%>
-  <%= hidden_field_tag 'search_type', 'methods' -%>
-  <%= text_field_tag :search_query, @search_query -%>
-  <%= submit_tag "Search" ,:title=> "Enter a term and click to search all methods and scripts"-%>
-<% end  -%>
-</div>
-<ul class="sectionIcons" style="text-align:left;">
-  <li><%= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %></li>
-  <!-- <li><%#= icon "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
-</ul>
-</div>
-
-<%#= icon "new", new_script_path, "Upload New Method", nil, "Upload New Method" %>
-
-
-<%# if @scripts.public_methods.include?("page_count") %>
-  <!-- only do the page links if the collection supports it -->
-  <%#= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
-<%# end %>
-
-<%#= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>false } %>
-
-<%# if @scripts.public_methods.include?("page_count") %>
-  <!-- only do the page links if the collection supports it -->
-  <%#= render :partial => "layouts/paginate", :locals => { :collection => @scripts } -%>
-<%# end %>
-
 <%= will_paginate(@scripts) %>
 <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
 <%= will_paginate(@scripts) %>
