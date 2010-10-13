@@ -8,6 +8,13 @@ module ApplicationHelper
   
   include TagsHelper
   
+  #dynamic sidebar for each contoller
+  def render_sidebar
+    if FileTest.exist?(File.join(RAILS_ROOT, 'app', 'views', controller.controller_name.downcase, '_sidebar.html.erb')) 
+      render :partial => "#{controller.controller_name.downcase}/sidebar"
+    end
+  end
+  
   #used in publication views.  taken straight from sysmo. not use anywhere else 
   #an avatar with an image_tag_for_key in the corner to show it can be favourited
   def favouritable_icon(item, size=100)
