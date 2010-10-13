@@ -19,8 +19,8 @@
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @people } -%>
 <% end %>
-
-<%= render :partial => "resource_list_item", :collection=>@people %>
+      			<%= render :partial => "assets/resource_list", :locals => { :collection => @people, :authorization_for_showing_already_done=>true} %>
+<%#= render :partial => "resource_list_item", :collection=>@people %>
 
 <% if @people.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->

@@ -139,7 +139,7 @@ ol.exhibit-tileView-body li{
   	border-collapse: separate;
   	border-spacing: 10px;
   	border: none;
-  	background-color: #F8F2E5;
+/*  	background-color: #F8F2E5;*/
   	border-color: #CCC;
 }
 
@@ -167,10 +167,14 @@ ol.exhibit-tileView-body li{
 
 .listings_table td.blank {
    	border: none;
-   	background-color: #F8F2E5;
+   	background-color: white;
    	-moz-box-shadow: none;
   	-webkit-box-shadow: none;
   	box-shadow: none;
+}
+
+.listings_blank td.blank {
+	background-color: #F8F2E5;
 }
 
 /* END listings styles */
@@ -259,8 +263,9 @@ ul.buttons li a * {
 }
 
 ul.vbuttons {
-  font-weight: bold;
-	margin-left: none;
+  	font-weight: bold;
+	margin-left:1em;
+	text-align:center;
 }
 
 ul.vbuttons li {
