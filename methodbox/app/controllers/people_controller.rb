@@ -27,7 +27,6 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
   def index
-
     if current_user.is_admin && ADMIN_CAN_SEE_DORMANT
       condition = nil
     else

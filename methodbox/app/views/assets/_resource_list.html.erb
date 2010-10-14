@@ -1,6 +1,7 @@
 <% authorization_for_showing_already_done ||= false -%>
 <% unless collection.empty? -%>
 		<% tableize collection, 
+		  :cols => 3,
 		  :header => nil,
 		  :name => "listings",
 		  :id => "listings_table",

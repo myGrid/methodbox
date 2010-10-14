@@ -616,7 +616,7 @@ class ApplicationController < ActionController::Base
 
   #The default for the number items in a page when paginating
   def default_items_per_page
-    7
+    9
   end
 
   def default_variables_per_page
