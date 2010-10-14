@@ -1,0 +1,8 @@
+<% if logged_in? -%>
+	<div class="sidebar">
+		<ul class="vbuttons">
+			<li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
+		</ul>
+		<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
+	</div>
+<% end %>

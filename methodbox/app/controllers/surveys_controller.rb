@@ -434,6 +434,8 @@ class SurveysController < ApplicationController
 
     @archives = source_archives
     @scripts = source_scripts
+    
+    find_all_categories
     # @publications = source_publications
 
     respond_to do |format|
@@ -836,6 +838,18 @@ class SurveysController < ApplicationController
             end
           end
           
+    end
+    
+    def find_all_categories
+      @all_categories = []
+      @survey.datasets.each do |dataset|
+        cats = Variable.all(:select => "DISTINCT(category)",:conditions=>({:dataset_id => dataset.id}))
+        cats.each do |var|
+          @all_categories << var.category
+        end
+      end
+      @all_categories.uniq!
+      @all_categories.sort!
     end
 
 end

@@ -6,7 +6,7 @@
 <%#= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
 <%#= hidden_field_tag 'watch_variable', 'watch_variable' %>
 
-<h1 class="contribution_title">All Variables with category = <%= h(@category) -%></h1>
+<h1 class="contribution_title"><%= @title -%> with category = <%= h(@category) -%></h1>
 
 <div class="show_basic" style="padding-right: 2em;">
   <% form_remote_tag :url => { :action => "add_multiple_to_cart"} do -%>
