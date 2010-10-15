@@ -99,6 +99,8 @@
       <div style="width:875px;margin:auto;color:red;">No value information recorded for this variable</div>
     <% end -%>
   </div>
+  <!-- <%= item.name %> -->
+  <%= render :partial => "variables/statistics_table",:locals=>{:variable => item} %> 
   <!-- <div> -->
     <%# if !item.variable_links.empty? -%>
       <!-- <div style="width:875px;margin:auto;">Grouped with:</div> -->
