@@ -20,6 +20,17 @@ class SurveysController < ApplicationController
 
   before_filter :find_survey, :only => [:show, :edit, :update]
 
+  #ajax remote for displaying the surveys for a specific survey type
+  def show_datasets_for_categories
+    render :update, :status=>:created do |page|
+      page.replace_html "categories", :partial=>"surveys/survey_categories"
+    end
+  end
+  
+  #display all the different survey types
+  def category_browse
+    @survey_types = SurveyType.all
+  end
   # browse surveys using exhibit
   def exhibit
     puts "exhibit json"

@@ -23,7 +23,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => 'http'}
 
 
-  map.resources :surveys, :member => {:download => :get}, :collection => {:exhibit => :get, :view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :search_stuff=>:get, :grid_view => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
+  map.resources :surveys, :member => {:download => :get}, :collection => {:show_datasets_for_categories => :post, :category_browse => :get, :exhibit => :get, :view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :search_stuff=>:get, :grid_view => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
 
   map.resources :csvarchives, :member => {:download => :get}, :collection =>{:recreate => :post, :help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
 

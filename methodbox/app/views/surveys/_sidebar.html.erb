@@ -2,9 +2,14 @@
 	<ul class="vbuttons">
 <% if logged_in? -%>
 	<% if current_user.is_admin? %>
-	  <li><%= icon "new", new_survey_path, "Create a new survey", nil, "Create a new survey" %></li>
+	  <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
+	<% if controller.action_name == "show" %>
 	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-	<% end -%>
+	<% end %>
+		<% end -%>
+			<li><%= icon "show", surveys_url, "Browse by surveys", nil, "Browse by surveys" %></li>
+	<li><%= icon "show", category_browse_surveys_url, "Browse by categories", nil, "Browse by categories" %></li>
+		<li><%= icon "show", exhibit_surveys_url, "Browse by facets", nil, "Browse by facets" %></li>
 <% end %>
 	</ul>
 </div>

@@ -349,3 +349,12 @@ a.button_slim * {
 	margin-bottom: 0.5em;
 }
 /* END Buttons */
+
+/* Survey Category browsing start */
+ul.vbuttons .category-browse.li {
+	display: inline;
+	border: 1px solid black;
+	padding: 2px;
+	margin: 2px;
+	line-height: 2;
+}
