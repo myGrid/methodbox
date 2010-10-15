@@ -14,7 +14,12 @@ module DataExtractJob
       begin
         data_extract = Csvarchive.find(data_extract_id)
         logger.info("performing csv extraction for " + data_extract.title + ", user " + user_id.to_s)
-        create_csv_files
+        begin
+          create_csv_files
+        rescue  
+          #OK then lets try it the old way
+          create_csv_files_from_uuid_files
+        end  
         create_metadata_files
         create_stata_do_files
         create_spss_files
@@ -40,6 +45,85 @@ module DataExtractJob
       }
     end
     
+    def create_csv_files
+      data_extract = Csvarchive.find(data_extract_id)
+      logger.info("creating files for " + data_extract.title + ", user " + user_id.to_s)
+      puts("creating files for " + data_extract.title + ", user " + user_id.to_s)
+      logger.info(variable_hash.to_s)
+      puts(variable_hash.to_s)
+      data_extact_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
+      FileUtils.mkdir(data_extact_directory)
+      variable_hash.each_key do |key|
+          dataset = Dataset.find(key)
+          logger.info("creating cvs files for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
+          puts("creating cvs files for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
+          new_csv_path = File.join(data_extact_directory, dataset.name + "_extract.csv")
+          spss_csv_path = File.join(data_extact_directory, dataset.name + "_selection_spss_data.txt")
+          new_csv_file = File.new(new_csv_path , "w")
+          spss_csv_file = File.new(spss_csv_path , "w")
+          dataset_file = dataset.uuid_filename
+                   
+          #ogger.info("data_directory")
+          #ogger.info(data_directory)
+          #uts(data_directory)
+          
+          survey = Survey.find(dataset.survey_id)
+          survey_year = survey.year
+          names = []
+          column_files = []
+          variable_hash[key].each do |var|
+              #uts(key)
+              variable = Variable.find(var)
+              name = variable.name
+              names.push(name)
+              path = variable.data_file
+              file = File.open(path, "r")
+              column_files << file
+          end
+          info = ["row", "year"]
+          headers = info + names
+          
+          # push headers for csv only, not for spss
+          header_string = String.new
+          headers.each do |header|
+            header_string << header + ","
+          end
+          header_string.chop!
+          puts(header_string)
+          header_string << "\r\n"
+          new_csv_file.write(header_string)
+
+          puts (column_files.to_s) 
+          puts (column_files[0]) 
+          i = 1
+          while (not column_files[0].eof) do
+              out_line = i.to_s + "," + dataset.survey.year
+              column_files.each do |column_file|
+                  line = column_file.readline
+                  #uts("line:"+line+":")
+                  out_line << "," + line
+              end            
+              out_line.chop!
+              #uts("out_line:"+out_line)
+              out_line << "\r\n"
+              new_csv_file.write(out_line)
+              spss_csv_file.write(out_line)
+              i = i + 1
+          end 
+          #uts("closing")
+          new_csv_file.close
+          spss_csv_file.close
+          #uts (column_files.to_s) 
+          column_files.each { |column_file| 
+            puts (column_file.to_s)
+            column_file.close 
+          }
+          logger.info("completed for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
+          #uts("Closed")
+        # }
+      end # variable_hash.each_key do |key|
+    end #create_csv_files
+
     def email_complete_to_user
       logger.info("email user")
       Mailer.deliver_data_extract_complete(data_extract_id, user_id) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
@@ -203,7 +287,7 @@ module DataExtractJob
         Csvarchive.find(data_extract_id).update_attributes(:content_blob=>content_blob)
     end
     
-    def create_csv_files
+    def create_csv_files_from_uuid_files
       data_extract = Csvarchive.find(data_extract_id)
       logger.info("creating files for " + data_extract.title + ", user " + user_id.to_s)
       data_extact_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
@@ -230,7 +314,6 @@ module DataExtractJob
           header_line.chop!
           all_headers = header_line.split("\t")
           header_position = []
-          begin
           thread_hash[thread_key].each do |var|
             variable = Variable.find(var)
             name = variable.name
@@ -241,9 +324,6 @@ module DataExtractJob
             end
             header_position.push(position)
           end
-        rescue Exception => e
-          puts e
-        end
           info = ["row", "year"]
           headers = info + names
           
@@ -257,7 +337,6 @@ module DataExtractJob
           new_csv_file.write(header_string)
 
           i = 1
-          begin
           csv_file.each_line do |row|
             line = row.split("\t")
             out_line = i.to_s + "," + dataset.survey.year + ","
@@ -270,9 +349,6 @@ module DataExtractJob
             spss_csv_file.write(out_line)
             i = i + 1
           end
-        rescue Exception => e
-          puts e
-        end
           new_csv_file.close
           spss_csv_file.close
           logger.info("completed for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
