@@ -29,4 +29,37 @@ class Variable < ActiveRecord::Base
     return hyphened
   end
   
+  def none_values_hash
+    hash = Hash.new(0)  
+    if self.none_values_distribution_file
+      #hash["path"]= self.none_values_distribution_file
+      file = File.open(self.none_values_distribution_file, "r")
+      #hash["file"] = file.to_s
+      file.each_line do |line|
+        parts = line.split(",",2)	  
+        frequecy = Integer(parts[1])
+        hash[parts[0]] = frequecy 
+      end  
+      file.close()
+    end
+    #hash["test"]="success"
+    #hash["more"]="yep"
+    return hash
+  end
+  
+  def values_hash
+    hash = Hash.new(0)  
+    if self.values_distribution_file
+      file = File.open(self.values_distribution_file, "r")
+      file.each_line do |line|
+        parts = line.split(",",2)	      
+        value = Float(parts[0])
+        frequecy = Integer(parts[1])
+        hash[value] = frequecy
+
+      end  
+    end
+    return hash
+  end
+
 end
