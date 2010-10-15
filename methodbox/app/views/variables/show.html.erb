@@ -130,24 +130,78 @@
         <%= link_to(Dataset.find(@variable.dataset_id).survey.survey_type.shortname + " " + Dataset.find(@variable.dataset_id).survey.year, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
       </p>
-<% unless @variable.updated_by.blank? %>
-	<p><b>Metadata last updated by:
-		<div class="box_standout">
-          <%= link_to User.find(@variable.updated_by).person.name, person_path(User.find(@variable.updated_by).person) -%>
+
+      <p>
+        <b>Statistics:</b>
+        <div class="box_standout">
+          <%= render :partial => "variables/statistics_table",:locals=>{:variable => @variable} %>
         </div>
-</p>
-	<p><b>Reason:
-		        <% unless @variable.update_reason.blank? -%>
-		<div class="box_standout">
-          <%= @variable.update_reason -%>
-        </div>
-      <% else -%>
-        <p class="none_text">
-          No reason given
+      </p>
+
+      <!-- TODO Style cleanup Including highlighting header line. -->
+      <% hash = @variable.none_values_hash -%>
+      <% if hash.size > 0 -%>
+        <p>
+          <b>Entries not considered Values:</b>
+          <div class="box_standout">
+            <table>
+              <tr>
+                <td> Entry </td>
+                <td> Frequency </td>
+              <tr>  
+              <% hash.sort.each do |entry, frequency| -%>
+                <tr>
+                  <td> <%= entry %> </td>
+                  <td> <%= frequency %> </td>
+                <tr>                  
+              <% end -%>
+            </table>
+          </div>
         </p>
-<% end %>
-</p>
-<% end -%>
+      <% end -%>  
+
+     <!-- TODO add a paramter to control when it long values lists - could be in the thousands -->
+     <!-- TODO Style cleanup Including highlighting header line.-->
+     <% hash = @variable.values_hash -%>
+      <% if hash.size > 0 && hash.size <= 20 -%>
+        <p>
+          <b>Entries considered Values:</b>
+          <div class="box_standout">
+            <table>
+              <tr>
+                <td> Vlaue </td>
+                <td> Frequency </td>
+              <tr>  
+              <% hash.sort.each do |value, frequency| -%>
+                <tr>
+                  <td> <%= value %> </td>
+                  <td> <%= frequency %> </td>
+                <tr>                  
+              <% end -%>
+            </table>
+          </div>
+        </p>
+      <% end -%>  
+
+     <!-- TODO Style cleanup Including highlighting header line.-->
+      <% unless @variable.updated_by.blank? %>
+        <p><b>Metadata last updated by:
+          <div class="box_standout">
+            <%= link_to User.find(@variable.updated_by).person.name, person_path(User.find(@variable.updated_by).person) -%>
+          </div>
+        </p>
+        <p><b>Reason:
+          <% unless @variable.update_reason.blank? -%>
+            <div class="box_standout">
+              <%= @variable.update_reason -%>
+            </div>
+          <% else -%>
+            <p class="none_text">
+              No reason given
+            </p>
+          <% end %>
+        </p>
+      <% end -%>
       <!-- <p> -->
         <%# if !@variable.variable_links.empty? -%>
           <!-- <b>Grouped by:</b> -->
