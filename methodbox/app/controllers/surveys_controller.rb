@@ -22,6 +22,9 @@ class SurveysController < ApplicationController
 
   #ajax remote for displaying the surveys for a specific survey type
   def show_datasets_for_categories
+    survey_type = SurveyType.find(params[:survey_type_id])
+    @surveys= Survey.all(:conditions=>({:survey_type_id=>survey_type.id}))
+    find_all_categories survey_type.id
     render :update, :status=>:created do |page|
       page.replace_html "categories", :partial=>"surveys/survey_categories"
     end
@@ -446,7 +449,7 @@ class SurveysController < ApplicationController
     @archives = source_archives
     @scripts = source_scripts
     
-    find_all_categories
+    find_all_categories_for_survey
     # @publications = source_publications
 
     respond_to do |format|
@@ -851,7 +854,10 @@ class SurveysController < ApplicationController
           
     end
     
-    def find_all_categories
+    #find the variable categories for a specific survey (@survey)
+    def find_all_categories_for_survey
+      ["#{Monitorship.table_name}.user_id = ? and #{Post.table_name}.user_id != ? and #{Monitorship.table_name}.active = ?", params[:user_id], @user.id, true]
+       inner join Surveys on Surveys.dataset#{Monitorship.table_name} on #{Monitorship.table_name}.topic_id = #{Topic.table_name}.id"
       @all_categories = []
       @survey.datasets.each do |dataset|
         cats = Variable.all(:select => "DISTINCT(category)",:conditions=>({:dataset_id => dataset.id}))
@@ -860,6 +866,15 @@ class SurveysController < ApplicationController
         end
       end
       @all_categories.uniq!
+      @all_categories.sort!
+    end
+    
+    #find the variable categories for all surveys with a survey_type
+    def find_all_categories survey_type_id
+      # @all_categories = Variable.all(:select => "DISTINCT(category)",:conditions=>({:dataset.survey_type_id => survey_type_id}), :joins=>:dataset)
+      categories = Variable.find_by_sql("select distinct(variables.category) from variables, datasets, surveys, survey_types where variables.dataset_id = datasets.id and datasets.survey_id = surveys.id and surveys.survey_type_id = #{survey_type_id}")
+      @all_categories = categories.collect{|var| var.category}
+      @all_categories.delete_if{|cat| cat==nil}
       @all_categories.sort!
     end
 

@@ -1,7 +1,9 @@
+<div id="survey_list">
 <ul class="buttons">
 <% @survey_types.each do |survey_type| %>
 <li><%= link_to_remote survey_type.name, :url => { :action => "show_datasets_for_categories", :survey_type_id => survey_type.id } -%></li>
 <% end %>
 </ul>
+</div>
 <div id="categories">
 </div>

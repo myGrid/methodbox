@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100928135147) do
+ActiveRecord::Schema.define(:version => 20101013121426) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -575,12 +575,24 @@ ActiveRecord::Schema.define(:version => 20100928135147) do
     t.string   "page"
     t.integer  "current_version"
     t.integer  "updated_by"
-    t.boolean  "is_archived",     :default => false
+    t.boolean  "is_archived",                                  :default => false
     t.string   "archived_reason"
     t.integer  "archived_by"
     t.datetime "archived_on"
     t.string   "update_reason"
     t.integer  "replaced_by"
+    t.string   "data_file",                     :limit => 100
+    t.string   "none_values_distribution_file", :limit => 100
+    t.string   "values_distribution_file",      :limit => 100
+    t.float    "mean"
+    t.float    "medium"
+    t.float    "mode"
+    t.float    "standard_deviation"
+    t.float    "min_value"
+    t.float    "max_value"
+    t.integer  "number_of_unique_entries"
+    t.integer  "number_of_unique_values"
+    t.integer  "number_of_blank_rows"
   end
 
   create_table "watched_variables", :force => true do |t|

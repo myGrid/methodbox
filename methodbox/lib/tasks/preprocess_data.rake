@@ -67,16 +67,19 @@ namespace :obesity do
     did = dataset.id
     variables = Variable.find(:all, :conditions => "dataset_id =  #{did}")
     count = variables.size
-    if count <= 500
+    puts "count " + count.to_s
+    if count <= 250
       process_part_dataset(dataset, 0, count-1)
     else
       first_column = 0
-      last_column = 499
+      last_column = 249
       while first_column < count  
+        puts "first column " + first_column.to_s
+        puts "last column " + last_column.to_s
         #uts count.to_s + " < " + count.to_s
         process_part_dataset(dataset, first_column, last_column)
         first_column = last_column + 1
-        last_column = last_column + 500
+        last_column = last_column + 250
         if last_column >= count
           last_column = count - 1
         end
@@ -103,7 +106,7 @@ namespace :obesity do
     if all_headers.size <= last_column
       puts "Error processing dataset " + dataset.id.to_s
       puts "Less than expected headers found"
-      puts "Expected " + last_column + " found " + all_headers.size
+      puts "Expected " + last_column.to_s + " found " + all_headers.size.to_s
       puts header_line
       raise "Incorrect header"
     end

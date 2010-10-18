@@ -3,6 +3,13 @@ class VariablesController < ApplicationController
   before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
 
+
+  def find_for_multiple_surveys_by_category
+    render :update, :status=>:created do |page|
+      page.replace_html "variables_list", "blah"
+    end
+  end
+  
   def deprecate
     find_variable
     deleted_id = @variable.id

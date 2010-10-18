@@ -27,7 +27,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :csvarchives, :member => {:download => :get}, :collection =>{:recreate => :post, :help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}, :requirements => {:protocol => 'http'}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}, :requirements => {:protocol => 'http'}
 
   map.resources :assets,:member=>{:request_resource=>:post}, :requirements => {:protocol => 'http'}
 
