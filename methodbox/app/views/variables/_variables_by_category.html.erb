@@ -1,0 +1,39 @@
+<%#= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
+<%#= hidden_field_tag 'tag_button', 'tag' %>
+<%#= hidden_field_tag 'year_of_survey', 'survey_year' %>
+<%#= hidden_field_tag 'variable_name', 'variable_name' %>
+<%#= hidden_field_tag 'variable_identifier', 'variable_identifier' %>
+<%#= hidden_field_tag 'watch_variable', 'watch_variable' %>
+
+<div class="show_basic">
+  <% form_remote_tag :url => { :action => "add_multiple_to_cart"} do -%>
+    <%= hidden_field_tag 'submit', 'add' %>
+<% if logged_in? -%>
+    <div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
+      <div><%= submit_tag 'Add selected variables to cart', :name=>"_submit", :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%>
+      </div><br/>
+      <div>Select:
+        <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+        ,&nbsp
+        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+        ,&nbsp
+        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+
+      </div>
+      <div id="cart_button" style="position: absolute; top:1em; right:1em;">
+        <%= render :partial => "cart/button" -%>
+      </div>
+    </div>
+    <br/>
+    <br/>
+<% end -%>
+    <div id="table_header" class="faux_table_header_container">
+      <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables} -%>
+    </div>
+    <div id="table_container" class="faux_table_container">
+      <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables} -%>
+    </div>
+  <% end -%>
+
+</div>

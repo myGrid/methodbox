@@ -5,8 +5,16 @@ class VariablesController < ApplicationController
 
 
   def find_for_multiple_surveys_by_category
+    @sorted_variables = []
+    @category = params[:category]
+    params[:survey_ids].each do |survey_id|
+      survey = Survey.find(survey_id)
+      survey.datasets.each do |dataset|
+        @sorted_variables.concat(Variable.all(:conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
+      end
+    end
     render :update, :status=>:created do |page|
-      page.replace_html "variables_list", "blah"
+      page.replace_html "variables_list", :partial => "variables_by_category"
     end
   end
   
