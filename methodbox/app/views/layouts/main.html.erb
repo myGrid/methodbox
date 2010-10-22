@@ -26,7 +26,7 @@
 					<%= render :partial=>"layouts/main_header" %>
 				</div>
 				<%#= render :partial=>"layouts/tabnav" %>
-				<%= tabnav :main %>
+					<%= tabnav :main %>
 				<div id="bd">
 					<div id="yui-main">
 						<div class="yui-b">
@@ -52,7 +52,7 @@
 						</div>
 						</div>
 					</div>
-					<div class="yui-b"><%= render_sidebar -%><%#= render :partial=>"layouts/sidebar" %></div>
+					<div class="yui-b"><%= render_sidebar -%><%= render :partial=>"layouts/sidebar" %></div>
 				</div>
 				<div id="ft" style="margin-top:1em; margin-bottom: 0;">
 					<%= render :partial=>"layouts/footer" %>

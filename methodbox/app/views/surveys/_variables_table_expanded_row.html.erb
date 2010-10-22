@@ -53,50 +53,50 @@
     </ul>
   </div>
   <% if item.name.size > 20 -%>
-    <div style="width:875px;margin:auto;">Actual Variable name: <%= item.name -%></div>
+    <div style="margin:auto;">Actual Variable name: <%= item.name -%></div>
     <br/>
   <% end -%>
   <div>
     <% unless item.document.blank? -%>
-      <div style="width:875px;margin:auto;">Document: 
+      <div style="margin:auto;">Document: 
         <%= link_to(item.document + ", page " + item.page, open_pdf_variable_url(item) + "#page=" + item.page,:title=>"Open the PDF document with information about this variable") -%>
       </div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No documentation listed</div>
+      <div style="margin:auto;color:red;">No documentation listed</div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% if item.category != nil -%>
-      <div style="width:875px;margin:auto;">Category: <%= item.category -%></div>
+      <div style="margin:auto;">Category: <%= item.category -%></div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No category recorded for this variable</div>
+      <div style="margin:auto;color:red;">No category recorded for this variable</div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% unless item.dertype.blank? -%>
-      <div style="width:875px;margin:auto;">Variable source: <%= item.dertype %></div>
+      <div style="margin:auto;">Variable source: <%= item.dertype %></div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No source</div>
+      <div style="margin:auto;color:red;">No source</div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% unless item.dermethod.blank? -%>
-      <div style="width:875px;margin:auto;">Derivation method:</div>
-      <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;"><pre><%=  item.dermethod -%></pre></div>
+      <div style="margin:auto;">Derivation method:</div>
+      <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre><%=  item.dermethod -%></pre></div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No derivation method recorded for this variable</div>
+      <div style="margin:auto;color:red;">No derivation method recorded for this variable</div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% if item.info != nil -%>
-      <div style="width:875px;margin:auto;">Allowed values:</div>
-      <div style="width:875px;margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
+      <div style="margin:auto;">Allowed values:</div>
+      <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
     <% else -%>
-      <div style="width:875px;margin:auto;color:red;">No value information recorded for this variable</div>
+      <div style="margin:auto;color:red;">No value information recorded for this variable</div>
     <% end -%>
   </div>
   <!-- <%= item.name %> -->

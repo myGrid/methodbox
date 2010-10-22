@@ -7,6 +7,9 @@
 <%#= hidden_field_tag 'watch_variable', 'watch_variable' %>
 
 <div class="show_basic">
+	<% if @sorted_variables.empty? %>
+	There are no variables with category <%= @category %> for the selected surveys
+	<% else %>
   <% form_remote_tag :url => { :action => "add_multiple_to_cart"} do -%>
     <%= hidden_field_tag 'submit', 'add' %>
 <% if logged_in? -%>
@@ -35,5 +38,5 @@
       <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
   <% end -%>
-
+	<% end %>
 </div>

@@ -104,7 +104,7 @@ ol.exhibit-tileView-body li{
 }
 .sidebar {
 	background-color: #F8F2E5;
-	min-height: 25em;
+/*	min-height: 25em;*/
 	-moz-border-radius: 8px;
   	-webkit-border-radius: 8px;
 /*  	margin: 10px;*/
@@ -116,6 +116,9 @@ ol.exhibit-tileView-body li{
 /*  	-moz-box-shadow: 2px 2px 2px #CCC;
   	-webkit-box-shadow: 2px 2px 2px #CCC;
   	box-shadow: 2px 2px 2px #CCC;*/
+	margin-bottom: 1em;
+	padding-bottom:0.5em;
+	padding-top:0.5em;
 }
 .box_standout {
   	color: #333333;
@@ -357,4 +360,10 @@ ul.vbuttons .category-browse.li {
 	padding: 2px;
 	margin: 2px;
 	line-height: 2;
+}
+.contents a {
+	font-size: large;
+}
+#logged-out-tabnav-div .main_tabnav {
+	margin-left: 0;
 }

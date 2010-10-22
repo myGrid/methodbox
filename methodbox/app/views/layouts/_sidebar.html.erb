@@ -1,22 +1,12 @@
 <div class="sidebar">
 	<ul class="vbuttons">
-<% if logged_in? -%>
-	<% if controller.controller_name.downcase == 'scripts' %>
-		<li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
-	<% end %>
-	<% if controller.controller_name.downcase == 'csvarchives' %>
-		<li><%= icon "new", new_script_url, "Create a data extract", nil, "Create a data extract" %></li>
-	<% end %>
-	<% if controller.controller_name.downcase == 'surveys' && current_user && current_user.is_admin? %>
-	  <li><%= icon "new", new_survey_path, "Create a new survey", nil, "Create a new survey" %></li>
-	<% end -%>
-<% else -%>
+		<% unless controller.controller_name =="surveys" %>
 		<li><%= icon "show", surveys_url, "Search for variables", nil, "Search for variables" %></li>
-<% end %>
+		<% end %>
+		<% unless controller.controller_name =="help" %>
+		<li><%= icon "help", help_index_url, "Get some help", nil, "Get some help" %></li>
+		<% end %>
 	</ul>
-<% if controller.controller_name.downcase == 'csvarchives' ||  controller.controller_name.downcase == 'scripts' %>
-	<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
-<% end %>
 </div>
 
 

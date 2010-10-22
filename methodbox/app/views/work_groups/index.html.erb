@@ -1,7 +1,3 @@
-<ul class="sectionIcons">
-  <li><%= icon "new", new_work_group_path, "Create a new group", nil, "Create a new group" %></li>
-</ul>
-
 <% if @groups.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @groups } -%>

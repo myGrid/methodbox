@@ -1,7 +1,10 @@
+<div style="position: absolute; left:26em;">
+          <%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
+  </div>
 <div id="survey_list">
 <ul class="buttons">
 <% @survey_types.each do |survey_type| %>
-<li><%= link_to_remote survey_type.name, :url => { :action => "show_datasets_for_categories", :survey_type_id => survey_type.id } -%></li>
+<li><%= link_to_remote survey_type.name, :url => { :action => "show_datasets_for_categories", :survey_type_id => survey_type.id }, :before => "Element.show('spinner')",:success => "Element.hide('spinner')" -%></li>
 <% end %>
 </ul>
 </div>

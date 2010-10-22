@@ -18,8 +18,8 @@
 
 	<div style="float: right;margin-right: 1em; padding-top: 4px;">
 		<div>
-			<div style="float:right;">
-				<ul style="margin-top:0;">
+			<div style="float:right;margin-left: 2em;">
+				<ul style="margin:0;">
 					<!-- <li style="list-style: none;"> -->
 					<%#= link_to current_user.person.name + "&nbsp;", person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
 					<!-- </li> -->
@@ -49,7 +49,7 @@
 </div>
 </div>
 <% else -%>
-<div id="small-hd" style="float:right;width:20%;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0; background-color: #ACCBE0; height: 75px;">
+<div id="small-hd" style="float:right;width:20%;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0; background-color: #ACCBE0; height: 70px;">
 	<%= render :partial=>"layouts/login_header" %>
 </div>
 <div id="big-hd" style="position: absolute; width:70%;margin-top:1em;-webkit-box-shadow: #777 1px 1px 3px; -webkit-border-radius: 6px; border-radius: 6px;box-shadow: 1px 1px 3px #777;margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px; padding-bottom: 0;  background-color: #ACCBE0; height: 75px;">
