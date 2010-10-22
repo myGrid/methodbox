@@ -1,5 +1,5 @@
 <%# this should be set by the caller, this is an extra check -%>
-<% resource=resource_list_item %>
+<% resource=item %>
 <% odd_row ||= false -%>
 <% narrow_view ||= false -%>
 
@@ -12,7 +12,7 @@
 
     <td style="text-align: left;">
       <p class="title">
-        <%= icon "script", nil, nil, nil, '' -%>
+        <%#= icon "script", nil, nil, nil, '' -%>
         <% title = h(resource.name) -%>
         <%= link_to(title, work_group_path(resource)) -%>
       </p>

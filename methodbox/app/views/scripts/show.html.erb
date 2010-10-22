@@ -14,7 +14,7 @@
 
   <% if Authorization.is_authorized?("download", nil, @script, current_user) -%>
     <li><%= icon('download', download_script_url, "Download Method", nil, "Download Method") -%></li>
-  <% else -%>
+  <% elsif current_user -%>
     <li>
     <li>
       <%= render :partial=>"assets/request_resource",:locals=>{:resource=>@script} %>
