@@ -192,12 +192,13 @@ class SurveysController < ApplicationController
     #    end
     @survey_hash = Hash.new
     @surveys.each do |survey| 
+      unless !Authorization.is_authorized?("show", nil, survey, current_user)
       # unless survey.survey_type.is_ukda && !@ukda_registered
         if (!@survey_hash.has_key?(survey.survey_type.shortname))
           @survey_hash[survey.survey_type.shortname] = Array.new
         end
         @survey_hash[survey.survey_type.shortname].push(survey)
-      # end
+      end
     end
     puts @survey_hash
 
@@ -347,12 +348,16 @@ class SurveysController < ApplicationController
       s_type.name = params[:survey_type_name]
       s_type.shortname = params[:survey_type_shortname]
       s_type.description = params[:survey_type_description]
+      if params[:ukda_survey] == "yes"
+        s_type.is_ukda = true
+      else
+        s_type.is_ukda = false
+      end
       s_type.save
       params[:survey][:survey_type] = s_type
     else
       params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
     end
-
       # prepare some extra metadata to store in Survey files instance
       params[:survey][:contributor_type] = "User"
       params[:survey][:contributor_id] = current_user.id
