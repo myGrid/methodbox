@@ -7,7 +7,7 @@ class CsvarchivesController < ApplicationController
   
   include DataExtractJob
   
-  before_filter :login_required, :except => [ :help, :help2]
+  before_filter :login_required, :except => [ :download, :help, :help2]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download ]
@@ -130,19 +130,34 @@ class CsvarchivesController < ApplicationController
   def download
     # no security here, need some so that people cannot just type in the id
     # and get it if it is 'hidden'
-    if params[:type] == nil
-      params[:type] = "CSV"
-    end
+    # firstly check if the current user has the authorization to see the extract
+    unless !Authorization.is_authorized?("download", nil, @archive, current_user)
+      # then check the individual surveys to see if any preclude them downloading it
+      unless !check_survey_auth_for_extract
+        if params[:type] == nil
+          params[:type] = "CSV"
+        end
 
-    if @archive.complete
-      retrieve_data_extract
-      #retrieve_archive_from_server
-      record_download @archive
+        if @archive.complete
+          retrieve_data_extract
+          record_download @archive
+        else
+          flash[:notice] = "Your data extract is not yet ready for download, please check later"
+          respond_to do |format|
+            format.html { redirect_to csvarchive_path(@archive) }
+          end  
+        end
+      else
+        flash[:error] = "You do not have permission to download some of the survey data within this data extract"
+        respond_to do |format|
+          format.html { redirect_to csvarchive_path(@archive) }
+        end
+      end
     else
-      flash[:notice] = "Your data extract is not yet ready for download, please check later"
+      flash[:error] = "You do not have permission to download this data extract"
       respond_to do |format|
         format.html { redirect_to csvarchive_path(@archive) }
-      end  
+      end
     end
   end
 
@@ -596,6 +611,17 @@ class CsvarchivesController < ApplicationController
        link.save
        end
      end
+  end
+  
+  # Are there any surveys in this data extract which the 
+  # current user does not have permission to download
+  def check_survey_auth_for_extract
+    @archive.variables.each do |variable|
+      if !Authorization.is_authorized?("download", nil, variable.dataset.survey, current_user)
+       return false
+      end
+    end
+    return true
   end
 
 end
