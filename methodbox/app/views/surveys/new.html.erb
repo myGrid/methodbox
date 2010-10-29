@@ -41,9 +41,9 @@
 				<% if current_user.is_admin? %>
 				<b>UKDA Survey?</b>
 				Yes
-				<%= radio_button_tag 'ukda_survey', 'yes', false -%>
+				<%= radio_button_tag 'ukda_survey', 'yes', false, :onclick=>"$('world_sharing_div').hide();$('sharing_scope_4').disabled = true;$('sharing_scope_4').selected = false;if (this.checked) { this.checked == false; $('sharing_scope_3').checked = true;};" -%>
 				No
-				<%= radio_button_tag 'ukda_survey', 'no', true -%>
+				<%= radio_button_tag 'ukda_survey', 'no', true, :onclick=>"$('world_sharing_div').show();$('sharing_scope_4').enable();" -%>
 				<% else %>
 				<%= hidden_field_tag 'ukda_survey', false -%>
 				<% end %>
@@ -68,7 +68,9 @@
           :project_hash => current_user.generate_own_project_id_name_hash } -%>
 
       </div>
-
+      <p style="margin: 2.5em 0 0 0;">
+        <%= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
+      </p>
     </center>
 
 

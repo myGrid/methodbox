@@ -19,6 +19,8 @@ class SurveysController < ApplicationController
   before_filter :rerouted_search, :only => [:show]
 
   before_filter :find_survey, :only => [:show, :edit, :update]
+  
+  before_filter :find_groups, :only => [ :new ]
 
   #ajax remote for displaying the surveys for a specific survey type
   def show_datasets_for_categories
@@ -322,6 +324,7 @@ class SurveysController < ApplicationController
 
   #no auth for the moment,login is enough
   def new
+    @ukda_only = false
     @survey_types =SurveyType.all
     if !current_user.is_admin
       @survey_types.reject!{|survey_type| !survey_type.is_ukda }
@@ -856,6 +859,10 @@ class SurveysController < ApplicationController
       @all_categories = categories.collect{|var| var.category}
       @all_categories.delete_if{|cat| cat==nil}
       @all_categories.sort!
+    end
+    
+    def find_groups
+      @groups = WorkGroup.all
     end
 
 end
