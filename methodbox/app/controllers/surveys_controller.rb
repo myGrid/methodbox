@@ -407,6 +407,7 @@ class SurveysController < ApplicationController
   end
 
   def show
+    unless !Authorization.is_authorized?("show", nil, @survey, current_user)
     # store timestamp of the previous last usage
     #    @last_used_before_now = @survey.last_used_at
 
@@ -446,6 +447,12 @@ class SurveysController < ApplicationController
       format.html # show.html.erb
       format.xml {render :xml=>@survey}
     end
+  else
+    flash[:error] = "You do not have permission to carry out that action"
+    respond_to do |format|
+      format.html { redirect_to surveys_url }
+    end
+  end
   end
 
   def edit
@@ -722,8 +729,8 @@ class SurveysController < ApplicationController
             #ogger.info("@vars_by_dataset[variable.dataset_id] = "+@vars_by_dataset[variable.dataset_id.to_s].to_s)
             @vars_by_dataset[variable.dataset_id.to_s]+= 1
             @total_vars+= 1
-          end  
-        end  
+          end 
+        end 
       end
       if logged_in? && new_search_terms.include?(term)
       #TODO There must be a way to avoid duplicating the save if the search is repeated.
