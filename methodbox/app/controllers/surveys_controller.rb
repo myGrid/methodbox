@@ -180,15 +180,22 @@ class SurveysController < ApplicationController
     do_search_variables
   end
 
+# list all the surveys that the current user can see.
   def index
     #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
-
+    # if current_user
+    #      @ukda_registered = ukda_registration_check(current_user)
+    #    else
+    #      @ukda_registered = false
+    #    end
     @survey_hash = Hash.new
-    @surveys.each do |survey|
-      if (!@survey_hash.has_key?(survey.survey_type.shortname))
-        @survey_hash[survey.survey_type.shortname] = Array.new
-      end
-      @survey_hash[survey.survey_type.shortname].push(survey)
+    @surveys.each do |survey| 
+      # unless survey.survey_type.is_ukda && !@ukda_registered
+        if (!@survey_hash.has_key?(survey.survey_type.shortname))
+          @survey_hash[survey.survey_type.shortname] = Array.new
+        end
+        @survey_hash[survey.survey_type.shortname].push(survey)
+      # end
     end
     puts @survey_hash
 
@@ -342,58 +349,30 @@ class SurveysController < ApplicationController
     else
       params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
     end
-    # if (params[:survey][:data]).blank?
-    #   respond_to do |format|
-    #     flash.now[:error] = "Please select a file to upload."
-    #     format.html {
-    #       set_parameters_for_sharing_form()
-    #       render :action => "new"
-    #     }
-    #   end
-    # elsif (params[:survey][:data]).size == 0
-    #   respond_to do |format|
-    #     flash.now[:error] = "The file that you have selected is empty. Please check your selection and try again!"
-    #     format.html {
-    #       set_parameters_for_sharing_form()
-    #       render :action => "new"
-    #     }
-    #   end
-    # else
-      # create new Survey file and content blob - non-empty file was selected
 
       # prepare some extra metadata to store in Survey files instance
       params[:survey][:contributor_type] = "User"
       params[:survey][:contributor_id] = current_user.id
 
 
-      # store properties and contents of the file temporarily and remove the latter from params[],
-      # so that when saving main object params[] wouldn't contain the binary data anymore
-      # params[:survey][:content_type] = (params[:survey][:data]).content_type
-      # params[:survey][:original_filename] = (params[:survey][:data]).original_filename
-      # data = params[:survey][:data].read
-      # name = (params[:survey][:data]).original_filename
-      # params[:survey].delete('data')
-
-      # directory = "public/data"
-      #      # create the file path
-      #      path = File.join(directory, name)
-      #      # write the file
-      #      File.open(path, "wb") do |f|
-      #        f.write(data)
-      #      end
-
-
-      # store source and quality of the new Survey file (this will be kept in the corresponding asset object eventually)
-      # TODO set these values to something more meaningful, if required for Survey files
-      # params[:survey][:source_type] = "upload"
-      #      params[:survey][:source_id] = nil
-      #      params[:survey][:quality] = nil
-
-
       @survey = Survey.new(params[:survey])
 
-        #      @survey.content_blob = ContentBlob.new(:data => data)
-
+      if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+        puts "custom sharing here"
+        values = "{"
+           params[:groups].each do |workgroup_id|
+              values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+           end
+           values = values.chop
+           values << "}}"
+           values.insert(0,"{\"WorkGroup\":")
+           params[:sharing][:permissions][:values] = values
+           params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+           logger.info "custom permissions: " + values
+           puts params[:sharing][:permissions][:values]
+           puts params[:sharing][:permissions][:contributor_types]
+       end
+       
       respond_to do |format|
         if @survey.save
           # the Survey file was saved successfully, now need to apply policy / permissions settings to it
@@ -859,13 +838,11 @@ class SurveysController < ApplicationController
     
     #find the variable categories for a specific survey (@survey)
     def find_all_categories_for_survey
-      ["#{Monitorship.table_name}.user_id = ? and #{Post.table_name}.user_id != ? and #{Monitorship.table_name}.active = ?", params[:user_id], @user.id, true]
-       inner join Surveys on Surveys.dataset#{Monitorship.table_name} on #{Monitorship.table_name}.topic_id = #{Topic.table_name}.id"
       @all_categories = []
       @survey.datasets.each do |dataset|
         cats = Variable.all(:select => "DISTINCT(category)",:conditions=>({:dataset_id => dataset.id}))
         cats.each do |var|
-          @all_categories << var.category
+          @all_categories << var.category unless var.category == nil
         end
       end
       @all_categories.uniq!

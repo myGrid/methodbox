@@ -622,6 +622,20 @@ class ApplicationController < ActionController::Base
   def default_variables_per_page
     30
   end
+  
+  #Check if someone is registered with the UKDA using their
+  #web service (see UKDA_EMAIL_ADDRESS in environment_local.rb). It
+  #takes a form with the persons email address and 'Login' submit button
+  #params and returns some xml with a simple <registered>yes</registered>
+  #or <registered>no</registered>
+  def ukda_registration_check(person)
+   params={'LoginName' => person.email, 'Login' => 'Login'}
+   response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
+   xml_parser = XML::Parser.string(response.body)
+   xml = xml_parser.parse
+   node = xml.find('child::registered')
+   return node.first.content == "yes"
+  end
 
   # See ActionController::Base for details
   # Uncomment this to filter the contents of submitted sensitive data parameters
