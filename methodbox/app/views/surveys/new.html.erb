@@ -1,6 +1,6 @@
 <%= javascript_include_tag "sharing.js" -%>
 
-        <h2>Add a new survey to an already existing survey series or create a brand new survey series.  Once you have added the survey you can add datasets to it.</h2><br/>
+        <h2>Add a new survey to an already existing survey series or a new one.  Once you have added the survey you can add datasets to it.</h2><br/>
 <h1>New Survey</h1>
 
 
@@ -11,7 +11,7 @@
     <center>
       <div style="width: 60%;">
 	<fieldset style="background-color: #FFFFCC;">
-		<legend>Choose the Survey type</legend>
+		<legend>1: Choose the Survey type</legend>
 		<% if SurveyType.all.size >=1 %>
 <p>
 	<b>Select an existing Survey type</b><br/>
@@ -37,9 +37,20 @@
 			<b>Description:</b> (Enter a description of the new survey type here)<br/>
 			<%= text_area_tag 'survey_type_description', '', :style => "width: 100%;margin-bottom:0.5em;", :rows => 5 -%>
 				</p>
+				<p>
+				<% if current_user.is_admin? %>
+				<b>UKDA Survey?</b>
+				Yes
+				<%= radio_button_tag 'ukda_survey', 'yes', false -%>
+				No
+				<%= radio_button_tag 'ukda_survey', 'no', true -%>
+				<% else %>
+				<%= hidden_field_tag 'ukda_survey', false -%>
+				<% end %>
+				</p>
 			</fieldset>
 			<fieldset style="background-color: #FFFFCC;">
-				<legend>Details for the new Survey</legend>
+				<legend>2: Details for the new Survey</legend>
 		        <p style="margin-top: 0.5em;">
 		          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
 		          <%= text_field_tag 'survey[title]','', :style => "width: 100%;" -%>

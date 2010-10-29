@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101013121426) do
+ActiveRecord::Schema.define(:version => 20101029082515) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -445,6 +445,7 @@ ActiveRecord::Schema.define(:version => 20101013121426) do
     t.string   "shortname"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_ukda"
   end
 
   create_table "surveys", :force => true do |t|

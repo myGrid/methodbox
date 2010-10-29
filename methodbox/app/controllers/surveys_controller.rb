@@ -315,7 +315,10 @@ class SurveysController < ApplicationController
 
   #no auth for the moment,login is enough
   def new
-    @survey_types =SurveyType.find(:all)
+    @survey_types =SurveyType.all
+    if !current_user.is_admin
+      @survey_types.reject!{|survey_type| !survey_type.is_ukda }
+    end
     
     respond_to do |format|
       # if Authorization.is_member?(current_user.person_id, nil, nil)

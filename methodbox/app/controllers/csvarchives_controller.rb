@@ -91,6 +91,14 @@ class CsvarchivesController < ApplicationController
     
   def new
     set_parameters_for_sharing_form
+    # code that allows 'world' access to extracts or not
+    @current_user.cart_items.each do |item|
+      variable = Variable.find(item.variable_id)
+        if variable.dataset.survey.survey_type.is_ukda
+          @ukda_only = true
+          break
+        end
+    end
     @selected_scripts=[]
     @selected_archives=[]
     @selected_surveys=[]

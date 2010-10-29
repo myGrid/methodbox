@@ -60,7 +60,9 @@
 		<p style="font-weight: bold; margin-top: 1em;">Or share it with..</p>
 
 
-
+		<% if @ukda_only && @ukda_only == true %>
+		<p>This data extract contains variables from UKDA surveys and can only be shared with other MethodBox users</p>
+		<% end %>
     <!-- all registered users -->
     <p>
     	<label for="sharing_scope_<%= Policy::ALL_REGISTERED_USERS -%>">
@@ -74,6 +76,7 @@
 			<br/>
 		</p>
 		<!-- the world -->
+		<% if @ukda_only && @ukda_only == false %>
 	    <p>
 	    	<label for="sharing_scope_<%= Policy::EVERYONE -%>">
 	      	<input type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::EVERYONE -%> id="sharing_scope_<%= Policy::EVERYONE -%>" name="sharing[sharing_scope]"
@@ -85,7 +88,7 @@
 
 				<br/>
 			</p>
-		
+		<% end %>
 		<p>
 	    	<label for="sharing_scope_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>">
 	      	<input type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY -%> id="include_custom_sharing_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>" name="sharing[sharing_scope]"
