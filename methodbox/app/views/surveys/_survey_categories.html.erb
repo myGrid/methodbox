@@ -1,3 +1,4 @@
+<% unless @all_categories.empty? %>
 <div id="survey_ids">
 <ul class="buttons">
 <% @surveys.each do |survey_id| %>
@@ -20,3 +21,8 @@
 </div>
 <div style="clear:both;">
 </div>
+<% else %>
+<center>
+<b>There are no categories for this survey type<b>
+<center>
+<% end %>

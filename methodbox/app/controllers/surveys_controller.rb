@@ -26,6 +26,7 @@ class SurveysController < ApplicationController
   def show_datasets_for_categories
     survey_type = SurveyType.find(params[:survey_type_id])
     @surveys= Survey.all(:conditions=>({:survey_type_id=>survey_type.id}))
+    @surveys.reject! {|survey| !Authorization.is_authorized?("show", nil, survey, current_user)}
     find_all_categories survey_type.id
     render :update, :status=>:created do |page|
       page.replace_html "categories", :partial=>"surveys/survey_categories"
@@ -40,18 +41,19 @@ class SurveysController < ApplicationController
   def exhibit
     puts "exhibit json"
     @surveys_json = "{types:{\"Dataset\":{pluralLabel:\"Datasets\"}},"
-     @surveys_json << "\"items\":["
-      Survey.all.each do |survey|
-        # @surveys_json << "{\"label\":\"" + survey.title + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Survey\",\"survey_description\" :\"" + survey.description
-        #        @surveys_json << "\",\"survey_type\":\"" + survey.survey_type.shortname + "\"},"
+    @surveys_json << "\"items\":["
+    Survey.all.each do |survey|
+      unless !Authorization.is_authorized?("show", nil, survey, current_user)
+           # @surveys_json << "{\"label\":\"" + survey.title + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Survey\",\"survey_description\" :\"" + survey.description
+          #        @surveys_json << "\",\"survey_type\":\"" + survey.survey_type.shortname + "\"},"
         survey.datasets.each do |dataset|
           @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":\"" + dataset.name + "\",\"survey-type\":\"" + survey.survey_type.shortname + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Dataset\",\"dataset-description\" :\"" + dataset.description
           @surveys_json << "\",\"Survey\":\"" + survey.title + "\",\"survey-description\" :\"" + survey.description + "\"},"
         end
       end
-      @surveys_json.chop!
-      @surveys_json << "]}"
-      puts @surveys_json.to_s
+    end
+    @surveys_json.chop!
+    @surveys_json << "]}"
   end
   
   #only show 'my' links or 'all' links
