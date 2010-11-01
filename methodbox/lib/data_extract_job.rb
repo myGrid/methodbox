@@ -247,7 +247,7 @@ module DataExtractJob
       end
       do_file_hash.each_key do |key|
         stata_do_file = StataDoFile.new
-        stata_do_file.name = Dataset.find(key).name + "_do_file.txt"
+        stata_do_file.name = Dataset.find(key).name + "_do_file.do"
         stata_do_file.csvarchive = Csvarchive.find(data_extract_id)
         stata_do_file.data = do_file_hash[key]
         stata_do_file.save

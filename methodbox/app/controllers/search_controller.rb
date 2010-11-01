@@ -31,7 +31,7 @@ class SearchController < ApplicationController
       @results = select_authorised @results
     when("surveys")
       find_surveys(query)
-      #    all surveys can be searched for the moment
+      @results = select_authorised @results
     when("methods")
       find_methods(query)
       @results = select_authorised @results
@@ -42,13 +42,12 @@ class SearchController < ApplicationController
         find_publications(query)
         @results = select_authorised @results
     when("all")
-      #slight fudge to allow all HSE datasets to come up since any users are already registered
       find_people(query)
       find_methods(query)
       find_csvarchive(query)
       find_publications(query)
-      @results = select_authorised @results
       find_surveys(query)
+      @results = select_authorised @results
     else
       logger.info("Unexpected search_type "+@search_query)
       flash[:error]="Unexpected search_type"
@@ -114,14 +113,14 @@ class SearchController < ApplicationController
 
   #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
   def select_authorised collection
-    puts current_user
     collection.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
   end
 
+  # Surveys and Data Extracts can be searched for by non logged in users
   def local_login_required
     @search_type = params[:search_type]
     type=@search_type.downcase unless @search_type.nil?
-    if (type == "surveys")
+    if (type == "surveys" || type == "data extracts")
       return true
     else
       return login_required

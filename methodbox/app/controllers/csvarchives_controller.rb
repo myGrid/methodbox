@@ -7,7 +7,7 @@ class CsvarchivesController < ApplicationController
   
   include DataExtractJob
   
-  before_filter :login_required, :except => [ :download, :help, :help2]
+  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download ]
@@ -436,9 +436,13 @@ class CsvarchivesController < ApplicationController
   def find_archives_by_page
     @my_page = params[:my_page]
     @all_page = params[:all_page]
-    my_archives = Csvarchive.find(:all,
+    if current_user
+      my_archives = Csvarchive.find(:all,
       :order => "created_at DESC",:conditions=>{:user_id => current_user.id})
-    @my_archives = my_archives.paginate(:page=>params[:my_page] ? params[:my_page] : 1, :per_page=>default_items_per_page)
+      @my_archives = my_archives.paginate(:page=>params[:my_page] ? params[:my_page] : 1, :per_page=>default_items_per_page)
+    else
+      @my_archives = []
+    end
     all_archives = Csvarchive.find(:all,
       :order => "created_at DESC")     
     all_authorized_archives = Authorization.authorize_collection("view", all_archives, current_user, keep_nil_records=false)
@@ -616,8 +620,13 @@ class CsvarchivesController < ApplicationController
   # Are there any surveys in this data extract which the 
   # current user does not have permission to download
   def check_survey_auth_for_extract
+    if current_user != nil
+      @ukda_registered = ukda_registration_check(current_user)
+    else
+      @ukda_registered = false
+    end
     @archive.variables.each do |variable|
-      if !Authorization.is_authorized?("download", nil, variable.dataset.survey, current_user)
+      if !@ukda_registered || !Authorization.is_authorized?("download", nil, variable.dataset.survey, current_user)
        return false
       end
     end

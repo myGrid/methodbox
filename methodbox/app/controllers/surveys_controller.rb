@@ -187,11 +187,11 @@ class SurveysController < ApplicationController
 # list all the surveys that the current user can see.
   def index
     #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
-    # if current_user
-    #      @ukda_registered = ukda_registration_check(current_user)
-    #    else
-    #      @ukda_registered = false
-    #    end
+    # if current_user != nil
+    #   @ukda_registered = ukda_registration_check(current_user)
+    # else
+    #   @ukda_registered = false
+    # end
     @survey_hash = Hash.new
     @surveys.each do |survey| 
       unless !Authorization.is_authorized?("show", nil, survey, current_user)
@@ -201,6 +201,7 @@ class SurveysController < ApplicationController
         end
         @survey_hash[survey.survey_type.shortname].push(survey)
       end
+    # end
     end
     puts @survey_hash
 

@@ -15,6 +15,9 @@
 			</div>
   		</div>
 		<% else %>
-  			<p>There are no CSV archives available to view.  To create one add <%= link_to "survey variables", surveys_path -%> to your cart and then create one from all or a subset of these variables</p>
+  			<p>There are no Data Extracts available to view.</p>
+			<% if logged_in? %>
+			<p>To create one add <%= link_to "survey variables", surveys_path -%> to your cart and then create one from all or a subset of these variables</p>
+			<% end%>
 		<% end %>
 </div>

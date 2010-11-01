@@ -51,7 +51,7 @@ render_tabnav :main,
    t.named 'Data Extracts'
    t.titled "Data sources created by the users"
    t.links_to :controller => 'csvarchives'
-  end unless !logged_in?
+  end #unless !logged_in?
 
   add_tab do |t|
    t.named 'Publications'
