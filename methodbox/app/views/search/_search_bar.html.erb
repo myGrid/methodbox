@@ -10,6 +10,7 @@
 	<% if logged_in? -%>
     <%= select_tag :search_type, options_for_select(search_type_options,@search_type)  -%>
 	<% else %>
+	<% @search_type="Surveys" unless @search_type -%>
 	<%= select_tag :search_type, options_for_select(non_reg_search_type_options,@search_type)  -%>
 	<% end %>
     <%= submit_tag "Go"  -%>
