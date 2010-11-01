@@ -4,6 +4,11 @@
 <div id="welcome-text" style="font-size: 20px; margin-top: 0.5em ;margin-right: 3em;">
 	<b>Browse</b> <i>datasets</i>, <b>shop</b> for <i>variables</i> and <b>share</b> your <i>knowledge</i>.
 </div>
+<div class="no-search-margin">
+<div id="search-bar-hd">
+	<%= render :partial=>"search/search_bar" %>
+</div>
+</div>
 <% if logged_in? -%>
 	<!-- <div style="position:absolute;bottom:-1.75em;right:0.5em;"> -->
     <%#= render :partial=>"search/search_bar" -%>

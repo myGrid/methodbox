@@ -4,13 +4,15 @@
 <%# if logged_in? && current_user.is_admin? -%>
   <%#= icon "lock", admin_url, "Admin enabled", {:id=>"adminmode"}, "Admin enabled" -%>
 <%# end -%>
-
-<% if SOLR_ENABLED && logged_in? && current_user.person -%>
-
+<% if SOLR_ENABLED -%>
   <% form_tag '/search/' do -%>
     <%= text_field_tag :search_query, @search_query,:onclick=>"javascript:$('search_query').select();" -%>
+	<% if logged_in? -%>
     <%= select_tag :search_type, options_for_select(search_type_options,@search_type)  -%>
+	<% else %>
+	<%= select_tag :search_type, options_for_select(non_reg_search_type_options,@search_type)  -%>
+	<% end %>
     <%= submit_tag "Go"  -%>
   <% end  -%>
-<% end %>
+<% end -%>
 

@@ -42,7 +42,9 @@ class SearchController < ApplicationController
         find_publications(query)
         @results = select_authorised @results
     when("all")
-      find_people(query)
+      if logged_in?
+        find_people(query)
+      end
       find_methods(query)
       find_csvarchive(query)
       find_publications(query)
@@ -120,7 +122,7 @@ class SearchController < ApplicationController
   def local_login_required
     @search_type = params[:search_type]
     type=@search_type.downcase unless @search_type.nil?
-    if (type == "surveys" || type == "data extracts")
+    if (type == "surveys" || "data extracts" || "methods" || "all")
       return true
     else
       return login_required

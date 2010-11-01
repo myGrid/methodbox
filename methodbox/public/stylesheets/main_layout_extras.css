@@ -367,3 +367,44 @@ ul.vbuttons .category-browse.li {
 #logged-out-tabnav-div .main_tabnav {
 	margin-left: 0;
 }
+/* header styles*/
+#small-hd {
+	float:right;
+	width:20%;
+	-webkit-box-shadow: #777 1px 1px 3px;
+	-webkit-border-radius: 6px;
+	border-radius:6px;
+	box-shadow: 1px 1px 3px #777;
+	margin-top:0;
+	-moz-border-radius:6px;
+	-moz-box-shadow: 1px 1px 3px #777777;
+	border: 1px solid #C0C4C6;
+	color: #000000;
+	padding: 10px;
+	padding-bottom: 0;
+	background-color: #ACCBE0;
+	height: 70px;
+}
+#big-hd {
+	position: absolute;
+	width:70%;
+	margin-top:1em;
+	-webkit-box-shadow:#777 1px 1px 3px;
+	-webkit-border-radius:6px;
+	border-radius: 6px;
+	box-shadow: 1px 1px 3px #777;
+	margin-top:0;
+	-moz-border-radius:6px;
+	-moz-box-shadow: 1px 1px 3px #777777;
+	border: 1px solid #C0C4C6;
+	color: #000000;
+	padding: 10px;
+	padding-bottom: 0; 
+	background-color: #ACCBE0;
+	height: 75px;
+}
+/* end of header styles */
+.no-search-margin #search-bar-hd {
+	margin: 0;
+	padding-top: 10px;
+}

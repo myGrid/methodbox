@@ -1,6 +1,6 @@
 class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
-  before_filter :login_required, :except => [ :index, :show, :help, :help2]
+  before_filter :login_required, :except => [ :download, :index, :show, :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
   before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment ]
@@ -196,11 +196,10 @@ class ScriptsController < ApplicationController
   def download
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
-    @script.last_used_at = Time.now
-    @script.save_without_timestamping
-    record_download @script
-
-    send_data @script.content_blob.data, :filename => @script.original_filename, :content_type => @script.content_type, :disposition => 'attachment'
+      @script.last_used_at = Time.now
+      @script.save_without_timestamping
+      record_download @script 
+      send_data @script.content_blob.data, :filename => @script.original_filename, :content_type => @script.content_type, :disposition => 'attachment'
   end
 
   # GET /scripts/new
