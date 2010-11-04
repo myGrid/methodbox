@@ -1,4 +1,16 @@
 <% truncate_length_for_boxes = 22 -%>
+	<ul class="buttons">
+<% if logged_in? -%>
+	  <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
+	<% if controller.action_name == "show" %>
+		<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
+	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
+	<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
+		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
+	<% end %>
+	<% end %>
+		<% end -%>
+	</ul>
 <h1 class="contribution_title">Survey: <%= h(@survey.title) -%></h1>
 <div class="left" style="width: 20%;">
 	<% unless @all_categories.empty? -%>

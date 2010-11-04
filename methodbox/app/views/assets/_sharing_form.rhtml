@@ -70,7 +70,7 @@
               value="<%= Policy::ALL_REGISTERED_USERS -%>" onclick="javascript:setSharingElementVisibility(<%= Policy::ALL_REGISTERED_USERS -%>);" />
           - All registered users for
 		  </label>
-		  <%= render :partial => "assets/sharing_form_access_type_dropdown", :locals => { :access_type_selector_for_scope => Policy::ALL_REGISTERED_USERS,
+		  <%= render :partial => "assets/sharing_form_access_type_dropdown", :locals => { :editing => @resource_type == "Survey" ? true : false, :access_type_selector_for_scope => Policy::ALL_REGISTERED_USERS,
 			                                                                                :sharing_scope => @sharing_mode, :access_type => @access_mode } -%>
 						
 			<br/>
@@ -84,7 +84,7 @@
 	              value="<%= Policy::EVERYONE -%>" onclick="javascript:setSharingElementVisibility(<%= Policy::EVERYONE -%>);" />
 	          - Everyone ie. the world
 			  </label>
-			  <%= render :partial => "assets/sharing_form_access_type_dropdown", :locals => { :access_type_selector_for_scope => Policy::EVERYONE,
+			  <%= render :partial => "assets/sharing_form_access_type_dropdown", :locals => { :editing => false, :access_type_selector_for_scope => Policy::EVERYONE,
 				                                                                                :sharing_scope => @sharing_mode, :access_type => @access_mode } -%>
 
 				<br/>

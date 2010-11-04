@@ -6,6 +6,7 @@ class DatasetsController < ApplicationController
   before_filter :login_required, :except => [ :show ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
+  before_filter :can_add_or_edit_datasets, :only => [ :new, :create, :load_new_data, :load_new_metadata, :update, :edit ]
   
   def load_new_data
     uuid = UUIDTools::UUID.random_create.to_s
@@ -411,6 +412,10 @@ end
   def send_to_server file_uuid, filename
     RestClient.post 'http://' + CSV_SERVER_LOCATION + ':' + CSV_SERVER_PORT  + CSV_SERVER_PATH + '/dataset?filename=' + file_uuid, :dataset => File.new(filename, 'rb')
     
+  end
+  
+  def can_add_or_edit_datasets
+    return Authorization.is_authorized?("edit", nil, Survey.find(params[:dataset][:survey]), current_user)
   end
   
 end
