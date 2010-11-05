@@ -18,6 +18,7 @@
 
       <%= hidden_field_tag "page", 1 -%>
       <%= hidden_field_tag "per_page", 10 -%>
+<br/>
       <% if !logged_in? -%>
         <h2>Welcome, guest.  Please select some surveys and search for variables of interest to your research.  You can browse the metadata and see what is inside the MethodBox but only <%= link_to "registered users", signup_url -%> can add variables to their cart and download them.</h2><br/>
       <% else -%>

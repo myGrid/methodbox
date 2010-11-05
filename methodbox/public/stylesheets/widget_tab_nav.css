@@ -2,17 +2,28 @@
 	color: #000;
 /*	border-bottom: 2px solid black;*/
 	border-bottom: none;
-	margin: 13px 0px 0px 0px;
+	margin-top: 5px;
+/*	margin: 13px 0px 0px 0px;*/
 	padding: 0px;
 	z-index: 1;
 	padding-left: 10px;
 /* IE needs this or it might centre the tabs */ 
 	text-align: left;
 	margin-left: 15em;
+/*	background-color: white;
+	-webkit-box-shadow: #777 1px 0px 3px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	box-shadow: 1px 0px 3px #777;
+	-moz-border-radius:6px;
+	-moz-box-shadow: 1px 0px 3px #777777;
+	border: 1px solid #C0C4C6;
+	color: #000000;
+	margin-top: 2px;*/
 	}
 
 .main_tabnav ul {
-	margin: 0px;
+	margin: 0;
 	padding: 0px;
 }
 
@@ -20,6 +31,8 @@
 	display: inline;
 	overflow: hidden;
 	list-style-type: none;
+	line-height: 1.25;
+	font-size: 125%;
 	}
 
 .main_tabnav li span.disabled {
@@ -44,8 +57,9 @@
 	}
 
 .main_tabnav a.active {
-	background: #FFFFFF;
-	border-bottom: 3px solid #FFFFFF;
+/*	background: #FFFFFF;*/
+	background-color: #ACCBE0;
+/*	border-bottom: 3px solid #FFFFFF;*/
 	}
 
 .main_tabnav a:hover {

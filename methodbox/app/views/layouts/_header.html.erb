@@ -1,7 +1,30 @@
 <div style="float: left;">
 	<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>70, :style=>"margin-right: 3em;"),root_path -%>
 </div>
-<div id="welcome-text" style="font-size: 20px; margin-top: 0.5em ;margin-right: 3em;">
+<div id="small-hd" class="right">
+<div style="text-align: center; margin-top: 1em;">
+	<b>
+		<% if REGISTRATION_CLOSED -%>
+			<%= link_to "Request Access", signup_url %>
+		<% else -%>
+			<%= link_to "Sign up", signup_url %>
+		<% end -%>
+	</b>
+	/
+	<b>
+		<%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
+	</b>
+</div>
+<div id="login_box" style="display: none; z-index: 100; position: absolute;">
+	<%= render :partial=>"gadgets/sign_in_popup" %>
+</div>
+<div style="text-align: center;">or</div>
+<div style="text-align: center;">
+	<b><%= link_to "try it out", surveys_url %></b>
+</div>
+</div>
+<div>
+<div id="welcome-text">
 	<b>Browse</b> <i>datasets</i>, <b>shop</b> for <i>variables</i> and <b>share</b> your <i>knowledge</i>.
 </div>
 <div class="no-search-margin">
@@ -9,8 +32,4 @@
 	<%= render :partial=>"search/search_bar" %>
 </div>
 </div>
-<% if logged_in? -%>
-	<!-- <div style="position:absolute;bottom:-1.75em;right:0.5em;"> -->
-    <%#= render :partial=>"search/search_bar" -%>
-	<!-- </div> -->
-<% end -%>
+</div>
