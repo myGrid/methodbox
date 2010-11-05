@@ -1,0 +1,30 @@
+<div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:85px;">
+      <div style="position: absolute; bottom:-10em; left:26em;">
+              <%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
+      </div>
+      <%= hidden_field_tag 'submit', 'add' -%>
+      <% if @selected_surveys!=nil %>
+        <% @selected_surveys.each do |val| -%>
+          <%= hidden_field_tag "entry_ids[]", val -%>
+        <% end -%>
+      <% end -%>
+<% if logged_in? -%>
+      <div style="position: absolute; bottom:1em; right:1em;">
+        <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
+      </div>
+<% end -%>
+      <div style="position: absolute; bottom:1em; left:1em;">
+	Select:
+        <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+        ,&nbsp
+        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+        ,&nbsp
+        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+        
+      </div>
+<% if logged_in? -%>
+      <div id="cart_button" style="position: absolute; top:1em; right:1em;">
+        <%= render :partial => "cart/button" -%>
+      </div>
+<% end -%>
+    </div>

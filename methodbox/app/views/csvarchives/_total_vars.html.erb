@@ -1,0 +1,8 @@
+<b>Number of variables in this extract by dataset: </b>
+<ul>
+	<% @vars_by_dataset.each_key do |key|-%>
+	<li class="var_number_list"><%= link_to(Dataset.find(key).name, dataset_url(Dataset.find(key))) -%> has <%= @vars_by_dataset[key].to_s -%> <%= @vars_by_dataset[key] ==  1 ? 'variable' : 'variables' -%></li>
+	<% end %>
+</ul>
+<br/>
+<b>Total number of variables in extract: </b><%= @total_vars -%>
