@@ -1,24 +1,14 @@
 <% truncate_length_for_boxes = 22 -%>
-<%#= stylesheet_link_tag "scrolltable" %>
 <%= javascript_include_tag 'toggler.js' %>
+<%= javascript_include_tag "variable_table_check.js" -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <ul class="sectionIcons">
   <%= hidden_field_tag "format_type", "csv" -%>
-<%# if Authorization.is_authorized?("download", nil, @survey, current_user) -%>
-<%#*always show edit button, the controller will flash a message if not available%>
   <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-  <%# if !@archive.failure && Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-
     <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button"}, "Download extract as:") -%></li>
   <%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
   <% end -%>
-
-<%# elsif @archive.failure %>
-<%# if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-<%#= button_to_remote "Recreate CSV archive", :url => {:controller=>"csvarchives",:action => "recreate", :id => @archive.id} %>
-<%# end %>
-<%# else %>
   <% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>
     <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
   <% end %>
@@ -30,7 +20,6 @@
 <h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
 
 <div class="show_basic">
-<%#*<div class="main_content_left_box">%>
   <div class="box_about_actor">
     <p>
       <b>Title:</b>
@@ -42,10 +31,6 @@
       </p>
     <% end -%>
     </p>
-
-
-    <br/>
-
     <p>
       <b>Description</b>
       <% unless @archive.description.blank? -%>
@@ -57,16 +42,8 @@
         No description
       </p>
     <% end -%>
-    <br/>
 	<div>
-	<b>Number of variables in this extract by dataset: </b>
-	<ul>
-		<% @vars_by_dataset.each_key do |key|-%>
-		<li class="var_number_list"><%= link_to(Dataset.find(key).name, dataset_url(Dataset.find(key))) -%> has <%= @vars_by_dataset[key].to_s -%> <%= @vars_by_dataset[key] ==  1 ? 'variable' : 'variables' -%></li>
-		<% end %>
-	</ul>
-	<br/>
-	<b>Total number of variables in extract: </b><%= @total_vars -%>
+		<%= render :partial => "total_vars" %>
 	</div>
 	<br/>
 	<div class="link_box">
@@ -74,103 +51,32 @@
 	<%= link_to_remote "Only my links", :url=> show_links_csvarchives_path, :with=> "'link_state=mine&extract_id=#{@archive.id}'" %>, 
 	<%= link_to_remote "All links", :url=> show_links_csvarchives_path, :with=> "'link_state=all&extract_id=#{@archive.id}'" %>
 	</div>
-		<div class="actual_link_box">
+	<div class="actual_link_box">
 
-	  <div id="links">
-	  <b>Linked with Data Extracts(s):</b>
-      <% if !@archives.empty? -%>
-
-        <% @archives.each do |archive| -%>
-          <%= link_to(archive.title, csvarchive_path(archive)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-      <br/>
-      <b>Linked with Survey(s):</b>
-      <% if !@surveys.empty? -%>
-
-        <% @surveys.each do |survey| -%>
-          <%= link_to(survey.title, survey_path(survey)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-	<br/>
-      <b>Linked with Script(s):</b>
-		<% if !@scripts.empty? -%>
-        <% @scripts.each do |script| -%>
-          <%= link_to(script.title, script_path(script)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-	<br/>
-	<br/>
-      <b>Linked with Publication(s):</b>
-		<% if !@publications.empty? -%>
-        <% @publications.each do |publication| -%>
-          <%= link_to(publication.title, publication_path(publication)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
+<div id="links">
+		<%= render :partial => "links" %>
 </div>
 </div>
 <br/>
 <br/>
-    <b>Status:</b>
-    <% if @archive.complete && !@archive.failure%>
-      <span class="title"><%=h "ready for download" -%></span>
-  <%# elsif @archive.failure-%>
-  <%#*<span class="title" style="color:red;">%>
-  <%#=h "Not available due to errors - please recreate" -%>
-  <%#*</span>%>
-    <% elsif @archive.failure -%>
-      <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>
-    <% else -%>
-      <span class="title"><%=h "Unknown: click on the download button to check" -%></span>
-    <% end -%>
-    </p>
+	<%= render :partial => "complete" %>
     <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
-<%#*</div>%>
   </div>
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
     <%= hidden_field_tag 'submit', 'add' %>
     <br/>
-    <table style="background-color:#ACCBE0;width:100%;padding-bottom:5px;
-           padding-left:5px;
-           padding-top:5px;">
-      <tr><td style="text-align:left;"><%= submit_tag'Add selected variables to cart', :name=>"_submit", :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%></td>
-      <td><div id="cart_button">
-		    <%= render :partial => "cart/button" -%>
-		  </div>
-		</td>
-      </tr>
-      <tr><td style="text-align:left;"> Select:
-          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-          ,&nbsp
-          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-          ,&nbsp
-          <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
-
-        </td></tr>
-    </table>
+<%= render :partial => "extract_bar" -%>
     <br/>
     <div id="table_header" class="faux_table_header_container">
       <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
     <div id="table_container" class="faux_table_container">
       <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables} -%>
-
     </div>
     <br/>
-
   <% end %>
-
 </div>
+<div style="clear: both;"></div>
 <script type="text/javascript">
   function changeURL(value) {
     URL = document.getElementById("download_button").href;

@@ -1,3 +1,5 @@
 <%= will_paginate(@scripts) %>
+<div class="no-bg">
 <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
+</div>
 <%= will_paginate(@scripts) %>

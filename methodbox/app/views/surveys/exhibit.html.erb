@@ -13,23 +13,18 @@
 <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
 <%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
 </div>
-<div ex:role="viewPanel" class="view-content">
+<div ex:role="viewPanel" class="view-content left">
 	<div ex:role="lens" class="content" ex:onshow="prepareLens(this);">
 		<div class="exhibit-checkbox-div" style="float:left;">
 		</div>
 		<div class="inner-view-content-block">
 		<div class="inner-view-content-description">
-			<!-- <b>Description:</b> -->
 			<span ex:content=".dataset-description" ></span>
 		</div>
 		<div class="inner-view-content">
-      		<!-- <b>Dataset Name:</b> -->
-      		<!-- <em><span ex:content=".name" ></span></em> -->
-      		<!-- <b>Year:</b> -->
       		<span ex:content=".survey-type" ></span><span ex:content=".year" ></span>
     	</div>
     	<div class="inner-view-content">
-			<!-- <b>Survey Type:</b> -->
     		<span ex:content=".url"></span>
 		</div>
 		</div>
@@ -47,7 +42,7 @@
         ex:sortAscending="false">
     </div>
 </div>
-<div class="facet-view-content">
+<div class="facet-view-content right">
 	<div class="facet-wrapper">
 		<div class="exhibit-facet-header">Search for surveys</div>
 		<div ex:role="facet" ex:facetClass="TextSearch"></div>
@@ -59,7 +54,7 @@
 		<div ex:role="facet" ex:expression=".year" ex:facetLabel="Year of survey"></div>
 	</div>
 </div>
-<div style="clear:all;"></div>
+<div style="clear:both;"></div>
 
 <% end %>
 

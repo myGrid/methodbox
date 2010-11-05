@@ -2,7 +2,7 @@
 	<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>70, :style=>"margin-right: 3em;"),root_path -%>
 </div>
 <div id="small-hd" class="right">
-<div style="text-align: center; margin-top: 1em;">
+<div class="center">
 	<b>
 		<% if REGISTRATION_CLOSED -%>
 			<%= link_to "Request Access", signup_url %>
@@ -18,13 +18,13 @@
 <div id="login_box" style="display: none; z-index: 100; position: absolute;">
 	<%= render :partial=>"gadgets/sign_in_popup" %>
 </div>
-<div style="text-align: center;">or</div>
-<div style="text-align: center;">
+<div class="center">or</div>
+<div class="center">
 	<b><%= link_to "try it out", surveys_url %></b>
 </div>
 </div>
-<div>
-<div id="welcome-text">
+<div id="welcome-wrapper">
+<div class="center" id="welcome-text">
 	<b>Browse</b> <i>datasets</i>, <b>shop</b> for <i>variables</i> and <b>share</b> your <i>knowledge</i>.
 </div>
 <div class="no-search-margin">

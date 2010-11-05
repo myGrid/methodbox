@@ -1,4 +1,5 @@
-<!-- <h2>The latest things inside the methodbox are show below</h2> -->
+<h2>The latest things inside the methodbox are show below</h2>
+<br/>
 <% if !@results.blank? %>
   <% resource_hash = classify_for_tabs @results -%>
   <%= render :partial => "assets/resource_listing_tabbed_by_class", :locals => { :asset_hash => resource_hash,

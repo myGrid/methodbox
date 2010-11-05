@@ -1,8 +1,8 @@
 <div class="sidebar">
+	<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
 <% if logged_in? -%>
 	<ul class="vbuttons">
 		<li><%= icon "new", new_script_url, "Create a data extract", nil, "Create a data extract" %></li>
 	</ul>
 <% end %>
-	<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
 </div>
