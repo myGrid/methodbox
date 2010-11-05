@@ -1,9 +1,9 @@
 <%= stylesheet_link_tag 'favourites' -%>
+<% if !@publications.empty? %>
 <ul class="sectionIcons">
   <li><%= image_tag_for_key "new", new_publication_path, "Register New Publication", nil, "Register New Publication" %></li>
   <!-- <li><%#= image_tag_for_key "view-all", all_files_path, nil, nil, "View All Files" %></li> -->
 </ul>
-
 <% if @publications.public_methods.include?("page_totals") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate_alphabetical", :locals => { :pages => @publications.pages, :page_totals=>@publications.page_totals,:current_page=>@publications.page } -%>
@@ -12,3 +12,11 @@
 <div class="list_items_container">
   <%= render :partial=>"layouts/resource_list_item", :collection=>@publications %>
 </div>
+<% else %>
+<% if logged_in? %>
+ <h1>No publications have been added to the methodbox.</h1>
+<p class="center"> Why not <%= link_to "add a new publication", new_publication_url -%></p>
+<% else %>
+        <h1>No publications have been added to the methodbox.</h1>
+<% end -%>
+<% end %>

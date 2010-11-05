@@ -1,3 +1,11 @@
+<% if @groups.empty? %>
+<% if logged_in? %>
+<h1>There are no groups inside the MethodBox.</h1>
+<p class="center">Why not <%= link_to "create one", new_work_group_url -%></p>
+<% else %>
+<h1>There are no groups inside the MethodBox.</h1>
+<% end %>
+<% else %>
 <% if @groups.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @groups } -%>
@@ -8,4 +16,5 @@
 <% if @groups.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @groups } -%>
+<% end %>
 <% end %>

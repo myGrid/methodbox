@@ -80,10 +80,11 @@
   </div>
 </div>
 <% else %>
-<% if logged_in? && current_user.is_admin? -%>
-        <h2>There are no surveys loaded into the methodbox at the moment.  Why not <%= link_to "upload a new survey", new_survey_path -%></h2>
+<% if logged_in? %>
+ <h1>There are no surveys loaded into the methodbox at the moment.</h1>
+<p class="center"> Why not <%= link_to "upload a new survey", new_survey_path -%></p>
 <% else %>
-        <h2>There are no surveys loaded into the methodbox at the moment.  Contact an administrator to get one loaded in.</h2>
+        <h1>There are no surveys loaded into the methodbox at the moment.</h1>
 <% end -%>
 <% end -%>
 <!-- jquery grid experiment -->

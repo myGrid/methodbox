@@ -1,3 +1,9 @@
+<% if @scripts.empty? %>
+<h1>There are no Methods available to view.</h1>
+<% if logged_in? %>
+<p class="center">Why not <%= link_to "create one", new_script_url -%></p>
+<% end %>
+<% end %>
 <%= will_paginate(@scripts) %>
 <div class="no-bg">
 <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
