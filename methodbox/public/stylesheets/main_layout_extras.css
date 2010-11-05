@@ -19,12 +19,13 @@
 }
 #bd {
 	min-height: 550px;
+	background-color: white;
 /*	-webkit-box-shadow: #777 1px 1px 3px; */
-/*	-webkit-border-radius: 6px; */
-/*	border-radius: 6px;*/
+	-webkit-border-radius: 6px; 
+	border-radius: 6px;
 /*	box-shadow: 1px 1px 3px #777;*/
 /*	margin-top:0;*/
-/*	-moz-border-radius:6px;*/
+	-moz-border-radius:6px;
 /*	-moz-box-shadow: 1px 1px 3px #777777; */
 /*	border: 1px solid #C0C4C6; */
 	color: #000000; 
@@ -457,34 +458,34 @@ ul.vbuttons .category-browse.li {
 	padding-top: 1em;
 }
 .sidebar-bg {
-	background-color: white;
+/*	background-color: white;*/
 /*	margin-top: 5px;*/
 /*	width:100%;*/
 /*	-webkit-box-shadow: #777 1px 0px 3px;*/
-	-webkit-border-radius: 6px;
-	border-radius: 6px;
+/*	-webkit-border-radius: 6px;*/
+/*	border-radius: 6px;*/
 /*	box-shadow: 1px 0px 3px #777;*/
-	-moz-border-radius:6px;
+/*	-moz-border-radius:6px;*/
 /*	-moz-box-shadow: 1px 0px 3px #777777;*/
-	border: 1px solid #C0C4C6;
-	color: #000000;
+/*	border: 1px solid #C0C4C6;*/
+/*	color: #000000;*/
 /*	background-color: #ACCBE0;*/
 }
 /* Where the layout yield is*/
 .yield-area {
 	padding: 1em;
-	background-color: white;
+/*	background-color: white;*/
 	min-height: 40em;
 	min-width: 70em;
-	background-color: white;
+/*	background-color: white;*/
 /*	margin-top: 2px;*/
 /*	width:100%;*/
 /*	-webkit-box-shadow: #777 1px 0px 3px;*/
-	-webkit-border-radius: 6px;
-	border-radius: 6px;
+/*	-webkit-border-radius: 6px;*/
+/*	border-radius: 6px;*/
 /*	box-shadow: 1px 0px 3px #777;*/
-	-moz-border-radius:6px;
+/*	-moz-border-radius:6px;*/
 /*	-moz-box-shadow: 1px 0px 3px #777777;*/
-	border: 1px solid #C0C4C6;
-	color: #000000;
+/*	border: 1px solid #C0C4C6;*/
+/*	color: #000000;*/
 }
