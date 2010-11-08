@@ -6,7 +6,7 @@
 /*	margin: 13px 0px 0px 0px;*/
 	padding: 0px;
 	z-index: 1;
-	padding-left: 10px;
+/*	padding-left: 10px;*/
 /* IE needs this or it might centre the tabs */ 
 	text-align: left;
 	margin-left: 15em;
@@ -31,7 +31,7 @@
 	display: inline;
 	overflow: hidden;
 	list-style-type: none;
-	line-height: 1.2;
+/*	line-height: 1.2;*/
 	font-size: 125%;
 	}
 
@@ -39,7 +39,7 @@
         color: #888888;
         background: #FAFAFA;
         border: 2px solid #DDDDDD;
-        border-bottom: 1px solid #DDDDDD;
+        border-bottom: 2px solid #DDDDDD;
         padding: 2px 5px 0px 5px;
         margin: 0;
         text-decoration: none;
@@ -50,7 +50,7 @@
 	background: #EEEEEE;
 	font-weight: bold;
 	border: 2px solid #C0C4C6;
-	border-bottom: 1px solid #C0C4C6;
+	border-bottom: 2px solid #C0C4C6;
 	padding: 2px 5px 0px 5px;
 	margin: 0;
 	text-decoration: none;
