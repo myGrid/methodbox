@@ -358,6 +358,10 @@ class SurveysController < ApplicationController
       end
       s_type.save
       params[:survey][:survey_type] = s_type
+      forum = Forum.new()
+      forum.name = s_type.shortname
+      forum.description = "Questions about " + s_type.name
+      forum.position = 4
     else
       params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
     end
@@ -420,7 +424,7 @@ class SurveysController < ApplicationController
     #    @survey.save_without_timestamping
 
     # @survey = Survey.find(params[:id])
-    @forum = Forum.all(:conditions=>["name=?", @survey.title])[0]
+    @forum = Forum.all(:conditions=>["name=?", @survey.survey_type.short_name])[0]
 
     source_archives = []
     source_scripts = []
