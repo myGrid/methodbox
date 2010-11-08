@@ -500,6 +500,21 @@ class SurveysController < ApplicationController
       params[:survey][:contributor_type] = current_user.class.name
       params[:survey][:contributor_id] = current_user.id
     end
+    
+    if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+      values = "{"
+         params[:groups].each do |workgroup_id|
+            values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+         end
+         values = values.chop
+         values << "}}"
+         values.insert(0,"{\"WorkGroup\":")
+         params[:sharing][:permissions][:values] = values
+         params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+         logger.info "custom permissions: " + values
+         puts params[:sharing][:permissions][:values]
+         puts params[:sharing][:permissions][:contributor_types]
+     end
 
     respond_to do |format|
       if @survey.update_attributes(params[:survey])
