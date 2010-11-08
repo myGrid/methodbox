@@ -15,7 +15,7 @@
     </p>
     <div id="publication_error" class="error_div" style="display:none"></div>  
     <p>
-      <%= select_tag("protocol", options_for_select([["PubMed ID","pubmed"],["DOI","doi"]])) %>
+      <%= select_tag("document_protocol", options_for_select([["PubMed ID","pubmed"],["DOI","doi"]])) %>
       <%= text_field_tag("key") %>
       <%= submit_tag 'Fetch' %>
       <%= image_tag "ajax-loader.gif", :id => 'spinner', :style => 'display:none;' -%>

@@ -1,3 +1,5 @@
+require 'uuidtools'
+
 module Seek
   module UniquelyIdentifiable
     

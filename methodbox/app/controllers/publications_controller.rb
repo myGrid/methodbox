@@ -167,7 +167,7 @@ class PublicationsController < ApplicationController
     begin
       @publication = Publication.new
       key = params[:key]
-      protocol = params[:protocol]
+      protocol = params[:document_protocol]
       pubmed_id = nil
       doi = nil
       if protocol == "pubmed"
@@ -179,6 +179,7 @@ class PublicationsController < ApplicationController
         end
       end      
       result = get_data(@publication, pubmed_id, doi)
+      puts result
     rescue
       if protocol == "pubmed"
         if key.match(/[0-9]+/).nil?
