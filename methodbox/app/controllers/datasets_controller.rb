@@ -20,9 +20,10 @@ class DatasetsController < ApplicationController
     
     file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
              
-    send_to_server file_uuid, filename
-    load_new_dataset filename
     @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision],:has_data=>true)
+
+    # send_to_server file_uuid, filename
+    load_new_dataset filename
     File.delete(filename)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
@@ -266,8 +267,12 @@ class DatasetsController < ApplicationController
     
     @missing_vars.each {|var| puts var.to_s}
     @new_variables.each {|var| puts var.to_s}
-    #TODO - push the file over to the CSV server (or just copy it to a directory somewhere?!?)
-    
+    #process the columns and get the stats - TODO - process only new columns?
+    begin 
+      Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(@dataset.id, current_user.id)
+    rescue Exception => e
+      logger.error(e)
+    end    
   end
   
   #Read the metadata from a methodbox internal formatted xml file for a particular survey

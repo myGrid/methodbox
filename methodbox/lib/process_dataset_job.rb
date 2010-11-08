@@ -20,7 +20,7 @@ module ProcessDatasetJob
     # can different people add datasets to a survey - permissions issue?
     # tell the user that the dataset has been processed. 
     def email_user
-      Mailer.deliver_data_extract_processed(dataset_id) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+      Mailer.deliver_dataset_processed(dataset_id) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
     end
     
     #split the dataset into columns

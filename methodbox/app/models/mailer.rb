@@ -3,6 +3,15 @@ class Mailer < ActionMailer::Base
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
   
+  def dataset_processed(dataset_id, user_id)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Dataset " + Dataset.find(dataset_id).title + " ready"
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :dataset => Dataset.find(dataset_id)
+  end
+  
   def data_extract_complete(data_extract_id, user_id)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER
