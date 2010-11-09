@@ -1,6 +1,9 @@
+require 'rest_client'
+require 'uuidtools'
+
 class DatasetsController < ApplicationController
-  
-  require 'rest_client'
+
+  include ProcessDatasetJob
 
   before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :login_required, :except => [ :show ]
@@ -75,29 +78,28 @@ class DatasetsController < ApplicationController
   def create
     uuid = UUIDTools::UUID.random_create.to_s
     #write out the dataset into a new file
-    filename=RAILS_ROOT + "/" + "filestore" + "/" + uuid + ".data"
+    filename=CSV_FILE_PATH + "/" + uuid + ".data"
     uf = File.open(filename,"w")
     params[:dataset][:data].each_line do |line|                
       uf.write(line)
     end
     uf.close
-    
-    file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
              
-    send_to_server file_uuid, filename
+    # send_to_server file_uuid, filename
     dataset = Dataset.new
     dataset.current_version = 1
     dataset.survey = Survey.find(params[:dataset][:survey])
     dataset.name = params[:dataset][:title]
     dataset.description = params[:dataset][:description]
     dataset.filename = params[:dataset][:data].original_filename
-    dataset.uuid_filename = file_uuid
+    dataset.uuid_filename = uuid + ".data"
     dataset.save
 
     load_dataset filename, dataset
 
     dataset.update_attributes(:has_variables=>false, :has_data=>true)
-    File.delete(filename)
+    #don't delete the rails file yet
+    # File.delete(filename)
     @dataset = dataset
     respond_to do |format|
       format.html { redirect_to dataset_path(@dataset) }
@@ -136,7 +138,7 @@ class DatasetsController < ApplicationController
   end
 
   def find_datasets
-    @datasets = Dataset.find(params[:all])
+    @datasets = Dataset.all
   end
   
   private
@@ -184,26 +186,13 @@ class DatasetsController < ApplicationController
     #split by tab
     if params[:dataset_format] == "Tab Separated"
         headers = header.split("\t")
+        separator = "\t"
     else
         headers = header.split(",")
+        separator = ","
     end
     
     headers.collect!{|item| item.strip}
-          
-    #need to find variables which are missing from the exisitng set and variables which are 'new'
-    # all_var = Variable.all(:conditions=> "dataset_id=" + dataset.id.to_s, :select => "name")
-    # 
-    #     all_variables = Array.new(all_var.size){|i| all_var[i].name}
-    
-    # missing_variables = all_variables - headers
-    # 
-    # added_variables = headers - all_variables
-    # 
-    # @missing_vars = []
-    # missing_variables.each do |missing_var|
-    #   v = Variable.find(:all,:conditions=> "dataset_id=" + dataset.id.to_s + " and name='" + missing_var+"'")
-    #   @missing_vars.push(v[0].id)
-    # end
     
     @new_variables = []
  
@@ -217,9 +206,13 @@ class DatasetsController < ApplicationController
         @new_variables.push(variable.id)
     end
     
-    # @missing_vars.each {|var| puts var.to_s}
-    # @new_variables.each {|var| puts var.to_s}
-    #TODO - push the file over to the CSV server (or just copy it to a directory somewhere?!?)
+    begin 
+      puts "sending the job with dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator
+      Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator)
+    rescue Exception => e
+      puts "job failed" + e
+      logger.error(e)
+    end
     
   end
   
@@ -230,10 +223,13 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     header =  datafile.readline
     #split by tab
+
     if params[:dataset_format] == "Tab Separated"
         headers = header.split("\t")
+        separator = "\t"
     else
         headers = header.split(",")
+        separator = ","
     end
     
     headers.collect!{|item| item.strip}
@@ -269,7 +265,7 @@ class DatasetsController < ApplicationController
     @new_variables.each {|var| puts var.to_s}
     #process the columns and get the stats - TODO - process only new columns?
     begin 
-      Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(@dataset.id, current_user.id)
+      Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(@dataset.id, current_user.id, separator)
     rescue Exception => e
       logger.error(e)
     end    
@@ -420,7 +416,12 @@ end
   end
   
   def can_add_or_edit_datasets
-    return Authorization.is_authorized?("edit", nil, Survey.find(params[:dataset][:survey]), current_user)
+    if params[:survey]
+      survey = Survey.find(params[:survey])
+    else
+      survey = Survey.find(params[:dataset][:survey])
+    end
+    return Authorization.is_authorized?("edit", nil, survey, current_user)
   end
   
 end

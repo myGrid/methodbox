@@ -193,15 +193,17 @@ class SurveysController < ApplicationController
     #   @ukda_registered = false
     # end
     @survey_hash = Hash.new
-    @surveys.each do |survey| 
-      unless !Authorization.is_authorized?("show", nil, survey, current_user)
+    @surveys.each do |survey|
+      unless survey.datasets.empty? 
+        unless !Authorization.is_authorized?("show", nil, survey, current_user)
       # unless survey.survey_type.is_ukda && !@ukda_registered
-        if (!@survey_hash.has_key?(survey.survey_type.shortname))
-          @survey_hash[survey.survey_type.shortname] = Array.new
+          if (!@survey_hash.has_key?(survey.survey_type.shortname))
+            @survey_hash[survey.survey_type.shortname] = Array.new
+          end
+          @survey_hash[survey.survey_type.shortname].push(survey)
         end
-        @survey_hash[survey.survey_type.shortname].push(survey)
-      end
     # end
+      end
     end
     puts @survey_hash
 
@@ -424,7 +426,7 @@ class SurveysController < ApplicationController
     #    @survey.save_without_timestamping
 
     # @survey = Survey.find(params[:id])
-    @forum = Forum.all(:conditions=>["name=?", @survey.survey_type.short_name])[0]
+    @forum = Forum.all(:conditions=>["name=?", @survey.survey_type.shortname])[0]
 
     source_archives = []
     source_scripts = []

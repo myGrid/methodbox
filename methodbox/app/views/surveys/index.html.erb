@@ -2,7 +2,7 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
-<% if Survey.all.size >=1 -%>
+<% if !Survey.all.empty? && !Dataset.all.empty? -%>
 
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
 <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
@@ -81,8 +81,14 @@
 </div>
 <% else %>
 <% if logged_in? %>
+<% if Survey.all.empty? %>
  <h1>There are no surveys loaded into the methodbox at the moment.</h1>
 <p class="center"> Why not <%= link_to "upload a new survey", new_survey_path -%></p>
+<% else %>
+ <h1>There are no surveys with datasets in the methodbox at the moment. </h1>
+<p class="center">Select a survey from the list and add a dataset to it.</p>
+<%= render :partial => "survey_list" -%>
+<% end -%>
 <% else %>
         <h1>There are no surveys loaded into the methodbox at the moment.</h1>
 <% end -%>

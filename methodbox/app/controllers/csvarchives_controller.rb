@@ -396,10 +396,12 @@ class CsvarchivesController < ApplicationController
       
       save_all_links selected_surveys
       begin 
-        Delayed::Job.enqueue DataExtractJob::StartJobTask.new(variable_hash, current_user.id, @archive.id, @archive.filename)
+        Delayed::Job.enqueue DataExtractJob::StartJobTask.new(variable_hash, current_user.id, @archive.id, @archive.filename, true)
       rescue Exception => e
         logger.error(e)
       end
+      #remove all the variables from the cart since we have now 'bought' them
+      current_user.cart_items.destroy
       respond_to do |format|
         format.html { redirect_to(csvarchive_url(@archive)) }
       end

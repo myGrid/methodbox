@@ -1,0 +1,7 @@
+<% Survey.all.each do |survey| %>
+<ul class="list-inline">
+<% if Authorization.is_authorized?("edit", nil, survey, current_user) -%>
+	<li><%= link_to survey.title, survey_url(survey) -%></li>
+<% end %>
+</ul>
+<% end %>

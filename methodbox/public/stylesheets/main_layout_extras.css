@@ -489,3 +489,7 @@ ul.vbuttons .category-browse.li {
 /*	border: 1px solid #C0C4C6;*/
 /*	color: #000000;*/
 }
+.list-inline li{
+	display: inline;
+	list-style: none;
+}

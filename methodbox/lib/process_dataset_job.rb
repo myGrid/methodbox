@@ -3,11 +3,11 @@
 
 module ProcessDatasetJob
   
-  class StartJobTask < Struct.new(:dataset_id)
+  class StartJobTask < Struct.new(:dataset_id, :user_id, :separator)
     
     def perform
-      puts "Calculating statistics for " + dataset.name
       dataset = Dataset.find(dataset_id)
+      puts "Calculating statistics for " + dataset.name
       process_dataset(dataset)
 
       #Get the updated variables
@@ -63,7 +63,7 @@ def process_part_dataset(dataset, first_column, last_column)
   #uts csv_file.ctime.to_s
   header_line = csv_file.readline
   header_line.chop!
-  all_headers = header_line.split("\t")
+  all_headers = header_line.split(separator)
   if all_headers.size <= last_column
     puts "Error processing dataset " + dataset.id.to_s
     puts "Less than expected headers found"
@@ -102,7 +102,7 @@ def process_part_dataset(dataset, first_column, last_column)
   
   #copy data
   csv_file.each_line do |row|
-    line = row.split("\t")      
+    line = row.split(separator)      
     all_columns.each do |column| 
       column_files[column].write (line[column] + "\n")
     end  

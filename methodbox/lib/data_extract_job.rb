@@ -5,7 +5,7 @@ module DataExtractJob
   require 'zip/zip'
   require 'zip/zipfilesystem'
   
-  class StartJobTask < Struct.new(:variable_hash, :user_id, :data_extract_id, :output_directory)
+  class StartJobTask < Struct.new(:variable_hash, :user_id, :data_extract_id, :output_directory, :send_email)
     
     cattr_accessor :logger
     self.logger = RAILS_DEFAULT_LOGGER
@@ -25,7 +25,9 @@ module DataExtractJob
         create_spss_files
         create_zip_file
         data_extract.update_attributes(:complete => true)
-        email_complete_to_user
+        if send_email
+          email_complete_to_user
+        end
         clean_up_files
       rescue Exception => e
         logger.error(e)
