@@ -380,6 +380,25 @@ class CsvarchivesController < ApplicationController
     @archive = Csvarchive.new(params[:archive])
     
     if @archive.save
+      if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+        puts "custom sharing here"
+        values = "{"
+        params[:groups].each do |workgroup_id|
+          values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
+        end
+        values = values.chop
+        values << "}}"
+        values.insert(0,"{\"WorkGroup\":")
+        params[:sharing][:permissions][:values] = values
+        params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
+        logger.info "custom permissions: " + values
+        puts params[:sharing][:permissions][:values]
+        puts params[:sharing][:permissions][:contributor_types]
+      end
+      policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
+      # update attributions
+      Relationship.create_or_update_attributions(@archive, params[:attributions])
+      puts "policy error: " + policy_err_msg
     
     # existing_arcs = Csvarchive.find(:all, :conditions=>{:title=> params[:archive][:title], :person_id=>User.find(current_user).person_id})
     #    if existing_arcs.empty?

@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_filter :is_user_admin_auth, :only =>[ :new, :create]
+  # before_filter :is_user_admin_auth, :only =>[ :new, :create]
 
   before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :exhibit, :category_browse, :show_datasets_for_categories]
   
@@ -20,7 +20,7 @@ class SurveysController < ApplicationController
 
   before_filter :find_survey, :only => [:show, :edit, :update]
   
-  before_filter :find_groups, :only => [ :new ]
+  before_filter :find_groups, :only => [ :new, :edit ]
 
   #ajax remote for displaying the surveys for a specific survey type
   def show_datasets_for_categories
@@ -336,7 +336,7 @@ class SurveysController < ApplicationController
     @ukda_only = false
     @survey_types =SurveyType.all
     if !current_user.is_admin
-      @survey_types.reject!{|survey_type| !survey_type.is_ukda }
+      @survey_types.reject!{|survey_type| survey_type.is_ukda }
     end
     
     respond_to do |format|
@@ -377,38 +377,24 @@ class SurveysController < ApplicationController
 
 
       @survey = Survey.new(params[:survey])
-
-      if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-        puts "custom sharing here"
-        values = "{"
-           params[:groups].each do |workgroup_id|
-              values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
-           end
-           values = values.chop
-           values << "}}"
-           values.insert(0,"{\"WorkGroup\":")
-           params[:sharing][:permissions][:values] = values
-           params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
-           logger.info "custom permissions: " + values
-           puts params[:sharing][:permissions][:values]
-           puts params[:sharing][:permissions][:contributor_types]
-       end
        
       respond_to do |format|
         if @survey.save
-          # the Survey file was saved successfully, now need to apply policy / permissions settings to it
-          policy_err_msg = Policy.create_or_update_policy(@survey, current_user, params)
+           policy = Policy.create(:name => "survey_policy", :sharing_scope => params[:sharing][:sharing_scope], :use_custom_sharing => params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false, :access_type => 2, :contributor => current_user)
+            @survey.asset.policy = policy
+            policy.save
+            @survey.asset.save
+            if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+              params[:groups].each do |workgroup_id|
+                policy.permissions << Permission.create(:contributor_id => workgroup_id, :contributor_type => "WorkGroup", :policy => policy, :access_type => 2)
+              end
+            end
 
           # update attributions
           Relationship.create_or_update_attributions(@survey, params[:attributions])
 
-          if policy_err_msg.blank?
-            flash[:notice] = 'Survey was successfully uploaded and saved.'
-            format.html { redirect_to survey_path(@survey) }
-          else
-            flash[:notice] = "Survey was successfully created. However some problems occurred, please see these below.</br></br><span style='color: red;'>" + policy_err_msg + "</span>"
-            format.html { redirect_to :controller => 'surveys', :id => @survey, :action => "edit" }
-          end
+          flash[:notice] = 'Survey was successfully uploaded and saved.'
+          format.html { redirect_to survey_path(@survey) }
         else
           format.html {
             set_parameters_for_sharing_form()
@@ -416,7 +402,6 @@ class SurveysController < ApplicationController
           }
         end
       end
-    # end
   end
 
   def show
@@ -469,15 +454,31 @@ class SurveysController < ApplicationController
   end
 
   def edit
-    if !current_user.is_admin?
-      flash[:error] = 'You do not have permission to edit survey metadata.'
-      respond_to do |format|
-        format.html { redirect_to survey_path(@survey) }
+    @survey = Survey.find(params[:id])
+    if Authorization.is_authorized?("edit", nil, @survey, current_user) || current_user && @survey.survey_type.is_ukda && current_user.is_admin?
+      @selected_groups = []
+      @ukda_only = @survey.survey_type.is_ukda
+      @survey_types =SurveyType.all
+      if !current_user.is_admin
+        @survey_types.reject!{|survey_type| survey_type.is_ukda }
       end
-    else
+      if @survey.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY
+        @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY
+        @survey.asset.policy.permissions.each do |permission|
+          if permission.contributor_type == "WorkGroup"
+            @selected_groups.push(permission.contributor_id)
+          end
+        end
+      end
       respond_to do |format|
         format.html # edit.html.erb
         format.xml
+      end
+      
+    else
+      flash[:error] = 'You do not have permission to edit survey metadata.'
+      respond_to do |format|
+        format.html { redirect_to survey_path(@survey) }
       end
     end
 
@@ -507,36 +508,26 @@ class SurveysController < ApplicationController
       params[:survey][:contributor_id] = current_user.id
     end
     
-    if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-      values = "{"
-         params[:groups].each do |workgroup_id|
-            values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
-         end
-         values = values.chop
-         values << "}}"
-         values.insert(0,"{\"WorkGroup\":")
-         params[:sharing][:permissions][:values] = values
-         params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
-         logger.info "custom permissions: " + values
-         puts params[:sharing][:permissions][:values]
-         puts params[:sharing][:permissions][:contributor_types]
+     #clear any custom permissions
+     if @survey.asset.policy.use_custom_sharing 
+       @survey.asset.policy.permissions.clear
      end
+     @survey.asset.policy.update_attributes(:sharing_scope => params[:sharing][:sharing_scope], :use_custom_sharing => params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false)
 
+     if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+       params[:groups].each do |workgroup_id|
+         @survey.asset.policy.permissions << Permission.create(:contributor_id => workgroup_id, :contributor_type => "WorkGroup", :policy => @survey.asset.policy, :access_type => 2)
+       end
+     end
+     
     respond_to do |format|
       if @survey.update_attributes(params[:survey])
-        # the Survey file was updated successfully, now need to apply updated policy / permissions settings to it
-        policy_err_msg = Policy.create_or_update_policy(@survey, current_user, params)
 
         # update attributions
         Relationship.create_or_update_attributions(@survey, params[:attributions])
 
-        if policy_err_msg.blank?
           flash[:notice] = 'Survey file metadata was successfully updated.'
           format.html { redirect_to survey_path(@survey) }
-        else
-          flash[:notice] = "Survey file metadata was successfully updated. However some problems occurred, please see these below.</br></br><span style='color: red;'>" + policy_err_msg + "</span>"
-          format.html { redirect_to :controller => 'surveys', :id => @survey, :action => "edit" }
-        end
       else
         format.html {
           set_parameters_for_sharing_form()
@@ -612,27 +603,11 @@ class SurveysController < ApplicationController
 
 
   def find_survey_auth
-    begin
       action=action_name
 
       survey = Survey.find(params[:id])
 
-      if Authorization.is_authorized?(action_name, nil, survey, current_user)
-        @survey = survey
-      else
-        respond_to do |format|
-          flash[:error] = "You are not authorized to perform this action"
-          format.html { redirect_to surveys_path }
-        end
-        return false
-      end
-    rescue ActiveRecord::RecordNotFound
-      respond_to do |format|
-        flash[:error] = "Couldn't find the Survey file or you are not authorized to view it"
-        format.html { redirect_to surveys_path }
-      end
-      return false
-    end
+      return Authorization.is_authorized?(action_name, nil, survey, current_user)
   end
 
   def set_parameters_for_sharing_form

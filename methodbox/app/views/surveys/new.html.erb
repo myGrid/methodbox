@@ -1,17 +1,40 @@
 <%= javascript_include_tag "sharing.js" -%>
-
-        <h2>Add a new survey to an already existing survey series or a new one.  Once you have added the survey you can add datasets to it.</h2><br/>
+<%= javascript_include_tag 'link_adder.js'-%>
 <h1>New Survey</h1>
-
-
 <div class="show_basic">
   <% form_tag({:action => :create}, :multipart => true) do -%>
     <%= error_messages_for :survey -%>
-
-    <center>
-      <div style="width: 60%;">
+<div class="right" style="width: 50%;">
+				<div id="new-survey-step-2">
+				<fieldset style="background-color: #FFFFCC;">
+					<legend style="font-size:150%;">2: Details for the new Survey</legend>
+			        <p style="margin-top: 0.5em;">
+			          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
+			          <%= text_field_tag 'survey[title]','', :style => "width: 100%;" -%>
+			        </p>
+	        <p style="margin-top: 0.5em;">
+	          <b>Description:</b> (Enter a description of the survey here)<br/>
+	          <%= text_area_tag 'survey[description]', '', :style => "width: 100%;", :rows => 5 -%>
+	        </p>
+	        <p style="margin-top: 0.5em;">
+	          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
+	          <%= text_field_tag 'survey[year]', '', :style => "width: 40%;" -%>
+	        </p>
+	</fieldset>
+	</div>
+	<div id="new-survey-step-3">
 	<fieldset style="background-color: #FFFFCC;">
-		<legend>1: Choose the Survey type</legend>
+		<legend style="font-size:150%;">3: Choose who to share with</legend>
+		<div class="left" style="margin-right:1em;">
+		<%= render :partial => "sharing" %>
+		</div>
+		<%= render :partial => "sharing_model" %>
+	</fieldset>
+	      </div>
+	</div>
+      <div id="new-survey-step-1" class="left" style="width: 45%;">
+	<fieldset style="background-color: #FFFFCC;">
+		<legend style="font-size:150%;">1: Choose the Survey type</legend>
 		<% if SurveyType.all.size >=1 %>
 <p>
 	<b>Select an existing Survey type</b><br/>
@@ -49,29 +72,23 @@
 				<% end %>
 				</p>
 			</fieldset>
-			<fieldset style="background-color: #FFFFCC;">
-				<legend>2: Details for the new Survey</legend>
-		        <p style="margin-top: 0.5em;">
-		          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
-		          <%= text_field_tag 'survey[title]','', :style => "width: 100%;" -%>
-		        </p>
-        <p style="margin-top: 0.5em;">
-          <b>Description:</b> (Enter a description of the survey here)<br/>
-          <%= text_area_tag 'survey[description]', '', :style => "width: 100%;", :rows => 5 -%>
-        </p>
-        <p style="margin-top: 0.5em;">
-          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
-          <%= text_field_tag 'survey[year]', '', :style => "width: 40%;" -%>
-        </p>
-</fieldset>
-        <%#= render :partial => "assets/project_selector", :locals => { :resource_type => "Survey",   # this is only for presentation, not for any processing
-          :project_hash => current_user.generate_own_project_id_name_hash } -%>
+			</div>
+			<div style="clear:both;">
+				</div>
 
-      </div>
+		<div id="specific_sharing"  <%= @sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY ? hide_style(false) : hide_style(true) -%>>
+			<fieldset style="background-color: #FFFFCC;">          
+				<legend style="font-size: 150%;">Share with group(s):</legend>
+				<div style="clear:both;"></div>
+			<%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups", :collection=>@groups,:selected=>[],:authorization_for_showing_already_done => false } -%>
+		</fieldset>
+		</div>
+		<div style="clear:both;">
+			</div>
       <p style="margin: 2.5em 0 0 0;">
-        <%= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
+        <%#= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
       </p>
-    </center>
+    <!--</center>-->
 
 
 

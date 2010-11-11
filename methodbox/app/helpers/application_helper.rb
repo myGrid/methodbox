@@ -8,6 +8,19 @@ module ApplicationHelper
   
   include TagsHelper
   
+  def sharing_text sharing_mode
+    case sharing_mode
+    when Policy::CUSTOM_PERMISSIONS_ONLY
+      return "You are sharing with the groups you have chosen below"
+    when Policy::ALL_REGISTERED_USERS
+      return "You are sharing with registered users only"
+    when Policy::EVERYONE
+      return "You are sharing with the world"
+    when Policy::PRIVATE
+      return "You are keeping this private"
+    end
+  end
+  
   #dynamic sidebar for each contoller
   def render_sidebar
     if FileTest.exist?(File.join(RAILS_ROOT, 'app', 'views', controller.controller_name.downcase, '_sidebar.html.erb')) 

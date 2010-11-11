@@ -1,0 +1,12 @@
+<div class="permissions-list" >
+<ul style="text-align: left;">
+<li style="padding-top: 5px; padding-bottom: 5px; padding-right:5px; font-size:125%;">
+	<input style="margin-right:10px;" type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::PRIVATE %> id="sharing_scope_<%= Policy::PRIVATE -%>" onclick="$('sharing-model').update('You are keeping this private'); $('specific_sharing').hide();" name="sharing[sharing_scope]" value="<%= Policy::PRIVATE -%>" />No one</li>
+<li style="padding-top: 5px; padding-bottom: 5px; padding-right:5px; font-size:125%;">
+	<input style="margin-right:10px;" type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::ALL_REGISTERED_USERS %> id="sharing_scope_<%= Policy::ALL_REGISTERED_USERS -%>"name="sharing[sharing_scope]" onclick="$('sharing-model').update('You are sharing with registered users only'); $('specific_sharing').hide();" value="<%= Policy::ALL_REGISTERED_USERS -%>" />Registered users only</li>
+<li style="padding-top: 5px; padding-bottom: 5px; padding-right:5px; font-size:125%; ">
+	<input style="margin-right:10px;" type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::EVERYONE %> id="sharing_scope_<%= Policy::EVERYONE -%>"name="sharing[sharing_scope]" value="<%= Policy::EVERYONE -%>" onclick="$('sharing-model').update('You are sharing this with the world'); $('specific_sharing').hide();"/>Everyone</li>
+<li style="padding-top: 5px; padding-bottom: 5px; padding-right:5px; font-size:125%; ">
+	<input style="margin-right:10px;" type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY %> id="sharing_scope_<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>"name="sharing[sharing_scope]" value="<%= Policy::CUSTOM_PERMISSIONS_ONLY -%>" onclick="$('sharing-model').update('You are sharing with the groups you have chosen below'); $('specific_sharing').show();"/>Specific groups</li>
+</ul>
+</div>

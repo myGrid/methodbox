@@ -7,6 +7,7 @@
 	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
 	<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
 		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
+		<li><%= icon "edit", edit_survey_url(@survey), "Edit this survey", nil, "Edit this survey" -%></li>
 	<% end %>
 	<% end %>
 		<% end -%>

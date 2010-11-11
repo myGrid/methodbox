@@ -1,7 +1,51 @@
-<% if current_user.is_admin? -%>
-<h1>Editing is not currently enabled for surveys</h1>
-<div style="text-align: center;"><%= link_to("Return to survey " + @survey.title, survey_path(@survey)) -%></div>
-<% else -%>
-<!-- The controller should take care of this anyway -->
-<h1>You do not have permission to edit surveys</h1>
-<% end -%>
+<%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'link_adder.js'-%>
+<h1>Editing Survey: <%= @survey.title -%></h1><div class="show_basic">
+  <% form_for(@survey) do |f| -%>
+    <%= error_messages_for :survey -%>
+	<div class="right" style="width: 50%" id="new-survey-step-3">
+	<fieldset style="background-color: #FFFFCC;">
+		<legend style="font-size:150%;">2: Edit Sharing</legend>
+		<div class="left" style="margin-right:1em;">
+		<%= render :partial => "sharing" %>
+		</div>
+		<%= render :partial => "sharing_model" %>
+	</fieldset>
+	      </div>
+				<div class="left" style="width: 40%" id="new-survey-step-2">
+				<fieldset style="background-color: #FFFFCC;">
+					<legend style="font-size:150%;">1: Edit Survey Details</legend>
+			        <p style="margin-top: 0.5em;">
+			          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
+			          <%= text_field_tag 'survey[title]',@survey.title, :style => "width: 100%;" -%>
+			        </p>
+	        <p style="margin-top: 0.5em;">
+	          <b>Description:</b> (Enter a description of the survey here)<br/>
+	          <%= text_area_tag 'survey[description]', @survey.description, :style => "width: 100%;", :rows => 5 -%>
+	        </p>
+	        <p style="margin-top: 0.5em;">
+	          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
+	          <%= text_field_tag 'survey[year]', @survey.year, :style => "width: 40%;" -%>
+	        </p>
+	</fieldset>
+	</div>
+			<div style="clear:both;">
+				</div>
+
+		<div id="specific_sharing"  <%= @sharing_mode == Policy::CUSTOM_PERMISSIONS_ONLY ? hide_style(false) : hide_style(true) -%>>
+			<fieldset style="background-color: #FFFFCC;">          
+				<legend style="font-size: 150%;">Share with group(s):</legend>
+				<div style="clear:both;"></div>
+			<%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups", :collection=>@groups,:selected => @selected_groups,:authorization_for_showing_already_done => false } -%>
+		</fieldset>
+		</div>
+		<div style="clear:both;">
+			</div>
+
+    <p style="text-align: center; margin-top: 1.5em;">
+      <%= submit_tag "Update", :id => "survey_submit_btn", :onclick => "javascript: validateSurveyFields(true); return(false);" -%> or <%= link_to 'Cancel', survey_url(@survey) -%>
+    </p>
+  <% end -%>
+</div>
+
+
