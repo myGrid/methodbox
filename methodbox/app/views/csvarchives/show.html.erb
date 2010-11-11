@@ -3,7 +3,7 @@
 <%= javascript_include_tag "variable_table_check.js" -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
-<ul class="sectionIcons">
+<ul class="buttons">
   <%= hidden_field_tag "format_type", "csv" -%>
   <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
     <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button"}, "Download extract as:") -%></li>
