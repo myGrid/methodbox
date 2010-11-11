@@ -49,18 +49,19 @@ module DataExtractJob
     
     def create_csv_files
       data_extract = Csvarchive.find(data_extract_id)
-      logger.info("creating files for " + data_extract.title + ", user " + user_id.to_s)
-      puts("creating files for " + data_extract.title + ", user " + user_id.to_s)
+      user = User.find(user_id)
+      logger.info("creating files for " + data_extract.title + ", user " + user.id.to_s)
+      puts("creating files for " + data_extract.title + ", user " + user.id.to_s)
       logger.info(variable_hash.to_s)
       puts(variable_hash.to_s)
-      data_extact_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
-      FileUtils.mkdir(data_extact_directory)
+      data_extract_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
+      FileUtils.mkdir(data_extract_directory)
       variable_hash.each_key do |key|
           dataset = Dataset.find(key)
-          logger.info("creating cvs files for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
-          puts("creating cvs files for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
-          new_csv_path = File.join(data_extact_directory, dataset.name + "_extract.csv")
-          spss_csv_path = File.join(data_extact_directory, dataset.name + "_selection_spss_data.txt")
+          logger.info("creating csv files for " + dataset.name  + ", " + data_extract.title + ", user " + user.id.to_s)
+          puts("creating csv files for " + dataset.name  + ", " + data_extract.title + ", user " + user.id.to_s)
+          new_csv_path = File.join(data_extract_directory, dataset.name + "_extract.csv")
+          spss_csv_path = File.join(data_extract_directory, dataset.name + "_selection_spss_data.txt")
           new_csv_file = File.new(new_csv_path , "w")
           spss_csv_file = File.new(spss_csv_path , "w")
           dataset_file = dataset.uuid_filename
@@ -292,8 +293,8 @@ module DataExtractJob
     def create_csv_files_from_uuid_files
       data_extract = Csvarchive.find(data_extract_id)
       logger.info("creating files for " + data_extract.title + ", user " + user_id.to_s)
-      data_extact_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
-      FileUtils.mkdir(data_extact_directory)
+      data_extract_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
+      FileUtils.mkdir(data_extract_directory)
       threads = []
       variable_hash.each_key do |key|
         # threads << Thread.new(key.to_s) {
@@ -301,8 +302,8 @@ module DataExtractJob
           thread_hash = variable_hash
           dataset = Dataset.find(thread_key)
           logger.info("creating thread for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
-          new_csv_path = File.join(data_extact_directory, dataset.name + "_extract.csv")
-          spss_csv_path = File.join(data_extact_directory, dataset.name + "_selection_spss_data.txt")
+          new_csv_path = File.join(data_extract_directory, dataset.name + "_extract.csv")
+          spss_csv_path = File.join(data_extract_directory, dataset.name + "_selection_spss_data.txt")
           new_csv_file = File.new(new_csv_path , "w")
           spss_csv_file = File.new(spss_csv_path , "w")
           dataset_file = dataset.uuid_filename
