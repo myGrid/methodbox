@@ -2,6 +2,7 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
+<% if !@survey_hash.empty? %>
 <% if !Survey.all.empty? && !Dataset.all.empty? -%>
 
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
@@ -93,6 +94,15 @@
         <h1>There are no surveys loaded into the methodbox at the moment.</h1>
 <% end -%>
 <% end -%>
+<% if !@empty_surveys.empty? %>
+<h3>Surveys without any datasets</h3>
+<% @empty_surveys.each do |survey| %>
+	<%= link_to survey.title, survey_url(survey) -%>
+<% end -%>
+<% end -%>
+<% else %>
+<h1>There are no surveys available to view.</h1>
+<% end %>
 <!-- jquery grid experiment -->
   <%# form_tag(:action => "grid_view") do -%>
   <%#= submit_tag 'Show grid view',:id => "grid_button" %>

@@ -13,6 +13,16 @@ class CsvarchivesController < ApplicationController
   before_filter :find_archive, :only => [ :edit, :update, :show, :download ]
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
+  # check if the extract is complete and if so then update the div
+  def check_for_complete
+    extract = Csvarchive.find(params[:id])
+    if extract.complete
+      render :partial=>"csvarchives/check_for_complete"
+    else
+      render :text=>"still being processed......"
+    end
+  end
+  
   #only show 'my' links or 'all' links
   def show_links
     source_archives = []

@@ -90,7 +90,8 @@ def process_part_dataset(dataset, first_column, last_column)
       raise "Variable not found " + name + " in dataset " + dataset.id.to_s + " file " + dataset_file
     end
     #uts column_files.size
-    path = File.join(data_directory, name + ".txt")
+    
+    path = File.join(data_directory.chop, name + ".txt")
     variable.data_file = path
     variable.save
     file = File.open(path, "w")

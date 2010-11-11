@@ -9,6 +9,7 @@
 	<center>
       <div style="width: 90%;">
 		  <% form_tag(load_new_data_dataset_url, :multipart => true) do %>
+		<%= hidden_field_tag "dataset[survey]", Survey.find(@dataset.survey_id).id -%>
 	<p>
 
 				<% if @dataset.has_data -%>

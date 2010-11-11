@@ -193,6 +193,7 @@ class SurveysController < ApplicationController
     #   @ukda_registered = false
     # end
     @survey_hash = Hash.new
+    @empty_surveys = []
     @surveys.each do |survey|
       unless survey.datasets.empty? 
         unless !Authorization.is_authorized?("show", nil, survey, current_user)
@@ -203,6 +204,8 @@ class SurveysController < ApplicationController
           @survey_hash[survey.survey_type.shortname].push(survey)
         end
     # end
+      else
+        @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
       end
     end
     puts @survey_hash
@@ -364,6 +367,7 @@ class SurveysController < ApplicationController
       forum.name = s_type.shortname
       forum.description = "Questions about " + s_type.name
       forum.position = 4
+      forum.save
     else
       params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
     end
