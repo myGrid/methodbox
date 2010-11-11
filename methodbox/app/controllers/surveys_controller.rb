@@ -455,7 +455,7 @@ class SurveysController < ApplicationController
 
   def edit
     @survey = Survey.find(params[:id])
-    if Authorization.is_authorized?("edit", nil, @survey, current_user) || current_user && @survey.survey_type.is_ukda && current_user.is_admin?
+    if Authorization.is_authorized?("edit", nil, @survey, current_user) || (current_user && @survey.survey_type.is_ukda && current_user.is_admin?)
       @selected_groups = []
       @ukda_only = @survey.survey_type.is_ukda
       @survey_types =SurveyType.all
@@ -485,7 +485,7 @@ class SurveysController < ApplicationController
   end
 
   def update
-    if !current_user.is_admin?
+    if !Authorization.is_authorized?("edit", nil, @survey, current_user) || !current_user || @survey.survey_type.is_ukda && !current_user.is_admin?
       flash[:error] = 'You do not have permission to edit survey metadata.'
       respond_to do |format|
         format.html { redirect_to survey_path(@survey) }
@@ -612,20 +612,28 @@ class SurveysController < ApplicationController
 
   def set_parameters_for_sharing_form
     policy = nil
-    policy_type = ""
+    policy_type = "asset"
+    @survey = Survey.find(params[:id])
 
-    # obtain a policy to use
-    if defined?(@survey) && @survey.asset
-      if (policy = @survey.asset.policy)
-        # Surveyfile exists and has a policy associated with it - normal case
-        policy_type = "asset"
-      elsif @survey.asset.project && (policy = @survey.asset.project.default_policy)
-        # Surveyfile exists, but policy not attached - try to use project default policy, if exists
-        policy_type = "project"
-      end
-    end
+    # # obtain a policy to use
+    # if defined?(@survey) && @survey.asset
+    #   if (policy = @survey.asset.policy)
+    #     # Surveyfile exists and has a policy associated with it - normal case
+    #     puts "we have a policy"
+    #     policy_type = "asset"
+    #   elsif @survey.asset.project && (policy = @survey.asset.project.default_policy)
+    #     # Surveyfile exists, but policy not attached - try to use project default policy, if exists
+    #     policy_type = "project"
+    #   end
+    # end
+    # 
 
+
+    # set the parameters
+    # ..from policy
+    policy = @survey.asset.policy
     unless policy
+      puts "there is no policy"
       # several scenarios could lead to this point:
       # 1) this is a "new" action - no Surveyfile exists yet; use default policy:
       #    - if current user is associated with only one project - use that project's default policy;
@@ -642,12 +650,10 @@ class SurveysController < ApplicationController
         policy_type = "system"
       end
     end
-
-    # set the parameters
-    # ..from policy
     @policy = policy
     @policy_type = policy_type
     @sharing_mode = policy.sharing_scope
+    puts "sharing mode is " + policy.sharing_scope.to_s
     @access_mode = policy.access_type
     @use_custom_sharing = (policy.use_custom_sharing == true || policy.use_custom_sharing == 1)
     @use_whitelist = (policy.use_whitelist == true || policy.use_whitelist == 1)

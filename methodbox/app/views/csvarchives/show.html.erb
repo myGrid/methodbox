@@ -46,11 +46,13 @@
 		<%= render :partial => "total_vars" %>
 	</div>
 	<br/>
+	<% if current_user %>
 	<div class="link_box">
 	Show: 
 	<%= link_to_remote "Only my links", :url=> show_links_csvarchives_path, :with=> "'link_state=mine&extract_id=#{@archive.id}'" %>, 
 	<%= link_to_remote "All links", :url=> show_links_csvarchives_path, :with=> "'link_state=all&extract_id=#{@archive.id}'" %>
 	</div>
+	<% end %>
 	<div class="actual_link_box">
 
 <div id="links">

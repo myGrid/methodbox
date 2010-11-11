@@ -77,7 +77,7 @@
 		</p>
 		<!-- the world -->
 		<div id="world_sharing_div">
-		<% if @ukda_only!=nil && @ukda_only == false %>
+		<% if @ukda_only!=nil && @ukda_only == false ||  @resource_type!="Survey"%>
 	    <p>
 	    	<label for="sharing_scope_<%= Policy::EVERYONE -%>">
 	      	<input type="radio" <%= 'checked="checked"' if @sharing_mode == Policy::EVERYONE -%> id="sharing_scope_<%= Policy::EVERYONE -%>" name="sharing[sharing_scope]"

@@ -1,12 +1,14 @@
 <div>
 	<% unless @all_archives.empty? %>
   		<div class="tabber" id="archivestab">
+			<% if current_user %>
     		<div id="my_archives_tab" class="tabbertab listings_blank" title="All of the data extracts you have created">
       			<h3>My Data Extracts</h3>
 				<%= will_paginate @my_archives, :param_name=>'my_page' %>
       			<%= render :partial => "assets/resource_list", :locals => { :collection => @my_archives, :authorization_for_showing_already_done=>true } %>
 				<%= will_paginate @my_archives, :param_name=>'my_page' %>
     		</div>
+			<% end %>
     		<div id="all_archives_tab" class="tabbertab listings_blank" title="Data extracts from all the users in the MethodBox">
       			<h3>All Data Extracts</h3>
 				<%= will_paginate @all_archives, :param_name=>'all_page' %>
