@@ -1,4 +1,4 @@
-<ul class="sectionIcons">
+<ul class="buttons">
 <% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
 <li>
 <%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit Dataset details') -%>

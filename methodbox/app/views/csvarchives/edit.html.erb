@@ -4,7 +4,7 @@
 <% current_user_authorized_to_manage = Authorization.is_authorized?("manage", nil, @archive, current_user) -%>
 
 
-<ul class="sectionIcons">
+<ul class="buttons">
   <li><%= icon('Method', csvarchive_path(@archive), 'Return to CSV Archive', nil, 'Return to CSV Archive') -%></li>
   <li><%= icon('Methods', csvarchives_path, 'View all CSV Archives', nil, 'View all CSV Archives') -%></li>
 </ul>
