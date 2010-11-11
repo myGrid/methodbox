@@ -274,48 +274,22 @@ class CsvarchivesController < ApplicationController
     links.each do |link|
       link.delete
     end
+    variable_hash = Hash.new
+    @archive.variables.each do |variable|
+      if (!variable_hash.has_key?(variable.dataset_id))
+        variable_hash[variable.dataset_id] = Array.new
+      end
+    end
     #add the links again
-    if params[:scripts] != nil
-      # all_scripts_array = Array.new
-      params[:scripts].each do |script_id|
-      link = Link.new
-      link.subject = @archive
-      link.object = Script.find(script_id)
-      link.predicate = "link"
-      link.user = current_user
-      link.save
+    selected_surveys = Array.new
+    variable_hash.each_key do |dataset_id|
+      survey_id = Dataset.find(dataset_id).survey.id
+      if !selected_surveys.include?(survey_id)
+        selected_surveys.push(survey_id)
       end
     end
-    if params[:surveys] != nil
-        params[:surveys].each do |survey_id|
-           link = Link.new
-           link.subject = @archive
-           link.object = Survey.find(survey_id)
-           link.predicate = "link"
-           link.user = current_user
-           link.save
-        end
-    end
-    if params[:data_extracts] != nil
-        params[:data_extracts].each do |extract_id|
-           link = Link.new
-           link.subject = @archive
-           link.object = Csvarchive.find(extract_id)
-           link.predicate = "link"
-           link.user = current_user
-           link.save
-        end
-    end
-     if params[:publications] != nil
-        params[:publications].each do |publication_id|
-        link = Link.new
-        link.subject = @archive
-        link.object = Publication.find(publication_id)
-        link.predicate = "link"
-        link.user = current_user
-        link.save
-        end
-      end
+    
+    save_all_links selected_surveys
     # generate the json encoding for the groups sharing permissions to go in the params
     if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
        puts "custom sharing here"
