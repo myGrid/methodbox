@@ -12,9 +12,9 @@ namespace :obesity do
     current_user = User.find(user_id)
     Survey.all.each do |survey|
       unless survey.asset != nil
-          policy = Policy.new(:name => 'auto',
-                    :contributor_type => 'Person',
-                    :contributor_id => current_user.person.id,
+          policy = Policy.new(:name => 'survey_policy',
+                    :contributor_type => 'User',
+                    :contributor_id => current_user.id,
                     :sharing_scope => 4,
                     :access_type => 2,
                     :use_custom_sharing => false,
