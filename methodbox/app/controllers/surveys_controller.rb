@@ -1,3 +1,5 @@
+require 'cgi'
+
 class SurveysController < ApplicationController
   
   # before_filter :is_user_admin_auth, :only =>[ :new, :create]
@@ -47,8 +49,8 @@ class SurveysController < ApplicationController
            # @surveys_json << "{\"label\":\"" + survey.title + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Survey\",\"survey_description\" :\"" + survey.description
           #        @surveys_json << "\",\"survey_type\":\"" + survey.survey_type.shortname + "\"},"
         survey.datasets.each do |dataset|
-          @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":\"" + dataset.name + "\",\"survey-type\":\"" + survey.survey_type.shortname + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Dataset\",\"dataset-description\" :\"" + dataset.description
-          @surveys_json << "\",\"Survey\":\"" + survey.title + "\",\"survey-description\" :\"" + survey.description + "\"},"
+          @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":\"" + dataset.name + "\",\"survey-type\":\"" + survey.survey_type.shortname + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Dataset\",\"dataset-description\" :\"" + CGI.escape(dataset.description)
+          @surveys_json << "\",\"Survey\":\"" + survey.title + "\",\"survey-description\" :\"" + CGI.escape(survey.description) + "\"},"
         end
       end
     end
