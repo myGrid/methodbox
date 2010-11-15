@@ -105,7 +105,7 @@ def process_part_dataset(dataset, first_column, last_column)
   csv_file.each_line do |row|
     line = row.split(separator)      
     all_columns.each do |column| 
-      column_files[column].write (line[column] + "\n")
+      column_files[column].write(line[column] + "\n")
     end  
   end
   #uts "done copy data"
