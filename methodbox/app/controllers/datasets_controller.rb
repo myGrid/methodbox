@@ -17,20 +17,18 @@ class DatasetsController < ApplicationController
   def load_new_data
     uuid = UUIDTools::UUID.random_create.to_s
     #create directory and zip file for the archive
-    filename=RAILS_ROOT + "/" + "filestore" + "/" + uuid + ".data"
+    filename = CSV_FILE_PATH + "/" + uuid + ".data"
     uf = File.open(filename,"w")
     params[:file][:data].each_line do |line|                
       uf.write(line)
     end
     uf.close
-    
     file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
              
     @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision],:has_data=>true)
 
     # send_to_server file_uuid, filename
     load_new_dataset filename
-    File.delete(filename)
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
       format.html
@@ -101,8 +99,6 @@ class DatasetsController < ApplicationController
     load_dataset filename, dataset
 
     dataset.update_attributes(:has_variables=>false, :has_data=>true)
-    #don't delete the rails file yet
-    # File.delete(filename)
     @dataset = dataset
     respond_to do |format|
       format.html { redirect_to dataset_path(@dataset) }
@@ -111,19 +107,13 @@ class DatasetsController < ApplicationController
   end
   
   def edit
-    # flash[:error] = "No dataset editing is allowed at the moment"
-    # respond_to do |format|
-    #   format.html { redirect_to dataset_path(@dataset) }
-    # end
+
   end
   
   def update
     
     if @dataset.update_attributes(params[:dataset])
       respond_to do |format|
-        # if @missing_variables.size >= 1
-        #           flash[:notice] = "Variables were found in the metadata which had not previously been found in the uploaded CSV dataset.  It is recommended that you upload a new dataset which contains these variables and then reload the metadata"  
-        #         end
         format.html { redirect_to dataset_path(@dataset) }
       end
     else
@@ -155,7 +145,7 @@ class DatasetsController < ApplicationController
         headers = header.split(",")
     end
     #Look at existing vars, find the differences - could be quite slow I guess?
-    #need to find variables which are missing from the exisitng set and variables which are 'new'
+    #need to find variables which are missing from the existing set and variables which are 'new'
     all_var = Variable.all(:conditions=> {:dataset_id => @dataset.id, :is_archived=>false}, :select => "name")
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
@@ -173,7 +163,7 @@ class DatasetsController < ApplicationController
         variable.name = var
         variable.dataset = @dataset
         variable.save
-        puts "this was new " + variable.name
+        logger.info("this was new " + variable.name)
         @new_variables.push(variable)
       end
     end
@@ -210,10 +200,9 @@ class DatasetsController < ApplicationController
     end
     
     begin 
-      puts "sending the job with dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator
+      logger.info("sending the job with dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator)
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator)
     rescue Exception => e
-      puts "job failed" + e
       logger.error(e)
     end
     
@@ -237,7 +226,7 @@ class DatasetsController < ApplicationController
     
     headers.collect!{|item| item.strip}
           
-    #need to find variables which are missing from the exisitng set and variables which are 'new'
+    #need to find variables which are missing from the existing set and variables which are 'new'
     all_var = Variable.all(:conditions=> {:dataset_id => @dataset.id, :is_archived=>false}, :select => "name")
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
@@ -250,6 +239,8 @@ class DatasetsController < ApplicationController
     missing_variables.each do |missing_var|
       v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + missing_var+"'")
       @missing_vars.push(v[0].id)
+      v[0].update_attributes(:is_archived => true, :archived_by => current_user.id)
+      v[0].solr_destroy
     end
     
     @new_variables = []

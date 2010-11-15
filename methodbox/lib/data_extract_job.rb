@@ -103,10 +103,11 @@ module DataExtractJob
               out_line = i.to_s + "," + dataset.survey.year
               column_files.each do |column_file|
                   line = column_file.readline
+                  line.chomp!
                   #uts("line:"+line+":")
                   out_line << "," + line
               end            
-              out_line.chop!
+              # out_line.chop!
               #uts("out_line:"+out_line)
               out_line << "\r\n"
               new_csv_file.write(out_line)

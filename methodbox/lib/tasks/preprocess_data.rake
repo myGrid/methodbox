@@ -10,9 +10,9 @@ namespace :obesity do
     puts "Strating preprocessing of data"
     #Dataset.find(:all, :conditions => "id = 22").each do |dataset|
     Dataset.find(:all).each do |dataset|
-      variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id} and data_file = NULL")
+      variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id} and data_file = NULL and is_archived != true")
       if variables.size == 0
-         variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id}")
+         variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id} and is_archived != true")
          if check_upto_date (dataset, variables.last)
            puts "Skipping dataset "+ dataset.id.to_s + " with name " + dataset.name
            process = false
