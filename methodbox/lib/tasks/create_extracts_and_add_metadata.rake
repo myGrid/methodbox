@@ -19,9 +19,8 @@ namespace :obesity do
       end
       #is the extract an old one?
       if !File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
-        File.makedirs(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
         #are any of the files missing, if so create the extract from scratch
-        if !File.exists(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip")) || !File.exists(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_stata.zip")) || !File.exists(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_spss.zip"))
+        if !File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip")) || !File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_stata.zip")) || !File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_spss.zip"))
           add_data = false
           variable_hash = Hash.new
           extract.variables.each do |variable|
@@ -36,7 +35,7 @@ namespace :obesity do
             logger.error(e)
           end
         else
-          
+        File.makedirs(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
         old_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip")
         new_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.filename + "_csv.zip")
         File.move(old_csv_place, new_csv_place)
