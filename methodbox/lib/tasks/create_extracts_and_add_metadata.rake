@@ -13,6 +13,9 @@ namespace :obesity do
   task :update_data_extracts_and_metadata  => :environment do
     Csvarchive.all.each do |extract|
       #firstly move the extracts to the correct place ie data_extract.filename/files
+      if File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + ".zip"))
+        File.move(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + ".zip"), File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip"))
+      end
       if !File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
         File.makedirs(CSV_OUTPUT_DIRECTORY, extract.filename)
         old_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip")
