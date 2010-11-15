@@ -200,7 +200,7 @@ def process_variable(variable)
   #Required because found a "9999999999999999999999999999999999999999999999999" in a String column
   if strings
     string_hash.sort.each do |key, frequency|
-      none_values_distribution_file .write (key.to_s + "," + frequency.to_s + "\n")
+      none_values_distribution_file .write(key.to_s + "," + frequency.to_s + "\n")
     end
     values_distribution_file.close
     no_value_stats(variable)
@@ -211,7 +211,7 @@ def process_variable(variable)
   #Write the non values if any
   if none_values_hash.size > 0 
     none_values_hash.sort.each do |key, frequency|
-      none_values_distribution_file .write (key.to_s + "," + frequency.to_s + "\n")
+      none_values_distribution_file .write(key.to_s + "," + frequency.to_s + "\n")
     end
   end  
   none_values_distribution_file .close
@@ -222,7 +222,7 @@ def process_variable(variable)
 
     #Write the values
     values.each do |key, frequency|
-      values_distribution_file.write (key.to_s + "," + frequency.to_s + "\n")
+      values_distribution_file.write(key.to_s + "," + frequency.to_s + "\n")
     end  
     values_distribution_file.close
 

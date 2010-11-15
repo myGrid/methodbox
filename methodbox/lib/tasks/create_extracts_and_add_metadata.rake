@@ -17,7 +17,7 @@ namespace :obesity do
         File.move(File.join(CSV_OUTPUT_DIRECTORY, extract.filename + ".zip"), File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip"))
       end
       if !File.exists?(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
-        File.makedirs(CSV_OUTPUT_DIRECTORY, extract.filename)
+        File.makedirs(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
         old_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip")
         new_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.filename + "_csv.zip")
         File.move(old_csv_place, new_csv_place)
