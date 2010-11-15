@@ -12,7 +12,6 @@ namespace :obesity do
     Csvarchive.all.each do |extract|
       if !extract.complete
         puts "creating extract " + extract.filename + ", id " + extract.id.to_s
-        extract.variables
         variable_hash = Hash.new
         extract.variables.each do |variable|
           if (!variable_hash.has_key?(variable.dataset_id))
