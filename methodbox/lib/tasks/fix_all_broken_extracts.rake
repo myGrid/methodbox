@@ -20,7 +20,7 @@ namespace :obesity do
           variable_hash[variable.dataset_id].push(variable.id)
         end
         begin 
-          Delayed::Job.enqueue DataExtractJob::StartJobTask.new(variable_hash, User.find(extract.user_id), extract.id, extract.filename, false)
+          Delayed::Job.enqueue DataExtractJob::StartJobTask.new(variable_hash, extract.user_id, extract.id, extract.filename, false)
         rescue Exception => e
           puts e
           logger.error(e)

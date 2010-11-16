@@ -11,14 +11,14 @@ class SurveysController < ApplicationController
   before_filter :find_previous_searches, :only => [ :index ]
 
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
+  
+  before_filter :find_survey, :only => [:show, :edit, :update]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
   before_filter :check_search_parameters, :only => [:search_variables]
 
   before_filter :rerouted_search, :only => [:show]
-
-  before_filter :find_survey, :only => [:show, :edit, :update]
   
   before_filter :find_groups, :only => [ :new, :edit ]
 
@@ -612,26 +612,26 @@ class SurveysController < ApplicationController
 
   def set_parameters_for_sharing_form
     policy = nil
-    policy_type = "asset"
-    @survey = Survey.find(params[:id])
+    policy_type = "survey_policy"
+    # @survey = Survey.find(params[:id])
 
     # # obtain a policy to use
-    # if defined?(@survey) && @survey.asset
-    #   if (policy = @survey.asset.policy)
+    if defined?(@survey) && @survey.asset
+      if (policy = @survey.asset.policy)
     #     # Surveyfile exists and has a policy associated with it - normal case
     #     puts "we have a policy"
-    #     policy_type = "asset"
+        policy_type = "survey_policy"
     #   elsif @survey.asset.project && (policy = @survey.asset.project.default_policy)
     #     # Surveyfile exists, but policy not attached - try to use project default policy, if exists
     #     policy_type = "project"
-    #   end
-    # end
+      end
+    end
     # 
 
 
     # set the parameters
     # ..from policy
-    policy = @survey.asset.policy
+    # policy = @survey.asset.policy
     unless policy
       puts "there is no policy"
       # several scenarios could lead to this point:
@@ -641,14 +641,9 @@ class SurveysController < ApplicationController
       # 2) this is "edit" action - Surveyfile exists, but policy wasn't attached to it;
       #    (also, Surveyfile wasn't attached to a project or that project didn't have a default policy) --
       #    hence, try to obtain a default policy for the contributor (i.e. owner of the Surveyfile) OR system default
-      projects = current_user.person.projects
-      if projects.length == 1 && (proj_default = projects[0].default_policy)
-        policy = proj_default
-        policy_type = "project"
-      else
+
         policy = Policy.default(current_user)
-        policy_type = "system"
-      end
+        policy_type = "survey_policy"
     end
     @policy = policy
     @policy_type = policy_type

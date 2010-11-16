@@ -16,8 +16,9 @@ module DataExtractJob
         logger.info("performing csv extraction for " + data_extract.title + ", user " + user_id.to_s)
         begin
           create_csv_files
-        rescue  
+        rescue Exception => e
           #OK then lets try it the old way
+          puts "failed with new way " + e
           create_csv_files_from_uuid_files
         end  
         create_metadata_files
@@ -52,8 +53,6 @@ module DataExtractJob
       user = User.find(user_id)
       logger.info("creating files for " + data_extract.title + ", user " + user.id.to_s)
       puts("creating files for " + data_extract.title + ", user " + user.id.to_s)
-      logger.info(variable_hash.to_s)
-      puts(variable_hash.to_s)
       data_extract_directory = File.join(CSV_OUTPUT_DIRECTORY, output_directory)
       FileUtils.mkdir(data_extract_directory)
       variable_hash.each_key do |key|
@@ -71,28 +70,38 @@ module DataExtractJob
           #uts(data_directory)
           
           survey = Survey.find(dataset.survey_id)
+          puts "1"
           survey_year = survey.year
+          puts "2"
           names = []
           column_files = []
+          puts "3"
           variable_hash[key].each do |var|
               #uts(key)
               variable = Variable.find(var)
+              puts "4"
               name = variable.name
+              puts"5"
               names.push(name)
-              path = variable.data_file
+              path = File.join(CSV_FILE_PATH, variable.dataset.uuid_filename.split('.')[0], variable.name.downcase + ".txt")
+              puts "6"
               file = File.open(path, "r")
               column_files << file
+              puts "7"
           end
           info = ["row", "year"]
           headers = info + names
+          puts "8"
           
           # push headers for csv only, not for spss
           header_string = String.new
           headers.each do |header|
             header_string << header + ","
           end
+          puts "9"
           header_string.chop!
           puts(header_string)
+          puts "10"
           header_string << "\r\n"
           new_csv_file.write(header_string)
 

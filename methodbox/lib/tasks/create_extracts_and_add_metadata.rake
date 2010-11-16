@@ -37,13 +37,13 @@ namespace :obesity do
         else
         File.makedirs(File.join(CSV_OUTPUT_DIRECTORY, extract.filename))
         old_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_csv.zip")
-        new_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.filename + "_csv.zip")
+        new_csv_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.title + "_csv.zip")
         File.move(old_csv_place, new_csv_place)
         old_stata_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_stata.zip")
-        new_stata_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.filename + "_stata.zip")
+        new_stata_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.title + "_stata.zip")
         File.move(old_stata_place, new_stata_place)
         old_spss_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename + "_spss.zip")
-        new_spss_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.filename + "_spss.zip")
+        new_spss_place = File.join(CSV_OUTPUT_DIRECTORY, extract.filename, extract.title + "_spss.zip")
         File.move(old_spss_place, new_spss_place)
         end
       end
