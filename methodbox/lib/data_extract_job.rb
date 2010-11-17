@@ -70,41 +70,30 @@ module DataExtractJob
           #uts(data_directory)
           
           survey = Survey.find(dataset.survey_id)
-          puts "1"
           survey_year = survey.year
-          puts "2"
           names = []
           column_files = []
-          puts "3"
           variable_hash[key].each do |var|
               #uts(key)
               variable = Variable.find(var)
-              puts "4"
               name = variable.name
-              puts"5"
               names.push(name)
               path = File.join(CSV_FILE_PATH, variable.dataset.uuid_filename.split('.')[0], variable.name.downcase + ".txt")
-              puts "6"
               file = File.open(path, "r")
               column_files << file
-              puts "7"
           end
           info = ["row", "year"]
           headers = info + names
-          puts "8"
           
           # push headers for csv only, not for spss
           header_string = String.new
           headers.each do |header|
             header_string << header + ","
           end
-          puts "9"
           header_string.chop!
           puts(header_string)
-          puts "10"
           header_string << "\r\n"
           new_csv_file.write(header_string)
-
           puts (column_files.to_s) 
           puts (column_files[0]) 
           i = 1
@@ -128,7 +117,6 @@ module DataExtractJob
           spss_csv_file.close
           #uts (column_files.to_s) 
           column_files.each { |column_file| 
-            puts (column_file.to_s)
             column_file.close 
           }
           logger.info("completed for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
@@ -146,7 +134,7 @@ module DataExtractJob
       data_extract = Csvarchive.find(data_extract_id)
       logger.info("create zip files for " + data_extract.title + ", user " + user_id.to_s)
       #csv files
-      csv_zip_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, data_extract.title + "_csv.zip")
+      csv_zip_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, data_extract.filename + "_csv.zip")
       Zip::ZipFile.open(csv_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
@@ -160,7 +148,7 @@ module DataExtractJob
       }
 
       #stata files
-      stata_zip_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, data_extract.title + "_stata.zip")
+      stata_zip_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, data_extract.filename + "_stata.zip")
       Zip::ZipFile.open(stata_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
@@ -178,7 +166,7 @@ module DataExtractJob
           }
       } 
       #spss files
-      spss_zip_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, data_extract.title + "_spss.zip")
+      spss_zip_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, data_extract.filename + "_spss.zip")
       Zip::ZipFile.open(spss_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)

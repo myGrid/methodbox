@@ -1182,6 +1182,11 @@ function validateSopFields(is_new_file) {
 // ***************  Dataset Upload Validation  *****************
 
 function validateDatasetFields() {
+	if (!(/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)*$/.test($('dataset_title').value))){
+        alert("Title is not valid, please use letters, numbers or underscore only");
+        $('dataset_title').focus();
+        return(false);
+    }
 	$('dataset_submit_btn').disabled = true;
     $('dataset_submit_btn').value = ("Uploading and Saving...");
 	$('dataset_submit_btn').form.submit();
@@ -1193,8 +1198,8 @@ function validateDatasetFields() {
 function validateScriptFields(is_new_file) {
     // only make this test if that's a new Script
     if(is_new_file) {
-        if (!(/^\w/.test($('script_title').value))){
-            alert("File name is not valid, please use letters, numbers or underscore only");
+        if (!(/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)*$/.test($('script_title').value))){
+            alert("Title is not valid, please use letters, numbers or underscore only");
             $('script_title').focus();
             return(false);
         }
@@ -1242,8 +1247,8 @@ function validateArchiveFields(is_new_file) {
     //	    return(false);
     //	  }
     //	}
-    if (!(/^\w/.test($('archive_title').value))){
-        alert("File name is not valid, please use letters, numbers or underscore only");
+    if (!(/^[^\\\/\:\*\?\"\<\>\|\.]+(\.[^\\\/\:\*\?\"\<\>\|\.]+)*$/.test($('archive_title').value))){
+        alert("Title is not valid, please use letters, numbers or underscore only");
         $('archive_title').focus();
         return(false);
     }

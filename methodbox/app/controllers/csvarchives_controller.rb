@@ -141,18 +141,21 @@ class CsvarchivesController < ApplicationController
     # no security here, need some so that people cannot just type in the id
     # and get it if it is 'hidden'
     # firstly check if the current user has the authorization to see the extract
-    unless !Authorization.is_authorized?("download", nil, @archive, current_user)
+    if Authorization.is_authorized?("download", nil, @archive, current_user)
       # then check the individual surveys to see if any preclude them downloading it
-      unless !check_survey_auth_for_extract
+      puts "1"
+      if check_survey_auth_for_extract
+        puts "2"
         if params[:type] == nil
           params[:type] = "CSV"
         end
 
         if @archive.complete
+          puts "3"
           retrieve_data_extract
           record_download @archive
         else
-          flash[:notice] = "Your data extract is not yet ready for download, please check later"
+          flash[:notice] = "The extract is not yet ready for download, please check later"
           respond_to do |format|
             format.html { redirect_to csvarchive_path(@archive) }
           end  
@@ -163,7 +166,7 @@ class CsvarchivesController < ApplicationController
           format.html { redirect_to csvarchive_path(@archive) }
         end
       end
-    else
+    else 
       flash[:error] = "You do not have permission to download this data extract"
       respond_to do |format|
         format.html { redirect_to csvarchive_path(@archive) }
@@ -569,16 +572,18 @@ class CsvarchivesController < ApplicationController
   def retrieve_data_extract
     begin
       if params[:type] == "Stata"
-        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.title + "_stata.zip")
+        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
         send_file path, :filename => @archive.title + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
       elsif params[:type] == "SPSS"
-        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.title + "_spss.zip")
+        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
         send_file path, :filename => @archive.title + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
       else
-        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.title + "_csv.zip")
+        puts "CSV 1"
+        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_csv.zip")
         send_file path, :filename => @archive.title + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
       end
       rescue Exception => e
+        puts "download kaboom " + e
     end
   end
   

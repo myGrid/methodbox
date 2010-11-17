@@ -47,15 +47,20 @@ namespace :obesity do
     if !File.exist?(csv_path)
       raise "ERROR path not found " + csv_path
     end 
-    values_distribution_path = variable.values_distribution_file
+    values_distribution_path = File.join(CSV_FILE_PATH, dataset_file.split('.')[0], variable.name.downcase + ".data")
+    puts "looking for " + values_distribution_path
     if values_distribution_path
       if File.exist?(values_distribution_path)
-        if File.mtime(values_distribution_path) > File.mtime(csv_path)
+        puts "file exists"
+        # if File.mtime(values_distribution_path) > File.mtime(csv_path)
+        #           puts "and is ok"
           return true
-        else
-          return false
-        end  
+        # else
+        #          puts "file is out of date"
+        #          return false
+        #        end  
       else
+        puts "file does not exist"
         return false
       end
     else
@@ -65,7 +70,7 @@ namespace :obesity do
 
   def process_dataset(dataset)
     did = dataset.id
-    variables = Variable.find(:all, :conditions => "dataset_id =  #{did}")
+    variables = Variable.all(:conditions => {:dataset_id => did})
     count = variables.size
     puts "count " + count.to_s
     if count <= 250
@@ -114,6 +119,7 @@ namespace :obesity do
     #uts all_headers.size
     column_files = []
     all_columns = (first_column..last_column)
+    puts "there are " + last_column.to_s + " columns"
     #uts all_columns
     all_columns.each do |column| 
       name = all_headers[column].downcase
@@ -135,15 +141,17 @@ namespace :obesity do
       file = File.open(path, "w")
       #uts file
       column_files[column] = file
+      puts "column is " + column.to_s + " for variable " + variable.name
       #uts column_files[column]
-    end     
+    end   
     #uts "all files open"
     
     #copy data
     csv_file.each_line do |row|
+      row.chop!
       line = row.split("\t")      
       all_columns.each do |column| 
-        column_files[column].write (line[column] + "\n")
+        column_files[column].write(line[column] + "\n")
       end  
     end
     #uts "done copy data"
