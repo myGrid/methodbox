@@ -512,3 +512,9 @@ ul.vbuttons .category-browse.li {
 	margin-bottom:30px;
 	text-align:center;
 }
+#datasets_list {
+	margin-bottom:0.5em;
+}
+#currently_selected_datasets {
+	margin-bottom:0.5em;
+}

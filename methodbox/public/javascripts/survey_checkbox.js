@@ -33,7 +33,8 @@ function checkSelectAllStatus(survey_id, dataset_id) {
 	} else {
 			//change colour to green
 			changeColour(survey_id, true);
-	}		
+	}	
+	showOrHideDatasetList();	
 		
 }
 //when a new dataset checkbox is created then store it
@@ -116,6 +117,7 @@ function selectAllDatasetsForYear(id) {
 	}
 
 	$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
+	showOrHideDatasetList();
 }
 //set all datasets for a particular survey to true or false
 function selectDatasets(checkbox, selected) {
@@ -131,7 +133,32 @@ function selectDatasets(checkbox, selected) {
 		setDatasets(id, selected);
 		changeColour(id, selected);
 	}
+	showOrHideDatasetList();
 	//make sure the checkbox for each survey is checked or unchecked
 //	$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
 	
+}
+
+//if a dataset is checked then show in the list of them
+//above the tabs
+function showOrHideDatasetList() {
+	//firstly 
+	var anySelected = false;
+	for (var dataset_id in allDatasetsMap) {
+		//in format X_Y where X is the survey id and Y the dataset id, we need to know Y to hide the correct div
+		var survey_dataset_id = dataset_id.split("_");
+		dataset = survey_dataset_id[1];
+		if (allDatasetsMap[dataset_id] == true) {
+			anySelected = true;
+			$('dataset_list_' + dataset).show();
+			$('dataset_list_' + dataset).setStyle({'display':'inline'});
+		} else {
+			$('dataset_list_' + dataset).hide();
+		}
+	}
+	if (anySelected == true) {
+		$('currently_selected_datasets').show();
+	} else {
+		$('currently_selected_datasets').hide();
+	}
 }

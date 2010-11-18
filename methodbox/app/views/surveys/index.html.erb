@@ -58,8 +58,10 @@
           <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { selectDatasets(checkbox, !checkbox.checked);})" %>
         </div>
       </div><br/><br/>
-
-
+<div id="currently_selected_datasets" style="display:none;">Currently selected datasets:</div>
+<div id="datasets_list"> 
+<%= render :partial => "dataset_list", :locals => { :survey_hash => @survey_hash } -%>
+</div>
       <% if @surveys.public_methods.include?("page_count") %>
       <% end %>
 

@@ -1,0 +1,9 @@
+<ul>
+<% @survey_hash.each_key do |key| -%>
+<% @survey_hash[key].each do |survey| -%>
+<% survey.datasets.each do |dataset| -%>
+<li id="dataset_list_<%=dataset.id.to_s -%>" style="display: none;"><%= link_to dataset.name, dataset_url(dataset) -%></li>
+<% end -%>
+<% end -%>
+<% end -%>
+</ul>
