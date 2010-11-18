@@ -578,12 +578,10 @@ class CsvarchivesController < ApplicationController
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
         send_file path, :filename => @archive.title + "_spss.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
       else
-        puts "CSV 1"
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_csv.zip")
         send_file path, :filename => @archive.title + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
       end
       rescue Exception => e
-        puts "download kaboom " + e
     end
   end
   

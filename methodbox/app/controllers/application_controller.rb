@@ -629,12 +629,15 @@ class ApplicationController < ActionController::Base
   #params and returns some xml with a simple <registered>yes</registered>
   #or <registered>no</registered>
   def ukda_registration_check(person)
-   params={'LoginName' => person.email, 'Login' => 'Login'}
-   response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
-   xml_parser = XML::Parser.string(response.body)
-   xml = xml_parser.parse
-   node = xml.find('child::registered')
-   return node.first.content == "yes"
+   # params={'LoginName' => person.email, 'Login' => 'Login'}
+   # response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
+   # xml_parser = XML::Parser.string(response.body)
+   # xml = xml_parser.parse
+   # node = xml.find('child::registered')
+   # return node.first.content == "yes"
+   #  This stuff isn't working reliably so we will just default to true
+   #  and fallback to the everyone registered is vetted by us
+   return true
   end
 
   # See ActionController::Base for details
