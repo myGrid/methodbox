@@ -576,7 +576,7 @@ class CsvarchivesController < ApplicationController
         send_file path, :filename => @archive.title + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
       elsif params[:type] == "SPSS"
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
-        send_file path, :filename => @archive.title + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
+        send_file path, :filename => @archive.title + "_spss.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
       else
         puts "CSV 1"
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_csv.zip")
