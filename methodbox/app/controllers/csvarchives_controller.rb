@@ -407,7 +407,9 @@ class CsvarchivesController < ApplicationController
         logger.error(e)
       end
       #remove all the variables from the cart since we have now 'bought' them
-      current_user.cart_items.destroy
+      current_user.cart_items.each do |item| 
+        item.destroy
+      end
       respond_to do |format|
         format.html { redirect_to(csvarchive_url(@archive)) }
       end
