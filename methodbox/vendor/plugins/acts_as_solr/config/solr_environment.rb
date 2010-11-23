@@ -5,7 +5,8 @@ SOLR_PATH = "#{File.dirname(File.expand_path(__FILE__))}/../solr" unless defined
 
 SOLR_LOGS_PATH = "#{rails_root_dir}/log" unless defined? SOLR_LOGS_PATH
 SOLR_PIDS_PATH = "#{rails_root_dir}/tmp/pids" unless defined? SOLR_PIDS_PATH
-SOLR_DATA_PATH = "#{rails_root_dir}/solr/#{ENV['RAILS_ENV']}" unless defined? SOLR_DATA_PATH
+# SOLR_DATA_PATH = "#{rails_root_dir}/solr/#{ENV['RAILS_ENV']}" unless defined? SOLR_DATA_PATH
+SOLR_DATA_PATH = "/Users/Ian/obesity_data/solr/#{ENV['RAILS_ENV']}"
 
 unless defined? SOLR_PORT
   config = YAML::load_file(rails_root_dir+'/config/solr.yml')

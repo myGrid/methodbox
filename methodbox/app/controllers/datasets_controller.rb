@@ -23,15 +23,14 @@ class DatasetsController < ApplicationController
       uf.write(line)
     end
     uf.close
-    file_uuid = UUIDTools::UUID.random_create.to_s + ".data"
              
-    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> file_uuid, :current_version => params[:dataset_revision],:has_data=>true)
+    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => params[:dataset_revision],:has_data=>true)
 
     # send_to_server file_uuid, filename
     load_new_dataset filename
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
-      format.html
+      format.html { redirect_to dataset_path(@dataset) }
     end
   end
   

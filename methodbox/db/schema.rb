@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101029082515) do
+ActiveRecord::Schema.define(:version => 20101123093819) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -529,6 +529,8 @@ ActiveRecord::Schema.define(:version => 20101029082515) do
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
     t.boolean  "dormant",                                 :default => false
+    t.datetime "last_ukda_check"
+    t.boolean  "ukda_registered"
   end
 
   create_table "value_domains", :force => true do |t|

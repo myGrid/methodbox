@@ -76,7 +76,7 @@ module DataExtractJob
           variable_hash[key].each do |var|
               #uts(key)
               variable = Variable.find(var)
-              name = variable.name
+              name = variable.name.downcase
               names.push(name)
               path = File.join(CSV_FILE_PATH, variable.dataset.uuid_filename.split('.')[0], variable.name.downcase + ".txt")
               file = File.open(path, "r")

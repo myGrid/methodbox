@@ -628,16 +628,37 @@ class ApplicationController < ActionController::Base
   #takes a form with the persons email address and 'Login' submit button
   #params and returns some xml with a simple <registered>yes</registered>
   #or <registered>no</registered>
-  def ukda_registration_check(person)
-   # params={'LoginName' => person.email, 'Login' => 'Login'}
-   # response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
-   # xml_parser = XML::Parser.string(response.body)
-   # xml = xml_parser.parse
-   # node = xml.find('child::registered')
-   # return node.first.content == "yes"
-   #  This stuff isn't working reliably so we will just default to true
-   #  and fallback to the everyone registered is vetted by us
-   return true
+  # if the system is down then just check if they were ok a few months ago
+  def ukda_registration_check(user)
+    begin
+      params={'LoginName' => user.email, 'Login' => 'Login'}
+      response= Net::HTTP.post_form(URI.parse(UKDA_EMAIL_ADDRESS),params)
+      xml_parser = XML::Parser.string(response.body)
+      xml = xml_parser.parse
+      node = xml.find('child::registered')
+    rescue Exception => e
+      puts "in rescue"
+      # ukda reg check service probably down, default to looking at last time checked
+      # if less than 6 months ago then say ok
+      if user.last_ukda_check >= Time.now - (60 * 60 * 24 * 180)
+        puts "all ok for time"
+        return true
+      else
+        puts "not ok for time"
+        return false
+      end
+    end
+ 
+    if node.first.content == "yes"
+      puts "attrib ok"
+      user.update_attributes(:last_ukda_check => Time.now, :ukda_registered => true)
+      return true
+    else
+      puts "attrib not"
+      user.update_attributes(:last_ukda_check => Time.now, :ukda_registered => false)
+      return false
+    end
+
   end
 
   # See ActionController::Base for details

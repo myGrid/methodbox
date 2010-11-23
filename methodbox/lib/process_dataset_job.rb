@@ -6,6 +6,7 @@ module ProcessDatasetJob
   class StartJobTask < Struct.new(:dataset_id, :user_id, :separator)
     
     def perform
+      begin
       dataset = Dataset.find(dataset_id)
       puts "Calculating statistics for " + dataset.name
       process_dataset(dataset)
@@ -15,6 +16,9 @@ module ProcessDatasetJob
       variables.each do |variable|
         process_variable (variable)
       end
+    rescue Exception => e
+      puts e
+    end
     end
     # TODO - surveys need to belong to a user.  datasets need to belong to a user.
     # can different people add datasets to a survey - permissions issue?
@@ -50,7 +54,7 @@ end
 
 def process_part_dataset(dataset, first_column, last_column)
   dataset_file = dataset.uuid_filename
-  data_directory = CSV_FILE_PATH + "/" + dataset_file.split('.')[0] + "/"
+  data_directory = File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
   FileUtils.mkdir_p  data_directory
   csv_path = File.join(CSV_FILE_PATH, dataset_file)
   puts "Reading " + first_column.to_s + " to " + last_column.to_s + " from " + csv_path
@@ -91,8 +95,9 @@ def process_part_dataset(dataset, first_column, last_column)
     end
     #uts column_files.size
     
-    path = File.join(data_directory.chop, name + ".txt")
-    variable.data_file = path
+    path = File.join(data_directory, name + ".txt")
+    #no need for the data_file path since it will be the name of the variable under File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
+    # variable.data_file = path
     variable.save
     file = File.open(path, "w")
     #uts file
@@ -103,8 +108,8 @@ def process_part_dataset(dataset, first_column, last_column)
   
   #copy data
   csv_file.each_line do |row|
-    line = row.split(separator)
-    line.chop!      
+    row.chop!
+    line = row.split(separator)      
     all_columns.each do |column| 
       column_files[column].write(line[column] + "\n")
     end  
@@ -121,7 +126,7 @@ end
 
 def process_variable(variable)
   #Open data file
-  data_path = variable.data_file
+  data_path = File.join(CSV_FILE_PATH, variable.dataset.uuid_filename.split('.')[0], variable.name.downcase + ".txt")
   if !data_path
     puts "Error processing variable " + variable.id.to_s + " no data_file set"
     return

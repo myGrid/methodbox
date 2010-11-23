@@ -1,5 +1,5 @@
 #where should completed data extracts be stored
-CSV_OUTPUT_DIRECTORY = '/Users/you/data/complete'
+CSV_OUTPUT_DIRECTORY = '/Users/you/data/#{RAILS_ENV}/complete'
 #is the server running ssl routes or not
 HTTPS_ON = true
 #you need this so it doesn't do eg localhost:3000:3001 in ssl paths and redirects to correct port from https to http
@@ -29,8 +29,8 @@ CSV_SERVER_LOCATION='localhost'
 CSV_SERVER_PORT='25000'
 CSV_SERVER_PATH='/server/eos'
 # CSV_SERVER_PATH='/eos'
-CSV_FILE_PATH='/Users/you/obesity_data/csv/'
+CSV_FILE_PATH='/Users/you/obesity_data/#{RAILS_ENV}/csv/'
 #can users register themselves
 REGISTRATION_CLOSED = true
-NEW_CSV_FILE_PATH='/Users/you/obesity_data/csv/complete'
+NEW_CSV_FILE_PATH='/Users/you/obesity_data/#{RAILS_ENV}/csv/complete'
 

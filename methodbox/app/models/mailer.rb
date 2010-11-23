@@ -9,7 +9,8 @@ class Mailer < ActionMailer::Base
     subject "Dataset " + Dataset.find(dataset_id).title + " ready"
     sent_on    Time.now
     body :name => User.find(user_id).person.name,
-         :dataset => Dataset.find(dataset_id)
+         :dataset => Dataset.find(dataset_id),
+         :host=>base_host
   end
   
   def data_extract_complete(data_extract_id, user_id)
