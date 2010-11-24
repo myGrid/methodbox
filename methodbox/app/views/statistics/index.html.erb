@@ -1,0 +1,10 @@
+<table>
+	<thead>
+		<tr><th>Survey</th><th>Number of downloads</th></tr>
+	</thead>
+	<tbody>
+<% @week.each_key do |key| -%>
+	<tr><td><%= Survey.find(key).title -%></td><td><%= @week[key] -%></td></tr>
+<% end -%>
+</tbody>
+</table>

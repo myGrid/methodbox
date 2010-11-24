@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
-    
+  
+  map.statistics '/statistics/', :controller=>'statistics',:action=>'index', :requirements => {:protocol => 'http'}
+      
   map.resources :cart_items, :requirements => {:protocol => 'http'}
 
   map.resources :work_groups, :member=>{:request_access=>:post}, :requirements => {:protocol => 'http'}
