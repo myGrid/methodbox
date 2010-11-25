@@ -1,4 +1,12 @@
+<%#= javascript_include_tag 'https://www.google.com/jsapi' -%>
+<h1>Survey download statistics</h1>
+<!-- last week -->
+<div id="week_chart_div"></div>
+<div class="statistics-table">
+<% week_keys = @week.keys -%>
+<% unless @week.empty? %>
 <table>
+	<caption>Downloads in the last week</caption>
 	<thead>
 		<tr><th>Survey</th><th>Number of downloads</th></tr>
 	</thead>
@@ -8,3 +16,151 @@
 <% end -%>
 </tbody>
 </table>
+<% else %>
+No downloads in the last week
+<% end %>
+</div>
+<!-- last month -->
+<div id="month_chart_div"></div>
+<% month_keys = @month.keys -%>
+<div class="statistics-table">
+<% unless @month.empty? %>
+<table class="statistics-table">
+	<caption>Downloads in the last month</caption>
+	<thead>
+		<tr><th>Survey</th><th>Number of downloads</th></tr>
+	</thead>
+	<tbody>
+<% @month.each_key do |key| -%>
+	<tr><td><%= Survey.find(key).title -%></td><td><%= @month[key] -%></td></tr>
+<% end -%>
+</tbody>
+</table>
+<% else %>
+No downloads in the last month
+<% end %>
+</div>
+<!-- last six months -->
+<div id="six_months_chart_div"></div>
+<% six_months_keys = @six_months.keys -%>
+<div class="statistics-table">
+<% unless @six_months.empty? %>
+<table class="statistics-table">
+	<caption>Downloads in the last six months</caption>
+	<thead>
+		<tr><th>Survey</th><th>Number of downloads</th></tr>
+	</thead>
+	<tbody>
+<% @six_months.each_key do |key| -%>
+	<tr><td><%= Survey.find(key).title -%></td><td><%= @six_months[key] -%></td></tr>
+<% end -%>
+</tbody>
+</table>
+<% else %>
+No downloads in the last six months
+<% end %>
+</div>
+<!-- last year -->
+<div id="year_chart_div"></div>
+<% year_keys = @year.keys -%>
+<div class="statistics-table">
+<% unless @year.empty? %>
+<table class="statistics-table">
+	<caption>Downloads in the last year</caption>
+	<thead>
+		<tr><th>Survey</th><th>Number of downloads</th></tr>
+	</thead>
+	<tbody>
+<% @year.each_key do |key| -%>
+	<tr><td><%= Survey.find(key).title -%></td><td><%= @six_months[key] -%></td></tr>
+<% end -%>
+</tbody>
+</table>
+<% else %>
+No downloads in the last year
+<% end %>
+</div>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Survey');
+        data.addColumn('number', 'downloads');
+		<% unless @week.empty? -%>
+        data.addRows(<%= @week.length -%>);
+		<% @week.each_key do |key| -%>
+			data.setValue(<%= week_keys.index(key)-%>, 0, "<%= Survey.find(key).title -%>");
+			data.setValue(<%= week_keys.index(key)-%>, 1, <%= @week[key] -%>);
+		<% end -%>
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('week_chart_div'));
+        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in last week',
+                          vAxis: {title: 'Downloads in the last week', titleTextStyle: {color: 'red'}}
+                         });
+ <% end -%>
+      }
+    </script>
+	<script type="text/javascript">
+	      google.load("visualization", "1", {packages:["corechart"]});
+	      google.setOnLoadCallback(drawChart);
+	      function drawChart() {
+	        var data = new google.visualization.DataTable();
+	        data.addColumn('string', 'Survey');
+	        data.addColumn('number', 'downloads');
+			<% unless @month.empty? -%>
+	        data.addRows(<%= @month.length -%>);
+			<% @month.each_key do |key| -%>
+				data.setValue(<%= month_keys.index(key)-%>, 0, "<%= Survey.find(key).title -%>");
+				data.setValue(<%= month_keys.index(key)-%>, 1, <%= @month[key] -%>);
+			<% end -%>
+
+	        var chart = new google.visualization.ColumnChart(document.getElementById('month_chart_div'));
+	        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in the last month',
+	                          vAxis: {title: 'Downloads in the last month', titleTextStyle: {color: 'red'}}
+	                         });
+	 <% end -%>
+	      }
+	    </script>
+		<script type="text/javascript">
+		      google.load("visualization", "1", {packages:["corechart"]});
+		      google.setOnLoadCallback(drawChart);
+		      function drawChart() {
+		        var data = new google.visualization.DataTable();
+		        data.addColumn('string', 'Survey');
+		        data.addColumn('number', 'downloads');
+				<% unless @six_months.empty? -%>
+		        data.addRows(<%= @six_months.length -%>);
+				<% @six_months.each_key do |key| -%>
+					data.setValue(<%= six_months_keys.index(key)-%>, 0, "<%= Survey.find(key).title -%>");
+					data.setValue(<%= six_months_keys.index(key)-%>, 1, <%= @six_months[key] -%>);
+				<% end -%>
+
+		        var chart = new google.visualization.ColumnChart(document.getElementById('six_months_chart_div'));
+		        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in last six months',
+		                          vAxis: {title: 'Downloads in the last six months', titleTextStyle: {color: 'red'}}
+		                         });
+		 <% end -%>
+		      }
+		    </script>
+			<script type="text/javascript">
+			      google.load("visualization", "1", {packages:["corechart"]});
+			      google.setOnLoadCallback(drawChart);
+			      function drawChart() {
+			        var data = new google.visualization.DataTable();
+			        data.addColumn('string', 'Survey');
+			        data.addColumn('number', 'downloads');
+					<% unless @year.empty? -%>
+			        data.addRows(<%= @year.length -%>);
+					<% @year.each_key do |key| -%>
+						data.setValue(<%= year_keys.index(key)-%>, 0, "<%= Survey.find(key).title -%>");
+						data.setValue(<%= year_keys.index(key)-%>, 1, <%= @year[key] -%>);
+					<% end -%>
+
+			        var chart = new google.visualization.ColumnChart(document.getElementById('year_chart_div'));
+			        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in last year',
+			                          vAxis: {title: 'Downloads in the last year', titleTextStyle: {color: 'red'}}
+			                         });
+			 <% end -%>
+			      }
+			    </script>

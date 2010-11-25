@@ -24,3 +24,4 @@ config.action_mailer.delivery_method = :test
 SOLR_ENABLED=false
 
 ROUTES_PROTOCOL = "http"
+STATISTICS_ROUTE = '/12345/'

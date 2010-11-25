@@ -518,3 +518,12 @@ ul.vbuttons .category-browse.li {
 #currently_selected_datasets {
 	margin-bottom:0.5em;
 }
+/*statistics styling */
+.statistics-table td, th{
+	border: 1px solid black;
+}
+.statistics-table {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+/* end os statistics*/

@@ -39,3 +39,4 @@ ActionMailer::Base.smtp_settings = {
 }
 #whether to use ssl or not. The routes.rb uses this
 ROUTES_PROTOCOL = "http"
+STATISTICS_ROUTE = '/12345/'
