@@ -22,11 +22,11 @@ class ApplicationController < ActionController::Base
   protect_from_forgery  :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
 
   def record_download resource
-    download = Download.new
-    download.resource_type = resource.class.name
-    download.resource_id = resource.id
-    download.user = current_user
-    download.save
+      download = Download.new
+      download.resource_type = resource.class.name
+      download.resource_id = resource.id
+      download.user = current_user
+      download.save
   end
   
 #savage_beast

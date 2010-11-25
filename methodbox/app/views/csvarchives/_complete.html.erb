@@ -4,10 +4,12 @@
 <% elsif @archive.failure -%>
   <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>
 <% else -%>
+<% if current_user %>
 <%= periodically_call_remote :frequency=>5,
                              :update=>"status",
                              :url=>{:action=>"check_for_complete",:id=>@archive.id}
 -%>
+<% end %>
 <div id="status"><%=h "still being processed......" -%>
 </div>
 <% end -%>

@@ -2,8 +2,120 @@ class StatisticsController < ApplicationController
 
   layout 'main'
   
-  # how many downloads per time period
+  # show stats for downloads and 'active' users
   def index
+    calculate_downloads_by_time_period
+    calculate_active_users
+  end
+  
+  protected
+  
+  private
+  
+  # survey downloads by users including unregistered
+  def calculate_active_users
+    @download_hash_week = Hash.new
+    Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*7)..Time.now}).each do |download|
+      user = download.user
+      if user == nil
+        user_id = "unknown_user"
+      else
+       user_id = user.id
+      end
+      # a hash of user to whatever they downloaded
+        if (!@download_hash_week.has_key?(user_id))
+          @download_hash_week[user_id] = Hash.new
+        end
+        extract = Csvarchive.find(download.resource_id)
+        variable_hash = Hash.new
+        # only count each survey once
+        extract.variables.each do |variable|
+          if (!@download_hash_week[user_id].has_key?(variable.dataset.survey_id))
+            inner_hash  = @download_hash_week[user_id]
+            inner_hash[variable.dataset.survey_id] = 1
+          else
+             inner_hash  = @download_hash_week[user_id]
+             inner_hash[variable.dataset.survey_id] += 1
+          end
+        end
+    end
+    
+    @download_hash_month = Hash.new
+    Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*30)..Time.now}).each do |download|
+      user = download.user
+      if user == nil
+        user_id = "unknown_user"
+      else
+       user_id = user.id
+      end
+      # a hash of user to whatever they downloaded
+        if (!@download_hash_month.has_key?(user_id))
+          @download_hash_month[user_id] = Hash.new
+        end
+        extract = Csvarchive.find(download.resource_id)
+        variable_hash = Hash.new
+        # only count each survey once
+        extract.variables.each do |variable|
+          if (!@download_hash_month[user_id].has_key?(variable.dataset.survey_id))
+            inner_hash  = @download_hash_month[user_id]
+            inner_hash[variable.dataset.survey_id] = 1
+          else
+            inner_hash  = @download_hash_month[user_id]
+             inner_hash[variable.dataset.survey_id] += 1
+          end
+        end
+    end
+    
+    @download_hash_six_months = Hash.new
+    Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*180)..Time.now}).each do |download|
+      user = download.user
+      if user == nil
+        user_id = "unknown_user"
+      else
+       user_id = user.id
+      end
+      # a hash of user to whatever they downloaded
+        if (!@download_hash_six_months.has_key?(user_id))
+          @download_hash_six_months[user_id] = Hash.new
+        end
+        extract = Csvarchive.find(download.resource_id)
+        variable_hash = Hash.new
+        # only count each survey once
+        extract.variables.each do |variable|
+          if (!@download_hash_six_months[user_id].has_key?(variable.dataset.survey_id))
+            @download_hash_six_months[user_id][variable.dataset.survey_id] = 1
+          else
+            @download_hash_six_months[user_id][variable.dataset.survey_id] += 1
+          end
+        end
+    end
+    @download_hash_year = Hash.new
+    Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*365)..Time.now}).each do |download|
+      user = download.user
+      if user == nil
+        user_id = "unknown_user"
+      else
+       user_id = user.id
+      end
+      # a hash of user to whatever they downloaded
+        if (!@download_hash_year.has_key?(user_id))
+          @download_hash_year[user_id] = Hash.new
+        end
+        extract = Csvarchive.find(download.resource_id)
+        variable_hash = Hash.new
+        # only count each survey once
+        extract.variables.each do |variable|
+          if (!@download_hash_year[user_id].has_key?(variable.dataset.survey_id))
+            @download_hash_year[user_id][variable.dataset.survey_id] = 1
+          else
+            @download_hash_year[user_id][variable.dataset.survey_id] += 1
+          end
+        end
+    end
+  end
+  
+  # downloads in last week, month, six months and year
+  def calculate_downloads_by_time_period
     @week = Hash.new
     @month = Hash.new
     @six_months = Hash.new
@@ -88,6 +200,5 @@ class StatisticsController < ApplicationController
           end
         end
       end
-    
   end
 end

@@ -19,7 +19,8 @@ class Mailer < ActionMailer::Base
     subject "Data Extract " + Csvarchive.find(data_extract_id).title + " ready"
     sent_on    Time.now
     body :name => User.find(user_id).person.name,
-         :data_extract => Csvarchive.find(data_extract_id)
+         :data_extract => Csvarchive.find(data_extract_id),
+         :host=>base_host
   end
 
   def new_message(message, base_host)

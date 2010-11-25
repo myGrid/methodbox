@@ -1,12 +1,118 @@
-<%#= javascript_include_tag 'https://www.google.com/jsapi' -%>
 <h1>Survey download statistics</h1>
-<!-- last week -->
-<div id="week_chart_div"></div>
+<div class="tabber" id="statistics-tab">
+	<div id="user-stats-tab" class="tabbertab listings_blank" title="Survey downloads by user">
+		<h3>Survey downloads by user</h3>
+<!-- active users -->
+<!-- week -->
 <div class="statistics-table">
+	<h3 id="heading">Users active in the last week</h3>
+<% unless @download_hash_week.empty? %>
+
+<table>
+	<!-- <caption>Users active in the last week</caption> -->
+	<thead>
+		<tr><th>User</th><th>Downloads</th></tr>
+	</thead>
+	<tbody>
+<% @download_hash_week.each_key do |key| %>
+<tr><td><% unless key == "unknown_user" %><%= User.find(key).person.name %></td><% else %>Unregistered user<% end %><td>
+	<% @download_hash_week[key].each_key do |survey_key| %>
+		<%= Survey.find(survey_key).title %>(<%= @download_hash_week[key][survey_key] %>)
+	<% end %>
+	</td>
+<% end %>
+</tbody>
+</table>
+<% else %>
+No user activity in the last week
+<% end %>
+</div>
+<!-- month -->
+<div class="statistics-table">
+	<h3 id="heading">Users active in the last month</h3>
+<% unless @download_hash_month.empty? %>
+
+<table>
+	<!-- <caption>Users active in the last month</caption> -->
+	<thead>
+		<tr><th>User</th><th>Downloads</th></tr>
+	</thead>
+	<tbody>
+<% @download_hash_month.each_key do |key| %>
+<tr><td><% unless key == "unknown_user" %><%= User.find(key).person.name %></td><% else %>Unregistered user<% end %><td>
+	<% @download_hash_month[key].each_key do |survey_key| %>
+		<%= Survey.find(survey_key).title %>(<%= @download_hash_month[key][survey_key] %>)
+	<% end %>
+	</td>
+<% end %>
+</tbody>
+</table>
+
+<% else %>
+No user activity in the last month
+<% end %>
+</div>
+<!-- six months -->
+<div class="statistics-table">
+	<h3 id="heading">Users active in the last six months</h3>
+<% unless @download_hash_six_months.empty? %>
+
+<table>
+	<!-- <caption>Users active in the last six months</caption> -->
+	<thead>
+		<tr><th>User</th><th>Downloads</th></tr>
+	</thead>
+	<tbody>
+<% @download_hash_six_months.each_key do |key| %>
+<tr><td><% unless key == "unknown_user" %><%= User.find(key).person.name %></td><% else %>Unregistered user<% end %><td>
+	<% @download_hash_six_months[key].each_key do |survey_key| %>
+		<%= Survey.find(survey_key).title %>(<%= @download_hash_six_months[key][survey_key] %>)
+	<% end %>
+	</td>
+<% end %>
+</tbody>
+</table>
+
+<% else %>
+No user activity in the last six months
+<% end %>
+</div>
+<!-- year -->
+<div class="statistics-table">
+	<h3 id="heading">Users active in the last year</h3>
+<% unless @download_hash_year.empty? %>
+
+<table>
+	<!-- <caption>Users active in the last year</caption> -->
+	<thead>
+		<tr><th>User</th><th>Downloads</th></tr>
+	</thead>
+	<tbody>
+<% @download_hash_year.each_key do |key| %>
+<tr><td><% unless key == "unknown_user" %><%= User.find(key).person.name %></td><% else %>Unregistered user<% end %><td>
+	<% @download_hash_year[key].each_key do |survey_key| %>
+		<%= Survey.find(survey_key).title %>(<%= @download_hash_year[key][survey_key] %>)
+	<% end %>
+	</td>
+<% end %>
+</tbody>
+</table>
+
+<% else %>
+No user activity in the last year
+<% end %>
+</div>
+</div>
+<div id="download-stats-tab" class="tabbertab listings_blank" title="Survey downloads over the last year">
+	<h3>Survey downloads over the last year</h3>
+<!-- last week -->
+<div class="statistics-table">
+<h3 id="heading">Last week</h3>
+<div id="week_chart_div"></div>
 <% week_keys = @week.keys -%>
 <% unless @week.empty? %>
 <table>
-	<caption>Downloads in the last week</caption>
+	<!-- <caption>Downloads in the last week</caption> -->
 	<thead>
 		<tr><th>Survey</th><th>Number of downloads</th></tr>
 	</thead>
@@ -21,12 +127,13 @@ No downloads in the last week
 <% end %>
 </div>
 <!-- last month -->
+<div class="statistics-table">
+<h3 id="heading">Last month</h3>
 <div id="month_chart_div"></div>
 <% month_keys = @month.keys -%>
-<div class="statistics-table">
 <% unless @month.empty? %>
 <table class="statistics-table">
-	<caption>Downloads in the last month</caption>
+	<!-- <caption>Downloads in the last month</caption> -->
 	<thead>
 		<tr><th>Survey</th><th>Number of downloads</th></tr>
 	</thead>
@@ -41,12 +148,13 @@ No downloads in the last month
 <% end %>
 </div>
 <!-- last six months -->
+<div class="statistics-table">
+<h3 id="heading">Last six months</h3>
 <div id="six_months_chart_div"></div>
 <% six_months_keys = @six_months.keys -%>
-<div class="statistics-table">
 <% unless @six_months.empty? %>
 <table class="statistics-table">
-	<caption>Downloads in the last six months</caption>
+	<!-- <caption>Downloads in the last six months</caption> -->
 	<thead>
 		<tr><th>Survey</th><th>Number of downloads</th></tr>
 	</thead>
@@ -61,12 +169,13 @@ No downloads in the last six months
 <% end %>
 </div>
 <!-- last year -->
+<div class="statistics-table">
+<h3 id="heading">Last year</h3>
 <div id="year_chart_div"></div>
 <% year_keys = @year.keys -%>
-<div class="statistics-table">
 <% unless @year.empty? %>
 <table class="statistics-table">
-	<caption>Downloads in the last year</caption>
+	<!-- <caption>Downloads in the last year</caption> -->
 	<thead>
 		<tr><th>Survey</th><th>Number of downloads</th></tr>
 	</thead>
@@ -79,6 +188,8 @@ No downloads in the last six months
 <% else %>
 No downloads in the last year
 <% end %>
+</div>
+</div>
 </div>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
@@ -95,7 +206,7 @@ No downloads in the last year
 		<% end -%>
 
         var chart = new google.visualization.ColumnChart(document.getElementById('week_chart_div'));
-        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in last week',
+        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in last week',
                           vAxis: {title: 'Downloads in the last week', titleTextStyle: {color: 'red'}}
                          });
  <% end -%>
@@ -116,7 +227,7 @@ No downloads in the last year
 			<% end -%>
 
 	        var chart = new google.visualization.ColumnChart(document.getElementById('month_chart_div'));
-	        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in the last month',
+	        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in the last month',
 	                          vAxis: {title: 'Downloads in the last month', titleTextStyle: {color: 'red'}}
 	                         });
 	 <% end -%>
@@ -137,7 +248,7 @@ No downloads in the last year
 				<% end -%>
 
 		        var chart = new google.visualization.ColumnChart(document.getElementById('six_months_chart_div'));
-		        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in last six months',
+		        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in last six months',
 		                          vAxis: {title: 'Downloads in the last six months', titleTextStyle: {color: 'red'}}
 		                         });
 		 <% end -%>
@@ -158,7 +269,7 @@ No downloads in the last year
 					<% end -%>
 
 			        var chart = new google.visualization.ColumnChart(document.getElementById('year_chart_div'));
-			        chart.draw(data, {width: 600, height: 240, title: 'Survey downloads in last year',
+			        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in last year',
 			                          vAxis: {title: 'Downloads in the last year', titleTextStyle: {color: 'red'}}
 			                         });
 			 <% end -%>

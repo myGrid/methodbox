@@ -16,6 +16,7 @@ module ProcessDatasetJob
       variables.each do |variable|
         process_variable (variable)
       end
+      email_user
     rescue Exception => e
       puts e
     end
