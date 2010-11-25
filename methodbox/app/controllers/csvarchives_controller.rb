@@ -143,7 +143,6 @@ class CsvarchivesController < ApplicationController
     # firstly check if the current user has the authorization to see the extract
     if Authorization.is_authorized?("download", nil, @archive, current_user)
       # then check the individual surveys to see if any preclude them downloading it
-      puts "1"
       if check_survey_auth_for_extract
         if params[:type] == nil
           params[:type] = "CSV"
@@ -646,7 +645,6 @@ class CsvarchivesController < ApplicationController
     variable_hash.each_key do |key|
       survey = Dataset.find(key).survey
       if !Authorization.is_authorized?("view", nil, survey, current_user)
-        puts "not allowed to see " + survey.title
         auth = false
         break
       end
@@ -655,14 +653,12 @@ class CsvarchivesController < ApplicationController
     variable_hash.each_key do |key|
       survey = Dataset.find(key).survey
       if survey.survey_type.is_ukda
-        puts "survey " + suryey.title + " is ukda"
         ukda = true
         break
       end
     end
     #if its a ukda survey then we better see if they are registered
     if ukda
-      puts "ukda survey"
       if current_user != nil
         @ukda_registered = ukda_registration_check(current_user)
       else
