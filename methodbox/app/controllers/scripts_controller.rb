@@ -13,7 +13,7 @@ class ScriptsController < ApplicationController
     if @script.contributor_id != current_user
       Recommendation.all(:conditions => {:user_id=>current_user.id, :recommendable_id=>@script.id, :recommendable_type=>"Script"})[0].destroy
       render :update do |page|
-          page.replace_html 'recommended', :partial=>"recommendations/thumbs_up", :locals=>{:script=>@script}
+          page.replace_html 'recommended', :partial=>"recommendations/thumbs_up", :locals=>{:item=>@script}
           page.replace_html 'award', :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size }
       end
     end
@@ -26,7 +26,7 @@ class ScriptsController < ApplicationController
       recommendation = Recommendation.new(:user_id=>current_user.id, :recommendable_id=>@script.id, :recommendable_type=>"Script")
       recommendation.save
       render :update do |page|
-          page.replace_html 'recommended', :partial=>"recommendations/thumbs_down", :locals=>{:script=>@script}
+          page.replace_html 'recommended', :partial=>"recommendations/thumbs_down", :locals=>{:item=>@script}
           page.replace_html 'award', :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size }
       end
     end

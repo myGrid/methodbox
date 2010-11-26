@@ -12,7 +12,33 @@ class CsvarchivesController < ApplicationController
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download ]
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
+  before_filter :recommended_by_current_user, :only=>[ :show ]
 
+  # you don't like it any more
+  def thumbs_down
+    extract = Csvarchive.find(params[:id])
+    if extract.contributor_id != current_user
+      Recommendation.all(:conditions => {:user_id=>current_user.id, :recommendable_id=>extract.id, :recommendable_type=>"Csvarchive"})[0].destroy
+      render :update do |page|
+          page.replace_html 'recommended', :partial=>"recommendations/thumbs_up", :locals=>{:item=>extract}
+          page.replace_html 'award', :partial => "recommendations/awards", :locals => { :count => extract.recommendations.size }
+      end
+    end
+  end
+  
+  # show that you like a script
+  def thumbs_up
+    extract = Csvarchive.find(params[:id])
+    if extract.contributor_id != current_user
+      recommendation = Recommendation.new(:user_id=>current_user.id, :recommendable_id=>extract.id, :recommendable_type=>"Csvarchive")
+      recommendation.save
+      render :update do |page|
+          page.replace_html 'recommended', :partial=>"recommendations/thumbs_down", :locals=>{:item=>extract}
+          page.replace_html 'award', :partial => "recommendations/awards", :locals => { :count => extract.recommendations.size }
+      end
+    end
+  end
+  
   # check if the extract is complete and if so then update the div
   def check_for_complete
     extract = Csvarchive.find(params[:id])
@@ -675,6 +701,23 @@ class CsvarchivesController < ApplicationController
     else
       #download barred
       return false
+    end
+  end
+  
+  # does the current user like this extract
+  def recommended_by_current_user
+    if current_user
+      extract = Csvarchive.find(params[:id])
+      e_rec = extract.recommendations
+      u_rec = current_user.recommendations
+      all_rec =  e_rec & u_rec
+      if !all_rec.empty?
+        @recommended =  true
+      else
+        @recommended =  false
+      end
+    else
+      @recommended =  false
     end
   end
 

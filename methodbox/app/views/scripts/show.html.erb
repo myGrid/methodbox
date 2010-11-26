@@ -4,9 +4,9 @@
 	<% if current_user && current_user.id != @script.contributor_id %>
 	<div id="recommended" style="display: inline;">
 		<% if @recommended == true %>
-			<%= render :partial => "recommendations/thumbs_down" -%>
+			<%= render :partial => "recommendations/thumbs_down", :locals => {:item => @script} -%>
 	<% else %>
-		<%= render :partial => "recommendations/thumbs_up" -%>
+		<%= render :partial => "recommendations/thumbs_up", :locals => {:item => @script} -%>
 	<% end %>
 	</div>
 	<% end %>

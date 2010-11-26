@@ -4,15 +4,15 @@
 
 <table class="list_item">
 	<tr>
-		<td colspan=2>
-			<p class="title center">
+		<td colspan=2 class="table-award" style="text-align:center;">
+			<!-- <p class="title center"> -->
 			      <% unless item.title.blank? -%>
 			        <% title = h(item.title) -%>
 			      <% else -%>
 			        <span class="none_text">No title</span>
 			      <% end -%>
-			      <%= link_to(title, csvarchive_path(item)) -%>
-			</p>
+			      <%= link_to(title, csvarchive_path(item)) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => item.recommendations.size } %></div>
+			<!-- </p> -->
 		</td>
 	</tr>
   <tr>

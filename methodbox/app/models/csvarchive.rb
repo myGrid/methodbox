@@ -3,6 +3,8 @@ require 'acts_as_resource'
 class Csvarchive < ActiveRecord::Base
 
   acts_as_resource
+  
+  has_many :recommendations, :as => :recommendable
 
   has_many :variable_lists
   

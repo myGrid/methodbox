@@ -5,6 +5,15 @@
 <%= stylesheet_link_tag 'faux_table'%>
 <ul class="buttons">
   <%= hidden_field_tag "format_type", "csv" -%>
+	<% if current_user && current_user.id != @archive.contributor_id %>
+	<div id="recommended" style="display: inline;">
+		<% if @recommended == true %>
+			<%= render :partial => "recommendations/thumbs_down", :locals => {:item => @archive} -%>
+	<% else %>
+		<%= render :partial => "recommendations/thumbs_up", :locals => {:item => @archive} -%>
+	<% end %>
+	</div>
+	<% end %>
   <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
     <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button"}, "Download extract as:") -%></li>
   <%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
@@ -17,7 +26,7 @@
   <% end -%>
 </ul>
 
-<h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%></h1>
+<h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @archive.recommendations.size } %></div></h1>
 
 <div class="show_basic">
   <div class="box_about_actor">
