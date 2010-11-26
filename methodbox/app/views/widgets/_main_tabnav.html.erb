@@ -77,7 +77,13 @@ render_tabnav :main,
    t.titled "Ask questions, help others"
    t.links_to :controller => 'forums'
   end unless !logged_in?
-
+if current_user && current_user.is_admin?
+  add_tab do |t|
+   t.named 'Statistics'
+   t.titled "User activity and downloads"
+   t.links_to :controller => 'statistics'
+  end 
+end
   #  
   # you can use restful routes with:
   #

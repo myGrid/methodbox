@@ -537,4 +537,7 @@ margin:1em 0 0.8em;
 padding:0 0 0.3em;
 display: block;
 }
+.gviz-chart {
+	width: 100%;
+}
 /* end of statistics*/

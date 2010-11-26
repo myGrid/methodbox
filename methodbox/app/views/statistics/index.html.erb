@@ -108,7 +108,7 @@ No user activity in the last year
 <!-- last week -->
 <div class="statistics-table">
 <h3 id="heading">Last week</h3>
-<div id="week_chart_div"></div>
+<div class="gviz-chart" id="week_chart_div"></div>
 <% week_keys = @week.keys -%>
 <% unless @week.empty? %>
 <table>
@@ -129,7 +129,7 @@ No downloads in the last week
 <!-- last month -->
 <div class="statistics-table">
 <h3 id="heading">Last month</h3>
-<div id="month_chart_div"></div>
+<div class="gviz-chart" id="month_chart_div"></div>
 <% month_keys = @month.keys -%>
 <% unless @month.empty? %>
 <table class="statistics-table">
@@ -150,7 +150,7 @@ No downloads in the last month
 <!-- last six months -->
 <div class="statistics-table">
 <h3 id="heading">Last six months</h3>
-<div id="six_months_chart_div"></div>
+<div class="gviz-chart" id="six_months_chart_div"></div>
 <% six_months_keys = @six_months.keys -%>
 <% unless @six_months.empty? %>
 <table class="statistics-table">
@@ -171,7 +171,7 @@ No downloads in the last six months
 <!-- last year -->
 <div class="statistics-table">
 <h3 id="heading">Last year</h3>
-<div id="year_chart_div"></div>
+<div class="gviz-chart" id="year_chart_div"></div>
 <% year_keys = @year.keys -%>
 <% unless @year.empty? %>
 <table class="statistics-table">
