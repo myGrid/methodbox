@@ -1,0 +1,13 @@
+<% if count > 0 && count < 5 %>
+<div class="inline">
+<%= image_tag("famfamfam_silk/medal_bronze_2.png", :title=>"Bronze award, at least one person likes this") %>
+</div>
+<% elsif count >= 5 && count < 10 %>
+<div class="inline">
+<%= image_tag("famfamfam_silk/silver_bronze_2.png", :title=>"Silver award, at least five people like this") %>
+</div>
+<% elsif count >= 10 %>
+<div class="inline">
+<%= image_tag("famfamfam_silk/gold_bronze_2.png", :title=>"Gold award, 10 or more people like this") %>
+</div>
+<% end %>

@@ -541,3 +541,11 @@ display: block;
 	width: 100%;
 }
 /* end of statistics*/
+.inline {
+	display: inline;
+}
+.table-award {
+	font-size:108%;
+	font-weight:bold;
+	text-align: center;
+}

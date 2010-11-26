@@ -1,0 +1,3 @@
+<% puts "thumbs down" %>
+<li><%= link_to_remote("<img alt='Thumbs down' src='/images/famfamfam_silk/thumb_down.png' /> Don't like this any more", 
+:url => {:action => 'thumbs_down', :id => @script.id }) -%></li>

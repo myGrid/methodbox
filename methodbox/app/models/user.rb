@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
   # TODO uncomment the following line when SOPs are implemented
   # has_many :sops, :as => :contributor
   
+  has_many :recommendations
+  
+  has_many :comments
+  
   has_many :links
   
   has_many :csvarchives

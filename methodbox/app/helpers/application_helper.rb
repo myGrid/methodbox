@@ -198,6 +198,8 @@ module ApplicationHelper
   #used in publication views.  taken straight from sysmo images helper
   def icon_filename_for_key(key)
     case (key.to_s)
+    when "thumbs_up"
+      "famfamfam_silk/thumb_up.png"
     when "refresh"
       "famfamfam_silk/arrow_refresh_small.png"
     when "arrow_up"
@@ -622,13 +624,11 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
     end
 
     return nil unless (filename = method_to_icon_filename(method.downcase))
-    
     image_options = alt ? { :alt => alt } : { :alt => method.humanize }
     img_tag = image_tag(filename, image_options)
     
     inner = img_tag;
     inner = "#{img_tag} #{label}" unless label == nil
-
     if (url)
       if (remote)
         inner = link_to_remote(inner, url, url_options);
@@ -636,12 +636,13 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
         inner = link_to(inner, url, url_options)
       end
     end
-
     return '<span class="icon">' + inner + '</span>';
   end
   
   def method_to_icon_filename(method)
     case (method.to_s)
+    when "thumbs_up"
+      return "famfamfam_silk/thumb_up.png"
     when "left_arrow_single"
       return "single_arrows_left.png"
     when "right_arrow_single"

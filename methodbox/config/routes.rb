@@ -40,7 +40,7 @@ ActionController::Routing::Routes.draw do |map|
     person.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
   end
 
-  map.resources :scripts, :member => { :download => :get, :add_comment => :post }, :collection => {:help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
+  map.resources :scripts, :member => { :download => :get, :add_comment => :post, :thumbs_up => :post, :thumbs_down => :post }, :collection => {:help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
 
   map.resources :projects,
     :collection => { :request_institutions => :get }, :requirements => {:protocol => 'http'} do |project|

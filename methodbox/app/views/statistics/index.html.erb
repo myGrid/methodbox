@@ -208,7 +208,7 @@ No downloads in the last year
         var chart = new google.visualization.ColumnChart(document.getElementById('week_chart_div'));
         chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in last week',
                           vAxis: {title: 'Downloads in the last week', titleTextStyle: {color: 'red'}}
-                         });
+                         , hAxis: {slantedText: true}});
  <% end -%>
       }
     </script>
@@ -229,7 +229,7 @@ No downloads in the last year
 	        var chart = new google.visualization.ColumnChart(document.getElementById('month_chart_div'));
 	        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in the last month',
 	                          vAxis: {title: 'Downloads in the last month', titleTextStyle: {color: 'red'}}
-	                         });
+	                         , hAxis: {slantedText: true}});
 	 <% end -%>
 	      }
 	    </script>
@@ -250,7 +250,7 @@ No downloads in the last year
 		        var chart = new google.visualization.ColumnChart(document.getElementById('six_months_chart_div'));
 		        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in last six months',
 		                          vAxis: {title: 'Downloads in the last six months', titleTextStyle: {color: 'red'}}
-		                         });
+		                         , hAxis: {slantedText: true}});
 		 <% end -%>
 		      }
 		    </script>
@@ -271,7 +271,7 @@ No downloads in the last year
 			        var chart = new google.visualization.ColumnChart(document.getElementById('year_chart_div'));
 			        chart.draw(data, {width: 800, height: 240, title: 'Survey downloads in last year',
 			                          vAxis: {title: 'Downloads in the last year', titleTextStyle: {color: 'red'}}
-			                         });
+			                         , hAxis: {slantedText: true}});
 			 <% end -%>
 			      }
 			    </script>

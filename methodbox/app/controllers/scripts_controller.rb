@@ -1,15 +1,40 @@
 class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
-  before_filter :login_required, :except => [ :download, :index, :show, :help, :help2]
+  before_filter :login_required, :except => [ :download, :index, :show, :help, :help2, :thumbs_down, :thumbs_up]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
-  before_filter :find_script_auth, :except => [ :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment ]
+  before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment ]
   before_filter :find_comments, :only=>[ :show ]
+  before_filter :recommended_by_current_user, :only=>[ :show ]
   
+  # you don't like it any more
+  def thumbs_down
+    @script = Script.find(params[:id])
+    if @script.contributor_id != current_user
+      Recommendation.all(:conditions => {:user_id=>current_user.id, :recommendable_id=>@script.id, :recommendable_type=>"Script"})[0].destroy
+      render :update do |page|
+          page.replace_html 'recommended', :partial=>"recommendations/thumbs_up", :locals=>{:script=>@script}
+          page.replace_html 'award', :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size }
+      end
+    end
+  end
+  
+  # show that you like a script
+  def thumbs_up
+    @script = Script.find(params[:id])
+    if @script.contributor_id != current_user
+      recommendation = Recommendation.new(:user_id=>current_user.id, :recommendable_id=>@script.id, :recommendable_type=>"Script")
+      recommendation.save
+      render :update do |page|
+          page.replace_html 'recommended', :partial=>"recommendations/thumbs_down", :locals=>{:script=>@script}
+          page.replace_html 'award', :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size }
+      end
+    end
+  end
   #add a user owned comment to a script and add it to the view
   def add_comment
     @script = Script.find(params[:resource_id])
-    comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :resource_id=>@script.id, :resource_type=>"Script")
+    comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :commentable_id=>@script.id, :commentable_type=>"Script")
     comment.save
     render :partial=>"comments/comment", :locals=>{:comment=>comment}
   end
@@ -657,7 +682,24 @@ class ScriptsController < ApplicationController
   
   def find_comments
     @script =Script.find(params[:id])
-    @comments = Comment.all(:conditions=>{:resource_type=>"Script",:resource_id=>@script.id})
+    @comments = @script.comments
+  end
+  
+  # does the current user like this script
+  def recommended_by_current_user
+    if current_user
+      script =Script.find(params[:id])
+      s_rec = script.recommendations
+      u_rec = current_user.recommendations
+      all_rec =  s_rec & u_rec
+      if !all_rec.empty?
+        @recommended =  true
+      else
+        @recommended =  false
+      end
+    else
+      @recommended =  false
+    end
   end
 
 end

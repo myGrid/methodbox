@@ -1,6 +1,15 @@
 <% truncate_length_for_boxes = 22 -%>
 
-<ul class="sectionIcons">
+<ul class="buttons">
+	<% if current_user && current_user.id != @script.contributor_id %>
+	<div id="recommended" style="display: inline;">
+		<% if @recommended == true %>
+			<%= render :partial => "recommendations/thumbs_down" -%>
+	<% else %>
+		<%= render :partial => "recommendations/thumbs_up" -%>
+	<% end %>
+	</div>
+	<% end %>
   <% if Authorization.is_authorized?("manage", nil, @script, current_user) && !User.find(@script.contributor_id).dormant? -%>
     <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Manage Method') -%></li>
   <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
@@ -23,7 +32,7 @@
 <% end -%>
 </ul>
 
-<h1 class="contribution_title">Script: <%= h (@script.title) -%></h1>
+<h1 class="contribution_title">Script: <%= h (@script.title) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size } %></div></h1>
 
 <%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
 
@@ -74,7 +83,7 @@
       </p>
       <br/>
 	<div class="link_box">
-	Show: 
+	<b>Show:</b> 
 	<%= link_to_remote "Only my links", :url=> show_links_scripts_path, :with=> "'link_state=mine&script_id=#{@script.id}'" %>, 
 	<%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
 	</div>
@@ -124,6 +133,7 @@
 	</div>
 	</div>
     </div>
+<h3>Comments</h3>
   <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @script.id} -%>
 		<% @comments.each do |comment| %>
 		<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>

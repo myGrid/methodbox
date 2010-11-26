@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101123093819) do
+ActiveRecord::Schema.define(:version => 20101126105737) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -113,8 +113,8 @@ ActiveRecord::Schema.define(:version => 20101123093819) do
 
   create_table "comments", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "resource_id"
-    t.string   "resource_type"
+    t.integer  "commentable_id"
+    t.string   "commentable_type"
     t.text     "words"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -285,7 +285,7 @@ ActiveRecord::Schema.define(:version => 20101123093819) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false
+    t.boolean  "dormant",            :default => false, :null => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -357,6 +357,14 @@ ActiveRecord::Schema.define(:version => 20101123093819) do
     t.datetime "last_used_at"
     t.string   "doi"
     t.string   "uuid"
+  end
+
+  create_table "recommendations", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "recommendable_id"
+    t.string   "recommendable_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "relationships", :force => true do |t|
@@ -528,7 +536,7 @@ ActiveRecord::Schema.define(:version => 20101123093819) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false
+    t.boolean  "dormant",                                 :default => false, :null => false
     t.datetime "last_ukda_check"
     t.boolean  "ukda_registered"
   end
