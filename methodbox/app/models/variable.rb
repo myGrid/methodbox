@@ -33,7 +33,7 @@ class Variable < ActiveRecord::Base
     hash = Hash.new(0)  
     if self.none_values_distribution_file
       #hash["path"]= self.none_values_distribution_file
-      file = File.open(self.none_values_distribution_file, "r")
+      file = File.open(File.join(CSV_FILE_PATH, self.dataset.uuid_filename.split('.')[0], self.name.downcase + ".csv"), "r")
       #hash["file"] = file.to_s
       file.each_line do |line|
         parts = line.split(",",2)	  
@@ -50,7 +50,7 @@ class Variable < ActiveRecord::Base
   def values_hash
     hash = Hash.new(0)  
     if self.values_distribution_file
-      file = File.open(self.values_distribution_file, "r")
+      file = File.open(File.join(CSV_FILE_PATH, self.dataset.uuid_filename.split('.')[0], self.name.downcase + ".data"), "r")
       file.each_line do |line|
         parts = line.split(",",2)	      
         value = Float(parts[0])

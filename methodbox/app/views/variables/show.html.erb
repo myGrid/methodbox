@@ -137,7 +137,6 @@
           <%= render :partial => "variables/statistics_table",:locals=>{:variable => @variable} %>
         </div>
       </p>
-
       <!-- TODO Style cleanup Including highlighting header line. -->
       <% hash = @variable.none_values_hash -%>
       <% if hash.size > 0 -%>
@@ -169,7 +168,7 @@
           <div class="box_standout">
             <table>
               <tr>
-                <td> Vlaue </td>
+                <td> Value </td>
                 <td> Frequency </td>
               <tr>  
               <% hash.sort.each do |value, frequency| -%>
@@ -181,7 +180,10 @@
             </table>
           </div>
         </p>
-      <% end -%>  
+		<% else %>
+		<b>There are <%= hash.size -%> unique values</b>
+      <% end -%> 
+	<div class="gviz-chart" id="frequency_count_chart_div"></div> 
 
      <!-- TODO Style cleanup Including highlighting header line.-->
       <% unless @variable.updated_by.blank? %>
@@ -239,3 +241,20 @@
 
   </div>
 </div>
+<% if hash.size > 0 && hash.size <= 20 -%>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Value');
+        data.addColumn('number', 'Count');
+              <% hash.sort.each do |value, frequency| -%>
+data.addRow(['<%= value %>', <%= frequency %>]);
+              <% end -%>
+
+        var chart = new google.visualization.PieChart(document.getElementById('frequency_count_chart_div'));
+        chart.draw(data, {width: 800, height: 240, is3D: true, title: 'Value frequency counts'});
+      }
+    </script>
+<% end %>

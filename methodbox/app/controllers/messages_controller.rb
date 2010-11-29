@@ -6,13 +6,21 @@
 class MessagesController < ApplicationController
   before_filter :login_required
   #   might not be the safest way but helps for the moment until i figure out how to do it properly
-  protect_from_forgery :except => [:delete]
+  protect_from_forgery :except => [:delete, :autocomplete_message_to]
   
   before_filter :find_message_by_to_or_from, :only => [:show, :destroy]
   before_filter :find_reply_by_to, :only => [:new]
 
   # declare sweepers and which actions should invoke them
   # cache_sweeper :message_sweeper, :only => [ :create, :show, :destroy, :delete_all_selected ]
+  
+  def autocomplete_message_to
+    re = Regexp.new("#{params[:message][:name]}", "i")
+    @to = Person.all do |person|
+      person.match re
+    end
+    render :layout =>false
+  end
   
   # GET /messages
   def index

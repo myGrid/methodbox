@@ -66,8 +66,7 @@ class Person < ActiveRecord::Base
     all_people = Person.find(:all, :order => "ID asc")
     names_emails = all_people.collect{ |p| {"id" => p.id,
         "name" => (p.first_name.blank? ? (logger.error("\n----\nUNEXPECTED DATA: person id = #{p.id} doesn't have a first name\n----\n"); "(NO FIRST NAME)") : p.first_name) + " " +
-                  (p.last_name.blank? ? (logger.error("\n----\nUNEXPECTED DATA: person id = #{p.id} doesn't have a last name\n----\n"); "(NO LAST NAME)") : p.last_name),
-        "email" => (p.email.blank? ? "unknown" : p.email) } }
+                  (p.last_name.blank? ? (logger.error("\n----\nUNEXPECTED DATA: person id = #{p.id} doesn't have a last name\n----\n"); "(NO LAST NAME)") : p.last_name) } }
     return names_emails.to_json
   end
 
