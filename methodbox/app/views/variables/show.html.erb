@@ -1,4 +1,4 @@
-<ul class="sectionIcons">
+<ul class="buttons">
   <%# if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
     <!-- <li> -->
 <%#= icon('watch', watch_variable_path(@variable), nil, nil, 'Watch variable') -%>
@@ -38,7 +38,7 @@
 	<% end -%>
 <h1 class="contribution_title">Variable: <%= link_to(h(@variable.name), variable_path(@variable)) -%></h1>
 <div class="show_basic">
-  <div class="main_content_left_box">
+  <!-- <div class="main_content_left_box"> -->
     <div class="box_about_actor">
       <p>
         <b>Title:</b>
@@ -138,52 +138,65 @@
         </div>
       </p>
       <!-- TODO Style cleanup Including highlighting header line. -->
-      <% hash = @variable.none_values_hash -%>
-      <% if hash.size > 0 -%>
-        <p>
-          <b>Entries not considered Values:</b>
-          <div class="box_standout">
-            <table>
-              <tr>
-                <td> Entry </td>
-                <td> Frequency </td>
-              <tr>  
-              <% hash.sort.each do |entry, frequency| -%>
-                <tr>
-                  <td> <%= entry %> </td>
-                  <td> <%= frequency %> </td>
-                <tr>                  
-              <% end -%>
-            </table>
-          </div>
-        </p>
-      <% end -%>  
+      <% no_var_hash = @variable.none_values_hash -%> 
 
      <!-- TODO add a paramter to control when it long values lists - could be in the thousands -->
      <!-- TODO Style cleanup Including highlighting header line.-->
-     <% hash = @variable.values_hash -%>
-      <% if hash.size > 0 && hash.size <= 20 -%>
+     <% var_hash = @variable.values_hash -%>
+	<% value_domain_hash = Hash.new %>
+	<% var_hash.each_key do |key| %>
+		<% @variable.value_domains.each do |value_domain| %>
+			<% if value_domain.value.to_i.eql?(key.to_i) %> 
+				<% value_domain_hash[key] = value_domain.label %>
+				<% break %>
+			<% end %>
+		<% end %>
+	<% end %>
+	<% no_var_hash.each_key do |key| %>
+		<% @variable.value_domains.each do |value_domain| %>
+			<% if value_domain.value.to_i.eql?(key.to_i) %> 
+				<% value_domain_hash[key] = value_domain.label %>
+				<% break %>
+			<% end %>
+		<% end %>
+	<% end %>
+      <% if var_hash.size > 0 && var_hash.size <= 20 -%>
+<div class="left box_standout">
         <p>
-          <b>Entries considered Values:</b>
-          <div class="box_standout">
-            <table>
+          <b>Value frequency counts:</b>
+            <table class="values-table">
+				<thead>
               <tr>
-                <td> Value </td>
-                <td> Frequency </td>
-              <tr>  
-              <% hash.sort.each do |value, frequency| -%>
+                <th>Value</th>
+                <th>Frequency</th>
+				<th>Label</th>
+              <tr> 
+	 			</thead>
+				<tbody>
+              <% var_hash.sort.each do |value, frequency| -%>
+                <tr>
+                  <td><%= value %></td>
+                  <td><%= frequency %></td>
+				  <td><%= value_domain_hash[value] ? value_domain_hash[value] : "N/A" %>
+                <tr>                  
+              <% end -%>
+              <% no_var_hash.sort.each do |value, frequency| -%>
                 <tr>
                   <td> <%= value %> </td>
                   <td> <%= frequency %> </td>
+				<td><%= value_domain_hash[value] ? value_domain_hash[value] : "N/A" %>
                 <tr>                  
               <% end -%>
+			</tbody>
             </table>
-          </div>
         </p>
+</div> 
+		<div class="gviz-chart" id="frequency_count_chart_div"></div>
+		<div style="clear:both;">
+			</div>
 		<% else %>
-		<b>There are <%= hash.size -%> unique values</b>
+		<b>There are <%= var_hash.size -%> unique values</b>
       <% end -%> 
-	<div class="gviz-chart" id="frequency_count_chart_div"></div> 
 
      <!-- TODO Style cleanup Including highlighting header line.-->
       <% unless @variable.updated_by.blank? %>
@@ -204,43 +217,12 @@
           <% end %>
         </p>
       <% end -%>
-      <!-- <p> -->
-        <%# if !@variable.variable_links.empty? -%>
-          <!-- <b>Grouped by:</b> -->
-        <!-- <div class="box_standout"> -->
-          <%# @variable.variable_links.each do |link| -%>
-            <%#=  link_to(link.description, variable_link_path(link)) -%>
-          <%# end -%>
-        <!-- </div> -->
-        <!-- <b>Grouped with variables:</b> -->
-        <!-- <div class="box_standout"> -->
-          <%# @variable.variable_links.each do |link| -%>
-            <%# link.variables.each do |var| -%>
-              <%# if @variable.id != var.id -%>
-                <%#= link_to(var.name, variable_path(var))-%>
-              <%# end -%>
-            <%# end -%>
-          <%# end -%>
-        <!-- </div> -->
-
-      <%# else -%>
-        <!-- <b>No groupings recorded for this variable</b> -->
-      <%# end -%>
-      <!-- </p> -->
 
     </div>
-    <!-- <p>
-            <b>User added notes:</b>
-            <div class="box_standout">
-              More info to come
-            </div>
-          </p> -->
 
-    <div id="tag_search">
-    </div>
-
-  </div>
+  <!-- </div> -->
 </div>
+
 <% if hash.size > 0 && hash.size <= 20 -%>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
@@ -249,12 +231,15 @@
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Value');
         data.addColumn('number', 'Count');
-              <% hash.sort.each do |value, frequency| -%>
-data.addRow(['<%= value %>', <%= frequency %>]);
+              <% var_hash.sort.each do |value, frequency| -%>
+data.addRow(['<%= value_domain_hash[value] %>', <%= frequency %>]);
               <% end -%>
+			              <% no_var_hash.sort.each do |value, frequency| -%>
+			data.addRow(['<%= value_domain_hash[value] %>', <%= frequency %>]);
+			              <% end -%>
 
         var chart = new google.visualization.PieChart(document.getElementById('frequency_count_chart_div'));
-        chart.draw(data, {width: 800, height: 240, is3D: true, title: 'Value frequency counts'});
+        chart.draw(data, {width: 600, height: 400, is3D: true});
       }
     </script>
 <% end %>

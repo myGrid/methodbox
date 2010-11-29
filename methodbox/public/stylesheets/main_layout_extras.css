@@ -549,3 +549,6 @@ display: block;
 	font-weight:bold;
 	text-align: center;
 }
+.values-table td, th{
+	border: none;
+}

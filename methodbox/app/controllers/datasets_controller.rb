@@ -361,7 +361,6 @@ class DatasetsController < ApplicationController
               valDom.value = child_node["value"]
               value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
               valDom.save
-              value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
             end
             # puts value_map
         end
