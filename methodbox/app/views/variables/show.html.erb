@@ -232,10 +232,10 @@
         data.addColumn('string', 'Value');
         data.addColumn('number', 'Count');
               <% var_hash.sort.each do |value, frequency| -%>
-data.addRow(['<%= value_domain_hash[value] %>', <%= frequency %>]);
+data.addRow(['<%= value_domain_hash[value] ? value_domain_hash[value] : value %>', <%= frequency %>]);
               <% end -%>
 			              <% no_var_hash.sort.each do |value, frequency| -%>
-			data.addRow(['<%= value_domain_hash[value] %>', <%= frequency %>]);
+			data.addRow(['<%= value_domain_hash[value] ? value_domain_hash[value] : value %>', <%= frequency %>]);
 			              <% end -%>
 
         var chart = new google.visualization.PieChart(document.getElementById('frequency_count_chart_div'));
