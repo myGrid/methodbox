@@ -6,7 +6,7 @@ class Mailer < ActionMailer::Base
   def dataset_processed(dataset_id, user_id, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER
-    subject "Dataset " + Dataset.find(dataset_id).title + " ready"
+    subject "Dataset " + Dataset.find(dataset_id).name + " ready"
     sent_on    Time.now
     body :name => User.find(user_id).person.name,
          :dataset => Dataset.find(dataset_id),
