@@ -555,6 +555,6 @@ display: block;
 .bordered .listings_table td {
 	border: 1px solid black;
 }
-.bordered .listings_table .blank td {
+.bordered .listings_table td.blank {
 	border: none;
 }
