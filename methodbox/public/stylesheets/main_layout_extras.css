@@ -552,3 +552,6 @@ display: block;
 .values-table td, th{
 	border: none;
 }
+.bordered .listings_table td {
+	border: 1px solid black;
+}
