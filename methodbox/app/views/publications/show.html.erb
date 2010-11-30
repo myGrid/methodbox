@@ -1,4 +1,4 @@
-<ul class="sectionIcons">
+<ul class="buttons">
   <% if !@publication.pubmed_id.nil? %>
     <li><%= image_tag_for_key('visit_pubmed', "http://www.ncbi.nlm.nih.gov/pubmed/#{@publication.pubmed_id}", nil, {:popup => true}, 'View Publication On PubMed') -%></li>
   <% elsif !@publication.doi.nil? %>

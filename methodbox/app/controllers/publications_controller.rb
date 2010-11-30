@@ -181,7 +181,9 @@ class PublicationsController < ApplicationController
       end      
       result = get_data(@publication, pubmed_id, doi)
       puts result
-    rescue
+    rescue Exception => e
+      puts e
+      logger.error("Pubmed fetch problem " + e)
       if protocol == "pubmed"
         if key.match(/[0-9]+/).nil?
           @error_text = "Please ensure the PubMed ID is entered in the correct format, e.g. <i>16845108</i>"
