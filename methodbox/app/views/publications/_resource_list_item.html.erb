@@ -10,15 +10,10 @@
     <span class='none_text'>Not specified</span>
   <% else %>
     <% item.asset.creators.each do |author| %>
-      <%= (link_to get_object_title(author), show_item_path(author)) + ((author == item.asset.creators.last) && (item.non_seek_authors.empty?) ? "" : ", ") %>
-    <% end %>
-    <% item.non_seek_authors.each do |author| %>
-      <%= author.last_name + " " + author.first_name + ((author == item.non_seek_authors.last) ? "" : ", ") %>
+      <%= (link_to author.name, person_url(author.person)) + ((author == item.asset.creators.last) && (item.non_seek_authors.empty?) ? "" : ", ") %>
     <% end %>
   <% end %>
 </p>
-
-<%#= list_item_optional_attribute "Project", h(item.project.try(:title)), item.project %>
 
 <%= list_item_expandable_text "Abstract", h(item.abstract) %>
 
