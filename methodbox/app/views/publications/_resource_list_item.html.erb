@@ -10,7 +10,7 @@
     <span class='none_text'>Not specified</span>
   <% else %>
     <% item.asset.creators.each do |author| %>
-      <%= (link_to author.name, person_url(author.person)) + ((author == item.asset.creators.last) && (item.non_seek_authors.empty?) ? "" : ", ") %>
+      <%= (link_to author.person.name, person_url(author.person)) + ((author == item.asset.creators.last) && (item.non_seek_authors.empty?) ? "" : ", ") %>
     <% end %>
   <% end %>
 </p>
