@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   before_create :make_activation_code
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation
+  attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation, :last_seen_at, :last_user_activity
 
   has_many :favourites
   has_many :favourite_groups, :dependent => :destroy

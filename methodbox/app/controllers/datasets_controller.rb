@@ -13,6 +13,7 @@ class DatasetsController < ApplicationController
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :new, :create, :load_new_data, :load_new_metadata, :update, :edit ]
+  after_filter :update_last_user_activity
   
   def load_new_data
     uuid = UUIDTools::UUID.random_create.to_s

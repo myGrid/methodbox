@@ -13,6 +13,7 @@ class CsvarchivesController < ApplicationController
   before_filter :find_archive, :only => [ :edit, :update, :show, :download ]
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
   before_filter :recommended_by_current_user, :only=>[ :show ]
+  after_filter :update_last_user_activity
 
   # you don't like it any more
   def thumbs_down
@@ -164,6 +165,41 @@ class CsvarchivesController < ApplicationController
 
   # GET /csvarchive/1;download
   def download
+    # no security here, need some so that people cannot just type in the id
+    # and get it if it is 'hidden'
+    # firstly check if the current user has the authorization to see the extract
+    if Authorization.is_authorized?("download", nil, @archive, current_user)
+      # then check the individual surveys to see if any preclude them downloading it
+      if check_survey_auth_for_extract
+        if params[:type] == nil
+          params[:type] = "CSV"
+        end
+
+        if @archive.complete
+          retrieve_data_extract
+          record_download @archive
+        else
+          flash[:notice] = "The extract is not yet ready for download, please check later"
+          respond_to do |format|
+            format.html { redirect_to csvarchive_path(@archive) }
+          end  
+        end
+      else
+        flash[:error] = "You do not have permission to download some of the survey data within this data extract"
+        respond_to do |format|
+          format.html { redirect_to csvarchive_path(@archive) }
+        end
+      end
+    else 
+      flash[:error] = "You do not have permission to download this data extract"
+      respond_to do |format|
+        format.html { redirect_to csvarchive_path(@archive) }
+      end
+    end
+  end
+  
+  # GET /csvarchive/1;download stats script
+  def download_stats_script
     # no security here, need some so that people cannot just type in the id
     # and get it if it is 'hidden'
     # firstly check if the current user has the authorization to see the extract

@@ -1,5 +1,7 @@
 # This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
+  
+  after_filter :update_last_user_activity
 
   layout 'main'
 

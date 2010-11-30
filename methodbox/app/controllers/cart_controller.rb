@@ -1,6 +1,7 @@
 class CartController < ApplicationController
 
   before_filter :login_required
+  after_filter :update_last_user_activity
   #  before_filter :find_archives, :only => [ :index ]
 
   def show

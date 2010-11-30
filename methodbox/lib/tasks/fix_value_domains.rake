@@ -13,8 +13,12 @@ namespace :obesity do
         value_domains = variable.value_domains
         if !value_domains.empty?
           info = String.new
+          hash = Hash.new
           value_domains.each do |value_domain|
-            info << "value " + value_domain.value + " label " + value_domain.label + "\r\n"
+            hash[value_domain.value] = value_domain.label
+          end
+          hash.sort.reverse.each do |value, label|
+            info << "value " + value + " label " + label + "\r\n"
           end
           variable.update_attributes(:info => info)
           puts "update for " + variable.name + variable.dataset.name

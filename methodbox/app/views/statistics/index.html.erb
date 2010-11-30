@@ -190,6 +190,24 @@ No downloads in the last year
 <% end %>
 </div>
 </div>
+<div id="user-any-activity-tab" class="tabbertab listings_blank" title="Survey downloads by user">
+	<h3>Active users</h3>
+	<% unless @active_users.empty? %>
+	<table class="values-table">
+		<!-- <caption>Downloads in the last year</caption> -->
+		<thead>
+			<tr><th>User</th><th>Last seen on</th></tr>
+		</thead>
+		<tbody>
+	<% @active_users.each do |user| -%>
+		<tr><td><%= user.person.name -%></td><td><%= user.last_user_activity.strftime('%d/%m/%Y @ %H:%M:%S') -%></td></tr>
+	<% end -%>
+	</tbody>
+	</table>
+	<% else %>
+	No active users
+	<% end %>
+</div>
 </div>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});

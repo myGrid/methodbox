@@ -6,6 +6,7 @@ class ScriptsController < ApplicationController
   before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment ]
   before_filter :find_comments, :only=>[ :show ]
   before_filter :recommended_by_current_user, :only=>[ :show ]
+  after_filter :update_last_user_activity
   
   # you don't like it any more
   def thumbs_down

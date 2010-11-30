@@ -21,6 +21,8 @@ class SurveysController < ApplicationController
   before_filter :rerouted_search, :only => [:show]
   
   before_filter :find_groups, :only => [ :new, :edit ]
+  
+  after_filter :update_last_user_activity
 
   #ajax remote for displaying the surveys for a specific survey type
   def show_datasets_for_categories

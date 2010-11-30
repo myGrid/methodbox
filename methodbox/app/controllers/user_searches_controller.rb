@@ -1,6 +1,7 @@
 class UserSearchesController < ApplicationController
   
     before_filter :find_search, :only => [ :show ]
+    after_filter :update_last_user_activity
     
     def show
       if current_user.id == UserSearch.find(params[:id]).user.id

@@ -5,7 +5,8 @@ class StatisticsController < ApplicationController
   # show stats for downloads and 'active' users
   def index
     calculate_downloads_by_time_period
-    calculate_active_users
+    calculate_active_user_downloads
+    any_user_activity
   end
   
   protected
@@ -13,7 +14,7 @@ class StatisticsController < ApplicationController
   private
   
   # survey downloads by users including unregistered
-  def calculate_active_users
+  def calculate_active_user_downloads
     @download_hash_week = Hash.new
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*7)..Time.now}).each do |download|
       user = download.user
@@ -201,4 +202,9 @@ class StatisticsController < ApplicationController
         end
       end
   end
+  
+  def any_user_activity
+    @active_users = User.all(:conditions => ['last_user_activity is not null']) 
+  end
+  
 end

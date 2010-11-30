@@ -29,11 +29,18 @@ class ApplicationController < ActionController::Base
       download.save
   end
   
-#savage_beast
+  # the last time a user was logged in and actively clicked on something
+  def update_last_user_activity
+    if current_user
+      current_user.update_attributes(:last_user_activity => Time.now)
+    end
+  end
+  
+  #savage_beast
   def update_last_seen_at
-    #return unless logged_in?
-    #User.update_all ['last_seen_at = ?', Time.now.utc], ['id = ?', current_user.id]
-    #current_user.last_seen_at = Time.now.utc
+    if current_user
+      current_user.update_attributes(:last_seen_at => Time.now)
+    end
   end
 
   def admin?
