@@ -201,7 +201,7 @@ class DatasetsController < ApplicationController
     
     begin 
       logger.info("sending the job with dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator)
-      Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator)
+      Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator, base_host)
     rescue Exception => e
       logger.error(e)
     end

@@ -3,7 +3,7 @@ class Mailer < ActionMailer::Base
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
   
-  def dataset_processed(dataset_id, user_id)
+  def dataset_processed(dataset_id, user_id, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER
     subject "Dataset " + Dataset.find(dataset_id).title + " ready"
@@ -13,7 +13,7 @@ class Mailer < ActionMailer::Base
          :host=>base_host
   end
   
-  def data_extract_complete(data_extract_id, user_id)
+  def data_extract_complete(data_extract_id, user_id, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER
     subject "Data Extract " + Csvarchive.find(data_extract_id).title + " ready"

@@ -197,41 +197,6 @@ class CsvarchivesController < ApplicationController
       end
     end
   end
-  
-  # GET /csvarchive/1;download stats script
-  def download_stats_script
-    # no security here, need some so that people cannot just type in the id
-    # and get it if it is 'hidden'
-    # firstly check if the current user has the authorization to see the extract
-    if Authorization.is_authorized?("download", nil, @archive, current_user)
-      # then check the individual surveys to see if any preclude them downloading it
-      if check_survey_auth_for_extract
-        if params[:type] == nil
-          params[:type] = "CSV"
-        end
-
-        if @archive.complete
-          retrieve_data_extract
-          record_download @archive
-        else
-          flash[:notice] = "The extract is not yet ready for download, please check later"
-          respond_to do |format|
-            format.html { redirect_to csvarchive_path(@archive) }
-          end  
-        end
-      else
-        flash[:error] = "You do not have permission to download some of the survey data within this data extract"
-        respond_to do |format|
-          format.html { redirect_to csvarchive_path(@archive) }
-        end
-      end
-    else 
-      flash[:error] = "You do not have permission to download this data extract"
-      respond_to do |format|
-        format.html { redirect_to csvarchive_path(@archive) }
-      end
-    end
-  end
 
   def show
     #    switch on if using web service
@@ -461,7 +426,7 @@ class CsvarchivesController < ApplicationController
       
       save_all_links selected_surveys
       begin 
-        Delayed::Job.enqueue DataExtractJob::StartJobTask.new(variable_hash, current_user.id, @archive.id, @archive.filename, true)
+        Delayed::Job.enqueue DataExtractJob::StartJobTask.new(variable_hash, current_user.id, @archive.id, @archive.filename, true, base_host)
       rescue Exception => e
         logger.error(e)
       end
@@ -641,6 +606,19 @@ class CsvarchivesController < ApplicationController
       else
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_csv.zip")
         send_file path, :filename => @archive.title + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
+      end
+      rescue Exception => e
+    end
+  end
+  
+  def retrieve_stats_script
+    begin
+      if params[:type] == "stata"
+        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
+        send_file path, :filename => @archive.title + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
+      else params[:type] == "SPSS"
+        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
+        send_file path, :filename => @archive.title + "_spss.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
       end
       rescue Exception => e
     end

@@ -285,7 +285,7 @@ ActiveRecord::Schema.define(:version => 20101130114618) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false, :null => false
+    t.boolean  "dormant",            :default => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -536,7 +536,7 @@ ActiveRecord::Schema.define(:version => 20101130114618) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false, :null => false
+    t.boolean  "dormant",                                 :default => false
     t.datetime "last_ukda_check"
     t.boolean  "ukda_registered"
     t.datetime "last_user_activity"
