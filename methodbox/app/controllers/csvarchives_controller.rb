@@ -42,7 +42,7 @@ class CsvarchivesController < ApplicationController
   
   #add a user owned comment to a script and add it to the view
   def add_comment
-    @archive = Script.find(params[:resource_id])
+    @archive = Csvarchive.find(params[:resource_id])
     comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :commentable_id=>@archive.id, :commentable_type=>"Csvarchive")
     comment.save
     render :partial=>"comments/comment", :locals=>{:comment=>comment}
