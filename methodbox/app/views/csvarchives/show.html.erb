@@ -88,6 +88,15 @@
   <% end %>
 </div>
 <div style="clear: both;"></div>
+<div class="resource-comments">
+<h3>Comments</h3>
+  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @archive.id} -%>
+		<% @comments.each do |comment| %>
+		<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
+		<% end %>
+		<div id="new_comment">
+			</div>
+</div>
 <script type="text/javascript">
   function changeURL(value) {
     URL = document.getElementById("download_button").href;

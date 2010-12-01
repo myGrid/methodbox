@@ -558,3 +558,6 @@ display: block;
 .bordered .listings_table td.blank {
 	border: none;
 }
+.resource-comments {
+	margin-top: 0.5em;
+}

@@ -14,7 +14,16 @@ class CsvarchivesController < ApplicationController
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
   before_filter :recommended_by_current_user, :only=>[ :show ]
   after_filter :update_last_user_activity
+  before_filter :find_comments, :only => [ :show ]
 
+  #add a user owned comment to a script and add it to the view
+  def add_comment
+    @archive = Script.find(params[:resource_id])
+    comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :commentable_id=>@archive.id, :commentable_type=>"Csvarchive")
+    comment.save
+    render :partial=>"comments/comment", :locals=>{:comment=>comment}
+  end
+  
   # you don't like it any more
   def thumbs_down
     extract = Csvarchive.find(params[:id])
@@ -733,6 +742,11 @@ class CsvarchivesController < ApplicationController
     else
       @recommended =  false
     end
+  end
+  
+  def find_comments
+    archive =Csvarchive.find(params[:id])
+    @comments = archive.comments
   end
 
 end
