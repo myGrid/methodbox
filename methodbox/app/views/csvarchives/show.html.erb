@@ -14,8 +14,10 @@
 	<% end %>
 	</div>
 	<% end %>
+	    <li><%= icon('download', download_stats_script_csvarchive_url + "?type=spss", nil, {:title => "Download all the scripts to load the data into your stats package.  You will need to supply the data yourself."}, "Download spss files") -%></li>
+	    <li><%= icon('download', download_stats_script_csvarchive_url + "?type=stata", nil, {:title => "Download all the scripts to load the data into your stats package.  You will need to supply the data yourself."}, "Download stata files") -%></li>
   <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-    <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button"}, "Download extract as:") -%></li>
+    <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button", :title => "Download the data, metadata and any stats package scripts."}, "Download extract as:") -%></li>
   <%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
   <% end -%>
   <% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>

@@ -1,6 +1,7 @@
 require 'uuidtools'
 require 'zip/zip'
 require 'zip/zipfilesystem'
+require 'tempfile'
 
 
 class CsvarchivesController < ApplicationController
@@ -10,12 +11,35 @@ class CsvarchivesController < ApplicationController
   before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
-  before_filter :find_archive, :only => [ :edit, :update, :show, :download ]
+  before_filter :find_archive, :only => [ :edit, :update, :show, :download, :download_stats_script ]
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
   before_filter :recommended_by_current_user, :only=>[ :show ]
   after_filter :update_last_user_activity
   before_filter :find_comments, :only => [ :show ]
 
+  def download_stats_script
+    # firstly check if the current user has the authorization to see the extract
+    if Authorization.is_authorized?("view", nil, @archive, current_user)
+      # then check the individual surveys to see if any preclude them downloading it
+      if @archive.complete
+        if params[:type] == nil
+            params[:type] = "stata"
+          end
+          create_and_send_stats_files
+        else
+          flash[:notice] = "The data extract has not been processed. Please try later."
+          respond_to do |format|
+            format.html { redirect_to csvarchive_url(@archive) }
+          end
+        end
+    else
+      flash[:error] = "You do not have permission to view this data extract"
+      respond_to do |format|
+        format.html { redirect_to csvarchives_url }
+      end
+    end
+  end
+  
   #add a user owned comment to a script and add it to the view
   def add_comment
     @archive = Script.find(params[:resource_id])
@@ -620,19 +644,6 @@ class CsvarchivesController < ApplicationController
     end
   end
   
-  def retrieve_stats_script
-    begin
-      if params[:type] == "stata"
-        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
-        send_file path, :filename => @archive.title + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
-      else params[:type] == "SPSS"
-        path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
-        send_file path, :filename => @archive.title + "_spss.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
-      end
-      rescue Exception => e
-    end
-  end
-  
   #save any links to other 'things' for this new data extract
   def save_all_links selected_surveys
     if params[:scripts] != nil
@@ -744,9 +755,80 @@ class CsvarchivesController < ApplicationController
     end
   end
   
+  #find all the comments for this data extract
   def find_comments
     archive =Csvarchive.find(params[:id])
     @comments = archive.comments
+  end
+  
+  #create stats data files for download
+  def create_and_send_stats_files
+    if params[:type] == "stata"
+      download_stata_files
+    else
+      download_spss_files
+    end
+  end
+  
+  # the request is for stata files, no actual data
+  def download_stata_files
+    zip_file_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename,@archive.filename + "_stata_files_only.zip")
+    if !File.exists?(zip_file_path)
+      variable_hash = Hash.new
+      file_hash = Hash.new
+      @archive.variables.each do |variable|
+        if (!variable_hash.has_key?(variable.dataset_id))
+          variable_hash[variable.dataset_id] = Array.new
+        end
+        variable_hash[variable.dataset_id].push(variable.id)
+      end
+      stata_zip_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
+      puts stata_zip_path
+      Zip::ZipFile.open(stata_zip_path) {|zipfile|
+          variable_hash.each_key do |key|
+            dataset = Dataset.find(key)
+            file_hash[dataset.name + "_do_file.do"] = zipfile.read(dataset.name + "_do_file.do")
+          end
+      }
+      Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
+        zipfile.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}
+        file_hash.each_key do |key|
+          puts key
+          zipfile.get_output_stream(key) { |f| f.puts file_hash[key] }
+        end
+      }
+    end
+      send_file zip_file_path, :filename => @archive.title + "_stata_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false
+  end
+
+  # the request is for spss files, no actual data
+  def download_spss_files
+    zip_file_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename,@archive.filename + "_spss_files_only.zip")
+    if !File.exists?(zip_file_path)
+      variable_hash = Hash.new
+      file_hash = Hash.new
+      @archive.variables.each do |variable|
+        if (!variable_hash.has_key?(variable.dataset_id))
+          variable_hash[variable.dataset_id] = Array.new
+        end
+          variable_hash[variable.dataset_id].push(variable.id)
+      end
+      spss_zip_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
+      Zip::ZipFile.open(spss_zip_path) {|zipfile|
+        variable_hash.each_key do |key|
+          dataset = Dataset.find(key)
+          file_hash[dataset.name + "_selection_spss_code.sps"] = zipfile.read(dataset.name + "_selection_spss_code.sps")
+        end
+      }
+
+      Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
+        zipfile.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}
+        file_hash.each_key do |key|
+          zipfile.get_output_stream(key) { |f| f.puts file_hash[key] }
+        end
+      }
+    end
+    send_file zip_file_path, :filename => @archive.title + "_spss_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false     
   end
 
 end
