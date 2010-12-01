@@ -8,7 +8,7 @@ class CsvarchivesController < ApplicationController
   
   include DataExtractJob
   
-  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download]
+  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download, :download_stats_script]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download, :download_stats_script ]
