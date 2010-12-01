@@ -563,3 +563,9 @@ display: block;
 .resource-comments {
 	margin-top: 0.5em;
 }
+.logged-out-main {
+	padding: 10px;
+}
+#logged-out-tabnav-div {
+	padding-left:10px;
+}

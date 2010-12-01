@@ -39,7 +39,7 @@
         color: #888888;
         background: #FAFAFA;
         border: 2px solid #DDDDDD;
-        border-bottom: 2px solid #DDDDDD;
+        border-bottom: 3px solid #DDDDDD;
         padding: 2px 5px 0px 5px;
         margin: 0;
         text-decoration: none;
@@ -49,8 +49,8 @@
 	color: #000000;
 	background: #EEEEEE;
 	font-weight: bold;
-	border: 2px solid #C0C4C6;
-	border-bottom: 2px solid #C0C4C6;
+/*	border: 2px solid #C0C4C6;*/
+	border-bottom: 3px solid #EEEEEE;;
 	padding: 2px 5px 0px 5px;
 	margin: 0;
 	text-decoration: none;
@@ -65,13 +65,14 @@
 
 .main_tabnav a.active {
 /*	background: #FFFFFF;*/
-	background-color: #ACCBE0;
-/*	border-bottom: 3px solid #FFFFFF;*/
+	background-color: white;
+	border-bottom: 3px solid white;
 	}
 
 .main_tabnav a:hover {
 	color: #FFFFFF;
 	background: #CCCCCC;
+	border-bottom: 2px solid #CCCCCC;
 	}
 
 .main_tabnav a:visited {
@@ -81,6 +82,7 @@
 .main_tabnav a.active:hover {
 	background: #FFFFFF;
 	color: #000000;
+	border-bottom: 3px solid #FFFFFF;
 	}
 
 .main_tabnav_content {
