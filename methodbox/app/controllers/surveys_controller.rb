@@ -2,7 +2,7 @@ class SurveysController < ApplicationController
   
   # before_filter :is_user_admin_auth, :only =>[ :new, :create]
 
-  before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :exhibit, :category_browse, :show_datasets_for_categories]
+  before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories]
   
   before_filter :find_previous_searches, :only => [ :index]
 
@@ -40,8 +40,7 @@ class SurveysController < ApplicationController
     @survey_types = SurveyType.all
   end
   # browse surveys using exhibit
-  def exhibit
-    puts "exhibit json"
+  def facets
     @surveys_json = "{types:{\"Dataset\":{pluralLabel:\"Datasets\"}},"
     @surveys_json << "\"items\":["
     Survey.all.each do |survey|
@@ -130,7 +129,6 @@ class SurveysController < ApplicationController
   end
 
   def search_stuff
-    puts "doing some stuff"
     @selected_surveys = params[:datasets]
     res = Variable.multi_solr_search(params[:query].downcase, :limit=>1000, :models=>(Variable))
     solr_docs = res.docs
@@ -679,7 +677,7 @@ class SurveysController < ApplicationController
     end
     respond_to do |format|
       flash[:error] = error
-      format.html { redirect_to :action=>:index, :survey_search_query => search_query }
+      format.html { redirect_to :back, :survey_search_query => search_query }
     end
     return false
   end

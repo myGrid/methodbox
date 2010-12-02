@@ -10,7 +10,7 @@
 <!-- <div class="search-box-header">Find variables in selected surveys
 </div> -->
 <div class="survey-search-box">
-<%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();" %>
+<%= text_field_tag :survey_search_query, @survey_search_query %>
 <%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
 </div>
 <div ex:role="viewPanel" class="view-content left">
@@ -34,7 +34,9 @@
 		<div style="clear:both;">
 		</div>
 	</div>
-	<div ex:role="view" ex:possibleOrders=".survey-type, .dataset-description, .year">
+	<div ex:role="view" ex:possibleOrders=".survey-type, .dataset-description, .year" ex:grouped=false>
+		<!-- <div ex:role="view"> -->
+		
 	</div>
 	<div ex:role="exhibit-view"
         ex:viewClass="Exhibit.TabularView"
