@@ -5,6 +5,7 @@ class VariablesController < ApplicationController
   after_filter :update_last_user_activity
 
   def find_for_multiple_surveys_by_category
+    if params[:survey_ids]
     @sorted_variables = []
     @category = params[:category]
     params[:survey_ids].each do |survey_id|
@@ -16,6 +17,11 @@ class VariablesController < ApplicationController
     render :update, :status=>:created do |page|
       page.replace_html "variables_list", :partial => "variables_by_category"
     end
+  else
+    render :update, :status=>:created do |page|
+    page.replace_html "variables_list", "<b style='color: red; font-size: 130%; font-style: italic;'>Please select some surveys first and then click on a category</b>"
+  end
+  end
   end
   
   def deprecate
