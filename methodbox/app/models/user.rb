@@ -59,6 +59,8 @@ class User < ActiveRecord::Base
   named_scope :admins,:conditions=>['is_admin = ?',true],:include=>:person
 
   has_many :cart_items, :dependent => :destroy
+  
+  has_many :messages, :foreign_key => :to
 
 #savage_beast
   def display_name
