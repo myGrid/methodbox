@@ -7,12 +7,10 @@ class DatasetsController < ApplicationController
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new ]
-  before_filter :authorize_update_access, :only => [ :create, :edit, :update, :load_new_data, :load_new_metadata ]
-  before_filter :authorize_dataset_update, :only => [ :update_data, :update_metadata ]
   before_filter :login_required, :except => [ :show ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
-  before_filter :can_add_or_edit_datasets, :only => [ :new, :create, :load_new_data, :load_new_metadata, :update, :edit ]
+  before_filter :can_add_or_edit_datasets, :only => [ :new, :create, :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter :update_last_user_activity
   
   def load_new_data
@@ -410,22 +408,13 @@ end
   
    #if you own the parent survey or it is a ukda one and you are an admin
   def can_add_or_edit_datasets
-    if params[:survey]
-      survey = Survey.find(params[:survey])
-    else
-      survey = Survey.find(params[:dataset][:survey])
-    end
-    return Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin?
-  end
-  
-   #if you own the parent survey or it is a ukda one and you are an admin
-  def authorize_update_access
-    if params[:survey]
-      survey = Survey.find(params[:survey])
-    else
-      survey = Survey.find(params[:dataset][:survey])
-    end
-    return Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin?
+    dataset = Dataset.find(params[:id])
+    if !Authorization.is_authorized?("edit", nil, dataset.survey, current_user) || current_user && Dataset.find(params[:id]).survey.survey_type.is_ukda && current_user.is_admin?
+        respond_to do |format|
+          flash[:error] = "You do not have permission for this action"
+          format.html { redirect_to dataset_url(dataset) }
+        end
+      end
   end
   
   #if you own the parent survey or it is a ukda one and you are an admin
@@ -433,10 +422,7 @@ end
     survey = Survey.find(params[:survey])
     return Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin?
   end
+
   
-  #if you own the parent survey or it is a ukda one and you are an admin
-  def authorize_dataset_update
-    return Authorization.is_authorized?("edit", nil, Dataset.find(params[:id]).survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin?
-  end
   
 end
