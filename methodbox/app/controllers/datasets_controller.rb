@@ -6,11 +6,11 @@ class DatasetsController < ApplicationController
   include ProcessDatasetJob
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
-  before_filter :authorize_new, :only => [ :new ]
+  before_filter :authorize_new, :only => [ :new, :create ]
   before_filter :login_required, :except => [ :show ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
-  before_filter :can_add_or_edit_datasets, :only => [ :new, :create, :edit, :load_new_data, :load_new_metadata, :update ]
+  before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter :update_last_user_activity
   
   def load_new_data
@@ -25,7 +25,6 @@ class DatasetsController < ApplicationController
              
     @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => params[:dataset_revision],:has_data=>true)
 
-    # send_to_server file_uuid, filename
     load_new_dataset filename
     respond_to do |format|
       flash[:notice] = "New data file was applied to dataset"
@@ -84,7 +83,6 @@ class DatasetsController < ApplicationController
     end
     uf.close
              
-    # send_to_server file_uuid, filename
     dataset = Dataset.new
     dataset.current_version = 1
     dataset.survey = Survey.find(params[:dataset][:survey])
@@ -332,14 +330,12 @@ class DatasetsController < ApplicationController
   
   #Read the metadata from a ccsr type xml file for a particular survey
   def read_ccsr_metadata
-    # puts params[:dataset][:metadata].class
-    # data = params[:dataset][:metadata].read
+
     @missing_variables=[]
     parser = XML::Parser.io(params[:file][:metadata], :encoding => XML::Encoding::ISO_8859_1)
     doc = parser.parse
 
       nodes = doc.find('//ccsrmetadata/variables')
-      # doc.close
       if nodes.size == 1
       nodes[0].each_element do |node|
         if (/^id_/.match(node.name)) 
@@ -350,7 +346,6 @@ class DatasetsController < ApplicationController
             v[0].value_domains.each do |valdom|
               valdom.delete
             end
-          # puts name + " " + label
           value_map = String.new
           node.each_element do |child_node| 
             if (!child_node.empty?) 
@@ -361,7 +356,6 @@ class DatasetsController < ApplicationController
               value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
               valDom.save
             end
-            # puts value_map
         end
           v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
           
@@ -378,7 +372,6 @@ else
             v[0].value_domains.each do |valdom|
               valdom.delete
             end
-          # puts name + " " + label
           value_map = String.new
           node.each_element do |child_node| 
             if (!child_node.empty?) 
@@ -389,7 +382,6 @@ else
               value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
               valDom.save
             end
-            # puts value_map
         end
 
           v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
@@ -399,12 +391,6 @@ else
   end
 end
 end
-  
-# send the new dataset file over to the csv server
-  def send_to_server file_uuid, filename
-    RestClient.post 'http://' + CSV_SERVER_LOCATION + ':' + CSV_SERVER_PORT  + CSV_SERVER_PATH + '/dataset?filename=' + file_uuid, :dataset => File.new(filename, 'rb')
-    
-  end
   
    #if you own the parent survey or it is a ukda one and you are an admin
   def can_add_or_edit_datasets
@@ -419,8 +405,19 @@ end
   
   #if you own the parent survey or it is a ukda one and you are an admin
   def authorize_new
-    survey = Survey.find(params[:survey])
-    return Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin?
+    if params[:survey]
+      # /new?survey=X
+      survey = Survey.find(params[:survey])
+    else
+      # post to /datasets ie create
+       survey = Survey.find(params[:dataset][:survey])
+    end
+    if !Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && survey.survey_type.is_ukda && current_user.is_admin?
+        respond_to do |format|
+          flash[:error] = "You do not have permission for this action"
+        format.html { redirect_to survey_url(survey) }
+      end
+    end
   end
 
   
