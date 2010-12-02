@@ -6,7 +6,7 @@
 class MessagesController < ApplicationController
   before_filter :login_required
   #   might not be the safest way but helps for the moment until i figure out how to do it properly
-  protect_from_forgery :except => [:delete, :autocomplete_message_to]
+  protect_from_forgery :except => [:delete]
   
   before_filter :find_message_by_to_or_from, :only => [:show, :destroy]
   before_filter :find_reply_by_to, :only => [:new]
@@ -14,20 +14,12 @@ class MessagesController < ApplicationController
   # declare sweepers and which actions should invoke them
   # cache_sweeper :message_sweeper, :only => [ :create, :show, :destroy, :delete_all_selected ]
   
-  def autocomplete_message_to
-    re = Regexp.new("#{params[:message][:name]}", "i")
-    @to = Person.all do |person|
-      person.match re
-    end
-    render :layout =>false
-  end
-  
   # GET /messages
   def index
     # inbox
     @message_folder = "inbox"
     @messages = Message.find(:all, 
-      :conditions => ["`to` = ? AND `deleted_by_recipient` = ?", User.find(current_user.id).person_id, false],
+      :conditions => ["`to` = ? AND `deleted_by_recipient` = ?", current_user.id, false],
       :order => produce_sql_ordering_string(params[:sort_by], params[:order]),
       :page => { :size => 20,
         :current => params[:page] })
@@ -42,7 +34,7 @@ class MessagesController < ApplicationController
     # outbox
     @message_folder = "outbox"
     @messages = Message.find(:all, 
-      :conditions => ["`from` = ? AND `deleted_by_sender` = ?", User.find(current_user.id).person_id, false],
+      :conditions => ["`from` = ? AND `deleted_by_sender` = ?", User.find(current_user.id), false],
       :order => produce_sql_ordering_string(params[:sort_by], params[:order]),
       :page => { :size => 20,
         :current => params[:page] })
@@ -63,7 +55,7 @@ class MessagesController < ApplicationController
     # and so check the relevant flag (for the message being deleted from inbox/outbox respectively)
     
     # if current_user is not recipient, they must be the sender
-    message_folder = ( @message.recipient?(User.find(current_user.id).person_id) ? "inbox" : "outbox" )
+    message_folder = ( @message.recipient?(current_user.id) ? "inbox" : "outbox" )
     
     if (message_folder == "inbox" && @message.deleted_by_recipient == true)
       error("Message not found (id not authorized)", "is invalid (not sender or recipient)")
@@ -72,7 +64,7 @@ class MessagesController < ApplicationController
     else
       # message is found, and is not deleted by current_user -> show the message;
       # mark message as read if it is viewed by the receiver
-      @message.read! if @message.to.to_i == User.find(current_user.id).person_id.to_i
+      @message.read! if @message.to.to_i == current_user.id
         
       @message_folder = message_folder
       respond_to do |format|
@@ -85,7 +77,7 @@ class MessagesController < ApplicationController
   
   # GET /messages/new
   def new
-    if params[:user_id] && params[:user_id].to_i == User.find(current_user.id).person_id.to_i
+    if params[:user_id] && params[:user_id].to_i == current_user.id
       # can't send a message to the user themself - error
       respond_to do |format|
         flash[:error] = "You cannot send a message to yourself"
@@ -135,13 +127,13 @@ class MessagesController < ApplicationController
     sending_allowed = true
     if sending_allowed
       @message = Message.new(params[:message])
-      @message.from ||= User.find(current_user.id).person_id
+      @message.from ||= current_user.id
       
       # set initial datetimes
       @message.read_at = nil
       
       # test for spoofing of "from" field
-      unless @message.from.to_i == User.find(current_user.id).person_id.to_i
+      unless @message.from.to_i == current_user.id
         errors = true
         @message.errors.add :from, "must be logged on"
       end
@@ -152,7 +144,7 @@ class MessagesController < ApplicationController
           reply = Message.find(@message.reply_id) 
         
           # test that user is replying to a message that was actually received by them
-          unless reply.to.to_i == User.find(current_user.id).person_id.to_i
+          unless reply.to.to_i == current_user.id
             errors = true
             @message.errors.add :reply_id, "not addressed to sender"
           end
@@ -167,7 +159,7 @@ class MessagesController < ApplicationController
       if sending_allowed && !errors && @message.save
         
         begin
-          Mailer.deliver_new_message(@message,base_host) if EMAIL_ENABLED && Person.find(@message.to).send_notifications?
+          Mailer.deliver_new_message(@message,base_host) if EMAIL_ENABLED && User.find(@message.to).person.send_notifications?
         rescue Exception => e
           logger.error("ERROR: failed to send New Message email notification. Message ID: #{@message.id}")
           logger.error("EXCEPTION: " + e)
@@ -196,12 +188,10 @@ class MessagesController < ApplicationController
     # determine, which flag to mark as deleted (sender|recipient), and if need to destroy the object;
     # (and where to go back after deletion)
     
-    if (@message.from == User.find(current_user).person_id)
-      puts "destroyed by sender"
+    if (@message.from == current_user.id)
       @message.destroy if @message.mark_as_deleted!(false)
       return_to_path = sent_messages_path
     else
-      puts "destroyed by recipient"
       @message.destroy if @message.mark_as_deleted!(true)
       return_to_path = messages_path
 
@@ -224,12 +214,10 @@ class MessagesController < ApplicationController
   
   # DELETE /messages/delete_all_selected
   def delete_all_selected
-    if (@message.from == User.find(current_user).person_id)
-      puts "destroyed by sender"
+    if (@message.from == current_user.id)
       deleted_by_recipient = false
       return_to_path = sent_messages_path
     else
-      puts "destroyed by recipient"
       deleted_by_recipient = true
       return_to_path = messages_path
     end
@@ -262,7 +250,7 @@ class MessagesController < ApplicationController
 
   def find_message_by_to
     begin
-      @message = Message.find(params[:id], :conditions => ["`to` = ?", User.find(current_user.id).person_id])
+      @message = Message.find(params[:id], :conditions => ["`to` = ?", current_user.id])
     rescue ActiveRecord::RecordNotFound
       error("Message not found (id not authorized)", "is invalid (not recipient)")
     end
@@ -270,7 +258,7 @@ class MessagesController < ApplicationController
   
   def find_message_by_to_or_from
     begin
-      @message = Message.find(params[:id], :conditions => ["`to` = ? OR `from` = ?", User.find(current_user.id).person_id, User.find(current_user.id).person_id])
+      @message = Message.find(params[:id], :conditions => ["`to` = ? OR `from` = ?", current_user.id, current_user.id])
     rescue ActiveRecord::RecordNotFound
       error("Message not found (id not authorized)", "is invalid (not sender or recipient)")
     end
@@ -279,7 +267,7 @@ class MessagesController < ApplicationController
   def find_reply_by_to
     if params[:reply_id]
       begin
-        @reply = Message.find(params[:reply_id], :conditions => ["`to` = ?", User.find(current_user.id).person_id])
+        @reply = Message.find(params[:reply_id], :conditions => ["`to` = ?", current_user.id])
       rescue ActiveRecord::RecordNotFound
         error("Reply not found (id not authorized)", "is invalid (not recipient)")
       end

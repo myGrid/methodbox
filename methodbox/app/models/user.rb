@@ -182,6 +182,10 @@ class User < ActiveRecord::Base
   def make_activation_code
     self.activation_code = Digest::SHA1.hexdigest( Time.now.to_s.split(//).sort_by {rand}.join )
   end
+  
+  def messages_to
+    return Message.all(:conditions => {:to => self.id, :deleted_by_recipient => false, :read_at => nil})
+  end
 
   protected
     # before filter
@@ -203,4 +207,5 @@ class User < ActiveRecord::Base
         return false
       end
     end
+    
 end

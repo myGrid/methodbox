@@ -24,11 +24,11 @@
 					<%#= link_to current_user.person.name + "&nbsp;", person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
 					<!-- </li> -->
 					<li style="list-style: none; line-height: 1;">
-						<%= icon('cart', cart_url, "View Cart", nil, "My Variable Cart") -%>
+						<%= icon('cart', cart_url, "View Cart", {:title => current_user.cart_items.size > 0 ? "You have some variables in your cart" : "There are no variables in your cart" }, current_user.cart_items.size > 0 ? "My Variable Cart(" + current_user.cart_items.size.to_s + ")" : "My Variable Cart" ) -%>
 					<%#= link_to "My Variable Cart&nbsp;", cart_path -%>
 					</li>
 					<li style="list-style:none; line-height: 1;">
-						<%= icon("message", messages_url, "View your messages", nil, "My Messages") -%>
+						<%= icon("message", messages_url, "View your messages", {:title=>current_user.messages_to.size > 0 ? "You have some unread messages" : "You have no unread messages"}, "My Messages(" + current_user.messages_to.size.to_s + ")") -%>
 					<%#= link_to "My Messages", messages_path -%>
 					</li>
 					<li style="list-style: none; line-height: 1;">
