@@ -5,6 +5,8 @@ class Survey < ActiveRecord::Base
   acts_as_resource
   
   belongs_to :survey_type
+  
+  has_many :comments, :as => :commentable
 
   has_many :datasets
 

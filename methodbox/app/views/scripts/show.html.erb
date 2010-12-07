@@ -133,6 +133,7 @@
 	</div>
 	</div>
     </div>
+<% if current_user %>
 <h3>Comments</h3>
   <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @script.id} -%>
 		<% @comments.each do |comment| %>
@@ -141,6 +142,7 @@
 		<div id="new_comment">
 			</div>
   </div>
+<% end %>
 </div>
 
 <div class="main_content_right_box">
@@ -149,9 +151,4 @@
 </div>
 
 <div style="clear:both;">
-
-
-
-
-
 </div>

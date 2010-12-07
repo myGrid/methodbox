@@ -90,6 +90,7 @@
   <% end %>
 </div>
 <div style="clear: both;"></div>
+<% if current_user %>
 <div class="resource-comments">
 <h3>Comments</h3>
   <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @archive.id} -%>
@@ -97,8 +98,9 @@
 		<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
 		<% end %>
 		<div id="new_comment">
-			</div>
+		</div>
 </div>
+<% end %>
 <script type="text/javascript">
   function changeURL(value) {
     URL = document.getElementById("download_button").href;

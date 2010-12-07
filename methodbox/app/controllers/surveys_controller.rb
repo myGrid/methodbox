@@ -22,8 +22,18 @@ class SurveysController < ApplicationController
   
   before_filter :find_groups, :only => [ :new, :edit ]
   
+  before_filter :find_comments, :only => [ :show ]
+  
   after_filter :update_last_user_activity
 
+  #add a user owned comment to a script and add it to the view
+  def add_comment
+    @survey = Survey.find(params[:resource_id])
+    comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :commentable_id=>@survey.id, :commentable_type=>"Survey")
+    comment.save
+    render :partial=>"comments/comment", :locals=>{:comment=>comment}
+  end
+  
   #ajax remote for displaying the surveys for a specific survey type
   def show_datasets_for_categories
     survey_type = SurveyType.find(params[:survey_type_id])
@@ -879,6 +889,12 @@ class SurveysController < ApplicationController
     
     def find_groups
       @groups = WorkGroup.all
+    end
+    
+    #find all the comments for this data extract
+    def find_comments
+      survey =Survey.find(params[:id])
+      @comments = survey.comments
     end
 
 end
