@@ -24,6 +24,7 @@ class DatasetsController < ApplicationController
         uf.write(line)
       end
       uf.close
+      new_dataset_version = @dataset.current_version + 1
       old_reason_for_update = @dataset.reason_for_update
       old_updated_by = @dataset.updated_by
       old_filename = @dataset.filename
@@ -32,7 +33,7 @@ class DatasetsController < ApplicationController
       old_has_data = @dataset.has_data
     
       if check_datafile_ok filename
-        @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => params[:dataset_revision],:has_data=>true)
+        @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => new_dataset_version, :has_data=>true)
         load_new_dataset filename
         respond_to do |format|
           flash[:notice] = "New data file was applied to dataset"
@@ -282,7 +283,7 @@ class DatasetsController < ApplicationController
       # grab the non archived vars in case the name is the same as a previous one
       v = Variable.find(:all,:conditions=> {:dataset_id=>@dataset.id, :name => missing_var, :is_archived => false})
       @missing_vars.push(v[0].id)
-      v[0].update_attributes(:is_archived => true, :archived_by => current_user.id)
+      v[0].update_attributes(:is_archived => true, :archived_by => current_user.id, :archived_on => Time.now)
       v[0].solr_destroy
     end
     

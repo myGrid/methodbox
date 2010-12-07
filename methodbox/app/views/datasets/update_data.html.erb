@@ -27,10 +27,6 @@
 					          <b>Reason for update:&nbsp;</b>
 					          <%= text_field :update, :reason -%>
 					        </p>
-					<p>		
-					<b>Revision</b>
-					<%= select_tag :dataset_revision, options_for_select(dataset_revision(@dataset), @dataset.current_version)  -%>
-					</p>
 	</p>	
 
     <p style="text-align: center;">
