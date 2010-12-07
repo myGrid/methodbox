@@ -175,16 +175,14 @@ class WorkGroupsController < ApplicationController
     @group.destroy
 
     respond_to do |format|
-      format.html { redirect_to(groups_url) }
+      format.html { redirect_to(work_groups_url) }
       format.xml  { head :ok }
     end
   rescue   Exception => exc
      respond_to do |format|
-       format.html {
-         #copy the error across from the model
-         flash[:error] = "#{exc.message}"
-         redirect_to { redirect_to(work_group_url(@group)) }
-       }
+       puts exc.message
+       flash[:error] = "#{exc.message}"
+       format.html {redirect_to(work_group_url(@group)) }
      end
   end
   end
