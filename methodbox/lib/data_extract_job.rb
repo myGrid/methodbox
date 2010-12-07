@@ -33,6 +33,8 @@ module DataExtractJob
       rescue Exception => e
         logger.error(e)
         puts e
+        data_extract.update_attributes( :failure=>true )
+        raise e
       end
     end
     

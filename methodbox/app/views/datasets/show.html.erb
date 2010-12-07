@@ -12,19 +12,6 @@
 <% end -%>
 </ul>
 
-<% if @missing_vars && @missing_vars.size>=1 -%>
-The following variables were in the previous uploaded dataset but were missing in the new dataset.
-<% @missing_vars.each do |missing_variable| -%>
-<%= missing_variable.name %> <%= link_to_remote "Archive this variable", deprecate_variable_path(missing_variable)%> 
-<% end -%>
-<% end -%>
-<% if @new_variables && @new_variables.size>=1 -%>
-The following variables have been added in the new dataset.
-<% @new_variables.each do |new_variable| -%>
-<%= link_to new_variable.name, variable_path(new_variable) %>
-<% end -%>
-<% end -%>
-
 <h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1>
 
 <div class="show_basic">

@@ -14,11 +14,18 @@ module ProcessDatasetJob
       #Get the updated variables
       variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset_id}")
       variables.each do |variable|
-        process_variable (variable)
+        begin
+          process_variable(variable)
+        rescue Exception => e
+          logger.info("Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
+        end
       end
+      dataset.update_attributes(:has_data=>true)
       email_user
-    rescue Exception => e
-      puts e
+    rescue Exception => e     
+      logger.error "Problem processing dataset " + dataset.id.to_s + ", "  + e
+      puts "Problem processing dataset " + dataset.id.to_s + ", "  + e
+      # send an error message
     end
     end
     # TODO - surveys need to belong to a user.  datasets need to belong to a user.
@@ -30,9 +37,17 @@ module ProcessDatasetJob
     
     #split the dataset into columns
 def process_dataset(dataset)
+  dataset_file = dataset.uuid_filename
+  csv_path = File.join(CSV_FILE_PATH, dataset_file)
+  csv_file = File.open(csv_path, "r")
+  header_line = csv_file.readline
+  header_line.chop!
+  all_headers = header_line.split(separator)
+  
   did = dataset.id
-  variables = Variable.find(:all, :conditions => "dataset_id =  #{did}")
-  count = variables.size
+  # variables = Variable.all(:conditions => "dataset_id =  #{did}")
+  count = all_headers.size
+  # count = variables.size
   puts "count " + count.to_s
   if count <= 250
     process_part_dataset(dataset, 0, count-1)
@@ -70,11 +85,16 @@ def process_part_dataset(dataset, first_column, last_column)
   header_line.chop!
   all_headers = header_line.split(separator)
   if all_headers.size <= last_column
-    puts "Error processing dataset " + dataset.id.to_s
-    puts "Less than expected headers found"
-    puts "Expected " + last_column.to_s + " found " + all_headers.size.to_s
-    puts header_line
+    logger.error "Error processing dataset " + dataset.id.to_s
+    logger.error "Less than expected headers found"
+    logger.error "Expected " + last_column.to_s + " found " + all_headers.size.to_s
+    logger.error header_line
     raise "Incorrect header"
+  end
+  all_headers.each do |header|
+    if (header.match('([A-Za-z0-9]+)') == nil)
+      raise "There is an empty column header"
+    end
   end
   #uts last_column
   #uts all_headers.size
@@ -82,6 +102,8 @@ def process_part_dataset(dataset, first_column, last_column)
   all_columns = (first_column..last_column)
   #uts all_columns
   all_columns.each do |column| 
+    #make sure there are some characters in the column
+    # if !(column['/\S/'].empty?)
     name = all_headers[column].downcase
     variable = Variable.find_by_name_and_dataset_id(name, dataset.id)
     if !variable
@@ -99,12 +121,15 @@ def process_part_dataset(dataset, first_column, last_column)
     path = File.join(data_directory, name + ".txt")
     #no need for the data_file path since it will be the name of the variable under File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
     # variable.data_file = path
-    variable.save
+    # variable.save
     file = File.open(path, "w")
     #uts file
     column_files[column] = file
     #uts column_files[column]
-  end     
+  # else
+  #   raise "There is a empty column header"
+  # end 
+  end    
   #uts "all files open"
   
   #copy data

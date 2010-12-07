@@ -569,3 +569,26 @@ display: block;
 #logged-out-tabnav-div {
 	padding-left:10px;
 }
+.missing_or_added_vars {
+	margin-bottom:1em;
+	margin-top: 2em;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	-moz-border-radius:10px;
+	-moz-box-shadow: #777 2px 3px 5px;
+	-webkit-box-shadow: 2px 3px 5px #777777;
+	box-shadow: 2px 3px 5px #777;
+	background-color: #FFFFCC;
+	text-align: center;
+	border:1px solid #DDDDDD;
+}
+.info-text {
+	font-style: italic;
+	font-size: 125%;
+	margin-bottom: 0.5em;
+	padding-top: 0.5em;
+	color: green;
+}
+.missing_or_added_vars a {
+	display: block;
+}

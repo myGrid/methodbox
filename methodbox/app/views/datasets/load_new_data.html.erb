@@ -1,6 +1,5 @@
-<ul class="sectionIcons">
-<% if current_user.is_admin? -%>
-<li><%= icon('script', dataset_path(@dataset), 'Return to Dataset', nil, 'Return to Dataset') -%></li>
+<ul class="buttons">
+<% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
 <li>
 <%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit Dataset details') -%>
 </li>
@@ -10,27 +9,68 @@
 <li>
 <%= icon('manage', update_metadata_dataset_path(@dataset), nil, nil, 'Upload variable metadata') -%>
 </li>
+<% end -%>
 </ul>
-<% end -%>
-<div class="show_basic">
-<% if @new_variables && @new_variables.size>=1 -%>
-The following variables have been added in the new dataset.<br/>
-<% @new_variables.each do |new_variable| -%>
-<%= link_to Variable.find(new_variable).name, variable_path(Variable.find(new_variable)) %><br/>
-<% end -%>
-<% end -%>
-<br/>
-<% if @missing_vars && @missing_vars.size>=1 -%>
-The following variables were in the previous uploaded dataset but were missing in the new dataset.<br/>
-<% @missing_vars.each do |missing_variable| -%>
-<div id="<%= Variable.find(missing_variable).id %>">
-<%= link_to Variable.find(missing_variable).name, variable_path(Variable.find(missing_variable)) %>
-<%= link_to_remote "Archive this variable", :url=> deprecate_variable_path(Variable.find(missing_variable)), :with=> "'reason=' + $('#{Variable.find(missing_variable).id.to_s + "_reason"}').value + '&replaces=' + $('#{Variable.find(missing_variable).id.to_s + "_replaces"}').value" %> <b>Reason:</b><br/>
-  <%= text_field :archive,:reason ,:id=> Variable.find(missing_variable).id.to_s + "_reason" -%><br/>
-<b>Replaces:</b><br/>
-<%= text_field :archive,:replaces ,:id=> Variable.find(missing_variable).id.to_s + "_replaces" -%>
-</div>
-<% end -%>
-<% end -%>
-</div>
 
+<h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1>
+
+<div class="show_basic">
+	<% if @new_variables && @new_variables.size>=1 -%>
+	<div class="missing_or_added_vars">
+	<div class="info-text">The following variables have been added in the new dataset.</div>
+	<% @new_variables.each do |new_variable| -%>
+	<%= link_to Variable.find(new_variable).name, variable_path(Variable.find(new_variable)) %><br/>
+	<% end -%>
+	</div>
+	<% end -%>
+	<br/>
+	<% if @missing_vars && @missing_vars.size>=1 -%>
+	<div class="missing_or_added_vars">
+	<div class="info-text">The following variables were in the previous uploaded dataset but were missing in the new dataset.</div>
+	<% @missing_vars.each do |missing_variable| -%>
+	<%= link_to Variable.find(missing_variable).name, variable_path(Variable.find(missing_variable)) %>
+	<% end -%>
+	</div>
+	<% end -%>
+  <div class="main_content_left_box">
+    <div class="box_about_actor">
+      <p>
+        <b>Title:</b>
+        <span class="title"><%=h @dataset.name -%></span>
+      </p>
+      <p>
+        <b>Original Filename:</b>
+        <span class="title"><%=h @dataset.filename -%></span>
+      </p>
+      <p>
+        <b>Description</b>
+        <% unless @dataset.description.blank? -%>
+        <div class="box_standout">
+          <%= simple_format(white_list(@dataset.description)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
+      </p>
+      <p>
+        <b>Parent Survey:</b>
+        <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
+      </p>
+<% if @dataset.current_version -%>
+      <p>
+        <b>Revision:</b>
+        <span class="title"><%=h @dataset.current_version -%></span>
+      </p>
+<% end -%>
+<% if @dataset.current_version > 1 -%>
+<p>
+<b>Reason for update:</b>
+        <span class="title"><%=h @dataset.reason_for_update -%></span>
+</p>
+<% end -%>
+
+    </div>
+  </div>
+</div>

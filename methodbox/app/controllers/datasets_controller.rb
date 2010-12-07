@@ -13,25 +13,49 @@ class DatasetsController < ApplicationController
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter :update_last_user_activity
   
+  #update the datafile for this dataset
   def load_new_data
-    uuid = UUIDTools::UUID.random_create.to_s
-    #create directory and zip file for the archive
-    filename = CSV_FILE_PATH + "/" + uuid + ".data"
-    uf = File.open(filename,"w")
-    params[:file][:data].each_line do |line|                
-      uf.write(line)
-    end
-    uf.close
-             
-    @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => params[:dataset_revision],:has_data=>true)
-
-    load_new_dataset filename
-    respond_to do |format|
-      flash[:notice] = "New data file was applied to dataset"
-      format.html { redirect_to dataset_path(@dataset) }
+    begin
+      uuid = UUIDTools::UUID.random_create.to_s
+      #create directory and zip file for the archive
+      filename = CSV_FILE_PATH + "/" + uuid + ".data"
+      uf = File.open(filename,"w")
+      params[:file][:data].each_line do |line|                
+        uf.write(line)
+      end
+      uf.close
+      old_reason_for_update = @dataset.reason_for_update
+      old_updated_by = @dataset.updated_by
+      old_filename = @dataset.filename
+      old_uuid_filename = @dataset.uuid_filename
+      old_current_version = @dataset.current_version
+      old_has_data = @dataset.has_data
+    
+      if check_datafile_ok filename
+        @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => params[:dataset_revision],:has_data=>true)
+        load_new_dataset filename
+        respond_to do |format|
+          flash[:notice] = "New data file was applied to dataset"
+          @missing_vars.each {|var| puts "I am missing " + var.to_s}
+          format.html
+        end
+      else
+        respond_to do |format|
+          flash[:error] = @datafile_error
+          format.html { redirect_to dataset_path(@dataset) }
+        end
+      end
+    rescue Exception => e
+      logger.error(e)
+      @dataset.update_attributes(:reason_for_update=>old_reason_for_update, :updated_by=>old_updated_by, :filename=>old_filename, :uuid_filename=> old_uuid_filename, :current_version => old_current_version,:has_data=>old_has_data)
+      respond_to do |format|
+        flash[:error] = "There was a problem updating the dataset. Please try again. The error was: " + e
+        format.html { redirect_to dataset_path(@dataset) }
+      end
     end
   end
   
+  #update the metadata for this dataset
   def load_new_metadata
     if @dataset.filename != nil
     case params[:dataset_metadata_format]
@@ -74,30 +98,45 @@ class DatasetsController < ApplicationController
   end
   
   def create
-    uuid = UUIDTools::UUID.random_create.to_s
-    #write out the dataset into a new file
-    filename=CSV_FILE_PATH + "/" + uuid + ".data"
-    uf = File.open(filename,"w")
-    params[:dataset][:data].each_line do |line|                
-      uf.write(line)
-    end
-    uf.close
-             
-    dataset = Dataset.new
-    dataset.current_version = 1
-    dataset.survey = Survey.find(params[:dataset][:survey])
-    dataset.name = params[:dataset][:title]
-    dataset.description = params[:dataset][:description]
-    dataset.filename = params[:dataset][:data].original_filename
-    dataset.uuid_filename = uuid + ".data"
-    dataset.save
+    begin
+      uuid = UUIDTools::UUID.random_create.to_s
+      #write out the dataset into a new file
+      filename=CSV_FILE_PATH + "/" + uuid + ".data"
+      uf = File.open(filename,"w")
+      params[:dataset][:data].each_line do |line|                
+        uf.write(line)
+      end
+      uf.close
+    
+      if check_datafile_ok filename
+        @survey = Survey.find(params[:dataset][:survey])
+        dataset = Dataset.new
+        dataset.current_version = 1
+        dataset.survey = @survey
+        dataset.name = params[:dataset][:title]
+        dataset.description = params[:dataset][:description]
+        dataset.filename = params[:dataset][:data].original_filename
+        dataset.uuid_filename = uuid + ".data"
+        dataset.save
+        load_dataset filename, dataset
+        dataset.update_attributes(:has_variables=>false)
+        @dataset = dataset
+        respond_to do |format|
+          format.html { redirect_to dataset_path(@dataset) }
+        end
+      else
+        respond_to do |format|
+          flash[:error] = @datafile_error
+          format.html { redirect_to survey_path(@survey) }
+        end
+      end
 
-    load_dataset filename, dataset
-
-    dataset.update_attributes(:has_variables=>false, :has_data=>true)
-    @dataset = dataset
-    respond_to do |format|
-      format.html { redirect_to dataset_path(@dataset) }
+    rescue Exception => e
+      logger.error(e)
+       respond_to do |format|
+          flash[:error] = "There was a problem creating this dataset.  Please try again.  The error was: " + e
+          format.html { redirect_to survey_path(@survey) }
+        end
     end
     
   end
@@ -182,7 +221,7 @@ class DatasetsController < ApplicationController
     end
     
     headers.collect!{|item| item.strip}
-    
+
     @new_variables = []
  
     headers.each do |var|
@@ -200,6 +239,7 @@ class DatasetsController < ApplicationController
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator, base_host)
     rescue Exception => e
       logger.error(e)
+      raise e
     end
     
   end
@@ -221,19 +261,26 @@ class DatasetsController < ApplicationController
     end
     
     headers.collect!{|item| item.strip}
-          
+
     #need to find variables which are missing from the existing set and variables which are 'new'
     all_var = Variable.all(:conditions=> {:dataset_id => @dataset.id, :is_archived=>false}, :select => "name")
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
     
+    puts "All variables " + all_variables.to_s
+    
     missing_variables = all_variables - headers
+    
+    puts "Missing variables " + missing_variables.to_s
     
     added_variables = headers - all_variables
     
+    puts "Added variables " + added_variables.to_s
+    
     @missing_vars = []
     missing_variables.each do |missing_var|
-      v = Variable.find(:all,:conditions=> "dataset_id=" + @dataset.id.to_s + " and name='" + missing_var+"'")
+      # grab the non archived vars in case the name is the same as a previous one
+      v = Variable.find(:all,:conditions=> {:dataset_id=>@dataset.id, :name => missing_var, :is_archived => false})
       @missing_vars.push(v[0].id)
       v[0].update_attributes(:is_archived => true, :archived_by => current_user.id)
       v[0].solr_destroy
@@ -242,6 +289,7 @@ class DatasetsController < ApplicationController
     @new_variables = []
  
     added_variables.each do |var|
+      puts  "new var " + var
         variable = Variable.new
         variable.name = var
         variable.value = "No label"
@@ -251,14 +299,15 @@ class DatasetsController < ApplicationController
         @new_variables.push(variable.id)
     end
     
-    @missing_vars.each {|var| puts var.to_s}
-    @new_variables.each {|var| puts var.to_s}
+    @missing_vars.each {|var| puts "missing var " + var.to_s}
+    @new_variables.each {|var| puts "new var " + var.to_s}
     #process the columns and get the stats - TODO - process only new columns?
     begin 
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(@dataset.id, current_user.id, separator)
     rescue Exception => e
       logger.error(e)
-    end    
+      raise e
+    end  
   end
   
   #Read the metadata from a methodbox internal formatted xml file for a particular survey
@@ -420,6 +469,43 @@ end
     end
   end
 
-  
+  #check that the csv/tab datafile being uploaded is valid
+  #before doing any sort of preprocessing 
+  def check_datafile_ok filename
+    datafile = File.open(filename, "r")
+    @new_variables =[]
+    header =  datafile.readline
+    #split by tab
+
+    if params[:dataset_format] == "Tab Separated"
+        headers = header.split("\t")
+        separator = "\t"
+    else
+        headers = header.split(",")
+        separator = ","
+    end
+    
+    #check that there are no empty headers
+    headers.collect!{|item| item.strip}
+    headers.each do |header|
+      if (header.match('([A-Za-z0-9]+)') == nil)
+        datafile.close
+        @datafile_error = "There are column headers with empty names or invalid characters"
+        return false
+      end
+    end
+    
+    puts "Headers " + headers.to_s
+    
+    if headers.uniq! == nil
+      datafile.close
+      return true
+    else
+      datafile.close
+      @datafile_error = "There are duplicate column headers.  Each column header must occur only once."
+      return false
+    end
+    
+  end
   
 end

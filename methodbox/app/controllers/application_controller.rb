@@ -459,7 +459,7 @@ class ApplicationController < ActionController::Base
     rescue Exception => e
       # ukda reg check service probably down, default to looking at last time checked
       # if less than 6 months ago then say ok
-      if user.last_ukda_check >= Time.now - (60 * 60 * 24 * 180)
+      if user.last_ukda_check != nil && user.last_ukda_check >= Time.now - (60 * 60 * 24 * 180)
         return true
       else
         return false
