@@ -1,0 +1,6 @@
+Hi <%= @name %>,
+
+There was an error processing dataset, <%= @dataset.name %>.  It is recommended that you check the datafile you tried to load and reload it.
+Find it at <%= link_to @dataset.name, dataset_url(@dataset) %> 
+
+- The MethodBox Team
