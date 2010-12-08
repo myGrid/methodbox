@@ -11,7 +11,7 @@
       <div class="col2"><%= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:Element.hide($('#{row_name}'));Element.show($('#{row_name + '_expanded'}'));") -%></div>
 	<% else %>
 	<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_checkbox'}" -%></div>
-      <div class="col2"><%= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_checkbox'}').checked == true) {$('#{row_name + '_expanded_checkbox'}').checked =true} else {$('#{row_name + '_expanded_checkbox'}').checked=false};Field.disable('#{row_name + '_checkbox'}');Field.enable('#{row_name + '_expanded_checkbox'}');Element.hide($('#{row_name}'));Element.show($('#{row_name + '_expanded'}'));") -%></div>
+      <div class="col2"><%= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_checkbox'}').checked == true) {$('#{row_name + '_expanded_checkbox'}').checked =true} else {$('#{row_name + '_expanded_checkbox'}').checked=false};Field.disable('#{row_name + '_checkbox'}');Field.enable('#{row_name + '_expanded_checkbox'}');draw#{row_name + '_expanded_stats_chart'}Chart();Element.hide($('#{row_name}'));Element.show($('#{row_name + '_expanded'}'));") -%></div>
 <% end %>
 <% if item.is_archived? %>
 <% if item.name.size > 20 -%>
