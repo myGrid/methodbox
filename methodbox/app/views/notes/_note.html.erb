@@ -1,0 +1,23 @@
+<% odd_row ||= false -%>
+<% narrow_view ||= false -%>
+
+<table class="list_item">
+  <tr class="<%= odd_row ? "odd_row" : "even_row" -%>">
+
+    <td style="text-align: left;">
+
+      <p style="font-size: 85%; margin-top: 0.4em;">
+        <b>Created:</b> <%= note.created_at.strftime('%d/%m/%Y @ %H:%M:%S') -%>
+      </p>
+
+      <div class="desc" style="font-size: 85%;">
+        <% unless note.words.blank? -%>
+          <%= truncate(white_list(note.words), :length=>500) -%>
+        <% else -%>
+          <span class="none_text">No note</span>
+        <% end -%>
+      </div>
+    </td>
+
+  </tr>
+</table>

@@ -1,0 +1,4 @@
+<div id="note_box" style="padding-top:1em;">
+	<%= text_area_tag 'note',nil,:rows=>3 -%>
+	<%= button_to_remote "Add a private note", :url => { :action => "add_note"}, :with => "'words=' + encodeURIComponent($('note').value)  + '&resource_id=#{resource_id}'", :position => :bottom, :update=>"new_note", :after=>"$('note').value=''" -%>
+</div>
