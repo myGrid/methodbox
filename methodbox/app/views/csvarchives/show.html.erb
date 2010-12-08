@@ -91,7 +91,7 @@
 </div>
 <div style="clear: both;"></div>
 <% if current_user %>
-<div class="left" style="width: 40%">
+<div class="left" id="extract-note-box">
 	<% if current_user %>
 	<h3>Notes</h3>
 	  <%= render :partial => "notes/add_note", :locals=>{:resource_id => @archive.id} -%>
@@ -102,7 +102,7 @@
 				</div>
 				<% end %>
 </div>
-<div class="resource-comments right" style="width: 50%; margin-bottom: 1em;">
+<div class="resource-comments right" id="extract-comment-box">
 <h3>Comments</h3>
   <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @archive.id} -%>
 		<% @comments.each do |comment| %>

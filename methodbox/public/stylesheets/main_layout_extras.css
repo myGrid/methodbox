@@ -592,3 +592,10 @@ display: block;
 .missing_or_added_vars a {
 	display: block;
 }
+#extract-comment-box {
+	width: 50%;
+	margin-bottom: 1em;
+}
+#extract-note-box {
+	width: 40%;
+}
