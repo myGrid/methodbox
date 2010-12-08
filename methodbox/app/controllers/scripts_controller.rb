@@ -3,10 +3,19 @@ class ScriptsController < ApplicationController
   before_filter :login_required, :except => [ :download, :index, :show, :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
-  before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment ]
+  before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment, :add_note ]
   before_filter :find_comments, :only=>[ :show ]
+  before_filter :find_notes, :only=>[ :show ]
   before_filter :recommended_by_current_user, :only=>[ :show ]
   after_filter :update_last_user_activity
+  
+  #a users notes about a resource
+  def add_note
+    @script = Script.find(params[:resource_id])
+    note = Note.new(:words=>params[:words], :user_id=>current_user.id, :notable_id=>@script.id, :notable_type=>"Script")
+    note.save
+    render :partial=>"notes/note", :locals=>{:note=>note}
+  end
   
   # you don't like it any more
   def thumbs_down
@@ -32,6 +41,7 @@ class ScriptsController < ApplicationController
       end
     end
   end
+  
   #add a user owned comment to a script and add it to the view
   def add_comment
     @script = Script.find(params[:resource_id])
@@ -700,6 +710,13 @@ class ScriptsController < ApplicationController
       end
     else
       @recommended =  false
+    end
+  end
+  
+  def find_notes
+    if current_user
+      @script =Script.find(params[:id])
+      @notes = Note.all(:conditions=>{:notable_type => "Script", :user_id=>current_user.id, :notable_id => @script.id})
     end
   end
 

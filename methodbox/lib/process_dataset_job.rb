@@ -26,6 +26,8 @@ module ProcessDatasetJob
       logger.error "Problem processing dataset " + dataset.id.to_s + ", "  + e
       puts "Problem processing dataset " + dataset.id.to_s + ", "  + e
       # send an error message
+      Mailer.deliver_dataset_processing_error(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+      
     end
     end
     # TODO - surveys need to belong to a user.  datasets need to belong to a user.

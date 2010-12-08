@@ -23,8 +23,18 @@ class SurveysController < ApplicationController
   before_filter :find_groups, :only => [ :new, :edit ]
   
   before_filter :find_comments, :only => [ :show ]
+
+  before_filter :find_notes, :only => [ :show ]
   
   after_filter :update_last_user_activity
+  
+  #a users notes about a resource
+  def add_note
+    @survey = Survey.find(params[:resource_id])
+    note = Note.new(:words=>params[:words], :user_id=>current_user.id, :notable_id=>@survey.id, :notable_type=>"Survey")
+    note.save
+    render :partial=>"notes/note", :locals=>{:note=>note}
+  end
 
   #add a user owned comment to a script and add it to the view
   def add_comment
@@ -895,6 +905,13 @@ class SurveysController < ApplicationController
     def find_comments
       survey =Survey.find(params[:id])
       @comments = survey.comments
+    end
+    
+    def find_notes
+      if current_user
+        @survey =Survey.find(params[:id])
+        @notes = Note.all(:conditions=>{:notable_type => "Survey", :user_id=>current_user.id, :notable_id => @survey.id})
+      end
     end
 
 end

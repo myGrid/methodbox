@@ -122,8 +122,19 @@
 				<% end -%>
 			<% end -%>
     	</div>
+		<div class="left">
+			<% if current_user %>
+			<h3>Notes</h3>
+			  <%= render :partial => "notes/add_note", :locals=>{:resource_id => @survey.id} -%>
+					<% @notes.each do |note| %>
+					<%= render :partial => "notes/note", :locals=>{:note=>note} %>
+					<% end %>
+					<div id="new_note">
+						</div>
+						<% end %>
+		</div>
 		<% if current_user %>
-		<div class="resource-comments">
+		<div class="resource-comments right">
 		<h3>Comments</h3>
 		  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @survey.id} -%>
 				<% @comments.each do |comment| %>

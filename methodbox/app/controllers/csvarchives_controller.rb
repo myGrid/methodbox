@@ -16,6 +16,15 @@ class CsvarchivesController < ApplicationController
   before_filter :recommended_by_current_user, :only=>[ :show ]
   after_filter :update_last_user_activity
   before_filter :find_comments, :only => [ :show ]
+  before_filter :find_notes, :only => [ :show ]
+  
+  #a users notes about a resource
+  def add_note
+    @extract = Csvarchive.find(params[:resource_id])
+    note = Note.new(:words=>params[:words], :user_id=>current_user.id, :notable_id=>@extract.id, :notable_type=>"Csvarchive")
+    note.save
+    render :partial=>"notes/note", :locals=>{:note=>note}
+  end
 
   def download_stats_script
     # firstly check if the current user has the authorization to see the extract
@@ -829,6 +838,13 @@ class CsvarchivesController < ApplicationController
       }
     end
     send_file zip_file_path, :filename => @archive.title + "_spss_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false     
+  end
+  
+  def find_notes
+    if current_user
+      @extract =Csvarchive.find(params[:id])
+      @notes = Note.all(:conditions=>{:notable_type => "Csvarchive", :user_id=>current_user.id, :notable_id => @extract.id})
+    end
   end
 
 end

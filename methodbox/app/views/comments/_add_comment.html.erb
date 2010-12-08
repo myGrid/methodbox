@@ -1,4 +1,4 @@
 <div id="comment_box" style="padding-top:1em;">
 	<%= text_area_tag 'comment',nil,:rows=>3 -%>
-	<%= button_to_remote "Add a comment", :url => { :action => "add_comment"}, :with => "'words=' + encodeURIComponent($('comment').value)  + '&resource_id=#{resource_id}'", :position => :bottom, :update=>"new_comment", :after=>"$('comment').value=''" -%>
+	<%= button_to_remote "Add a public comment", :url => { :action => "add_comment"}, :with => "'words=' + encodeURIComponent($('comment').value)  + '&resource_id=#{resource_id}'", :position => :bottom, :update=>"new_comment", :after=>"$('comment').value=''" -%>
 </div>

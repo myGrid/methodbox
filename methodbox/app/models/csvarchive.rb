@@ -4,6 +4,8 @@ class Csvarchive < ActiveRecord::Base
 
   acts_as_resource
   
+  has_many :notes, :as => :notable
+  
   has_many :comments, :as => :commentable
   
   has_many :recommendations, :as => :recommendable

@@ -16,6 +16,13 @@ class DatasetsController < ApplicationController
   #update the datafile for this dataset
   def load_new_data
     begin
+      new_dataset_version = @dataset.current_version + 1
+      old_reason_for_update = @dataset.reason_for_update
+      old_updated_by = @dataset.updated_by
+      old_filename = @dataset.filename
+      old_uuid_filename = @dataset.uuid_filename
+      old_current_version = @dataset.current_version
+      old_has_data = @dataset.has_data
       uuid = UUIDTools::UUID.random_create.to_s
       #create directory and zip file for the archive
       filename = CSV_FILE_PATH + "/" + uuid + ".data"
@@ -24,13 +31,6 @@ class DatasetsController < ApplicationController
         uf.write(line)
       end
       uf.close
-      new_dataset_version = @dataset.current_version + 1
-      old_reason_for_update = @dataset.reason_for_update
-      old_updated_by = @dataset.updated_by
-      old_filename = @dataset.filename
-      old_uuid_filename = @dataset.uuid_filename
-      old_current_version = @dataset.current_version
-      old_has_data = @dataset.has_data
     
       if check_datafile_ok filename
         @dataset.update_attributes(:reason_for_update=>params[:update][:reason], :updated_by=>current_user.id, :filename=>params[:file][:data].original_filename, :uuid_filename=> uuid + ".data", :current_version => new_dataset_version, :has_data=>true)

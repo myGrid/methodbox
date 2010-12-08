@@ -25,9 +25,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :autocomplete_message_to => :post, :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => 'http'}
 
 
-  map.resources :surveys, :member => {:download => :get}, :collection => {:show_datasets_for_categories => :post, :category_browse => :get, :facets => :get, :view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :search_stuff=>:get, :grid_view => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
+  map.resources :surveys, :member => {:add_note => :post, :download => :get}, :collection => {:show_datasets_for_categories => :post, :category_browse => :get, :facets => :get, :view_variables => :post, :add_to_pseudo_cart => :get,  :data => :get, :datagrid => :get,:hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :search_stuff=>:get, :grid_view => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
 
-  map.resources :csvarchives, :member => {:download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:recreate => :post, :help => :get, :help2 => :get,:show_links=>:post, :check_for_complete => :post }, :requirements => {:protocol => 'http'}
+  map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:recreate => :post, :help => :get, :help2 => :get,:show_links=>:post, :check_for_complete => :post }, :requirements => {:protocol => 'http'}
 
   map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get,:add_to_cart=> :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}, :requirements => {:protocol => 'http'}
 
@@ -40,7 +40,7 @@ ActionController::Routing::Routes.draw do |map|
     person.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
   end
 
-  map.resources :scripts, :member => { :download => :get, :add_comment => :post, :thumbs_up => :post, :thumbs_down => :post }, :collection => {:help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
+  map.resources :scripts, :member => { :add_note => :post, :download => :get, :add_comment => :post, :thumbs_up => :post, :thumbs_down => :post }, :collection => {:help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => 'http'}
 
   map.resources :projects,
     :collection => { :request_institutions => :get }, :requirements => {:protocol => 'http'} do |project|

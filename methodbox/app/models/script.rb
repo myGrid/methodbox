@@ -10,6 +10,8 @@ class Script < ActiveRecord::Base
   # has_many :sources,  :through => :scripts_as_target
   # has_many :targets,    :through => :scripts_as_source
   
+  has_many :notes, :as => :notable
+  
   has_many :recommendations, :as => :recommendable
   
   has_many :comments, :as => :commentable

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101130114618) do
+ActiveRecord::Schema.define(:version => 20101208133639) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -271,6 +271,15 @@ ActiveRecord::Schema.define(:version => 20101130114618) do
     t.boolean "active",   :default => true
   end
 
+  create_table "notes", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "notable_id"
+    t.string   "notable_type"
+    t.text     "words"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "people", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -285,7 +294,7 @@ ActiveRecord::Schema.define(:version => 20101130114618) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false
+    t.boolean  "dormant",            :default => false, :null => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -536,7 +545,7 @@ ActiveRecord::Schema.define(:version => 20101130114618) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false
+    t.boolean  "dormant",                                 :default => false, :null => false
     t.datetime "last_ukda_check"
     t.boolean  "ukda_registered"
     t.datetime "last_user_activity"
