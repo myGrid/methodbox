@@ -11,7 +11,7 @@
 	</div>
 	<% end %>
   <% if Authorization.is_authorized?("manage", nil, @script, current_user) && !User.find(@script.contributor_id).dormant? -%>
-    <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Manage Method') -%></li>
+    <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
   <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
   <%# this is not owner, but current user can edit -%>
     <li><%= icon('edit', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>

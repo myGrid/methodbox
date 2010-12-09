@@ -37,7 +37,6 @@ class DatasetsController < ApplicationController
         load_new_dataset filename
         respond_to do |format|
           flash[:notice] = "New data file was applied to dataset"
-          @missing_vars.each {|var| puts "I am missing " + var.to_s}
           format.html
         end
       else
@@ -203,7 +202,6 @@ class DatasetsController < ApplicationController
         @new_variables.push(variable)
       end
     end
-    @new_variables.each {|new_variable| puts new_variable.name}
   end
   
   #Load the first CSV/Tabbed file for a survey.
@@ -268,15 +266,12 @@ class DatasetsController < ApplicationController
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
     
-    puts "All variables " + all_variables.to_s
     
     missing_variables = all_variables - headers
     
-    puts "Missing variables " + missing_variables.to_s
     
     added_variables = headers - all_variables
     
-    puts "Added variables " + added_variables.to_s
     
     @missing_vars = []
     missing_variables.each do |missing_var|
@@ -290,7 +285,6 @@ class DatasetsController < ApplicationController
     @new_variables = []
  
     added_variables.each do |var|
-      puts  "new var " + var
         variable = Variable.new
         variable.name = var
         variable.value = "No label"
@@ -299,9 +293,7 @@ class DatasetsController < ApplicationController
         variable.save
         @new_variables.push(variable.id)
     end
-    
-    @missing_vars.each {|var| puts "missing var " + var.to_s}
-    @new_variables.each {|var| puts "new var " + var.to_s}
+
     #process the columns and get the stats - TODO - process only new columns?
     begin 
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(@dataset.id, current_user.id, separator)
@@ -495,8 +487,6 @@ end
         return false
       end
     end
-    
-    puts "Headers " + headers.to_s
     
     if headers.uniq! == nil
       datafile.close

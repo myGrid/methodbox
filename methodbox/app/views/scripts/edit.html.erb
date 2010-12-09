@@ -4,7 +4,7 @@
 <% current_user_authorized_to_manage = Authorization.is_authorized?("manage", nil, @script, current_user) -%>
 
 
-<ul class="sectionIcons">
+<ul class="buttons">
   <li><%= icon('script', script_path(@script), 'Return to Method', nil, 'Return to Method') -%></li>
   <li><%= icon('scripts', scripts_path, 'View all Methods', nil, 'View all Methods') -%></li>
 </ul>
@@ -15,11 +15,17 @@
 </h1>
 
 <div class="show_basic">
-  <% form_for(@script) do |f| %>
+  <% form_for @script, :html => {:multipart => true} do |f| %>
     <%= f.error_messages %>
 
     <center>
       <div style="width: 90%;">
+	    <p>
+          <b>File to upload:&nbsp;</b>
+          <%= file_field :content, :data -%>
+        </p>
+		<p>(File is currently: <%= @script.original_filename %>)</p>
+
         <p style="margin-top: 1.5em;">
           <b>Title:</b><br/>
           <%= f.text_field :title, :style => "width: 100%;" -%>

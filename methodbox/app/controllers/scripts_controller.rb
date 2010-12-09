@@ -416,12 +416,15 @@ class ScriptsController < ApplicationController
       [:contributor_id, :contributor_type, :original_filename, :content_type, :content_blob_id, :created_at, :updated_at, :last_used_at,:method_type].each do |column_name|
         params[:script].delete(column_name)
       end
-      # params[:script].script_lists.each do |list|
-      #   list.delete
-      # end
-      # params[:script].survey_to_script_lists.each do |list|
-      #   list.delete
-      # end
+
+    end
+    if !((params[:content][:data]).blank?)
+      begin
+      @script.content_blob.update_attributes(:data => params[:content][:data].read)
+      @script.update_attributes(:original_filename => params[:content][:data].original_filename, :content_type => params[:content][:data].content_type)
+    rescue Exception => e
+      puts "blob " + e
+    end
     end
       # update 'last_used_at' timestamp on the Script
       params[:script][:last_used_at] = Time.now
