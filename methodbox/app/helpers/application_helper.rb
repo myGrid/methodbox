@@ -14,7 +14,8 @@ module ApplicationHelper
         if cart_item.search_term != nil && !cart_item.search_term.empty?
           return "Added after search for: " + cart_item.search_term
         elsif cart_item.extract_id
-          return "From extract id: " + cart_item.extract_id.to_s + ", " + Csvarchive.find(cart_item.extract_id.to_s).title
+          extract = Csvarchive.find(cart_item.extract_id)
+          return "From extract: " + link_to(extract.title, csvarchive_url(extract))
         else
           return "The lineage of this cart item could not be determined"
         end

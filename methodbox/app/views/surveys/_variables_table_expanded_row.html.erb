@@ -56,6 +56,12 @@
     <div style="margin:auto;">Actual Variable name: <%= item.name -%></div>
     <br/>
   <% end -%>
+<% if lineage %>
+  <div>
+	<%= display_lineage_for_variable(item.id) %>
+  </div>
+<br/>
+<% end %>
   <div>
     <% unless item.document.blank? -%>
       <div style="margin:auto;">Document: 

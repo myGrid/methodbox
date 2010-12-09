@@ -15,15 +15,15 @@
 <% end %>
 <% if item.is_archived? %>
 <% if item.name.size > 20 -%>
-  <div class="col3" title="<%= lineage ? display_lineage_for_variable(item.id) : "" %>"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%>(Archived)</div>
+  <div class="col3"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%>(Archived)</div>
 <% else -%>
-  <div class="col3" title="<%= lineage ? display_lineage_for_variable(item.id) : "" %>"><%= link_to(item.name, variable_path(item)) -%>(Archived)</div>
+  <div class="col3"><%= link_to(item.name, variable_path(item)) -%>(Archived)</div>
 <% end -%>
 <% else %>
 <% if item.name.size > 20 -%>
-  <div class="col3" title="<%= lineage ? display_lineage_for_variable(item.id) : "" %>"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%></div>
+  <div class="col3"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%></div>
 <% else -%>
-  <div class="col3" title="<%= lineage ? display_lineage_for_variable(item.id) : "" %>"><%= link_to(item.name, variable_path(item)) -%></div>
+  <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
 <% end -%>
 <% end %> 
       <div class="col4">
