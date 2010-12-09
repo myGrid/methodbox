@@ -22,7 +22,7 @@
       <div style="position: absolute; ;top:0.9em;left:1em">
         <%= hidden_field_tag 'previous_query', @survey_search_query %>
         <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();",:title=>@survey_search_query %>
-				<%= image_tag ( method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
+				<%= image_tag( method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
         <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'search';};" %>
       </div>
       <div style="position: absolute; bottom:-10em; left:26em;">
@@ -63,6 +63,9 @@
         <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
         
       </div>
+<!-- keeps all the hidden inputs which match search term to variables -->
+<div id="search_tracker_div">
+</div>
 <% if logged_in? -%>
       <div id="cart_button" style="position: absolute; top:1em; right:1em;">
         <%= render :partial => "cart/button" -%>
@@ -77,7 +80,7 @@
       <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
     <div id="table_container" class="faux_table_container">
-      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables} -%>
+      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables ,:lineage => false} -%>
     </div>
   </div>
 <% end -%>

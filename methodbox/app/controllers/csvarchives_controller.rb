@@ -456,6 +456,14 @@ class CsvarchivesController < ApplicationController
         all_variables_array.push(Variable.find(item.variable_id))
       end
       @archive.update_attributes({:variables => all_variables_array})
+      @archive.variable_lists.each do |variable_list|
+        @current_user.cart_items.each do |cart_item|
+          if (variable_list.variable_id == cart_item.variable_id)
+              variable_list.update_attributes(:search_term => cart_item.search_term, :extract_id => cart_item.extract_id)
+            break
+          end
+        end
+      end
     # end
       
       selected_surveys = Array.new

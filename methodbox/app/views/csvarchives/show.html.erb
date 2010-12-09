@@ -76,6 +76,7 @@
     <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
   </div>
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
+	<%= hidden_field_tag 'extract_id', @archive.id %>
     <%= hidden_field_tag 'submit', 'add' %>
     <br/>
 <%= render :partial => "extract_bar" -%>

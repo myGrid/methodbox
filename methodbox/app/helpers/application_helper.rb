@@ -8,6 +8,20 @@ module ApplicationHelper
   
   include TagsHelper
   
+  def display_lineage_for_variable variable_id
+    current_user.cart_items.each do |cart_item|
+      if cart_item.variable_id == variable_id
+        if cart_item.search_term != nil && !cart_item.search_term.empty?
+          return "Added after search for: " + cart_item.search_term
+        elsif cart_item.extract_id
+          return "From extract id: " + cart_item.extract_id.to_s + ", " + Csvarchive.find(cart_item.extract_id.to_s).title
+        else
+          return "The lineage of this cart item could not be determined"
+        end
+      end
+    end
+  end
+  
   def sharing_text sharing_mode
     case sharing_mode
     when Policy::CUSTOM_PERMISSIONS_ONLY

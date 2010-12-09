@@ -156,6 +156,23 @@ class ApplicationController < ActionController::Base
   end
 
   def add_to_cart
+    
+    if params[:extract_id]
+      extract_id_for_items = params[:extract_id]
+    end
+    if params[:search_terms]
+    search_terms = Array.new(params[:search_terms])
+    search_term_tracker = params[:search_term_tracker]
+    search_terms.each do |term|
+      if search_term_tracker.has_key?(term)
+      search_term_tracker[term].each do |search_term_hash|
+        search_term_hash.each do |var|
+          puts term + ":" + var.to_s
+        end
+      end
+    end
+    end
+  end
 
     @submit = params[:submit]
 #    req = "submit:\'"+@submit+ "\'"
@@ -187,15 +204,37 @@ class ApplicationController < ActionController::Base
       @variable_list = Array.new(params[:variable_ids])
 
       @variable_list.each do |var|
-
-       if CartItem.find_by_user_id_and_variable_id(current_user,var)
-       else
-	  an_item = CartItem.new
-          an_item.user = current_user
-          an_item.variable_id = var
-          an_item.save
-          current_user.reload
+        search_term_for_var = String.new
+        if search_terms
+          search_terms.each do |term|
+            if search_term_tracker.has_key?(term)
+              search_term_tracker[term].each do |search_term_hash|
+                search_term_hash.each do |term_var|
+                  if (term_var == var)
+                    search_term_for_var = term
+                    break
+                  end
+                end
+              end
+            end
+          end
+        elsif params[:survey_search_query]
+            search_term_for_var = params[:survey_search_query]
         end
+        
+       if CartItem.find_by_user_id_and_variable_id(current_user,var)
+         
+       else
+	       an_item = CartItem.new
+         an_item.user = current_user
+         an_item.variable_id = var
+         if extract_id_for_items
+           an_item.extract_id = extract_id_for_items
+         end
+         an_item.search_term = search_term_for_var
+         an_item.save
+         current_user.reload
+       end
       end
 
       render :update, :status=>:created do |page|

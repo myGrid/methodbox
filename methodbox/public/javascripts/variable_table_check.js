@@ -115,3 +115,25 @@ function highlightTerm(term) {
 	termsHighlight[term] = true;
 }
 }
+//track which vars are clicked in the table and insert a hidden field 
+//so that when submitted to the controller it knows which terms correspond
+//to which variables
+function addOrRemoveHiddenFieldForVariable(variable) {
+	if ($(variable + '_checkbox').checked == false) {
+		for(var key in termsHash) {
+			if (termsHash[key].include(variable)) {
+				$(key + '_' + variable + '_hidden_tracker').remove();
+				break;
+			}
+		}
+	} else {
+			for(var key in termsHash) {
+				if (termsHash[key].include(variable)) {
+					var hidden_input = new Element('input',{'id':key + '_' + variable + '_hidden' + '_tracker','name': 'search_term_tracker[' + key + '][]','type':'hidden'});
+					hidden_input.value = variable;
+					$('search_tracker_div').insert(hidden_input);
+					break;
+				}
+			}
+	}
+}
