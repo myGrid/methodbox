@@ -161,18 +161,12 @@ class ApplicationController < ActionController::Base
       extract_id_for_items = params[:extract_id]
     end
     if params[:search_terms]
-    search_terms = Array.new(params[:search_terms])
-    search_term_tracker = params[:search_term_tracker]
-    search_terms.each do |term|
-      if search_term_tracker.has_key?(term)
-      search_term_tracker[term].each do |search_term_hash|
-        search_term_hash.each do |var|
-          puts term + ":" + var.to_s
-        end
-      end
+      search_terms = Array.new(params[:search_terms])
+      search_term_tracker = params[:search_term_tracker]
     end
+    if params[:from_a_previous_search]
+      previous_search_id = params[:from_a_previous_search]
     end
-  end
 
     @submit = params[:submit]
 #    req = "submit:\'"+@submit+ "\'"
@@ -230,6 +224,9 @@ class ApplicationController < ActionController::Base
          an_item.variable_id = var
          if extract_id_for_items
            an_item.extract_id = extract_id_for_items
+         end
+         if previous_search_id
+           an_item.user_search_id = previous_search_id
          end
          an_item.search_term = search_term_for_var
          an_item.save

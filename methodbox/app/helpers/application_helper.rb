@@ -8,16 +8,19 @@ module ApplicationHelper
   
   include TagsHelper
   
-  #figure out where the varible comes from ie. an extract, a search or unknown
+  #figure out where the variable comes from ie. an extract, a search (current or previous) or unknown
   def display_lineage_for_variable variable_id, extract_lineage, extract_id
     if extract_lineage
       Csvarchive.find(extract_id).variable_lists.each do |variable_list|
         if variable_list.variable_id == variable_id
           if variable_list.search_term != nil && !variable_list.search_term.empty?
             return "Added after search for: " + variable_list.search_term
-          elsif variable_list.extract_id
+          elsif variable_list.extract_id != nil
             extract = Csvarchive.find(variable_list.extract_id)
             return "From extract: " + link_to(extract.title, csvarchive_url(extract))
+          elsif variable_list.user_search_id != nil
+            search = UserSearch.find(variable_list.user_search_id)
+            return "From previous search for: " + link_to(search.terms, user_search_url(search))
           else
             return "The lineage of this cart item could not be determined"
           end
@@ -28,9 +31,12 @@ module ApplicationHelper
       if cart_item.variable_id == variable_id
         if cart_item.search_term != nil && !cart_item.search_term.empty?
           return "Added after search for: " + cart_item.search_term
-        elsif cart_item.extract_id
+        elsif cart_item.extract_id != nil
           extract = Csvarchive.find(cart_item.extract_id)
           return "From extract: " + link_to(extract.title, csvarchive_url(extract))
+        elsif cart_item.user_search_id != nil
+          search = UserSearch.find(cart_item.user_search_id)
+          return "From previous search for: " + link_to(search.terms, user_search_url(search))
         else
           return "The lineage of this cart item could not be determined"
         end
