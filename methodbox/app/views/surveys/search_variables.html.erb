@@ -80,7 +80,7 @@
       <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
     <div id="table_container" class="faux_table_container">
-      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables ,:lineage => false} -%>
+      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables ,:lineage => false, :extract_lineage => false, :extract_id => nil} -%>
     </div>
   </div>
 <% end -%>

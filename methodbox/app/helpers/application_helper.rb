@@ -8,7 +8,22 @@ module ApplicationHelper
   
   include TagsHelper
   
-  def display_lineage_for_variable variable_id
+  #figure out where the varible comes from ie. an extract, a search or unknown
+  def display_lineage_for_variable variable_id, extract_lineage, extract_id
+    if extract_lineage
+      Csvarchive.find(extract_id).variable_lists.each do |variable_list|
+        if variable_list.variable_id == variable_id
+          if variable_list.search_term != nil && !variable_list.search_term.empty?
+            return "Added after search for: " + variable_list.search_term
+          elsif variable_list.extract_id
+            extract = Csvarchive.find(variable_list.extract_id)
+            return "From extract: " + link_to(extract.title, csvarchive_url(extract))
+          else
+            return "The lineage of this cart item could not be determined"
+          end
+        end
+      end
+    else
     current_user.cart_items.each do |cart_item|
       if cart_item.variable_id == variable_id
         if cart_item.search_term != nil && !cart_item.search_term.empty?
@@ -21,6 +36,7 @@ module ApplicationHelper
         end
       end
     end
+  end
   end
   
   def sharing_text sharing_mode

@@ -85,7 +85,7 @@
       <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables} -%>
     </div>
     <div id="table_container" class="faux_table_container">
-      <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables} -%>
+      <%= render :partial => "surveys/table",:locals=>{:lineage => true, :extract_lineage => true, :extract_id => @archive.id, :sorted_variables => @sorted_variables} -%>
     </div>
     <br/>
   <% end %>
