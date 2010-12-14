@@ -26,15 +26,20 @@ module DataExtractJob
         create_spss_files
         create_zip_file
         data_extract.update_attributes(:complete => true)
-        if send_email
-          email_complete_to_user
-        end
-        clean_up_files
       rescue Exception => e
         logger.error(e)
         puts e
         data_extract.update_attributes( :failure=>true )
         raise e
+      end
+      #no need to count a cleanup or email failure as a real problem
+      begin
+       if send_email
+          email_complete_to_user
+        end
+        clean_up_files
+      rescue Exception => e
+        logger.error(e)
       end
     end
     
