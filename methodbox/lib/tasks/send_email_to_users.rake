@@ -13,8 +13,10 @@ namespace :obesity do
     email_hash[:subject] = "MethodBox server maintenance"
     email_hash[:body] = "Methodbox will be unavailable for one or two hours this afternoon (Monday 12 July) for esssential maintenance and upgrades. \nThank you for your patience while we carry out this work.\n\n The MethodBox team"
     User.find(:all).each do |user|
-      email_hash[:to] = email=user.email
-      SendGMail.send_gmail(email_hash)
+      email_hash[:to] =user.email
+      if user.active? != nil
+        SendGMail.send_gmail(email_hash)
+      end
     end
 
   end
