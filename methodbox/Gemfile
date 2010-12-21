@@ -1,5 +1,5 @@
 source :gemcutter
-gem "rails", "2.3.3"
+gem "rails", "2.3.5"
 gem "rmagick", "2.12.2"
 gem "RedCloth", "4.2.3"
 gem "will_paginate", "2.3.12"
