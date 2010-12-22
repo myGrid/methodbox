@@ -52,6 +52,7 @@ class CartController < ApplicationController
     end
 
     render :update, :status=>:created do |page|
+      page.replace_html "table_header", :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables}
       page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables,:lineage => false, :extract_lineage => false, :extract_id => nil}
     end
     when "create_archive"
