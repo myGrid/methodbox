@@ -38,9 +38,10 @@ class Variable < ActiveRecord::Base
       file = File.open(File.join(CSV_FILE_PATH, arr[index], self.name.downcase + ".csv"), "r")
       #hash["file"] = file.to_s
       file.each_line do |line|
-        parts = line.split(",",2)	  
-        frequecy = Integer(parts[1])
-        hash[parts[0]] = frequecy 
+        parts = line.split(",")  
+        frequency = Integer(parts[parts.size - 1])
+        #might be commas in the value so remove the frequency from the line using gsub
+        hash[line.gsub("," + parts[parts.size - 1] + "\n", "")] = frequency 
       end  
       file.close()
     end
@@ -56,10 +57,11 @@ class Variable < ActiveRecord::Base
       index = arr.size - 2
       file = File.open(File.join(CSV_FILE_PATH, arr[index], self.name.downcase + ".data"), "r")
       file.each_line do |line|
-        parts = line.split(",",2)	      
+        parts = line.split(",")	      
         value = Float(parts[0])
-        frequecy = Integer(parts[1])
-        hash[value] = frequecy
+        frequency = Integer(parts[parts.size - 1])
+        #might be commas in the value so remove the frequency from the line using gsub
+        hash[line.gsub("," + parts[parts.size - 1] + "\n", "")] = frequency
 
       end  
     end

@@ -5,6 +5,11 @@ module ProcessDatasetJob
   
   class StartJobTask < Struct.new(:dataset_id, :user_id, :separator, :base_host)
     
+    require 'fastercsv'
+    
+    cattr_accessor :logger
+    self.logger = RAILS_DEFAULT_LOGGER
+    
     def perform
       begin
       dataset = Dataset.find(dataset_id)
@@ -137,7 +142,12 @@ def process_part_dataset(dataset, first_column, last_column)
   #copy data
   csv_file.each_line do |row|
     row.chop!
-    line = row.split(separator)      
+    #use faster csv to split the line to handle commas inside quoted values
+    if separator == ","
+      line = row.parse_csv()  
+    else
+      line = row.parse_csv(:col_sep => "\t")  
+    end    
     all_columns.each do |column| 
       column_files[column].write(line[column] + "\n")
     end  
@@ -234,7 +244,7 @@ def process_variable(variable)
   #Required because found a "9999999999999999999999999999999999999999999999999" in a String column
   if strings
     string_hash.sort.each do |key, frequency|
-      none_values_distribution_file .write(key.to_s + "," + frequency.to_s + "\n")
+      none_values_distribution_file.write (key.chomp.to_s + "," + frequency.to_s + "\n")
     end
     values_distribution_file.close
     no_value_stats(variable)

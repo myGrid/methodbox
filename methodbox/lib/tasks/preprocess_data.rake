@@ -246,7 +246,7 @@ namespace :obesity do
     #Required because found a "9999999999999999999999999999999999999999999999999" in a String column
     if strings
       string_hash.sort.each do |key, frequency|
-        none_values_distribution_file .write (key.to_s + "," + frequency.to_s + "\n")
+        none_values_distribution_file.write (key.chomp!.to_s + "," + frequency.to_s + "\n")
       end
       values_distribution_file.close
       no_value_stats(variable)
@@ -257,10 +257,10 @@ namespace :obesity do
     #Write the non values if any
     if none_values_hash.size > 0 
       none_values_hash.sort.each do |key, frequency|
-        none_values_distribution_file .write (key.to_s + "," + frequency.to_s + "\n")
+        none_values_distribution_file.write(key.to_s + "," + frequency.to_s + "\n")
       end
     end  
-    none_values_distribution_file .close
+    none_values_distribution_file.close
 
     #Process the values if any
     if values_hash.size > 0       
@@ -268,7 +268,7 @@ namespace :obesity do
 
       #Write the values
       values.each do |key, frequency|
-        values_distribution_file.write (key.to_s + "," + frequency.to_s + "\n")
+        values_distribution_file.write(key.to_s + "," + frequency.to_s + "\n")
       end  
       values_distribution_file.close
 

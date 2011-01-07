@@ -109,6 +109,9 @@ module DataExtractJob
               column_files.each do |column_file|
                   line = column_file.readline
                   line.chomp!
+                  if line.include? ","
+                    line = "\"" + line + "\""
+                  end
                   #uts("line:"+line+":")
                   out_line << "," + line
               end            
@@ -349,7 +352,11 @@ module DataExtractJob
             line = row.split("\t")
             out_line = i.to_s + "," + dataset.survey.year + ","
             header_position.each do |pos|
-              out_line << line[pos] +","
+              if line[pos].include? ","
+                out_line << "\"" + line[pos] + "\","
+              else
+                out_line << line[pos] + ","
+              end
             end
             out_line.chop!
             out_line << "\r\n"
