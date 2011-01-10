@@ -30,6 +30,7 @@ class Variable < ActiveRecord::Base
   end
   
   def none_values_hash
+    begin
     hash = Hash.new(0)  
     if self.none_values_distribution_file
       #hash["path"]= self.none_values_distribution_file
@@ -48,9 +49,14 @@ class Variable < ActiveRecord::Base
     #hash["test"]="success"
     #hash["more"]="yep"
     return hash
+    rescue Exception => e
+      logger.error("Could not open stats file for variable " + self.id.to_s + ". " + e)
+      return Hash.new(0)
+    end
   end
   
   def values_hash
+    begin
     hash = Hash.new(0)  
     if self.values_distribution_file
       arr = self.values_distribution_file.split("/")
@@ -66,6 +72,10 @@ class Variable < ActiveRecord::Base
       end  
     end
     return hash
+    rescue Exception => e
+      logger.error("Could not open stats file for variable " + self.id.to_s + ". " + e)
+      return Hash.new(0)
+    end
   end
 
 end
