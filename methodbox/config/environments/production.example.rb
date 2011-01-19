@@ -25,7 +25,7 @@ config.action_controller.perform_caching             = true
 SOLR_ENABLED=true
 ACTIVATION_REQUIRED=true
 
-#change to the address that the app is hosted at
+#change to the address that the app is hosted at, can be localhost
 config.action_mailer.default_url_options = { :host => "www.something.org" }
 
 ActionMailer::Base.delivery_method = :smtp

@@ -47,6 +47,17 @@ def process_dataset(dataset)
   dataset_file = dataset.uuid_filename
   csv_path = File.join(CSV_FILE_PATH, dataset_file)
   csv_file = File.open(csv_path, "r")
+  
+  #try and guess the encoding of the file so that the headers mean something
+  begin
+    cd = CharDet.detect(csv_file.readline)
+    encoding = cd['encoding']
+  rescue
+    encoding="UTF-8"
+  ensure
+    csv_file.close
+  end
+  csv_file = File.open(csv_path, "r:" + encoding)
   header_line = csv_file.readline
   header_line.chop!
   all_headers = header_line.split(separator)
