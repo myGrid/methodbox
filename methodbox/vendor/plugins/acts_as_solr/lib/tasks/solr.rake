@@ -35,7 +35,9 @@ desc 'Starts Solr. Options accepted: RAILS_ENV=your_env, PORT=XX. Defaults to de
     rescue Net::HTTPServerException #responding
       puts "Port #{SOLR_PORT} in use" and return
 
-    rescue Errno::ECONNREFUSED #not responding
+    # need to additionally catch NoMethodError below to work around
+    # a bug in Ubuntu packaged versions of Net::HTTP here.
+    rescue Errno::ECONNREFUSED, NoMethodError #not responding
       Dir.chdir(SOLR_PATH) do
         pid = fork do
           #STDERR.close
