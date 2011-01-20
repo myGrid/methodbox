@@ -1,8 +1,12 @@
 *.log
-*.log
 *_pid
 coverage/*
 coverage.data
 solr/solr/data/*
-.svn
 test/db/*.db
+config/solr_environment.rb
+solr/logs/*
+solr/tmp/*
+solr/development/*
+tmp/pids/*
+log/*

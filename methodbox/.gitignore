@@ -1,0 +1,17 @@
+config/environment.rb
+config/environment_local.rb
+config/environments/development.rb
+config/environments/production.rb
+config/environments/test.rb
+config/database.yml
+methodbox/db/schema.rb
+Gemfile.lock
+
+# empty dirs
+tmp/*
+log/*
+filestore/*
+public/javascripts/exhibit/webapp/api/extensions/chart/locales/sv/*
+public/javascripts/exhibit/webapp/api/extensions/chart/locales/es/*
+public/javascripts/exhibit/webapp/api/extensions/editing/locales/*
+vendor/plugins/savage-beast/tested_plugins/engines/*
