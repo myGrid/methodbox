@@ -14,6 +14,9 @@ config/environment_local.example.rb contains various constants which are used eg
 config/environment.example.rb includes set up for the exception handler and needs your email address so it can send any bug reports to the correct address.  Copy file to environment.rb and then make the changes
 config/environments/RAILS_ENV.example.rb (eg production.rb) need email details that MethodBox uses to send out notifications.  It also has a STATISTICS_ROUTE which is an obfuscated url that you can use to give to someone interested in the download stats.  In these file there is a constant called ROUTES_PROTOCOL which can be set to 'http' or 'https' and is used by the config/routes.rb file to make certain routes over 'https' if you require (don't forget certificates for apache etc, hard to test in development).  Copy file to eg. development.rb and then make the changes.
 MethodBox uses bundler to handle its gems.  (sudo) gem install bundler to install it and then bundle install in the MethodBox root to install the gems in the application. 
+If setting up the database using migrations you will also need to run 
+> rake savage_beast:bootstrap_db 
+to set up the tables for the savage beasts forum plugin.
 
 = SOLR setup
 
