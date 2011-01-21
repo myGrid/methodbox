@@ -231,9 +231,14 @@ class SurveysController < ApplicationController
     puts @survey_hash
 
     @variables = Array.new
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@surveys}
+      #FIXME some sort of bug causes the first character in the xml type declaration to be
+      #stripped off before the rdf+xml transfer, this <?xml version="1.0" encoding="UTF-8"?>
+      #becomes ?xml version="1.0" encoding="UTF-8"?>
+      format.rdf { render :layout => false, :content_type => 'application/rdf+xml' }
     end
   end
 

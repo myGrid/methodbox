@@ -1,0 +1,8 @@
+<%# return rdf/xml representation of surveys %>
+<% graph = convert_to_linked_data @survey_hash -%>
+<% w = RDF::RDFXML::Writer.buffer do |writer| -%>
+	<% graph.each_statement do |statement| -%>
+		<% writer << statement -%>
+	<% end -%>
+<% end -%>
+<%= w -%>
