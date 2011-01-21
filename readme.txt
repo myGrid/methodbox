@@ -1,0 +1,7 @@
+Obesity is one of the leading causes of preventable death world-wide, and a priority for many governments. It is caused when we consume more energy than what is spent in physical activity. Mostly this can be related to social factors; however studies of these factors, usually only relate to one side of the energy balance equation. In order to readdress this, there is a need for easily-shared, multi-disciplinary social research into obesity.
+
+The team is developing an eLab - a unique, secure environment for producing, sharing, communicating and finding obesity research between epidemiologists, public health researchers and social scientists.
+
+The project has developed and deployed the data sharing platform methodbox. MethodBox aims to provide a simple, easy to use environment for browsing and sharing surveys, methods and data. Variables (ie columns in spreadsheet/csv data) can be searched for using keywords. Metadata for the variables can be viewed and the variables themselves can be added to your cart and downloaded. MethodBox is a generic Ruby on Rails based web application that can be seeded with any type of csv style datasets. It's original intention was to support health researchers involved in obesity data investigations with emphasis on datasets from the UK Data Archive.
+
+The project is developed by the myGrid team at the University of Manchester, funded by the Economic & Social Research Council and comes under the Digital Social Research umbrella. 
