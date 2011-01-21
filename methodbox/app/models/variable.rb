@@ -42,7 +42,7 @@ class Variable < ActiveRecord::Base
         parts = line.split(",")  
         frequency = Integer(parts[parts.size - 1])
         #might be commas in the value so remove the frequency from the line using gsub
-        hash[line.gsub("," + parts[parts.size - 1] + "\n", "")] = frequency 
+        hash[line.gsub("," + parts[parts.size - 1], "")] = frequency 
       end  
       file.close()
     end
@@ -67,7 +67,7 @@ class Variable < ActiveRecord::Base
         value = Float(parts[0])
         frequency = Integer(parts[parts.size - 1])
         #might be commas in the value so remove the frequency from the line using gsub
-        hash[line.gsub("," + parts[parts.size - 1] + "\n", "")] = frequency
+        hash[line.gsub("," + parts[parts.size - 1], "")] = frequency
 
       end  
     end

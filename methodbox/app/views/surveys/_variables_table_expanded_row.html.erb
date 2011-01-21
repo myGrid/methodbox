@@ -125,8 +125,8 @@
 		<% end %>
 	<% end %>
 <% end %>
-<% if var_hash.size > 0 && var_hash.size <= 20 -%>
-<div class="left" id='<%= row_name + "_expanded_stats_chart" -%>'>
+<% if var_hash.size > 0 -%>
+	<div class="left" id='<%= row_name + "_expanded_stats_chart" -%>'>
 
 	</div>
 <% end %>
@@ -160,7 +160,20 @@
 							              <% end -%>
 
         var chart = new google.visualization.PieChart(document.getElementById('<%= row_name + "_expanded_stats_chart" -%>'));
-        chart.draw(data, {width: 400, height: 200, is3D: true});
+        chart.draw(data, {width: 500, height: 200, is3D: true});
+	} else if (hash_size > 1) {
+		var data = new google.visualization.DataTable();
+		data.addColumn('string', 'Value');
+        data.addColumn('number', 'Count');
+              <% var_hash.sort.each do |value, frequency| -%>
+				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+				              <% end -%>
+							              <% no_var_hash.sort.each do |value, frequency| -%>
+							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+							              <% end -%>
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('<%= row_name + "_expanded_stats_chart" -%>'));
+        chart.draw(data, {width: 500, height: 200, is3D: true});
 	}
-      }
+}
     </script>
