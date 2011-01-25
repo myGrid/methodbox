@@ -115,7 +115,7 @@ li div {
 .col1 {
     /*min-width: 25px;*/
 /*    width:25px;*/
-	width:5%;
+	width:3%;
 }
 .col2 {
     /*min-width: 25px;*/
@@ -162,13 +162,13 @@ li div {
     /* Remember the scroll bar needs space*/
 	white-space:normal;
 /*    width:30px;*/
-	width:5%;
+	width:7%;
 }
 
 .head1 {
     /*min-width: 25px;*/
 /*    width:25px;*/
-	width:5%;
+	width:3%;
 }
 .head2 {
     /*min-width: 25px;*/
@@ -207,7 +207,7 @@ li div {
 .head9 {
     /*min-width: 75px;*/
 /*    width:30px;*/
-	width:5%;
+	width:7%;
 }
 * html div.faux_table_container {
     /*width:700px;*/
