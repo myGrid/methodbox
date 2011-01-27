@@ -50,10 +50,10 @@ class SessionsController < ApplicationController
               return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action])
             end
           else
-            unless session[:return_to] and !session[:return_to].empty?
-              return_to_url = request.env['HTTP_REFERER']
-            else
+            if session[:return_to] and !session[:return_to].empty?
               return_to_url = session[:return_to]
+            else
+              return_to_url = root_url
             end
           end
 
