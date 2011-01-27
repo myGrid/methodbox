@@ -29,7 +29,7 @@
 
     <td class="actions" style="width: 80px;">
       <%= icon "show", work_group_path(resource), nil, nil, "View" -%>
-      <% if resource.user.id == current_user.id -%>
+      <% if resource.user != nil && resource.user.id == current_user.id -%>
         <%= icon "edit", edit_work_group_path(resource), nil, nil, "Edit" -%>
       <% end -%>
     </td>
