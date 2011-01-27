@@ -1,9 +1,50 @@
+require 'digest/md5'
+  
 # This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
-  
+    
   after_filter :update_last_user_activity
-
+  
   layout 'main'
+  
+  def shibboleth
+    date = DateTime.now
+    year = date.year
+    month = date.month
+    mday = date.mday
+    check_date = year.to_s + '-' + sprintf("%02d", month) + '-' + sprintf("%02d",mday)
+    to_base = "http://cspool58.cs.man.ac.uk?" + params[:username] + "&sars_checksum="
+    ip = request.env["HTTP_X_FORWARDED_FOR"] || request.env["HTTP_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]
+    full_ip = IPAddress ip
+    short_ip = full_ip[0].to_s + '.' + full_ip[1].to_s + '.' + full_ip[2].to_s
+    puts short_ip
+    user = params[:username]
+    user.gsub!("+"," ")
+    pre_hash =  check_date + SARS_SHARED_SECRET + short_ip + user
+    digest = Digest::MD5.hexdigest(pre_hash)
+    puts pre_hash + " " + digest
+    sars_checksum = params[:sars_checksum]
+    calculated_hash = digest
+    respond_to do |format|
+      if params[:sars_checksum] == digest
+        user=User.find_by_shibboleth_user_id(params[:username])
+        if user && user.person
+          self.current_user = user
+          format.html {redirect_to index_url}
+        else
+          @user = User.new
+          format.html {redirect_to :controller => 'users', :action => 'new_shib', :shib_user_id => params[:username]}
+        end
+      else
+        flash[:error] ="UK Federation authentication failed.  Please try again or use your MethodBox user name and password."
+        format.html {redirect_to new_user_url}
+      end
+    end
+  end
+  
+  def create_shib
+    
+  end
 
   # render new.rhtml
   def new

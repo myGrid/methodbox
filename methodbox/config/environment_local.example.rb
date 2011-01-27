@@ -1,3 +1,7 @@
+#the secret used to when calculating shib login hash
+SARS_SHARED_SECRET = "something"
+#the root url where the shib login process should redirect to
+SHIB_LOGIN_URL = "http://some.url:port"
 #where should completed data extracts be stored
 CSV_OUTPUT_DIRECTORY = "/Users/you/data/#{ENV['RAILS_ENV']}/complete"
 #is the server running ssl routes or not

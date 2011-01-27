@@ -48,9 +48,9 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => 'http'}
   end
 
-  map.resources :users, :collection=>{:activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get], :resend_actiavtion_code =>[:get]}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :users, :collection=>{ :new_shib => :get, :create_shib => :post, :activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get], :resend_activation_code =>[:get]}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resource :session, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resource :session, :collection => { :shibboleth => :get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   # page for admin tasks
   map.admin '/admin/', :controller=>'admin',:action=>'show', :requirements => {:protocol => ROUTES_PROTOCOL}

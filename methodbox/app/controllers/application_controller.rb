@@ -494,8 +494,8 @@ class ApplicationController < ActionController::Base
       node = xml.find('child::registered')
     rescue Exception => e
       # ukda reg check service probably down, default to looking at last time checked
-      # if less than 6 months ago then say ok
-      if user.last_ukda_check != nil && user.last_ukda_check >= Time.now - (60 * 60 * 24 * 180)
+      # if less than 6 months ago then say ok as long as they were previously ok
+      if user.last_ukda_check != nil && user.last_ukda_check >= Time.now - (60 * 60 * 24 * 180) && user.ukda_registered
         return true
       else
         return false
@@ -503,6 +503,7 @@ class ApplicationController < ActionController::Base
     end
  
     if node.first.content == "yes"
+      puts "updating user ukda"
       user.update_attributes(:last_ukda_check => Time.now, :ukda_registered => true)
       return true
     else

@@ -31,10 +31,10 @@ class User < ActiveRecord::Base
   #validates_length_of       :email,    :within => 3..100
 
   # validates_presence_of     :login
-  validates_presence_of     :password,                   :if => :password_required?
-  validates_presence_of     :password_confirmation,      :if => :password_required?
-  validates_length_of       :password, :within => 4..40, :if => :password_required?
-  validates_confirmation_of :password,                   :if => :password_required?
+  validates_presence_of     :password,                   :if => :password_required?, :unless => :shibboleth
+  validates_presence_of     :password_confirmation,      :if => :password_required?, :unless => :shibboleth
+  validates_length_of       :password, :within => 4..40, :if => :password_required?, :unless => :shibboleth
+  validates_confirmation_of :password,                   :if => :password_required?, :unless => :shibboleth
 
   validates_presence_of     :email
   validates_confirmation_of :email if :email_confirmation
@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   before_create :make_activation_code
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation, :last_seen_at, :last_user_activity
+  attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation, :last_seen_at, :last_user_activity, :shibboleth_user_id, :shibboleth, :ukda_registered, :last_ukda_check
 
   has_many :favourites
   has_many :favourite_groups, :dependent => :destroy

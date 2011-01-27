@@ -1,6 +1,6 @@
 <div class="sidebar">
 	<ul class="vbuttons">
-		<% unless controller.controller_name =="surveys" %>
+		<% unless controller.controller_name =="surveys" || controller.controller_name =="home" %>
 		<li><%= icon "show", surveys_url, "Search for variables", nil, "Search for variables" %></li>
 		<% end %>
 		<% unless controller.controller_name =="help" %>

@@ -216,7 +216,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_resend_activation_code
     login_as :admin
     u=users(:unactivated_user)
-    post :resend_actiavtion_code, :id => u.id
+    post :resend_activation_code, :id => u.id
     user = User.find(u)
     assert !user.active?
     assert_nil flash[:error]

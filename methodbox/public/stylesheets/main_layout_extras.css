@@ -602,3 +602,25 @@ display: block;
 .image-margin-right {
 	margin-right: 10px;
 }
+/* popup login box stuff */
+.email_login_box {
+	margin-top:0;
+	-moz-border-radius:6px;
+	-moz-box-shadow: 1px 1px 3px #777777;
+	border: 1px solid #C0C4C6;
+	color: #000000;
+	padding: 10px;
+	background-color: #FFFFFF;
+}
+.email_login_box p {
+	text-align: center;
+	font-size:1em;
+	font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;
+}
+.forgotten_password {
+	text-align: center;
+	margin-top: 0.6em;
+	line-height: 1.3em;
+	font-size:1em;
+	font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;
+}

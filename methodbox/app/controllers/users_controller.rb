@@ -3,10 +3,50 @@
   layout "main", :except=>[:edit]
 
   before_filter :is_current_user_auth, :only=>[:edit, :update]
-  before_filter :logged_out_or_admin, :only=>[:new, :create, :activate]
+  before_filter :logged_out_or_admin, :only=>[:new, :create, :activate, :create_shib, :new_shib]
   before_filter :is_user_admin_auth, :only=>[:resend_activation_code, :approve, :reject]
   before_filter :request_for_unactive_user, :only=>[:resend_activation_code, :approve, :reject]
   before_filter :validate_create, :only=>[:create]
+  
+  def create_shib
+    if !current_user
+      cookies.delete :auth_token
+      # protects against session fixation attacks, wreaks havoc with
+      # request forgery protection.
+      # uncomment at your own risk
+      reset_session
+    end
+    @user = User.new(params[:user])
+    @person = Person.new(params[:person])
+    @person.email = @user.email
+    @user.person=@person
+
+    @user.save
+    respond_to do |format|
+    if @user.errors.empty?
+       self.current_user = @user
+        if !ACTIVATION_REQUIRED
+          @user.activate
+          @user.save
+          Mailer.deliver_welcome self.current_user, base_host
+          format.html {redirect_to(root_url)}
+       else
+            Mailer.deliver_shibboleth_signup(current_user,base_host)
+            flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
+            logout_user
+            format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+        end
+      end
+    end
+  end
+  
+  #user has logged in with shib credentials but does not have a mb user yet
+  def new_shib
+    @shib_user_id = params[:shib_user_id]
+    @user=User.new
+    @user.person=Person.new
+   end
+   
   # render new.rhtml
   def new
     @user=User.new

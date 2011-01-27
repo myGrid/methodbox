@@ -1,5 +1,5 @@
 <b>Status:</b>
-<% if @archive.complete && !@archive.failure%>
+<% if @archive.complete && !@archive.failure %>
   <span class="title"><%=h "ready for download" -%></span>
 <% elsif @archive.failure -%>
   <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>

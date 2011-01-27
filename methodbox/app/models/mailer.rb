@@ -3,6 +3,15 @@ class Mailer < ActionMailer::Base
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
   
+  def shibboleth_signup(user,base_host)
+    subject     'MethodBox account activation'
+    recipients  user.person.email_with_name
+    from        NOREPLY_SENDER
+    sent_on     Time.now
+
+    body        :username=>user.email, :name=>user.person.name, :admins=>User.admins.collect{|u| u.person}, :activation_code=>user.activation_code, :host=>base_host
+  end
+  
   def dataset_processing_error(dataset_id, user_id, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER
