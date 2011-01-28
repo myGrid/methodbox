@@ -1,3 +1,5 @@
+#Stat Transfer location - not used yet, only prototype
+STAT_TRANSFER="path to command line st app"
 #the secret used to when calculating shib login hash
 SARS_SHARED_SECRET = "something"
 #the root url where the shib login process should redirect to

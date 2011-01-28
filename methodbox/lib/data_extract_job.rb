@@ -4,6 +4,7 @@ module DataExtractJob
   
   require 'zip/zip'
   require 'zip/zipfilesystem'
+  require 'popen4'
   
   class StartJobTask < Struct.new(:variable_hash, :user_id, :data_extract_id, :output_directory, :send_email, :base_host)
     
@@ -183,7 +184,7 @@ module DataExtractJob
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_data.txt")
           code_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_code.sps")
           zipfile.add(dataset.name + "_selection_spss_data.txt", file_path)
-          zipfile.add(dataset.name + "_selection_spss_code.sps", code_path)
+          zipfile.add(dataset.name + "_selection_spss_code.sav", code_path)
         }
         zipfile.close
       }
@@ -221,6 +222,34 @@ module DataExtractJob
         file = File.new(spss_file_path, "w")
         file.write(spss_file)
         file.close
+      end
+    end
+    
+    def create_spss_files_from_original
+      data_extract = Csvarchive.find(data_extract_id)
+      logger.info("create stata do files for " + data_extract.title + ", user " + user_id.to_s)
+      variable_hash.each_key do |key|
+        dataset = Dataset.find(key)
+        var_names = String.new
+        variable_hash[key].each do |var|
+          variable = Variable.find(var)
+          var_names << variable.name.downcase + ","
+        end
+        var_names.chomp!
+        spss_input_file_path = File.join(CSV_FILE_PATH, dataset.uuid_filename.split(".")[0] + ".sav")
+        spss_output_file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_code.sav")
+        command_file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, "spss_command.stcmd")
+        command_file = File.new(command_file_path, "w")
+        command_file << "keep " + var_names + "\n"
+        command_file << "copy " + spss_input_file_path  + " " + spss_output_file_path + "\n"
+        command_file << "exit"
+        command_file.close
+        # pipe = IO.popen(STAT_TRANSFER + " " + command_file_path)
+        status = Open4::popen4(STAT_TRANSFER) do |pid, stdin, stdout, stderr|
+          stdin.puts "ex " + command_file_path
+          stdin.puts "exit"
+          stdin.close 
+        end
       end
     end
     
