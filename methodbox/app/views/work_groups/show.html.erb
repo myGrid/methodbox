@@ -3,7 +3,7 @@
     <li><%= icon('edit', edit_work_group_path(@group), nil, nil, 'Edit Group') -%></li>
     <li><%= icon('destroy', work_group_path(@group), nil, { :confirm => 'This deletes the group and all metadata. Are you sure?', :method => :delete }, 'Delete Group') -%></li>
   <% end -%>
- <% if !@group.people.include?(User.find(current_user).person) %>
+ <% if !@group.people.include?(User.find(current_user).person) && @group.user != nil %>
 	<li><%= icon('user-invite', request_access_work_group_path(@group), nil, { :method => :post}, 'Request access to this group') -%></li>
 <% end -%>
 </ul>
@@ -30,7 +30,7 @@
       </p>
       <br/>
 	<p>
-        <b>Owner:</b><%= link_to(@group.user.person.name, person_path(@group.user.person)) -%>
+        <b>Owner: </b><%= @group.user != nil ? link_to(@group.user.person.name, person_path(@group.user.person)) : "No longer a member of MethodBox" -%>
       </p>
       <br/>
   <% if @group.user == current_user || @group.person_ids.include?(current_user.id)-%>
