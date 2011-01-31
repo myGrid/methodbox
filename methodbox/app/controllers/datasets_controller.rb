@@ -437,12 +437,14 @@ end
    #if you own the parent survey or it is a ukda one and you are an admin
   def can_add_or_edit_datasets
     dataset = Dataset.find(params[:id])
-    if !Authorization.is_authorized?("edit", nil, dataset.survey, current_user) || current_user && Dataset.find(params[:id]).survey.survey_type.is_ukda && current_user.is_admin?
+    if !Authorization.is_authorized?("edit", nil, dataset.survey, current_user)
+      if current_user && dataset.survey.survey_type.is_ukda && !current_user.is_admin?
         respond_to do |format|
           flash[:error] = "You do not have permission for this action"
           format.html { redirect_to dataset_url(dataset) }
         end
       end
+    end
   end
   
   #if you own the parent survey or it is a ukda one and you are an admin
