@@ -1,0 +1,7 @@
+<div>
+	<%= link_to_close_redbox("close") -%>
+	<% if current_user %>
+	<h3>Comments</h3>
+	  <%= render :partial => "comments/add_comment", :locals=>{:controller => "variables", :resource_id => variable.id, :popup => true} -%>
+				<% end %>
+</div>

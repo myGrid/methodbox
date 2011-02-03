@@ -1,0 +1,7 @@
+<div>
+	<%= link_to_close_redbox("close") -%>
+	<% if current_user %>
+	<h3>Notes</h3>
+	  <%= render :partial => "notes/add_note", :locals=>{:resource_id => variable.id, :popup => true} -%>
+				<% end %>
+</div>
