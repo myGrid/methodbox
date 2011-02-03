@@ -3,6 +3,24 @@ class VariablesController < ApplicationController
   before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
   after_filter :update_last_user_activity
+  before_filter :find_comments, :only=>[ :show ]
+  before_filter :find_notes, :only=>[ :show ]
+  
+  #a users private notes about a variable
+  def add_note
+    @variable = Variable.find(params[:resource_id])
+    note = Note.new(:words=>params[:words], :user_id=>current_user.id, :notable_id=>@variable.id, :notable_type=>"Variable")
+    note.save
+    render :partial=>"notes/note", :locals=>{:note=>note}
+  end
+  
+  #add a user owned comment to a variable and add it to the view
+  def add_comment
+    @variable = Variable.find(params[:resource_id])
+    comment = Comment.new(:words=>params[:words], :user_id=>current_user.id, :commentable_id=>@variable.id, :commentable_type=>"Variable")
+    comment.save
+    render :partial=>"comments/comment", :locals=>{:comment=>comment}
+  end
 
   def find_for_multiple_surveys_by_category
     if params[:survey_ids]
@@ -241,6 +259,18 @@ class VariablesController < ApplicationController
     @tag = Tag.find(params[:tag_id])
     render :update, :status=>:created do |page|
       page.replace_html "tag_search", :partial=>"variables/search_for_tags"
+    end
+  end
+  
+  def find_comments
+    @variable =Variable.find(params[:id])
+    @comments = @variable.comments
+  end
+  
+  def find_notes
+    if current_user
+      @variable =Variable.find(params[:id])
+      @notes = Note.all(:conditions=>{:notable_type => "Variable", :user_id=>current_user.id, :notable_id => @variable.id})
     end
   end
 

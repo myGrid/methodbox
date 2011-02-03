@@ -142,7 +142,8 @@
 
      <!-- TODO add a paramter to control when it long values lists - could be in the thousands -->
      <!-- TODO Style cleanup Including highlighting header line.-->
-     <% var_hash = @variable.values_hash -%>
+ 	<% no_var_hash = @variable.none_values_hash -%> 
+	<% var_hash = @variable.values_hash -%>
 	<% value_domain_hash = Hash.new %>
 	<% var_hash.each_key do |key| %>
 		<% @variable.value_domains.each do |value_domain| %>
@@ -196,6 +197,7 @@
 			</div>
 		<% else %>
 		<b>There are <%= var_hash.size -%> unique values</b>
+		<div class="gviz-chart" id="frequency_count_chart_div"></div>
       <% end -%> 
 
      <!-- TODO Style cleanup Including highlighting header line.-->
@@ -221,13 +223,35 @@
     </div>
 
   <!-- </div> -->
+<div class="left">
+	<% if current_user %>
+	<h3>Notes</h3>
+	  <%= render :partial => "notes/add_note", :locals=>{:resource_id => @variable.id} -%>
+			<% @notes.each do |note| %>
+			<%= render :partial => "notes/note", :locals=>{:note=>note} %>
+			<% end %>
+			<div id="new_note">
+				</div>
+				<% end %>
+</div>
+<div class="right">
+	<% if current_user %>
+	<h3>Comments</h3>
+	  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @variable.id} -%>
+			<% @comments.each do |comment| %>
+			<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
+			<% end %>
+			<div id="new_comment">
+				</div>
+				<% end %>
+</div>
 </div>
 
-<% if var_hash.size > 0 && var_hash.size <= 20 -%>
 <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
+		var hash_size = <%=var_hash.size %>
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Value');
         data.addColumn('number', 'Count');
@@ -237,9 +261,13 @@ data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash
 			              <% no_var_hash.sort.each do |value, frequency| -%>
 			data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 			              <% end -%>
-
+		if (hash_size > 1 && hash_size <= 20) {
         var chart = new google.visualization.PieChart(document.getElementById('frequency_count_chart_div'));
         chart.draw(data, {width: 600, height: 400, is3D: true});
-      }
+} else if (hash_size > 1) {
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('frequency_count_chart_div'));
+        chart.draw(data, {width: 800, height: 400, is3D: true});
+	}
+}
     </script>
-<% end %>

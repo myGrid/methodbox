@@ -140,7 +140,16 @@
 </div>
 
   <br/>
-
+<!-- TODO: get this redbox popup working correctly.  It shows ok but the button does not -->
+<!-- grab the value of the note or comment text in the box-->
+<!-- <div id='<%#= "hidden_comment_div_" + item.id.to_s -%>' style="display:none;"> -->
+	<%#= render :partial => "variables/comment_popup", :locals=>{:variable => item} -%>
+<!-- </div> -->
+<!-- <div id='<%#= "hidden_note_div_" + item.id.to_s -%>' style="display: none;"> -->
+	<%#= render :partial => "variables/note_popup", :locals=>{:variable => item}-%>
+<!-- </div> -->
+<%#= link_to_redbox("Add a comment", "hidden_comment_div_" + item.id.to_s ) -%>
+<%#= link_to_redbox("Add a private note", "hidden_note_div_" + item.id.to_s ) -%>
 
 </div>
 

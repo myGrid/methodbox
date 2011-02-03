@@ -1,6 +1,10 @@
 require 'acts_as_solr'
 
 class Variable < ActiveRecord::Base
+  
+  has_many :notes, :as => :notable
+  
+  has_many :comments, :as => :commentable
 
   belongs_to :dataset
   has_many :variable_linkages
