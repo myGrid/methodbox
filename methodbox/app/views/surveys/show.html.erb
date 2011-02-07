@@ -1,3 +1,5 @@
+<%= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
 <% truncate_length_for_boxes = 22 -%>
 	<ul class="buttons">
 <% if logged_in? -%>
@@ -48,6 +50,11 @@
 					<% @survey.datasets.each do |dataset| -%>
             			<%= link_to(h(dataset.name), dataset_path(dataset)) -%>
           			<% end -%>
+					<div class="small-padding" title="Showing all variables could take some time">
+					<%= link_to_remote "Show all variables for this survey", :url=> show_all_variables_survey_url(@survey) -%>
+					</div>
+					<div id='variables-table'>
+					</div>
         		<% else -%>
           		None
         		<% end -%>

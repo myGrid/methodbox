@@ -28,6 +28,18 @@ class SurveysController < ApplicationController
   
   after_filter :update_last_user_activity
   
+  #find all the variables for a particular survey
+  def show_all_variables
+    @survey = Survey.find(params[:id])
+    variables = []
+    @survey.datasets.each do |dataset|
+      variables += dataset.variables
+    end
+    render :update, :status=>:created do |page|
+      page.replace_html "variables-table", :partial => "show_all_vars_for_survey", :locals=>{:sorted_variables => variables}
+    end
+  end
+  
   #a users notes about a resource
   def add_note
     @survey = Survey.find(params[:resource_id])

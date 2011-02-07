@@ -2,25 +2,39 @@
 		
   <% if @search_terms.length > 1 -%>
     <% @search_terms.each do |search_term| -%>
-      <!-- <h4> <%#= search_term -%> </h4> -->
       <% @term_results[search_term].each do |item| -%>
-        <%# dataset = Dataset.find(item.dataset_id) -%>
-        <%# popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
-        <%#= render :partial => "surveys/variables_table_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even", "_odd"), :row_name => item.id.to_s + search_term} %>
-        <%#= render :partial => "surveys/variables_table_expanded_row",:locals=>{:item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle, :row_name => item.id.to_s + search_term} %>
+
 		<%= javascript_tag "addVariable('#{search_term}', '#{item.id.to_s}')"-%>
       <% end %>
     <% end %>
-    <!-- <h4> <%#= @survey_search_query -%> </h4> -->
   <% end %>
 <% end %>
-
+<% i = 0 -%>
+<% j = 0 -%>
+<% k = 1 -%>
 <% sorted_variables.each do |item| -%>
+<% if i == 0 %>
+	<div id='infinite_show_<%= j -%>' class="infinite-show-div" style=<%= j !=0 ? 'display:none' : ''-%>>
+<% end %>
   <% dataset = Dataset.find(item.dataset_id) -%>
   <% popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
 
   <%= render :partial => "surveys/variables_table_row",:locals=>{:lineage=>lineage, :extract_lineage => extract_lineage, :extract_id => extract_id, :item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even","_odd"), :row_name => item.id.to_s} %>
   <%= render :partial => "surveys/variables_table_expanded_row",:locals=>{:lineage=>lineage, :extract_lineage => extract_lineage, :extract_id => extract_id, :item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle, :row_name => item.id.to_s} %>
+
+<% if i == 19 || sorted_variables.size == k -%>
+	<% if i == 19 && sorted_variables.size != k-%>
+	<div id="infinite_show_link_<%= j -%>" class="infinite-show-link">
+		<%= link_to_function 'Show more', "$('infinite_show_#{j + 1}').show(); $('infinite_show_link_#{j}').hide();", :title => "Show more variables found with this search" %>
+	</div>
+	<% end -%>
+	<% i = 0 %>
+	<% j += 1 %>
+	</div>
+<% else %>
+	<% i += 1 %>
+<% end %>
+	<% k += 1 -%>
 <% end %>
 
 

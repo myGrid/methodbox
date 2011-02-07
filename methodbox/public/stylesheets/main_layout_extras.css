@@ -624,3 +624,11 @@ display: block;
 	font-size:1em;
 	font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;
 }
+.infinite-show-link {
+	text-align: center;
+	padding: 2px;
+}
+/* 2 pixel padding around the element */
+.small-padding {
+	padding: 2px;
+}
