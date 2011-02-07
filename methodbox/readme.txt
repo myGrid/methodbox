@@ -126,3 +126,6 @@ ActionMailer::Base.smtp_settings = {
 }
 This setup is for TLS/SSL using gmail, it's a lot easier with non-authenticated SMTP.
 MethodBox uses the restful_authentication plugin. We are currently investigating the use of Shibboleth to use the UK Federation authorisation service and may have multiple routes for user authentication in the future.
+
+=Licence
+The MethodBox software developed by the University of Manchester uses the New BSD License.  Other software (eg plugins) developed by other authors but used by MethodBox may use different but compatible licences, please see the individual bits of software for further information.

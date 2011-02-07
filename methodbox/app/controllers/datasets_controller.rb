@@ -107,9 +107,9 @@ class DatasetsController < ApplicationController
         uf.write(line)
       end
       uf.close
-    
+      
+      @survey = Survey.find(params[:dataset][:survey])
       if check_datafile_ok filename
-        @survey = Survey.find(params[:dataset][:survey])
         dataset = Dataset.new
         dataset.current_version = 1
         dataset.survey = @survey
@@ -469,6 +469,15 @@ end
   def check_datafile_ok filename
     datafile = File.open(filename, "r")
     @new_variables =[]
+
+    #first check mime type
+    mimetype = `file --mime -br #{datafile.path}`.gsub(/\n/,"").split(';')[0]
+    if mimetype.index("text") == nil && mimetype.index("csv") == nil
+      possible_mimetype = `file -b #{datafile.path}`
+      @datafile_error = "MethodBox cannot process this file.  Is it really a tab or csv file? Checking the mime type revealed this: " + possible_mimetype
+      return false
+    end
+    
     header =  datafile.readline
     #split by tab
 
