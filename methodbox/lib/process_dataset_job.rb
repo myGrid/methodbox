@@ -255,7 +255,7 @@ def process_variable(variable)
   #Required because found a "9999999999999999999999999999999999999999999999999" in a String column
   if strings
     string_hash.sort.each do |key, frequency|
-      none_values_distribution_file.write (key.chomp.to_s + "," + frequency.to_s + "\n")
+      none_values_distribution_file.write(key.chomp.to_s + "," + frequency.to_s + "\n")
     end
     values_distribution_file.close
     no_value_stats(variable)

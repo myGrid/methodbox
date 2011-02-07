@@ -57,24 +57,41 @@ class DatasetsController < ApplicationController
   
   #update the metadata for this dataset
   def load_new_metadata
-    if @dataset.filename != nil
-    case params[:dataset_metadata_format]
-    when "CCSR"
-      read_ccsr_metadata
-    when "Methodbox"
-      read_methodbox_metadata
+    if @dataset.has_data != nil
+      uuid = UUIDTools::UUID.random_create.to_s
+      filename = File.join(METADATA_PATH, uuid + ".xml")
+      uf = File.open(filename,"w")
+      params[:file][:metadata].each_line do |line|                
+        uf.write(line)
+      end
+      uf.close
+      #first check mime type
+      mimetype = `file --mime -br #{filename}`.gsub(/\n/,"").split(';')[0]
+      if mimetype.index("xml") == nil && mimetype.index("XML") == nil
+        possible_mimetype = `file -b #{filename}`
+        respond_to do |format|
+          flash[:error] = "MethodBox cannot process this file.  Is it really an xml file? Checking the mime type revealed this: " + possible_mimetype
+          format.html { redirect_to dataset_path(@dataset) }
+        end
+      else  
+        begin 
+          logger.info("Starting metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
+          Delayed::Job.enqueue ProcessMetadataJob::StartJobTask.new(@dataset.id, current_user.id, params[:dataset_metadata_format], uf.path, params[:update][:reason], base_host)
+        rescue Exception => e
+          logger.error(e)
+          raise e
+        end   
+        respond_to do |format|
+          flash[:notice] = "The metadata is being updated. You will be emailed when it is ready."  
+          format.html { redirect_to dataset_path(@dataset) }
+        end
+      end
+    else
+      respond_to do |format|
+        flash[:error] = "There are no variables in this dataset.  Please upload a dataset file."
+        format.html { redirect_to dataset_path(@dataset) }
+      end
     end
-    @dataset.update_attributes(:has_variables=>true)
-    respond_to do |format|
-      flash[:notice] = "The metadata has been updated."  
-      format.html { redirect_to dataset_path(@dataset) }
-    end
-  else
-    respond_to do |format|
-      flash[:error] = "There are no variables in this dataset.  Please upload a dataset"
-      format.html { redirect_to dataset_path(@dataset) }
-    end
-  end
   end
   
   def update_data
@@ -119,7 +136,7 @@ class DatasetsController < ApplicationController
         dataset.uuid_filename = uuid + ".data"
         dataset.save
         load_dataset filename, dataset
-        dataset.update_attributes(:has_variables=>false)
+        dataset.update_attributes(:has_metadata=>false)
         @dataset = dataset
         respond_to do |format|
           format.html { redirect_to dataset_path(@dataset) }
@@ -302,137 +319,6 @@ class DatasetsController < ApplicationController
       raise e
     end  
   end
-  
-  #Read the metadata from a methodbox internal formatted xml file for a particular survey
-  def read_methodbox_metadata
-    #don't think we need encoding here
-    parser = XML::Parser.io(params[:file][:metadata])
-    doc = parser.parse
-    
-    nodes = doc.find('//metadata/variable')
-
-    nodes.each do |node|
-    
-      namenode = node.find('child::name')
-      namecontent = namenode.first.content
-              print " NAME: " + namecontent
-
-      variable_name = namecontent
-
-      descnode = node.find('child::description')
-      desccontent = descnode.first.content
-              print " DESC: " + desccontent
-      variable_value = desccontent
-    
-      catnode = node.find('child::category')
-      catcontent = catnode.first.content
-              print " CAT: " + catcontent
-      variable_category = catcontent
-      
-      dernode = node.find('child::derivation')
-      dercontent = dernode.first
-    
-      dertype = dercontent.find('child::type')
-      if dertype.first != nil
-        dertypecontent = dertype.first.content
-        variable_dertype = dertypecontent
-                  print " TYPE: " + dertypecontent
-      else
-                  print "TYPE: NIL"
-      end
-    
-      dermethod = dercontent.find('child::method')
-      if dermethod.first != nil
-        dermethodcontent = dermethod.first.content
-        variable_dermethod = dermethodcontent
-
-        page = dermethod[0].[]("page")
-
-        document = dermethod[0].[]("document")
-
-                  print "METHOD: " + dermethodcontent
-        if page != nil
-                       print " page: " + page + " document: " + document
-        end
-      else
-                  print "METHOD: NIL"
-      end
-      
-      infonode = node.find('child::information')
-      infocontent = infonode.first.content
-      variable_info = infocontent
-      print "INFO: " + infocontent
-      v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>variable_name})
-      if (v[0]!= nil)
-        v[0].update_attributes(:value=>variable_value, :dertype=>variable_dertype, :dermethod=>variable_dermethod, :info=>variable_info,:category=>variable_category, :page=>page, :document=>document, :update_reason=>params[:update][:reason])
-        
-        end
-      end
-  end
-  
-  #Read the metadata from a ccsr type xml file for a particular survey
-  def read_ccsr_metadata
-
-    @missing_variables=[]
-    parser = XML::Parser.io(params[:file][:metadata], :encoding => XML::Encoding::ISO_8859_1)
-    doc = parser.parse
-
-      nodes = doc.find('//ccsrmetadata/variables')
-      if nodes.size == 1
-      nodes[0].each_element do |node|
-        if (/^id_/.match(node.name)) 
-          name = node["variable_name"]
-          label = node["variable_label"]
-          v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
-          if (v[0]!= nil)
-            v[0].value_domains.each do |valdom|
-              valdom.delete
-            end
-          value_map = String.new
-          node.each_element do |child_node| 
-            if (!child_node.empty?) 
-              valDom = ValueDomain.new
-              valDom.variable = v[0]
-              valDom.label = child_node["value_name"]
-              valDom.value = child_node["value"]
-              value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
-              valDom.save
-            end
-        end
-          v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
-          
-        # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
-        end
-      end  
-  end
-else
-      nodes.each do |node|
-          name = node["variable_name"]
-          label = node["variable_label"]
-          v = Variable.find(:all,:conditions=> {:dataset_id => @dataset.id, :is_archived=>false, :name=>name})
-          if (v[0]!= nil)
-            v[0].value_domains.each do |valdom|
-              valdom.delete
-            end
-          value_map = String.new
-          node.each_element do |child_node| 
-            if (!child_node.empty?) 
-              valDom = ValueDomain.new
-              valDom.variable = v[0]
-              valDom.label = child_node["value_name"]
-              valDom.value = child_node["value"]
-              value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
-              valDom.save
-            end
-        end
-
-          v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>params[:update][:reason])
-          
-        # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
-        end 
-  end
-end
-end
   
    #if you own the parent survey or it is a ukda one and you are an admin
   def can_add_or_edit_datasets

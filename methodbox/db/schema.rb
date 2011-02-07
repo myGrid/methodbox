@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110127115437) do
+ActiveRecord::Schema.define(:version => 20110207110108) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(:version => 20110127115437) do
     t.string   "colour"
     t.string   "key_variable"
     t.integer  "current_version"
-    t.boolean  "has_variables"
+    t.boolean  "has_metadata"
     t.boolean  "has_data"
     t.integer  "updated_by"
     t.string   "uuid_filename"

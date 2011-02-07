@@ -15,7 +15,7 @@
       <%= file_field :file, :metadata -%>
     </p>
 	<p>
-		<% if @dataset.has_variables -%>
+		<% if @dataset.has_metadata -%>
 		<b><%= @dataset.name -%> already has metadata, uploading a new file will overwrite the old metadata.</b>
 		<% end -%>
 		<b>Metadata Format</b>

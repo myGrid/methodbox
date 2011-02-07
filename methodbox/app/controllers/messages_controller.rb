@@ -1,7 +1,7 @@
 # myExperiment: app/controllers/messages_controller.rb
 #
 # Copyright (c) 2007 University of Manchester and the University of Southampton.
-# See license.txt for details.
+# See license for details.
 
 class MessagesController < ApplicationController
   before_filter :login_required

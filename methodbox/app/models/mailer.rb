@@ -3,6 +3,27 @@ class Mailer < ActionMailer::Base
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
   
+  def metadata_processing_error(dataset_id, user_id, error, base_host)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Problem processing metadata for dataset " + Dataset.find(dataset_id).name
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :dataset => Dataset.find(dataset_id),
+         :error => error,
+         :host=>base_host
+  end
+  
+  def metadata_processed(dataset_id, user_id, base_host)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Metadta processed for dataset " + Dataset.find(dataset_id).name
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :dataset => Dataset.find(dataset_id),
+         :host=>base_host
+  end
+  
   def shibboleth_signup(user,base_host)
     subject     'MethodBox account activation'
     recipients  user.person.email_with_name
