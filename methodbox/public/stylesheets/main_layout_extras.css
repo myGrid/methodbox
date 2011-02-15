@@ -444,10 +444,10 @@ ul.vbuttons .category-browse.li {
 	padding-top: 10px;
 }
 #spinner {
-	position: absolute;
-	top:250px;
-	left:550px;
-	display: none;
+    left: 50%;
+    position: fixed;
+    top: 25%;
+/*	display: none;*/
 	z-index:1000;
 }
 #welcome-text {
