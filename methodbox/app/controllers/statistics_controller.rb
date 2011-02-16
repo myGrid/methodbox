@@ -17,6 +17,7 @@ class StatisticsController < ApplicationController
   def calculate_active_user_downloads
     @download_hash_week = Hash.new
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*7)..Time.now}).each do |download|
+      begin
       user = download.user
       if user == nil
         user_id = "unknown_user"
@@ -39,10 +40,13 @@ class StatisticsController < ApplicationController
              inner_hash[variable.dataset.survey_id] += 1
           end
         end
+      rescue
+      end
     end
     
     @download_hash_month = Hash.new
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*30)..Time.now}).each do |download|
+      begin
       user = download.user
       if user == nil
         user_id = "unknown_user"
@@ -65,10 +69,13 @@ class StatisticsController < ApplicationController
              inner_hash[variable.dataset.survey_id] += 1
           end
         end
+      rescue
+      end
     end
     
     @download_hash_six_months = Hash.new
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*180)..Time.now}).each do |download|
+      begin
       user = download.user
       if user == nil
         user_id = "unknown_user"
@@ -89,9 +96,12 @@ class StatisticsController < ApplicationController
             @download_hash_six_months[user_id][variable.dataset.survey_id] += 1
           end
         end
+      rescue
+      end
     end
     @download_hash_year = Hash.new
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*365)..Time.now}).each do |download|
+      begin
       user = download.user
       if user == nil
         user_id = "unknown_user"
@@ -112,6 +122,8 @@ class StatisticsController < ApplicationController
             @download_hash_year[user_id][variable.dataset.survey_id] += 1
           end
         end
+      rescue
+      end
     end
   end
   
@@ -124,6 +136,7 @@ class StatisticsController < ApplicationController
     
     # last week
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*7)..Time.now}).each do |download|
+      begin
       extract = Csvarchive.find(download.resource_id)
       variable_hash = Hash.new
       # only count each survey once
@@ -140,10 +153,13 @@ class StatisticsController < ApplicationController
           @week[key] += 1
         end
       end
+    rescue
+    end
     end
     
     # last month
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*30)..Time.now}).each do |download|
+      begin
         extract = Csvarchive.find(download.resource_id)
         variable_hash = Hash.new
         # only count each survey once
@@ -160,10 +176,13 @@ class StatisticsController < ApplicationController
             @month[key] += 1
           end
         end
+      rescue 
+      end
       end
     
     # last six months
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*180)..Time.now}).each do |download|
+      begin
         extract = Csvarchive.find(download.resource_id)
         variable_hash = Hash.new
         # only count each survey once
@@ -180,10 +199,14 @@ class StatisticsController < ApplicationController
             @six_months[key] += 1
           end
         end
+      rescue
+        
+      end
       end
     
     # last year
     Download.all(:conditions => {:resource_type=>"Csvarchive", :created_at => Time.now - (60*60*24*365)..Time.now}).each do |download|
+      begin
         extract = Csvarchive.find(download.resource_id)
         variable_hash = Hash.new
         # only count each survey once
@@ -200,6 +223,9 @@ class StatisticsController < ApplicationController
             @year[key] += 1
           end
         end
+      rescue
+      end
+      
       end
   end
   

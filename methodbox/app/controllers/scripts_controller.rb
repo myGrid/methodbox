@@ -418,7 +418,8 @@ class ScriptsController < ApplicationController
       end
 
     end
-    if !((params[:content][:data]).blank?)
+    if params[:content]
+      if !((params[:content][:data]).blank?)
       begin
       @script.content_blob.update_attributes(:data => params[:content][:data].read)
       @script.update_attributes(:original_filename => params[:content][:data].original_filename, :content_type => params[:content][:data].content_type)
@@ -426,6 +427,7 @@ class ScriptsController < ApplicationController
       puts "blob " + e
     end
     end
+  end
       # update 'last_used_at' timestamp on the Script
       params[:script][:last_used_at] = Time.now
 
