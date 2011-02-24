@@ -27,7 +27,7 @@
       <% end -%>
       <div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
         <div style="position: absolute; ;top:1em;left:1em"><%= text_field_tag :survey_search_query, @survey_search_query %>
-				<%= image_tag (method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
+				<%= image_tag(method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
           <%= submit_tag 'Search selected surveys',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {return true;}" %>
         </div>
 		  <% if logged_in? && !@recent_searches.empty? -%>
@@ -69,7 +69,7 @@
         <% @survey_hash.each_key do |key| -%>
           <div class="tabbertab" title="<%= @survey_hash[key][0].survey_type.name -%>">
             <h3>
-              <%= key -%>
+              <%= h key == nil ? @survey_hash[key][0].survey_type.name : key -%>
             </h3>
             <div>
               <%= render :partial => "single_survey_check", :locals => { :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %>

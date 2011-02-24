@@ -1,0 +1,10 @@
+<div id="nesstar-survey-table">
+	<% form_tag new_nesstar_datasource_surveys_url do %>
+
+	<%= text_field_tag 'nesstar_url', 'Enter url to catalog...' -%>
+	<%= text_field_tag 'nesstar_catalog', 'Enter catalog id...' -%>
+
+	<%= submit_tag 'Fetch catalogs' %>
+	<% end %>
+	Might take some time to retrieve list of datasets, please be patient.
+</div>

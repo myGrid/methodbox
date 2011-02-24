@@ -36,7 +36,7 @@
         		<b>Description</b>
         		<% unless @survey.description.blank? -%>
         			<div class="box_standout">
-          				<%= simple_format(white_list(@survey.description)) -%>
+          				<%= h simple_format(white_list(@survey.description)) -%>
         			</div>
       			<% else -%>
         			<p class="none_text">

@@ -6,6 +6,10 @@ class Survey < ActiveRecord::Base
   
   belongs_to :survey_type
   
+  belongs_to :survey
+  
+  has_many :surveys
+  
   has_many :notes, :as => :notable
   
   has_many :comments, :as => :commentable

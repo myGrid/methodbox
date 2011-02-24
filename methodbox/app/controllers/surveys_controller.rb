@@ -28,6 +28,54 @@ class SurveysController < ApplicationController
   
   after_filter :update_last_user_activity
   
+  #list of surveys to add to the db
+  def add_nesstar_surveys
+    respond_to do |format|
+      begin
+        Delayed::Job.enqueue AddNesstarSurveysJob::StartJobTask.new(params[:datasets], params[:nesstar_url], params[:nesstar_catalog], current_user.id, base_host)
+        flash[:notice] = "Surveys are being added to MethodBox.  You will receive an email when it is complete."
+      rescue Exception => e
+        flash[:error] = "There was a problem adding the datasets. Please try again later."
+        puts e
+      ensure
+        format.html {redirect_to surveys_url}
+      end
+    end
+  end
+  
+  #retrieve list of catalogs from a nesstar server
+  def new_nesstar_datasource
+    @nesstar_url = params[:nesstar_url]
+    @nesstar_catalog = params[:nesstar_catalog]
+    nesstar_api = Nesstar::Api::CatalogApi.new
+    nodes = nesstar_api.get_nodes(@nesstar_url, @nesstar_catalog)
+    @survey_types = Hash.new
+    @surveys = Hash.new
+    @datasets = Hash.new
+    begin
+      nesstar_api.parse_surveys_from_nodes nodes.root, @surveys, @survey_types
+      # @surveys.each_key do |survey|
+      #   @surveys[survey].each do |dataset|
+      #     info = nesstar_api.get_simple_study_information @nesstar_url, dataset.split('/').last
+      #     @datasets[dataset] = info.title
+      #   end
+      # end
+    rescue Exception => e
+      respond_to do |format|
+        flash[:error] = "There seems to be problems with the nesstar server.  Please try again later."
+        format.html {redirect_to surveys_url}
+      end
+    end
+    # render :update, :status=>:created do |page|
+    #   page.replace_html "nesstar-survey-table", :partial => "nesstar_surveys", :locals=>{:surveys => surveys, :survey_types => survey_types}
+    # end
+  end
+  
+  #entry route to add a catalog
+  def nesstar_datasource
+    
+  end
+  
   #find all the variables for a particular survey
   def show_all_variables
     @survey = Survey.find(params[:id])

@@ -41,14 +41,18 @@
         <% end -%>
       </div>
        <div class="col6">
-        <%= dataset.survey.survey_type.shortname -%>
+        <%= dataset.survey.survey_type.shortname ? dataset.survey.survey_type.shortname : truncate(dataset.survey.title, 10, "...")-%>
       </div>
       <div class="col7">
         <%= link_to dataset.name, dataset_url(dataset) -%>
       </div>
       <div class="col8">
+		<% if dataset.survey.year != nil %>
 	<!-- replace any '-' characters with space -->
         <%= dataset.survey.year.tr('-',' ') -%>
+		<% else %>
+		<%= 'N/A' -%>
+		<% end %>
       </div>
 	 <div class="col9">
         <%= popularity -%>

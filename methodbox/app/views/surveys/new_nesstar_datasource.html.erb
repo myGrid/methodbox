@@ -1,0 +1,24 @@
+<div class="survey-table" style="width:100%">
+<% form_tag add_nesstar_surveys_surveys_url do %>
+<%= hidden_field_tag 'nesstar_url', @nesstar_url %>
+<%= hidden_field_tag 'nesstar_catalog', @nesstar_catalog %>
+	<table style="width:100%">
+		<thead>		
+			<tr style="text-align: center"><th style="width:10%"></th><th style="width:10%">Parent Catalogue</th><th style="width:40%">Dataset Catalogue</th><th style="width:40%">Dataset</th></tr>	
+		</thead>
+		<tbody>
+			<% @survey_types.each_key do |survey_type| %>
+				<% @surveys.each_key do |survey| %>
+					<% if @survey_types[survey_type].include?(survey) %>
+						<% @surveys[survey].each do |dataset| %>
+							<tr style="text-align: center"><td><%= check_box_tag "datasets[]", dataset.split('/').last, true -%></td><td><%= survey_type.split('/').last %></td><td><%= survey.split('/').last %></td><td><%= dataset.split('/').last %></td></tr>
+						<% end %>
+					<% end %>
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+	<%= submit_tag 'Add these surveys'%>
+	<% end %>
+</div>
+
