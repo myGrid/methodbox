@@ -14,13 +14,17 @@ require 'nesstar-api/study_date'
 require 'nesstar-api/variable'
 require 'nesstar-api/summary_stat'
 
+#Methods for retrieving Nesstar catalog hierarchy and 
+#metadata information
 module Nesstar
   module Api
     
     class CatalogApi
       
-      #given tree of datasets and catalogs figure out which are the
-      #survey types, which are surveys and link them to child datasets
+      #Given tree of datasets and catalogs, contained in a RubyTree Node object
+      #figure out which are the survey types, which are surveys and link them to child datasets
+      #This is to match the MethodBox (http://www.methodbox.org) data model, basically
+      #a dataset belongs to a survey which has a survey type.
       def parse_surveys_from_nodes node, surveys_hash, survey_types_hash
         node.children.each do |node|
           if node.name.index('fStudy')
@@ -59,6 +63,14 @@ module Nesstar
         end
       end
 
+      #Get a hash of catalogs to child catalogs and datasets from a
+      #Nesstar instance.  The children will be contained in an Array object
+      #Inputs are a url to the nesstar server eg
+      #http://nesstar.somewhere.com and a catalog id eg myCatalog
+      #If there appears to be no parent catalog for something then
+      #the key will be listed as 'none'
+      #
+      #Returns a Hash of catalogs to children
       def get_catalog url, catalog
         
         #Hash of catalogs to their child datasets
@@ -75,6 +87,11 @@ module Nesstar
         return catalog_hash
       end
       
+      #Given a Nesstar url and catalog eg
+      #http://nesstar.somewhere.com and a catalog id eg myCatalog
+      #the return a RubyTree node object containing the hierarchy.
+      #
+      #Returns a RubyTree Node
       def get_nodes url, catalog
         #tree of catalogs to their child datasets
         root_tree_node = Tree::TreeNode.new(catalog, "Catalog Content")
@@ -90,7 +107,10 @@ module Nesstar
         return root_tree_node
       end
       
-      #get the ddi xml for a nesstar dataset
+      #Get the ddi xml for a nesstar dataset given a Nesstar url and catalog eg
+      #http://nesstar.somewhere.com and a catalog id eg myCatalog
+      #
+      #returns the ddi xml raw string
       def get_ddi uri, dataset
         ddi_uri = URI.parse(uri)
         ddi_uri.merge!("/obj/fStudy/" + dataset)
@@ -102,8 +122,10 @@ module Nesstar
       end
       
       #return a catalog object with information inside it
-      #uri is something like http://nesstar.here.com
-      #catalog is the name of the catalog eg Catalog20
+      #given a Nesstar url and catalog eg
+      #http://nesstar.somewhere.com and a catalog id eg myCatalog
+      #
+      #Returns a Nesstar::Catalog object
       def get_catalog_information uri, catalog
         catalog_uri = URI.parse(uri)
         catalog_uri.merge!("/obj/fCatalog/" + catalog)
@@ -119,7 +141,11 @@ module Nesstar
         return catalog
       end
       
-      #information about the dataset only
+      #Get basic information about the dataset only given a Nesstar url and catalog eg
+      #http://nesstar.somewhere.com and a catalog id eg myCatalog
+      #No information about the variables a study (ie dataset) contains are returned
+      #
+      #Returns a Nesstar::Study object
       def get_simple_study_information uri, dataset
         dataset_uri = URI.parse(uri)
         dataset_uri.merge!("/obj/fStudy/" + dataset)
@@ -136,7 +162,11 @@ module Nesstar
       end
       
       #information about the dataset and its variables
-      #inputs are the uri to a dataset file
+      #given a Nesstar url and catalog eg
+      #http://nesstar.somewhere.com and a catalog id eg myCatalog
+      #The study will contain variable level information if available
+      #
+      #Returns a Nesstar::Study object
       def get_study_information uri, dataset
         #TODO use the get_ddi method above
         ddi_uri = URI.parse(uri)
