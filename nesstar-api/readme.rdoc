@@ -1,0 +1,3 @@
+= Introduction
+
+Nesstar is a software system for publishing data on the Web (see http://www.nesstar.com), it is used by lots of data providers including the UKs ESDS.  Lots of metadata about the surveys a nesstar instance contains is available using their API.  This Ruby gem allows you to pull out information about the catalogs and datasets any nesstar server contains as well as download ddi metadata files.  The gem was originally used for the deployed MethodBox system (see http://www.methodbox.org) to allow users to search for data sources other than that which it hosted itself.
