@@ -1,10 +1,15 @@
-<div id="nesstar-survey-table">
+<div id="nesstar-survey-table" class="show_basic center">
+	<h1 class="contribution_title" style="border-bottom: 1px dotted; margin-bottom: 1em;">Add a Nesstar Datasource</h1>
 	<% form_tag new_nesstar_datasource_surveys_url do %>
-
+<div>
 	<%= text_field_tag 'nesstar_url', 'Enter url to catalog...' -%>
 	<%= text_field_tag 'nesstar_catalog', 'Enter catalog id...' -%>
-
+</div>
+<div style="margin-top: 1em; margin-bottom: 1em;">
 	<%= submit_tag 'Fetch catalogs' %>
+</div>
 	<% end %>
-	Might take some time to retrieve list of datasets, please be patient.
+<div>
+<p class="center" style="font-size: small; color: gray;">(Note: It might take some time to retrieve the list of datasets, please be patient)<p>
+</div>
 </div>

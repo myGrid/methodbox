@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110207110108) do
+ActiveRecord::Schema.define(:version => 20110228134900) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -155,7 +155,7 @@ ActiveRecord::Schema.define(:version => 20110207110108) do
     t.integer  "survey_id"
     t.string   "name"
     t.string   "filename"
-    t.string   "description"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "colour"

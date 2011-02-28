@@ -1,24 +1,30 @@
 <div class="survey-table" style="width:100%">
+	<h1 class="contribution_title" style="border-bottom: 1px dotted; margin-bottom: 1em;">Select some catalogs/datasets and add them</h1>
 <% form_tag add_nesstar_surveys_surveys_url do %>
 <%= hidden_field_tag 'nesstar_url', @nesstar_url %>
 <%= hidden_field_tag 'nesstar_catalog', @nesstar_catalog %>
-	<table style="width:100%">
-		<thead>		
-			<tr style="text-align: center"><th style="width:10%"></th><th style="width:10%">Parent Catalogue</th><th style="width:40%">Dataset Catalogue</th><th style="width:40%">Dataset</th></tr>	
+<div class="center" style="margin-bottom: 1em;">
+	<%= submit_tag 'Add these surveys'%>
+</div>
+	<table style="width:100%; border-bottom: 1px solid black;">
+		<thead style="border: 1px solid black;">		
+			<tr style="text-align: center;"><th style="width:10%; border-right: 1px solid black; border-bottom: 1px solid black;"></th><th style="background-color: gold; width:10%; border: 1px solid black;">Parent Catalogue</th><th style="background-color: gold; width:40%; border: 1px solid black;">Dataset Catalogue</th><th style="background-color: gold; width:40%; border: 1px solid black;">Dataset</th></tr>	
 		</thead>
 		<tbody>
 			<% @survey_types.each_key do |survey_type| %>
 				<% @surveys.each_key do |survey| %>
 					<% if @survey_types[survey_type].include?(survey) %>
 						<% @surveys[survey].each do |dataset| %>
-							<tr style="text-align: center"><td><%= check_box_tag "datasets[]", dataset.split('/').last, true -%></td><td><%= survey_type.split('/').last %></td><td><%= survey.split('/').last %></td><td><%= dataset.split('/').last %></td></tr>
+							<tr style="text-align: center;"><td style="background-color: gold; border: 1px solid black;"><%= check_box_tag "datasets[]", dataset.split('/').last, true -%></td><td style="border: 1px solid black;"><%= survey_type.split('/').last %></td><td style="border: 1px solid black;"><%= survey.split('/').last %></td><td style="border: 1px solid black;"><%= dataset.split('/').last %></td></tr>
 						<% end %>
 					<% end %>
 				<% end %>
 			<% end %>
 		</tbody>
 	</table>
+<div class="center" style="margin-top: 1em;">
 	<%= submit_tag 'Add these surveys'%>
+</div>
 	<% end %>
 </div>
 
