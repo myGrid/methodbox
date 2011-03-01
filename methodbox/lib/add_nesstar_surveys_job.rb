@@ -68,6 +68,8 @@ module AddNesstarSurveysJob
                     policy = Policy.create(:name => "survey_policy", :sharing_scope => 3, :use_custom_sharing => false, :access_type => 2, :contributor => User.find(user_id))
                     catalog_survey.asset.policy = policy
                     policy.save
+                    catalog_survey.asset.contributor_type='User'
+                    catalog_survey.asset.contributor_id = user_id
                     catalog_survey.asset.save
                   else
                     catalog_survey = catalog_surveys[0]

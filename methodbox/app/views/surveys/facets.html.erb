@@ -9,24 +9,27 @@
 <% form_tag(:action => "search_variables") do -%>
 <!-- <div class="search-box-header">Find variables in selected surveys
 </div> -->
-<div class="survey-search-box">
+<div class="survey-search-box center" style="margin: 2em; border-bottom: 2px solid; padding-bottom: 1em;">
 <%= text_field_tag :survey_search_query, @survey_search_query %>
 <%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
 </div>
 <div ex:role="viewPanel" class="view-content left">
-	<div ex:role="lens" class="content" ex:onshow="prepareLens(this);">
-		<div class="exhibit-checkbox-div" style="float:left;">
+	<div ex:role="lens" class="content" style="margin-bottom: 0.5em; border-bottom: 1px dotted; padding-bottom: 0.5em; padding-top: 0.5em;" ex:onshow="prepareLens(this);">
+		<div class="exhibit-checkbox-div" style="float:left;" style="width: 10%;">
 		</div>
-		<div class="inner-view-content-block">
-			<div class="inner-view-content-description">
+		<div class="inner-view-content-block right" style="width: 90%;">
+			<div class="inner-view-content-description bold" style="margin-bottom: 0.5em; text-align: center;">
 				<span ex:content=".name" ></span>
 			</div>
-		<div class="inner-view-content-description">
+		<div class="inner-view-content-description" style="margin-bottom: 0.5em; background-color: #FFFFCC; border: 1px dotted gray; padding: 2px;">
 			<span ex:content=".dataset-description" ></span>
 		</div>
-		<div class="inner-view-content">
-      		<span ex:content=".survey-type" ></span><span ex:content=".year" ></span>
+		<div class="inner-view-content small-font">
+      		Survey type is <span ex:content=".survey-type" style="font-style: italic; font-size: larger; color: grey;"></span> and year is <span ex:content=".year" style="font-style: italic; font-size: larger; color: grey;"></span>
     	</div>
+		<!-- <div class="inner-view-content">
+      		<b>Year:</b></span><span ex:content=".year" ></span>
+    	</div> -->
     	<div class="inner-view-content">
     		<span ex:content=".url"></span>
 		</div>
@@ -38,21 +41,22 @@
 		<!-- <div ex:role="view"> -->
 		
 	</div>
-	<div ex:role="exhibit-view"
+	<!-- <div ex:role="exhibit-view"
         ex:viewClass="Exhibit.TabularView"
         ex:columns=".survey-type, .dataset-description, .year"
         ex:columnLabels="survey, description, year"
         ex:columnFormats="list, list, list"
         ex:sortColumn="2"
         ex:sortAscending="false">
-    </div>
+    </div> -->
 </div>
 <div class="facet-view-content right">
-	<div class="facet-wrapper">
-		<div class="exhibit-facet-header">Search for surveys</div>
+	<div class="facet-wrapper" style="margin-bottom: 1em;">
+		<div class="exhibit-facet-header center" style="font-size: larger;
+		    font-weight: bold; margin-bottom: 0.5em;">Find surveys</div>
 		<div ex:role="facet" ex:facetClass="TextSearch"></div>
 	</div>
-	<div class="facet-wrapper">
+	<div class="facet-wrapper" style="margin-bottom: 1em;">
 		<div ex:role="facet" ex:expression=".survey-type" ex:facetLabel="Survey type"></div>
 	</div>
 	<div class="facet-wrapper">
@@ -60,7 +64,10 @@
 	</div>
 </div>
 <div style="clear:both;"></div>
-
+<div class="survey-search-box center" style="margin: 2em; border-top: 2px solid; padding-top: 1em;">
+<%= text_field_tag :survey_search_query, @survey_search_query %>
+<%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
+</div>
 <% end %>
 
 <script type="text/javascript">

@@ -322,10 +322,13 @@ ul.vbuttons li a {
   background-position: top;
   background-repeat: repeat-x;
   background-color: #EEF6FF;
-  border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
+  border-radius: 6px;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
   color: #595246;
+  -moz-box-shadow: 2px 2px 2px gray;
+  -webkit-box-shadow: gray 2px 2px 2px;
+  box-shadow: 2px 2px 2px gray;
 }
 
 ul.vbuttons li a:hover {
@@ -631,4 +634,15 @@ display: block;
 /* 2 pixel padding around the element */
 .small-padding {
 	padding: 2px;
+}
+.bold {
+	font-weight: bold;
+	font-size: large;
+}
+.small-font {
+	font-size: 83%;
+}
+div.exhibit-collectionView-header {
+	text-align: center;
+	border-bottom: 1px dotted;
 }
