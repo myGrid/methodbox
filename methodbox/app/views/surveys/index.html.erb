@@ -69,7 +69,8 @@
         <% @survey_hash.each_key do |key| -%>
           <div class="tabbertab" title="<%= @survey_hash[key][0].survey_type.name -%>">
             <h3>
-              <%= h key == nil ? @survey_hash[key][0].survey_type.name : key -%>
+				<%= h truncate(@survey_hash[key][0].survey_type.name, 10, '...') -%>
+              	<%#= h key == nil ? @survey_hash[key][0].survey_type.name : key -%>
             </h3>
             <div>
               <%= render :partial => "single_survey_check", :locals => { :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %>

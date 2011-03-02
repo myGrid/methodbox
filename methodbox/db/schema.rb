@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110228134900) do
+ActiveRecord::Schema.define(:version => 20110302102212) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -484,6 +484,7 @@ ActiveRecord::Schema.define(:version => 20110228134900) do
     t.string   "UKDA_summary"
     t.string   "headline_report"
     t.integer  "survey_type_id"
+    t.string   "source"
   end
 
   create_table "taggings", :force => true do |t|

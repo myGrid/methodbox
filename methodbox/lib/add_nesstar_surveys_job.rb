@@ -62,7 +62,7 @@ module AddNesstarSurveysJob
                   #find existing survey or create new one
                   catalog_surveys = Survey.all(:conditions => {:title => parent_info.label, :survey_type_id => catalog_survey_type.id})
                   if catalog_surveys.empty?
-                    catalog_survey = Survey.new(:title => parent_info.label, :description => parent_info.description, :survey_type_id => catalog_survey_type.id)
+                    catalog_survey = Survey.new(:title => parent_info.label, :description => parent_info.description, :survey_type_id => catalog_survey_type.id, :year => 'N/A')
                     catalog_survey.save
                     #TODO user can define policy when adding the surveys
                     policy = Policy.create(:name => "survey_policy", :sharing_scope => 3, :use_custom_sharing => false, :access_type => 2, :contributor => User.find(user_id))
