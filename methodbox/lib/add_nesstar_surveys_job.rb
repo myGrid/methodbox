@@ -62,7 +62,7 @@ module AddNesstarSurveysJob
                   #find existing survey or create new one
                   catalog_surveys = Survey.all(:conditions => {:title => parent_info.label, :survey_type_id => catalog_survey_type.id})
                   if catalog_surveys.empty?
-                    catalog_survey = Survey.new(:title => parent_info.label, :description => parent_info.description, :survey_type_id => catalog_survey_type.id, :year => 'N/A')
+                    catalog_survey = Survey.new(:title => parent_info.label, :description => parent_info.description, :survey_type_id => catalog_survey_type.id, :year => 'N/A', :source => 'nesstar', :nesstar_id => parent_info.nesstar_id)
                     catalog_survey.save
                     #TODO user can define policy when adding the surveys
                     policy = Policy.create(:name => "survey_policy", :sharing_scope => 3, :use_custom_sharing => false, :access_type => 2, :contributor => User.find(user_id))
@@ -77,7 +77,7 @@ module AddNesstarSurveysJob
                   #create new dataset and save it
                   catalog_datasets = Dataset.all(:conditions => {:filename => study.variables[0].file, :name => study.title, :survey_id => catalog_survey.id})
                   if catalog_datasets.empty?
-                    catalog_dataset = Dataset.new(:current_version => 1, :filename => study.variables[0].file, :name => study.title, :description => study.abstract, :survey => catalog_survey)
+                    catalog_dataset = Dataset.new(:current_version => 1, :filename => study.variables[0].file, :name => study.title, :description => study.abstract, :survey => catalog_survey, :nesstar_id => study.nesstar_id)
                     catalog_dataset.save
                   else
                     #this should be a new dataset so throw exception and carry on to the next
@@ -85,7 +85,7 @@ module AddNesstarSurveysJob
                   end
                   #create variables for the dataset
                   study.variables.each do |variable|
-                    var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable.group, :dataset => catalog_dataset)
+                    var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable.group, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file)
                     logger.info Time.now.to_s + " : saving variable " + variable.name + " from " + study.title
                     var.save
                   end
