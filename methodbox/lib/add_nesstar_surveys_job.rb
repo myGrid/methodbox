@@ -39,13 +39,12 @@ module AddNesstarSurveysJob
                   
                   study = n.get_study_information nesstar_url, dataset
                   
-                  
                   #TODO - pass in ukda status
                   #find exisitng survey type or create new one
                   if survey_type_info != nil
                     catalog_survey_types = SurveyType.all(:conditions=>{:name => survey_type_info.label})
                     if catalog_survey_types.empty?
-                      catalog_survey_type = SurveyType.new(:name => survey_type_info.label, :description => survey_type_info.description)
+                      catalog_survey_type = SurveyType.new(:name => survey_type_info.label, :description => survey_type_info.description.gsub(/<\/?[^>]*>/, ""))
                       catalog_survey_type.save
                     else
                       catalog_survey_type = catalog_survey_types[0]
@@ -62,7 +61,7 @@ module AddNesstarSurveysJob
                   #find existing survey or create new one
                   catalog_surveys = Survey.all(:conditions => {:title => parent_info.label, :survey_type_id => catalog_survey_type.id})
                   if catalog_surveys.empty?
-                    catalog_survey = Survey.new(:title => parent_info.label, :description => parent_info.description, :survey_type_id => catalog_survey_type.id, :year => 'N/A', :source => 'nesstar', :nesstar_id => parent_info.nesstar_id)
+                    catalog_survey = Survey.new(:title => parent_info.label, :description => parent_info.description.gsub(/<\/?[^>]*>/, ""), :survey_type_id => catalog_survey_type.id, :year => 'N/A', :source => 'nesstar', :nesstar_id => parent_info.nesstar_id, :nesstar_uri => parent_info.nesstar_uri)
                     catalog_survey.save
                     #TODO user can define policy when adding the surveys
                     policy = Policy.create(:name => "survey_policy", :sharing_scope => 3, :use_custom_sharing => false, :access_type => 2, :contributor => User.find(user_id))
@@ -77,7 +76,7 @@ module AddNesstarSurveysJob
                   #create new dataset and save it
                   catalog_datasets = Dataset.all(:conditions => {:filename => study.variables[0].file, :name => study.title, :survey_id => catalog_survey.id})
                   if catalog_datasets.empty?
-                    catalog_dataset = Dataset.new(:current_version => 1, :filename => study.variables[0].file, :name => study.title, :description => study.abstract, :survey => catalog_survey, :nesstar_id => study.nesstar_id)
+                    catalog_dataset = Dataset.new(:current_version => 1, :filename => study.variables[0].file, :name => study.title, :description => study.abstract.gsub(/<\/?[^>]*>/, ""), :survey => catalog_survey, :nesstar_id => study.nesstar_id, :nesstar_uri => study.nesstar_uri)
                     catalog_dataset.save
                   else
                     #this should be a new dataset so throw exception and carry on to the next
@@ -85,7 +84,7 @@ module AddNesstarSurveysJob
                   end
                   #create variables for the dataset
                   study.variables.each do |variable|
-                    var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable.group, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file)
+                    var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable.group, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable,min)
                     logger.info Time.now.to_s + " : saving variable " + variable.name + " from " + study.title
                     var.save
                     variable.categories.each do |category|
@@ -94,6 +93,21 @@ module AddNesstarSurveysJob
                       valDom = ValueDomain.new(:variable => variable, :value => category.value, :label => category.label)
                       valDom.save
                     end
+                    variable.summary_stats.each do |summary_stat|
+                      if summary_stat.type == 'mean'
+                        variable.update_attribute(:mean => summary_stat.value)
+                      elsif summary_stat.type == 'stdev'
+                        variable.update_attribute(:standard_deviation => summary_stat.value)
+                      elsif summary_stat.type == 'invd'
+                        variable.update_attribute(:invalid_entries => summary_stat.value)
+                      elsif summary_stat.type == 'vald'
+                        variable.update_attribute(:valid_entries => summary_stat.value)
+                      end
+                    end
+                    question = variable.question != nil ? variable.question : ""
+                    interview = derivation_method + variable.interview_instruction != nil ? variable.interview_instruction : ""
+                    derivation = question + interview
+                    variable.update_attribute(:dermethod => derivation) unless variable.question == nil && variable.interview_instruction == nil
                   end
                   break
                 end

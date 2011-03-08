@@ -137,6 +137,7 @@ module Nesstar
         description = doc.xpath('//s:comment')
         catalog = Nesstar::Catalog.new
         catalog.nesstar_id = catalog
+        catalog.nesstar_uri = uri
         catalog.label = label[0].content.strip unless label[0] == nil
         catalog.description = description[0].content.strip unless description[0] == nil
         return catalog
@@ -157,7 +158,8 @@ module Nesstar
         label = doc.xpath('//s:label')
         description = doc.xpath('//s:comment')
         study = Nesstar::Study.new
-        study.study_id = dataset
+        study.nesstar_id = dataset
+        study.nesstar_uri = uri
         study.title = label[0].content.strip unless label[0] == nil
         study.abstract = description[0].content.strip unless description[0] == nil
         return study
@@ -179,7 +181,8 @@ module Nesstar
         xml = gz.read
         catalog = Nesstar::Catalog.new
         study = Nesstar::Study.new
-        study.study_id = dataset
+        study.nesstar_id = dataset
+        study.nesstar_uri = uri
         study_info_hash = Hash.new
         parser = LibXML::XML::Parser.string(xml)
         doc = parser.parse

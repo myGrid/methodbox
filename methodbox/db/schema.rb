@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110302105522) do
+ActiveRecord::Schema.define(:version => 20110307134401) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(:version => 20110302105522) do
     t.string   "uuid_filename"
     t.string   "reason_for_update"
     t.string   "nesstar_id"
+    t.string   "nesstar_uri"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -487,6 +488,7 @@ ActiveRecord::Schema.define(:version => 20110302105522) do
     t.integer  "survey_type_id"
     t.string   "source"
     t.string   "nesstar_id"
+    t.string   "nesstar_uri"
   end
 
   create_table "taggings", :force => true do |t|
@@ -627,6 +629,9 @@ ActiveRecord::Schema.define(:version => 20110302105522) do
     t.integer  "number_of_blank_rows"
     t.string   "nesstar_file"
     t.string   "nesstar_id"
+    t.string   "interval"
+    t.integer  "valid_entries"
+    t.integer  "invalid_entries"
   end
 
   create_table "watched_variables", :force => true do |t|
