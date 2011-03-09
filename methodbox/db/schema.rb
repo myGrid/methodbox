@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110307134401) do
+ActiveRecord::Schema.define(:version => 20110309121234) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -468,6 +468,8 @@ ActiveRecord::Schema.define(:version => 20110307134401) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "is_ukda"
+    t.string   "nesstar_uri"
+    t.string   "nesstar_id"
   end
 
   create_table "surveys", :force => true do |t|

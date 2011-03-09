@@ -36,6 +36,7 @@ class SurveysController < ApplicationController
         flash[:notice] = "Surveys are being added to MethodBox.  You will receive an email when it is complete."
       rescue Exception => e
         flash[:error] = "There was a problem adding the datasets. Please try again later."
+        logger.error Time.now.to_s + ", There was a problem adding the datasets. Please try again later. " + e
         puts e
       ensure
         format.html {redirect_to surveys_url}
@@ -278,10 +279,10 @@ class SurveysController < ApplicationController
       unless survey.datasets.empty? 
         unless !Authorization.is_authorized?("show", nil, survey, current_user)
       # unless survey.survey_type.is_ukda && !@ukda_registered
-          if (!@survey_hash.has_key?(survey.survey_type.shortname))
-            @survey_hash[survey.survey_type.shortname] = Array.new
+          if (!@survey_hash.has_key?(survey.survey_type.name))
+            @survey_hash[survey.survey_type.name] = Array.new
           end
-          @survey_hash[survey.survey_type.shortname].push(survey)
+          @survey_hash[survey.survey_type.name].push(survey)
         end
     # end
       else

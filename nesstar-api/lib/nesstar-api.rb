@@ -126,9 +126,9 @@ module Nesstar
       #http://nesstar.somewhere.com and a catalog id eg myCatalog
       #
       #Returns a Nesstar::Catalog object
-      def get_catalog_information uri, catalog
+      def get_catalog_information uri, catalog_id
         catalog_uri = URI.parse(uri)
-        catalog_uri.merge!("/obj/fCatalog/" + catalog)
+        catalog_uri.merge!("/obj/fCatalog/" + catalog_id)
         catalog_res = Net::HTTP.get(catalog_uri)
         gz = Zlib::GzipReader.new(StringIO.new(catalog_res))
         catalog_info = gz.read
@@ -136,7 +136,7 @@ module Nesstar
         label = doc.xpath('//s:label')
         description = doc.xpath('//s:comment')
         catalog = Nesstar::Catalog.new
-        catalog.nesstar_id = catalog
+        catalog.nesstar_id = catalog_id
         catalog.nesstar_uri = uri
         catalog.label = label[0].content.strip unless label[0] == nil
         catalog.description = description[0].content.strip unless description[0] == nil
@@ -148,9 +148,9 @@ module Nesstar
       #No information about the variables a study (ie dataset) contains are returned
       #
       #Returns a Nesstar::Study object
-      def get_simple_study_information uri, dataset
+      def get_simple_study_information uri, dataset_id
         dataset_uri = URI.parse(uri)
-        dataset_uri.merge!("/obj/fStudy/" + dataset)
+        dataset_uri.merge!("/obj/fStudy/" + dataset_id)
         dataset_res = Net::HTTP.get(dataset_uri)
         gz = Zlib::GzipReader.new(StringIO.new(dataset_res))
         dataset_info = gz.read
@@ -158,7 +158,7 @@ module Nesstar
         label = doc.xpath('//s:label')
         description = doc.xpath('//s:comment')
         study = Nesstar::Study.new
-        study.nesstar_id = dataset
+        study.nesstar_id = dataset_id
         study.nesstar_uri = uri
         study.title = label[0].content.strip unless label[0] == nil
         study.abstract = description[0].content.strip unless description[0] == nil
@@ -171,17 +171,17 @@ module Nesstar
       #The study will contain variable level information if available
       #
       #Returns a Nesstar::Study object
-      def get_study_information uri, dataset
+      def get_study_information uri, dataset_id
         #TODO use the get_ddi method above
         ddi_uri = URI.parse(uri)
-        ddi_uri.merge!("/obj/fStudy/" + dataset)
+        ddi_uri.merge!("/obj/fStudy/" + dataset_id)
         ddi_uri.merge!('?http://www.nesstar.org/rdf/method=http://www.nesstar.org/rdf/Dataset/GetDDI')
         res = Net::HTTP.get(ddi_uri)
         gz = Zlib::GzipReader.new(StringIO.new(res))
         xml = gz.read
         catalog = Nesstar::Catalog.new
         study = Nesstar::Study.new
-        study.nesstar_id = dataset
+        study.nesstar_id = dataset_id
         study.nesstar_uri = uri
         study_info_hash = Hash.new
         parser = LibXML::XML::Parser.string(xml)
