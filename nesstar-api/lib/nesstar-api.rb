@@ -356,13 +356,13 @@ module Nesstar
             else
               category.label = 'N/A'
             end
-            catstat = cat.find('./catStat')
+            catstats = cat.find('./catStat')
             category_statistics = []
-            catstat.each do |cat|
+            catstats.each do |catstat|
               category_statistic = Nesstar::CategoryStatistic.new
-              a = cat.first.attributes unless cat.first == nil
-              if a != nil
-                category_statistic.type = a.get_attribute('type').strip unless a.get_attribute('type') == nil
+              a = catstat.attributes
+              if a != nil && a.get_attribute('type') != nil
+                category_statistic.type = a.get_attribute('type').value.strip
                 category_statistic.value = catstat.first.content.strip unless catstat.first == nil
                 category_statistics.push(category_statistic)
               end

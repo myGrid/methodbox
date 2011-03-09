@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110309121234) do
+ActiveRecord::Schema.define(:version => 20110309153930) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -561,6 +561,13 @@ ActiveRecord::Schema.define(:version => 20110309121234) do
     t.datetime "last_user_activity"
     t.boolean  "shibboleth"
     t.string   "shibboleth_user_id"
+  end
+
+  create_table "value_domain_statistics", :force => true do |t|
+    t.string   "value_domain_id"
+    t.string   "frequency"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "value_domains", :force => true do |t|

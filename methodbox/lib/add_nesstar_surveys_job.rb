@@ -109,13 +109,19 @@ module AddNesstarSurveysJob
                     logger.info Time.now.to_s + " : saving variable " + variable.name + " from " + study.title
                     var.save
                     variable.categories.each do |category|
-                      category.category_statistics.each do |statistic|
-                      #TODO: the statistics for each category. They are saved in the category object but we might need to play
-                      #around with the variable statistics stuff to make it all play nicely
-                        
-                      end
                       valDom = ValueDomain.new(:variable => var, :value => category.value, :label => category.label)
                       valDom.save
+                      category.category_statistics.each do |statistic|
+                      #the frequency statistics for the value domain
+                      #guessing that 'freq' is consistent, however......
+                        if statistic.type == 'freq'
+                          puts "statistic for " + variable.name + " " + statistic.value
+                          val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain => valDom)
+                          val_dom_stat.save
+                          break
+                        end
+                        
+                      end
                     end
                     variable.summary_stats.each do |summary_stat|
                       begin
