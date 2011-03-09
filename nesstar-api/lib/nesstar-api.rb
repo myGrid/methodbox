@@ -344,10 +344,17 @@ module Nesstar
           #categories in ddi are value domains in mb
           catgry.each do |cat|
             category = Nesstar::Category.new
-            category.value = cat.find('./catValu').first.content
+            valxml = cat.find('./catValu')
+            if valxml != nil && valxml[0] != nil
+              category.value = valxml[0].first.content.strip unless valxml[0].first == nil
+            else
+              category.value = 'N/A'
+            end
             labxml = cat.find('./labl')
             if labxml != nil && labxml[0] != nil
               category.label = labxml[0].first.content.strip unless labxml[0].first == nil
+            else
+              category.label = 'N/A'
             end
             catstat = cat.find('./catStat')
             category_statistics = []
@@ -357,12 +364,11 @@ module Nesstar
               if a != nil
                 category_statistic.type = a.get_attribute('type').strip unless a.get_attribute('type') == nil
                 category_statistic.value = catstat.first.content.strip unless catstat.first == nil
-                category_statistic.type = a.get_attribute('type').strip unless a.get_attribute('type') == nil
                 category_statistics.push(category_statistic)
               end
             end
             category.category_statistics = category_statistics
-            categories.push(category_statistics)
+            categories.push(category)
           end
           #what group is the variable in
           variable_info_hash.each_key do |key|

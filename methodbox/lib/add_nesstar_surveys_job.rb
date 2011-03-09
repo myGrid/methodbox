@@ -108,13 +108,14 @@ module AddNesstarSurveysJob
                     var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable.group, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
                     logger.info Time.now.to_s + " : saving variable " + variable.name + " from " + study.title
                     var.save
-                    variable.categories.each do |categories|
-                      categories.each do |category|
+                    variable.categories.each do |category|
+                      category.category_statistics.each do |statistic|
                       #TODO: the statistics for each category. They are saved in the category object but we might need to play
                       #around with the variable statistics stuff to make it all play nicely
-                        valDom = ValueDomain.new(:variable => var, :value => category.value, :label => category.type)
-                        valDom.save
+                        
                       end
+                      valDom = ValueDomain.new(:variable => var, :value => category.value, :label => category.label)
+                      valDom.save
                     end
                     variable.summary_stats.each do |summary_stat|
                       begin
