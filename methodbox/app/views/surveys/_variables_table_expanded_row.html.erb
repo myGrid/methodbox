@@ -112,6 +112,11 @@
     <% if item.info != nil -%>
       <div style="margin:auto;">Allowed values:</div>
       <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
+	<% elsif !item.value_domains.empty? %>
+		<% item.value_domains.each do |value_domain| %>
+			<%= value_domain.label + " " + value_domain.value %>
+			<br/>
+		<% end %>
     <% else -%>
       <div style="margin:auto;color:red;">No value information recorded for this variable</div>
     <% end -%>
