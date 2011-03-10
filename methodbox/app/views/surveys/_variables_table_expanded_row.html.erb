@@ -122,6 +122,7 @@
     <% end -%>
   </div>
   <!-- <%= item.name %> -->
+
 <% no_var_hash = item.none_values_hash -%> 
 <% var_hash = item.values_hash -%>
 <% value_domain_hash = Hash.new %>
@@ -138,6 +139,15 @@
 		<% if value_domain.value.to_i.eql?(key.to_i) %> 
 			<% value_domain_hash[key] = value_domain.label %>
 			<% break %>
+		<% end %>
+	<% end %>
+<% end %>
+<!-- If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets -->
+<% if var_hash.empty? %>
+	<% item.value_domains.each do |value_domain| %>
+		<% if value_domain.value_domain_statistic %>
+			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
+			<% value_domain_hash[value_domain.value] = value_domain.label %>
 		<% end %>
 	<% end %>
 <% end %>
