@@ -2,6 +2,7 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
+
 <% if !@survey_hash.empty? %>
 <% if !Survey.all.empty? && !Dataset.all.empty? -%>
 
@@ -65,21 +66,29 @@
       <% if @surveys.public_methods.include?("page_count") %>
       <% end %>
 
-      <div class="tabber">
-        <% @survey_hash.each_key do |key| -%>
-          <div class="tabbertab" title="<%= @survey_hash[key][0].survey_type.name -%>">
-            <h3>
-				<%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 10, :omission => '...') -%>
-              	<%#= h key == nil ? @survey_hash[key][0].survey_type.name : key -%>
-            </h3>
-            <div>
-              <%= render :partial => "single_survey_check", :locals => { :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %>
-            </div>
-          </div>
-        <% end -%>
-      </div>
+<!-- 
       <br class="clear"/><br/>
-      <div id="table"></div>
+      <div id="table"></div> -->
+
+<div class="yui-skin-sam">
+<div id="demo" class="yui-navset">
+    <ul class="yui-nav">
+	<% tab_count = 1 %>
+	<% @survey_hash.each_key do |key| -%>
+		<% if tab_count == 1 %>
+        	<li class="selected"><a href="#tab<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
+		<% else %>
+			<li><a href="#tab<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
+		<% end %>
+	<% end %>
+    </ul>            
+    <div class="yui-content">
+	<% @survey_hash.each_key do |key| -%>
+        <div><%= render :partial => "single_survey_check", :locals => { :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %></div>
+	<% end %>
+    </div>
+</div>
+</div>
     <% end -%>
   </div>
 </div>
@@ -106,6 +115,9 @@
 <% else %>
 <h1>There are no surveys available to view.</h1>
 <% end %>
+<script>
+var myTabs = new YAHOO.widget.TabView("demo");
+</script>
 <!-- jquery grid experiment -->
   <%# form_tag(:action => "grid_view") do -%>
   <%#= submit_tag 'Show grid view',:id => "grid_button" %>
