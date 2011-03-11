@@ -35,7 +35,7 @@ module AddNesstarSurveysJob
                   #survey type of the parent
                   survey_parent = survey_type
                   survey_type_info = n.get_catalog_information nesstar_url, survey_type unless survey_type == 'none'
-                  logger.info Time.now.to_s + " : retrieving info for " + dataset + ", " + dataset_info.title + ", with parent " + parent_info.label + ", " + catalog_info.label + ", and survey type " + survey_type
+                  logger.info Time.now.to_s + " : retrieving info for " + dataset + ", " + dataset_info.title + ", with parent " + survey + ", and survey type " + survey_type
                   
                   study = n.get_study_information nesstar_url, dataset
                   
@@ -47,11 +47,7 @@ module AddNesstarSurveysJob
                       catalog_survey_type = SurveyType.new(:name => survey_type_info.label, :nesstar_id => survey_type, :nesstar_uri => nesstar_url)
                       catalog_survey_type.save
                       if survey_type_info.description != nil
-                        begin
-                        catalog_survey_type.update_attributes(:description => survey_type_info.description.gsub(/<\/?[^>]*>/, ""))
-                      rescue
-                        puts "1"
-                      end
+                          catalog_survey_type.update_attributes(:description => survey_type_info.description.gsub(/<\/?[^>]*>/, ""))
                       end
                     else
                       catalog_survey_type = catalog_survey_types[0]
@@ -71,11 +67,7 @@ module AddNesstarSurveysJob
                     catalog_survey = Survey.new(:title => parent_info.label, :survey_type_id => catalog_survey_type.id, :year => 'N/A', :source => 'nesstar', :nesstar_id => parent_info.nesstar_id, :nesstar_uri => parent_info.nesstar_uri)
                     catalog_survey.save
                     if parent_info.description != nil
-                      begin
-                      catalog_survey.update_attributes(:description => parent_info.description.gsub(/<\/?[^>]*>/, ""))
-                    rescue
-                      puts "2"
-                    end
+                        catalog_survey.update_attributes(:description => parent_info.description.gsub(/<\/?[^>]*>/, ""))
                     end
                     #TODO user can define policy when adding the surveys
                     policy = Policy.create(:name => "survey_policy", :sharing_scope => 3, :use_custom_sharing => false, :access_type => 2, :contributor => User.find(user_id))
@@ -92,12 +84,8 @@ module AddNesstarSurveysJob
                   if catalog_datasets.empty?
                     catalog_dataset = Dataset.new(:current_version => 1, :filename => study.variables[0].file, :name => study.title, :survey => catalog_survey, :nesstar_id => study.nesstar_id, :nesstar_uri => study.nesstar_uri)
                     catalog_dataset.save
-                    if study.abstract == nil
-                      begin
-                      catalog_dataset.update_attributes(:description => study.abstract.gsub(/<\/?[^>]*>/, ""))
-                    rescue
-                      puts "3"
-                    end
+                    if study.abstract != nil
+                        catalog_dataset.update_attributes(:description => study.abstract.gsub(/<\/?[^>]*>/, ""))
                     end
                   else
                     #this should be a new dataset so throw exception and carry on to the next
@@ -115,7 +103,6 @@ module AddNesstarSurveysJob
                       #the frequency statistics for the value domain
                       #guessing that 'freq' is consistent, however......
                         if statistic.type == 'freq'
-                          puts "statistic for " + variable.name + " " + statistic.value
                           val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain => valDom)
                           val_dom_stat.save
                           break
@@ -135,18 +122,14 @@ module AddNesstarSurveysJob
                         var.update_attributes(:valid_entries => summary_stat.value)
                       end
                     rescue
-                      puts "4"
+                      logger.warn Time.now.to_s 'One of the summary stats failed for variable ' +  var.id.to_s
                     end
                     end
                     question = variable.question != nil ? variable.question : ""
                     interview = variable.interview_instruction != nil ? variable.interview_instruction : ""
                     derivation = question + interview
                     if variable.question != nil && variable.interview_instruction != nil
-                      begin
                       var.update_attributes(:dermethod => derivation)
-                    rescue
-                      puts "5"
-                    end
                     end
                   end
                   break

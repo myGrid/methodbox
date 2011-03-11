@@ -13,7 +13,7 @@
 
 		        <% item.datasets.each do |dataset| -%>
 		            <%= check_box_tag "entry_ids[]", dataset.id,(selected.include?(dataset) && {:checked => 'checked'}),:onclick=>"checkSelectAllStatus(#{item.id.to_s},#{dataset.id.to_s})", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}" %>
-		            <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= h  dataset.description -%>
+		            <%= link_to(dataset.name , dataset_path(dataset)) -%><br/><%= h truncate(dataset.description, :length=> 200, :omission => '...') -%>
 <br/>
 		<%= javascript_tag "addDataset(#{item.id.to_s}, #{dataset.id.to_s})"-%>
 		        <% end -%>

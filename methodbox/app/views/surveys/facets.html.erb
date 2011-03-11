@@ -64,10 +64,6 @@
 	</div>
 </div>
 <div style="clear:both;"></div>
-<div class="survey-search-box center" style="margin: 2em; border-top: 2px solid; padding-top: 1em;">
-<%= text_field_tag :survey_search_query, @survey_search_query %>
-<%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
-</div>
 <% end %>
 
 <script type="text/javascript">

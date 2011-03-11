@@ -190,8 +190,9 @@ module Nesstar
         abstracts = studynodes[0].find('//abstract')
         abstract = ""
         abstracts.each do |ab|
-          abstract << ab.first.content.strip
+          abstract << ab.content.strip
         end
+        abstract.strip!
         study.abstract = abstract
         study.title = studynodes[0].find('//stdyDscr/citation/titlStmt/titl')[0].first.content.strip
         study.id = studynodes[0].find('//IDNo')[0].first.content.strip
