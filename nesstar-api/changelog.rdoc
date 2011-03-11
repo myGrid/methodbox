@@ -1,8 +1,0 @@
-=v 0.0.2
-* Retrieve descriptions for catalogs and datasets.
-* Fix category statistics parsing from the ddi files
-= v 0.0.1
-* Initial upload.  
-* API for retrieving catalog and dataset information from a NESSTAR server instance.  
-* Get ddi metadata file for a dataset.  
-* Get hierarchy of catalogs and datasets in tree or hash form.
