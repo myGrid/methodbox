@@ -136,7 +136,7 @@ function expandResourceListItemExpandableText(objectId){
 }
 // open a browser window for each of the uris
 function downloadFromNesstar (nesstarUris) {
-	nesstarUris.forEach(function(item) { alert('download' + item) });
+	nesstarUris.forEach(function(item) { window.open(item, 'nesstar download') });
 }
 
 

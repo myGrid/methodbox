@@ -881,13 +881,24 @@ class CsvarchivesController < ApplicationController
     variable_hash.each_key do |dataset_id|
       dataset = Dataset.find(dataset_id)
       download_string = 'format=CSV&execute=true&ddiformat=html&study'
-      download_string << '=' + CGI.escape(URI.join(dataset.nesstar_uri, 'obj/fStudy', dataset.nesstar_id).to_s) + '&v=2&analysismode=table'
+      study_uri = URI.parse(dataset.nesstar_uri)
+      study_uri.merge!('/obj/fStudy/' + dataset.nesstar_id)
+      puts 'study uri: ' + study_uri.to_s
+      study_uri = CGI.escape(study_uri.to_s)
+      puts 'study uri: ' + study_uri.to_s
+      download_string << '=' + study_uri + '&v=2&analysismode=table'
+      puts 'download string: ' + download_string.to_s
       var_number = 1
       variable_hash[dataset_id].each do |variable|
-        download_string << '&var' + var_number.to_s + '=' + CGI.escape(URI.join(dataset.nesstar_uri, 'obj/fVariable', variable.name).to_s)
+        temp_download_uri = URI.parse(dataset.nesstar_uri)
+        temp_download_uri.merge!('obj/fVariable/' + variable.name)
+        temp_download_uri = CGI.escape(temp_download_uri.to_s)
+        download_string << '&var' + var_number.to_s + '=' + temp_download_uri
+        var_number += 1
       end
       download_string << '&mode=download'
       download_uri = URI.join(dataset.nesstar_uri, 'webview/velocity?')
+      puts download_uri
       @download_uri_strings << download_uri.to_s + download_string
     end
   end
