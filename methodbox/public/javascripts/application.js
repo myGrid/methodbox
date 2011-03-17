@@ -134,6 +134,10 @@ function expandResourceListItemExpandableText(objectId){
       text.innerHTML = truncResourceListItemExpandableText[objectId];
     }
 }
+// open a browser window for each of the uris
+function downloadFromNesstar (nesstarUris) {
+	nesstarUris.forEach(function(item) { alert('download' + item) });
+}
 
 
 

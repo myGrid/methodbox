@@ -2,13 +2,13 @@ require 'uuidtools'
 require 'zip/zip'
 require 'zip/zipfilesystem'
 require 'tempfile'
-
+require 'cgi'
 
 class CsvarchivesController < ApplicationController
   
   include DataExtractJob
   
-  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download, :download_stats_script]
+  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download_stats_script]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download, :download_stats_script ]
@@ -290,6 +290,11 @@ class CsvarchivesController < ApplicationController
     @scripts = source_scripts | target_scripts
     @surveys = source_surveys | target_surveys
     sort_into_datasets @archive
+    
+    if @archive.contains_nesstar_variables
+      create_nesstar_variables_download_urls
+    end
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml {render :xml=>@archives}
@@ -449,6 +454,9 @@ class CsvarchivesController < ApplicationController
       variable_hash = Hash.new
       @current_user.cart_items.each do |item|
         variable = Variable.find(item.variable_id)
+        if variable.nesstar_id != nil && @archive.contains_nesstar_variables != true
+          @archive.update_attributes(:contains_nesstar_variables => true)
+        end
         if (!variable_hash.has_key?(variable.dataset_id))
           variable_hash[variable.dataset_id] = Array.new
         end
@@ -852,6 +860,35 @@ class CsvarchivesController < ApplicationController
     if current_user
       @extract =Csvarchive.find(params[:id])
       @notes = Note.all(:conditions=>{:notable_type => "Csvarchive", :user_id=>current_user.id, :notable_id => @extract.id})
+    end
+  end
+  
+  #create the urls for downloading data extracts from
+  #a nesstar server/s
+  def create_nesstar_variables_download_urls
+    @download_uri_strings = []
+    variable_hash = Hash.new
+    #figure out what variables are from a nesstar server
+    @archive.variables.each do |variable|
+      if variable.nesstar_id != nil
+        if (!variable_hash.has_key?(variable.dataset_id))
+          variable_hash[variable.dataset_id] = Array.new
+        end
+        variable_hash[variable.dataset_id].push(variable)
+      end
+    end
+    #loop through and create the url for each dataset
+    variable_hash.each_key do |dataset_id|
+      dataset = Dataset.find(dataset_id)
+      download_string = 'format=CSV&execute=true&ddiformat=html&study'
+      download_string << '=' + CGI.escape(URI.join(dataset.nesstar_uri, 'obj/fStudy', dataset.nesstar_id).to_s) + '&v=2&analysismode=table'
+      var_number = 1
+      variable_hash[dataset_id].each do |variable|
+        download_string << '&var' + var_number.to_s + '=' + CGI.escape(URI.join(dataset.nesstar_uri, 'obj/fVariable', variable.name).to_s)
+      end
+      download_string << '&mode=download'
+      download_uri = URI.join(dataset.nesstar_uri, 'webview/velocity?')
+      @download_uri_strings << download_uri.to_s + download_string
     end
   end
 

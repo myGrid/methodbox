@@ -642,7 +642,12 @@ display: block;
 .small-font {
 	font-size: 83%;
 }
+/* extra styling for exhibit facet view */
 div.exhibit-collectionView-header {
 	text-align: center;
 	border-bottom: 1px dotted;
+}
+/* extra styling for exhibit facet view ends */
+.normal-margin-top {
+	margin-top: 1em;
 }

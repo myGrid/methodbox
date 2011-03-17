@@ -65,6 +65,9 @@ module DataExtractJob
       FileUtils.mkdir(data_extract_directory)
       variable_hash.each_key do |key|
           dataset = Dataset.find(key)
+          if dataset.survey.source == 'nesstar'
+            break
+          end
           logger.info("creating csv files for " + dataset.name  + ", " + data_extract.title + ", user " + user.id.to_s)
           puts("creating csv files for " + dataset.name  + ", " + data_extract.title + ", user " + user.id.to_s)
           new_csv_path = File.join(data_extract_directory, dataset.name + "_extract.csv")
@@ -149,6 +152,9 @@ module DataExtractJob
       Zip::ZipFile.open(csv_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
+          if dataset.survey.source == 'nesstar'
+            break
+          end
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_extract.csv")
           zipfile.add(dataset.name + "_extract.csv", file_path)
         }
@@ -163,6 +169,9 @@ module DataExtractJob
       Zip::ZipFile.open(stata_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
+          if dataset.survey.source == 'nesstar'
+            break
+          end
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_extract.csv")
           zipfile.add(dataset.name + "_extract.csv", file_path)
         }
@@ -181,6 +190,9 @@ module DataExtractJob
       Zip::ZipFile.open(spss_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
+          if dataset.survey.source == 'nesstar'
+            break
+          end
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_data.txt")
           code_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_code.sps")
           zipfile.add(dataset.name + "_selection_spss_data.txt", file_path)
@@ -217,7 +229,7 @@ module DataExtractJob
         spss_file << "dataset\r\n"
         spss_file << "1 \"" + d.name + "\"\r\n/\r\n"
         spss_file << "survey\r\n"
-        spss_file << "1 \"" + d.survey.survey_type.shortname + "\"\r\n.\r\n\r\nEXECUTE."
+        spss_file << "1 \"" + d.survey.survey_type.name + "\"\r\n.\r\n\r\nEXECUTE."
         spss_file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, d.name + "_selection_spss_code.sps")
         file = File.new(spss_file_path, "w")
         file.write(spss_file)
@@ -346,7 +358,7 @@ module DataExtractJob
           dataset_file = dataset.uuid_filename
           survey = Survey.find(dataset.survey_id)
           survey_year = survey.year
-          survey_type = survey.survey_type.shortname
+          survey_type = survey.survey_type.name
           names = []
           path = File.join(CSV_FILE_PATH, dataset_file)
           csv_file = File.open(path, "r")

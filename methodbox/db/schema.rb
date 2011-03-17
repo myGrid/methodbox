@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110309153930) do
+ActiveRecord::Schema.define(:version => 20110314112520) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(:version => 20110309153930) do
     t.boolean  "failure"
     t.string   "contributor_type"
     t.integer  "contributor_id"
+    t.boolean  "contains_nesstar_variables"
   end
 
   create_table "dataset_lists", :force => true do |t|
