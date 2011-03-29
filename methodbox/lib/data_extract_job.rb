@@ -28,9 +28,10 @@ module DataExtractJob
         create_zip_file
         data_extract.update_attributes(:complete => true)
       rescue Exception => e
-        logger.error(e)
+        logger.error(Time.now.to_s + ", Data Extract " + data_extract.id.to_s + "failed, " + e)
         puts e
         data_extract.update_attributes( :failure=>true )
+        email_failed_to_user e
         raise e
       end
       #no need to count a cleanup or email failure as a real problem
@@ -40,7 +41,7 @@ module DataExtractJob
         end
         clean_up_files
       rescue Exception => e
-        logger.error(e)
+        logger.error(Time.now.to_s + ", Data Extract " + data_extract.id.to_s + "failed, " + e)
       end
     end
     
@@ -65,9 +66,9 @@ module DataExtractJob
       FileUtils.mkdir(data_extract_directory)
       variable_hash.each_key do |key|
           dataset = Dataset.find(key)
-          if dataset.survey.source == 'nesstar'
-            break
-          end
+          if dataset.survey.source != 'nesstar'
+            begin
+          puts "create csv " + dataset.name + " was ok"
           logger.info("creating csv files for " + dataset.name  + ", " + data_extract.title + ", user " + user.id.to_s)
           puts("creating csv files for " + dataset.name  + ", " + data_extract.title + ", user " + user.id.to_s)
           new_csv_path = File.join(data_extract_directory, dataset.name + "_extract.csv")
@@ -136,8 +137,17 @@ module DataExtractJob
           logger.info("completed for " + dataset.name  + ", " + data_extract.title + ", user " + user_id.to_s)
           #uts("Closed")
         # }
+      rescue Exception => e
+        logger.error(Time.now.to_s + "Problem with data extract " +  data_extract.id.to_s + " and dataset " + dataset.id.to_s)
+      end
+      end
       end # variable_hash.each_key do |key|
     end #create_csv_files
+    
+    def email_failed_to_user error
+      logger.info("email failure to user")
+      Mailer.deliver_data_extract_failed(data_extract_id, user_id, error, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+    end
 
     def email_complete_to_user
       logger.info("email user")
@@ -152,11 +162,10 @@ module DataExtractJob
       Zip::ZipFile.open(csv_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
-          if dataset.survey.source == 'nesstar'
-            break
-          end
+          if dataset.survey.source != 'nesstar'
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_extract.csv")
           zipfile.add(dataset.name + "_extract.csv", file_path)
+        end
         }
         zipfile.close
       }
@@ -169,11 +178,11 @@ module DataExtractJob
       Zip::ZipFile.open(stata_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
-          if dataset.survey.source == 'nesstar'
-            break
-          end
+          if dataset.survey.source != 'nesstar'
+
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_extract.csv")
           zipfile.add(dataset.name + "_extract.csv", file_path)
+        end
         }
           zipfile.close
       }
@@ -190,13 +199,13 @@ module DataExtractJob
       Zip::ZipFile.open(spss_zip_path, Zip::ZipFile::CREATE) {|zipfile|
         variable_hash.each_key {|key|
           dataset = Dataset.find(key)
-          if dataset.survey.source == 'nesstar'
-            break
-          end
+          if dataset.survey.source != 'nesstar'
+
           file_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_data.txt")
           code_path = File.join(CSV_OUTPUT_DIRECTORY, output_directory, dataset.name + "_selection_spss_code.sps")
           zipfile.add(dataset.name + "_selection_spss_data.txt", file_path)
-          zipfile.add(dataset.name + "_selection_spss_code.sav", code_path)
+          zipfile.add(dataset.name + "_selection_spss_code.sps", code_path)
+        end
         }
         zipfile.close
       }

@@ -472,6 +472,7 @@ class CsvarchivesController < ApplicationController
           end
         end
       end
+      check_nesstar_only variable_hash.keys
     # end
       
       selected_surveys = Array.new
@@ -657,13 +658,13 @@ class CsvarchivesController < ApplicationController
     begin
       if params[:type] == "Stata"
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
-        send_file path, :filename => @archive.title + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
+        send_file path, :filename => @archive.title.gsub(' ', '_') + "_stata.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
       elsif params[:type] == "SPSS"
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss.zip")
-        send_file path, :filename => @archive.title + "_spss.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
+        send_file path, :filename => @archive.title.gsub(' ', '_') + "_spss.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false        
       else
         path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_csv.zip")
-        send_file path, :filename => @archive.title + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
+        send_file path, :filename => @archive.title.gsub(' ', '_') + "_csv.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false 
       end
       rescue Exception => e
     end
@@ -812,7 +813,9 @@ class CsvarchivesController < ApplicationController
       Zip::ZipFile.open(stata_zip_path) {|zipfile|
           variable_hash.each_key do |key|
             dataset = Dataset.find(key)
-            file_hash[dataset.name + "_do_file.do"] = zipfile.read(dataset.name + "_do_file.do")
+            if !dataset.nesstar_uri
+              file_hash[dataset.name + "_do_file.do"] = zipfile.read(dataset.name + "_do_file.do")
+            end
           end
       }
       Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
@@ -823,12 +826,12 @@ class CsvarchivesController < ApplicationController
         end
       }
     end
-      send_file zip_file_path, :filename => @archive.title + "_stata_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false
+      send_file zip_file_path, :filename => @archive.title.gsub(' ', '_') + "_stata_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false
   end
 
   # the request is for spss files, no actual data
   def download_spss_files
-    zip_file_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename,@archive.filename + "_spss_files_only.zip")
+    zip_file_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_spss_files_only.zip")
     if !File.exists?(zip_file_path)
       variable_hash = Hash.new
       file_hash = Hash.new
@@ -842,7 +845,9 @@ class CsvarchivesController < ApplicationController
       Zip::ZipFile.open(spss_zip_path) {|zipfile|
         variable_hash.each_key do |key|
           dataset = Dataset.find(key)
-          file_hash[dataset.name + "_selection_spss_code.sps"] = zipfile.read(dataset.name + "_selection_spss_code.sps")
+          if !dataset.nesstar_uri
+            file_hash[dataset.name + "_selection_spss_code.sps"] = zipfile.read(dataset.name + "_selection_spss_code.sps")
+          end
         end
       }
 
@@ -853,7 +858,7 @@ class CsvarchivesController < ApplicationController
         end
       }
     end
-    send_file zip_file_path, :filename => @archive.title + "_spss_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false     
+    send_file zip_file_path, :filename => @archive.title.gsub(' ', '_') + "_spss_files_only.zip", :content_type => "application/zip", :disposition => 'attachment', :stream => false     
   end
   
   def find_notes
@@ -886,21 +891,31 @@ class CsvarchivesController < ApplicationController
       puts 'study uri: ' + study_uri.to_s
       study_uri = CGI.escape(study_uri.to_s)
       puts 'study uri: ' + study_uri.to_s
-      download_string << '=' + study_uri + '&v=2&analysismode=table'
+      download_string << '=' + study_uri + '&v=2&analysismode=table&s='
       puts 'download string: ' + download_string.to_s
-      var_number = 1
       variable_hash[dataset_id].each do |variable|
-        temp_download_uri = URI.parse(dataset.nesstar_uri)
-        temp_download_uri.merge!('obj/fVariable/' + variable.name)
-        temp_download_uri = CGI.escape(temp_download_uri.to_s)
-        download_string << '&var' + var_number.to_s + '=' + temp_download_uri
-        var_number += 1
+        download_string << CGI.escape(variable.nesstar_id + ',')
       end
+      download_string.chomp! #remove the final ,
       download_string << '&mode=download'
       download_uri = URI.join(dataset.nesstar_uri, 'webview/velocity?')
       puts download_uri
       @download_uri_strings << download_uri.to_s + download_string
+      
     end
+  end
+  
+  # check an array of dataset ids to see if any
+  # are from mb only
+  def check_nesstar_only keys
+    nesstar = true
+    keys.each do |key| 
+      if !Dataset.find(key).nesstar_uri
+        nesstar = false
+        break
+      end
+    end
+    nesstar ? @archive.update_attributes({:nesstar_only => true}) : @archive.update_attributes({:nesstar_only => false})
   end
 
 end

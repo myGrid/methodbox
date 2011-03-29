@@ -53,6 +53,17 @@ class Mailer < ActionMailer::Base
          :host=>base_host
   end
   
+  def data_extract_failed(data_extract_id, user_id, error, base_host)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Data Extract " + Csvarchive.find(data_extract_id).title + " creation failed"
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :data_extract => Csvarchive.find(data_extract_id),
+         :error => error,
+         :host=>base_host
+  end
+  
   def data_extract_complete(data_extract_id, user_id, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER

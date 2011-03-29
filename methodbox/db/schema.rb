@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110314112520) do
+ActiveRecord::Schema.define(:version => 20110329134400) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -143,6 +143,7 @@ ActiveRecord::Schema.define(:version => 20110314112520) do
     t.string   "contributor_type"
     t.integer  "contributor_id"
     t.boolean  "contains_nesstar_variables"
+    t.boolean  "nesstar_only"
   end
 
   create_table "dataset_lists", :force => true do |t|
@@ -300,7 +301,7 @@ ActiveRecord::Schema.define(:version => 20110314112520) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false, :null => false
+    t.boolean  "dormant",            :default => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -556,7 +557,7 @@ ActiveRecord::Schema.define(:version => 20110314112520) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false, :null => false
+    t.boolean  "dormant",                                 :default => false
     t.datetime "last_ukda_check"
     t.boolean  "ukda_registered"
     t.datetime "last_user_activity"
