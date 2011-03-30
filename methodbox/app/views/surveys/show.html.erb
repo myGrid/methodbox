@@ -143,7 +143,7 @@
 		<% if current_user %>
 		<div class="resource-comments right">
 		<h3>Comments</h3>
-		  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @survey.id} -%>
+		  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @survey.id, :controller => "Surveys", :comment_div_id => "comment", :update_div_id => "new_comment"} -%>
 				<% @comments.each do |comment| %>
 				<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
 				<% end %>
