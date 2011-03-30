@@ -651,6 +651,13 @@ div.exhibit-collectionView-header {
 .normal-margin-top {
 	margin-top: 1em;
 }
+/* exhibit styling over */
+
+/* some extra margin and padding settings */
 .normal-margin-bottom {
 	margin-bottom: 1em;
 }
+.medium-padding {
+	padding: 5px;
+}
+/* extra marging and padding settings over */
