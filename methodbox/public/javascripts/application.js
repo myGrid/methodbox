@@ -109,6 +109,10 @@ function checkNotEmpty(textBox) {
 		alert('Please enter a search term.');
 		$(textBox).focus();
 		return false;
+	} else if ($(textBox).value.length < 2){
+		alert('Search term must be 2 or more letters.');
+		$(textBox).focus();
+		return false;
 	} else {
 		return true;
 	}
