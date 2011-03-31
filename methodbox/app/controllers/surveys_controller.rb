@@ -37,7 +37,6 @@ class SurveysController < ApplicationController
       rescue Exception => e
         flash[:error] = "There was a problem adding the datasets. Please try again later."
         logger.error Time.now.to_s + ", There was a problem adding the datasets. Please try again later. " + e
-        puts e
       ensure
         format.html {redirect_to surveys_url}
       end
@@ -108,18 +107,36 @@ class SurveysController < ApplicationController
   #ajax remote for displaying the surveys for a specific survey type
   def show_datasets_for_categories
     survey_type = SurveyType.find(params[:survey_type_id])
-    @surveys= Survey.all(:conditions=>({:survey_type_id=>survey_type.id}))
-    @surveys.reject! {|survey| !Authorization.is_authorized?("show", nil, survey, current_user)}
-    find_all_categories survey_type.id
+    all_surveys= Survey.all(:conditions=>({:survey_type_id=>survey_type.id}))
+    all_surveys.reject! {|survey| !Authorization.is_authorized?("show", nil, survey, current_user)}
+    all_categories = find_all_categories survey_type.id
+
     render :update, :status=>:created do |page|
-      page.replace_html "categories", :partial=>"surveys/survey_categories"
+      page.replace_html "categories", :partial=>"surveys/survey_categories", :locals => {:survey_type => survey_type, :surveys => all_surveys, :all_categories => all_categories}
     end
   end
   
   #display all the different survey types
   def category_browse
+    @sorted_variables = []
     @survey_types = SurveyType.all
+    var = nil
+    Dataset.all.each do |dataset|
+      var = Variable.first(:all, :conditions => ["dataset_id =? and category is not ?", dataset.id, nil])
+      if var != nil
+        break
+      end
+    end
+    if var != nil
+      @selected_survey = var.dataset.survey
+    end
+    if var != nil
+      @categories = find_all_categories @selected_survey.survey_type.id
+    end
+    @surveys = Survey.all(:conditions=>({:survey_type_id=>@selected_survey.survey_type.id}))
+    @surveys.reject! {|survey| !Authorization.is_authorized?("show", nil, survey, current_user)}
   end
+  
   # browse surveys using exhibit
   def facets
     @surveys_json = "{types:{\"Dataset\":{pluralLabel:\"Datasets\"}},"
@@ -200,7 +217,6 @@ class SurveysController < ApplicationController
     
 #experimental code for doing jgrid table using jqgrid plugin
   def grid_view
-    puts "doing some stuff"
     @query= params[:survey_search_query]
     datasets=params[:entry_ids]
     @dataset_request = ""
@@ -218,8 +234,6 @@ class SurveysController < ApplicationController
     solr_docs.each do |item|
       @selected_surveys.each do |ids|
         if Dataset.find(item.dataset_id).id.to_s == ids
-          logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-          puts "Found " + item.name + ", from Survey " + item.dataset_id.to_s
           temp_variables.push(item)
           break
         end
@@ -247,7 +261,6 @@ class SurveysController < ApplicationController
     #    @variables_json = page_res.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:rows],temp_variables.size)
     @variables_json = page_res.to_jqgrid_json([:name,:value,:category],params[:page],params[:rows],temp_variables.size)
 
-    puts @variables_json
     respond_to do |format|
       format.html
       format.json { render :json => @variables_json }
@@ -289,7 +302,6 @@ class SurveysController < ApplicationController
         @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
       end
     end
-    puts @survey_hash
 
     @variables = Array.new
 
@@ -719,7 +731,6 @@ class SurveysController < ApplicationController
     # ..from policy
     # policy = @survey.asset.policy
     unless policy
-      puts "there is no policy"
       # several scenarios could lead to this point:
       # 1) this is a "new" action - no Surveyfile exists yet; use default policy:
       #    - if current user is associated with only one project - use that project's default policy;
@@ -734,7 +745,6 @@ class SurveysController < ApplicationController
     @policy = policy
     @policy_type = policy_type
     @sharing_mode = policy.sharing_scope
-    puts "sharing mode is " + policy.sharing_scope.to_s
     @access_mode = policy.access_type
     @use_custom_sharing = (policy.use_custom_sharing == true || policy.use_custom_sharing == 1)
     @use_whitelist = (policy.use_whitelist == true || policy.use_whitelist == 1)
@@ -918,7 +928,6 @@ class SurveysController < ApplicationController
           if (/^id_/.match(node.name)) 
             name = node["variable_name"]
             label = node["variable_label"]
-            puts name + " " + label
             value_map = String.new
             node.each_element do |child_node| 
               if (!child_node.empty?) 
@@ -961,6 +970,8 @@ class SurveysController < ApplicationController
       @all_categories = categories.collect{|var| var.category}
       @all_categories.delete_if{|cat| cat==nil}
       @all_categories.sort!
+      all_categories = @all_categories
+      return all_categories
     end
     
     def find_groups

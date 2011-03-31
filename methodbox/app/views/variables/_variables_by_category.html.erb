@@ -8,7 +8,9 @@
 
 <div class="show_basic">
 	<% if @sorted_variables.empty? %>
+	<div class="center bold normal-margin-top normal-margin-bottom warning-message">
 	There are no variables with category <%= @category %> for the selected surveys
+	</div>
 	<% else %>
   <% form_remote_tag :url => { :action => "add_multiple_to_cart"} do -%>
     <%= hidden_field_tag 'submit', 'add' %>

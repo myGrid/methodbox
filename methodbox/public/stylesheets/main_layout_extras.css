@@ -661,3 +661,11 @@ div.exhibit-collectionView-header {
 	padding: 5px;
 }
 /* extra marging and padding settings over */
+/* quickly use bold fonts */
+.bold {
+	font-weight: bold;
+}
+.warning-message {
+	font-style: italic;
+	color: red;
+}

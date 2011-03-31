@@ -9,4 +9,5 @@
 </ul>
 </div>
 <div id="categories">
+	<%= render :partial => "survey_categories", :locals => {:survey_type => @selected_survey.survey_type, :surveys => @surveys, :all_categories => @categories} -%>
 </div>
