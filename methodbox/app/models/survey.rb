@@ -31,7 +31,12 @@ class Survey < ActiveRecord::Base
   
     validates_uniqueness_of :title, :scope => [ :contributor_id, :contributor_type ], :message => "error - you already have a Survey with such title."
 
-
+    #sunspot solr
+    searchable do
+        text :description
+        text :title
+        text :year
+      end
     def to_param
       "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
     end

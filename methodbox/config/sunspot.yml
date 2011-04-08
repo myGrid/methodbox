@@ -1,0 +1,19 @@
+production:
+  solr:
+    hostname: localhost
+    port: 8983
+    solr_home: '/Users/Ian/obesity_data/sunspot/production'
+    log_level: WARNING
+
+development:
+  solr:
+    hostname: localhost
+    port: 8982
+    solr_home: '/Users/Ian/obesity_data/sunspot/development'
+    log_level: INFO
+
+test:
+  solr:
+    hostname: localhost
+    port: 8981
+    log_level: WARNING

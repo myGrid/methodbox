@@ -54,6 +54,13 @@ class Person < ActiveRecord::Base
 
   #FIXME: change userless_people to use this scope - unit tests
   named_scope :not_registered,:include=>:user,:conditions=>"users.person_id IS NULL"
+  
+  #sunspot solr
+  searchable do
+      text :first_name
+      text :last_name
+      text :expertise
+    end
 
   def self.userless_people
     p=Person.find(:all)

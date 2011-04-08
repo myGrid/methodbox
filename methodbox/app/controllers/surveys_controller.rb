@@ -783,21 +783,24 @@ class SurveysController < ApplicationController
   def do_search_variables
     @survey_search_query = params[:survey_search_query]
 
+    #TODO the dismax syntax doesn't really support this sort of thing so don't save these
+    #until we figure out how to get the extended dismax parser into sunspot
+    
     #save only new search terms
-    new_search_terms = @survey_search_query.downcase.split(' or ')
-    #Check that the same term has been included twice by combining searches
-    new_search_terms.uniq!
-    new_search_terms.each do |search_term|
-      unless SearchTerm.find(:first, :conditions=>["term=?",search_term])
-        t = SearchTerm.new
-        t.term = search_term
-        t.save
-      end
-    end
+    # new_search_terms = @survey_search_query.downcase.split(' or ')
+    # #Check that the same term has been included twice by combining searches
+    # new_search_terms.uniq!
+    # new_search_terms.each do |search_term|
+    #   unless SearchTerm.find(:first, :conditions=>["term=?",search_term])
+    #     t = SearchTerm.new
+    #     t.term = search_term
+    #     t.save
+    #   end
+    # end
 
     case params['add_results']
       when "yes"
-        @survey_search_query = @survey_search_query + " or " +params[:previous_query]
+        @survey_search_query = @survey_search_query + " " + params[:previous_query]
       when "no"
         #don't have to do anything
     end
@@ -809,34 +812,28 @@ class SurveysController < ApplicationController
       end
     @total_vars = 0
   
-    @search_terms = @survey_search_query.downcase.split(' or ')
-    @search_terms.uniq!
+    # @search_terms = @survey_search_query.downcase.split(' or ')
+    # @search_terms.uniq!
       
     @sorted_variables = Array.new
     @term_results = Hash.new
 
-    @search_terms.each do |term|
-      @term_results[term] = Array.new
-      @selected_surveys.each do |ids|
-        logger.info("searching for " + term)
-        variables = find_variables(term, ids)
-        logger.info("found "+variables.length.to_s)
-        variables.each do | variable |
-          @term_results[term].push(variable) 
-          if !@sorted_variables.include?(variable)
-            @sorted_variables.push(variable)
-            #ogger.info("variable.dataset_id = "+variable.dataset_id.to_s)
-            #ogger.info("@vars_by_dataset[variable.dataset_id] = "+@vars_by_dataset[variable.dataset_id.to_s].to_s)
-            @vars_by_dataset[variable.dataset_id.to_s]+= 1
-            @total_vars+= 1
-          end 
-        end 
-      end
-      if logged_in? && new_search_terms.include?(term)
-      #TODO There must be a way to avoid duplicating the save if the search is repeated.
+    @term_results[term] = Array.new
+    @selected_surveys.each do |ids|
+      results = Sunspot.search(Variable) do
+        keywords = '#{@search_terms}'
+        with(:dataset_id).any_of(@selected_surveys)
+        #not the smartest pagination but it will do until the variables table gets its act sorted
+        paginate(:page => 1, :per_page => 1000)
+      end 
+    end 
+    @sorted_variables = results.results
+
+      #save the search terms as a string including all the solr syntax
+      if logged_in?
         user_search = UserSearch.new
         user_search.user = current_user
-        user_search.terms = term
+        user_search.terms = @search_terms
         user_search.dataset_ids = @selected_surveys
         var_as_ints = Array.new
         @sorted_variables.each do |temp_var|
@@ -846,10 +843,9 @@ class SurveysController < ApplicationController
         user_search.save
       end   
       
-    end #search_terms.each do |term|
+    end
 
     respond_to do |format|
-      logger.info("rendering survey search")
       format.html { render :action =>:search_variables }
       format.xml  { render :xml =>:search_variables }
     end

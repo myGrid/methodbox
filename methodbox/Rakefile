@@ -9,6 +9,7 @@ require 'rake/rdoctask'
 
 require 'tasks/rails'
 require 'metric_fu'
+require 'sunspot/rails/tasks'
 
 MetricFu::Configuration.run do |config|
   #define which metrics you want to use

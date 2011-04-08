@@ -37,6 +37,12 @@ class Script < ActiveRecord::Base
              :dependent => :destroy
 
   belongs_to :person, :dependent => :destroy
+  
+  #sunspot solr
+  searchable do
+      text :description
+      text :title
+    end
 
   def to_param
     "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')

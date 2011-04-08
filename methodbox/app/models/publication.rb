@@ -22,6 +22,13 @@ class Publication < ActiveRecord::Base
   
   acts_as_uniquely_identifiable  
   
+  #sunspot solr
+  searchable do
+      text :title
+      text :abstract
+      text :journal
+    end
+  
   #belongs_to :contributor, :polymorphic => true
   
   def update_first_letter
