@@ -13,7 +13,6 @@ module ProcessDatasetJob
     def perform
       begin
       dataset = Dataset.find(dataset_id)
-      puts "Calculating statistics for " + dataset.name
       process_dataset(dataset)
 
       #Get the updated variables
@@ -22,14 +21,13 @@ module ProcessDatasetJob
         begin
           process_variable(variable)
         rescue Exception => e
-          logger.info("Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
+          logger.info(Time.now.to_s + " Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
         end
       end
       dataset.update_attributes(:has_data=>true)
       email_user
     rescue Exception => e     
-      logger.error "Problem processing dataset " + dataset.id.to_s + ", "  + e
-      puts "Problem processing dataset " + dataset.id.to_s + ", "  + e
+      logger.error Time.now.to_s + " Problem processing dataset " + dataset.id.to_s + ", "  + e
       # send an error message
       Mailer.deliver_dataset_processing_error(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
       
@@ -66,15 +64,12 @@ def process_dataset(dataset)
   # variables = Variable.all(:conditions => "dataset_id =  #{did}")
   count = all_headers.size
   # count = variables.size
-  puts "count " + count.to_s
   if count <= 250
     process_part_dataset(dataset, 0, count-1)
   else
     first_column = 0
     last_column = 249
     while first_column < count  
-      puts "first column " + first_column.to_s
-      puts "last column " + last_column.to_s
       #uts count.to_s + " < " + count.to_s
       process_part_dataset(dataset, first_column, last_column)
       first_column = last_column + 1
@@ -91,7 +86,6 @@ def process_part_dataset(dataset, first_column, last_column)
   data_directory = File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
   FileUtils.mkdir_p  data_directory
   csv_path = File.join(CSV_FILE_PATH, dataset_file)
-  puts "Reading " + first_column.to_s + " to " + last_column.to_s + " from " + csv_path
   #uts File.exist?(csv_path)
   if (!File.exist?csv_path)
     raise "ERROR path not found " + csv_path
@@ -103,10 +97,7 @@ def process_part_dataset(dataset, first_column, last_column)
   header_line.chop!
   all_headers = header_line.split(separator)
   if all_headers.size <= last_column
-    logger.error "Error processing dataset " + dataset.id.to_s
-    logger.error "Less than expected headers found"
-    logger.error "Expected " + last_column.to_s + " found " + all_headers.size.to_s
-    logger.error header_line
+    logger.error Time.now.to_s + " Error processing dataset " + dataset.id.to_s + " Less than expected headers found. Expected " + last_column.to_s + " found " + all_headers.size.to_s
     raise "Incorrect header"
   end
   all_headers.each do |header|
@@ -177,7 +168,7 @@ def process_variable(variable)
   #Open data file
   data_path = File.join(CSV_FILE_PATH, variable.dataset.uuid_filename.split('.')[0], variable.name.downcase + ".txt")
   if !data_path
-    puts "Error processing variable " + variable.id.to_s + " no data_file set"
+    logger.error Time.now.to_s + " Error processing variable " + variable.id.to_s + " no data_file set"
     return
   end  
   if !File.readable?(data_path)
@@ -226,8 +217,7 @@ def process_variable(variable)
           value = Float(key)
         rescue
           if !strings
-            puts "In variable " + variable.name.to_s
-            puts "Non number value found " + key.to_s
+            logger.info Time.now.to_s + " In variable " + variable.name.to_s + " Non number value found " + key.to_s
           end  
           strings = true;
           value = nil
@@ -287,10 +277,10 @@ def process_variable(variable)
     mean = (sum / count)
     variable.mean = mean 
     
-    #second pass for variance, mode and medium
+    #second pass for variance, mode and median
     difference_sum = 0
     counter = 0;
-    half_medium = nil
+    half_median = nil
     mode = nil
     mode_count = 0
     values.each do |key, frequency|
@@ -298,13 +288,13 @@ def process_variable(variable)
       difference_sum += ((key - mean) * (key - mean) * frequency)
       counter += frequency
       if counter == count / 2
-        #medium is mean of value before the middle and value after the middle
-        half_medium = key
+        #median is mean of value before the middle and value after the middle
+        half_median = key
       elsif counter >= count / 2
-        if half_medium
-          variable.medium = (key + half_medium) /2.0
+        if half_median
+          variable.median = (key + half_median) /2.0
         else
-          variable.medium = key
+          variable.median = key
         end  
         counter = - count
       end
@@ -334,7 +324,7 @@ def no_value_stats(variable)
   variable.min_value = nil
   variable.max_value = nil
   variable.mean = nil
-  variable.medium = nil
+  variable.median = nil
   variable.mode = nil
   variable.standard_deviation = nil  
 end

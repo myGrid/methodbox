@@ -192,6 +192,34 @@
             </table>
         </p>
 </div> 
+<!-- figure out what type of stats we are dealing with - discrete, continuous etc... -->
+<!-- firstly see if we have some metadata for the type -->
+<% if var.interval %>
+
+<% elsif var.info %>
+	<% var_type_line = var.info.split("\n").first %>
+		<% if var_type_line.include?("scale") || var_type_line.include?("discrete") || var_type_line.include?("nominal") || var_type_line.include?("ordinal") -%>
+			<%= stat_type="disc" %>
+		<% elsif var_type_line.include?("contin") %>
+			<%= stat_type="contin" %>
+		<% else %>
+		<!-- we have info but no stats type mentioned so figure out the stat type by 'guessing' -->
+			<% if var_hash.size > 20 %>
+				<%= stat_type="contin" %>
+			<% else %>
+				<%= stat_type="disc" %>
+			<% end %>
+		<% end %>
+<% else %>
+	<!-- guess the type from the amount of unique data counted in the  -->
+	<% if var_hash && var_hash.size > 20 %>
+		<%= stat_type="contin" %>
+	<% elsif var_hash %>
+		<%= stat_type="disc" %>
+	<% else %>
+		<!-- errrm, no idea what the stat type is, don't show any -->
+	<% end %>
+<% end %>
 		<div class="gviz-chart" id="frequency_count_chart_div"></div>
 		<div style="clear:both;">
 			</div>
@@ -251,6 +279,7 @@
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {
+		var stat_type = <%= stat_type %>
 		var hash_size = <%=var_hash.size %>
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Value');
@@ -261,10 +290,10 @@ data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash
 			              <% no_var_hash.sort.each do |value, frequency| -%>
 			data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 			              <% end -%>
-		if (hash_size > 1 && hash_size <= 20) {
+		if (hash_size > 1 && stat_type == "disc") {
         var chart = new google.visualization.PieChart(document.getElementById('frequency_count_chart_div'));
         chart.draw(data, {width: 600, height: 400, is3D: true});
-} else if (hash_size > 1) {
+} else if (hash_size > 1 && stat_type == "contin") {
 
         var chart = new google.visualization.ColumnChart(document.getElementById('frequency_count_chart_div'));
         chart.draw(data, {width: 800, height: 400, is3D: true});

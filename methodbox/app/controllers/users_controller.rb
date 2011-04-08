@@ -8,6 +8,36 @@
   before_filter :request_for_unactive_user, :only=>[:resend_activation_code, :approve, :reject]
   before_filter :validate_create, :only=>[:create]
   
+  def shib_convert_after
+    u = User.find(params[:id])
+    date = DateTime.now
+    year = date.year
+    month = date.month
+    mday = date.mday
+    check_date = year.to_s + '-' + sprintf("%02d", month) + '-' + sprintf("%02d",mday)
+    to_base = "http://cspool58.cs.man.ac.uk?" + params[:username] + "&sars_checksum="
+    ip = request.env["HTTP_X_FORWARDED_FOR"] || request.env["HTTP_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]
+    full_ip = IPAddress ip
+    short_ip = full_ip[0].to_s + '.' + full_ip[1].to_s + '.' + full_ip[2].to_s
+    user_id = params[:username]
+    user_id.gsub!("+"," ")
+    pre_hash =  check_date + SARS_SHARED_SECRET + short_ip + user_id
+    digest = Digest::MD5.hexdigest(pre_hash)
+    sars_checksum = params[:sars_checksum]
+    calculated_hash = digest
+    respond_to do |format|
+      if params[:sars_checksum] == digest
+        self.current_user = u
+        u.update_attributes({:shibboleth => true, :shibboleth_user_id => user_id})
+        flash[:notice]="UK Federation login was successful.  You may now use this to login to MethodBox."
+        format.html{redirect_to person_url(u.person)}
+      else
+        flash[:error]="UK Federation login was unsuccessful. Please check your details and try again."
+        format.html{redirect_to person_url(u.person)}
+      end
+    end
+  end
+  
   def create_shib
     if !current_user
       cookies.delete :auth_token

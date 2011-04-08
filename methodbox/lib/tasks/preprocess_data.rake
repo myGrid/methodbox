@@ -278,10 +278,10 @@ namespace :obesity do
       mean = (sum / count)
       variable.mean = mean 
       
-      #second pass for variance, mode and medium
+      #second pass for variance, mode and median
       difference_sum = 0
       counter = 0;
-      half_medium = nil
+      half_median = nil
       mode = nil
       mode_count = 0
       values.each do |key, frequency|
@@ -289,13 +289,13 @@ namespace :obesity do
         difference_sum += ((key - mean) * (key - mean) * frequency)
         counter += frequency
         if counter == count / 2
-          #medium is mean of value before the middle and value after the middle
-          half_medium = key
+          #median is mean of value before the middle and value after the middle
+          half_median = key
         elsif counter >= count / 2
-          if half_medium
-            variable.medium = (key + half_medium) /2.0
+          if half_median
+            variable.median = (key + half_median) /2.0
           else
-            variable.medium = key
+            variable.median = key
           end  
           counter = - count
         end
@@ -325,7 +325,7 @@ namespace :obesity do
     variable.min_value = nil
     variable.max_value = nil
     variable.mean = nil
-    variable.medium = nil
+    variable.median = nil
     variable.mode = nil
     variable.standard_deviation = nil  
   end

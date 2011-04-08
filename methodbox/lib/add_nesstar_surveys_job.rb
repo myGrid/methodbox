@@ -103,6 +103,7 @@ module AddNesstarSurveysJob
                       #the frequency statistics for the value domain
                       #guessing that 'freq' is consistent, however......
                         if statistic.type == 'freq'
+                          puts "stats for " +  variable.name + ", value: " + statistic.value
                           val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain => valDom)
                           val_dom_stat.save
                           break

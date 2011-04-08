@@ -46,7 +46,7 @@ class DatasetsController < ApplicationController
         end
       end
     rescue Exception => e
-      logger.error(e)
+      logger.error(Time.now.to_s + " " + e)
       @dataset.update_attributes(:reason_for_update=>old_reason_for_update, :updated_by=>old_updated_by, :filename=>old_filename, :uuid_filename=> old_uuid_filename, :current_version => old_current_version,:has_data=>old_has_data)
       respond_to do |format|
         flash[:error] = "There was a problem updating the dataset. Please try again. The error was: " + e
@@ -75,10 +75,10 @@ class DatasetsController < ApplicationController
         end
       else  
         begin 
-          logger.info("Starting metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
+          logger.info(Time.now.to_s + " Starting metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
           Delayed::Job.enqueue ProcessMetadataJob::StartJobTask.new(@dataset.id, current_user.id, params[:dataset_metadata_format], uf.path, params[:update][:reason], base_host)
         rescue Exception => e
-          logger.error(e)
+          logger.error(Time.now.to_s + " " + e)
           raise e
         end   
         respond_to do |format|
@@ -149,7 +149,7 @@ class DatasetsController < ApplicationController
       end
 
     rescue Exception => e
-      logger.error(e)
+      logger.error(Time.now.to_s + " " + e)
        respond_to do |format|
           flash[:error] = "There was a problem creating this dataset.  Please try again.  The error was: " + e
           format.html { redirect_to survey_path(@survey) }
@@ -215,7 +215,7 @@ class DatasetsController < ApplicationController
         variable.name = var
         variable.dataset = @dataset
         variable.save
-        logger.info("this was new " + variable.name)
+        logger.info(Time.now.to_s + " This was new " + variable.name)
         @new_variables.push(variable)
       end
     end
@@ -251,10 +251,10 @@ class DatasetsController < ApplicationController
     end
     
     begin 
-      logger.info("sending the job with dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator)
+      logger.info(Time.now.to_s + " processing dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator)
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator, base_host)
     rescue Exception => e
-      logger.error(e)
+      logger.error(Time.now.to_s + " " + e)
       raise e
     end
     
@@ -315,7 +315,7 @@ class DatasetsController < ApplicationController
     begin 
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(@dataset.id, current_user.id, separator)
     rescue Exception => e
-      logger.error(e)
+      logger.error(Time.now.to_s + " " + e)
       raise e
     end  
   end

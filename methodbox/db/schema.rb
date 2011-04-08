@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110329134400) do
+ActiveRecord::Schema.define(:version => 20110405141352) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -301,7 +301,7 @@ ActiveRecord::Schema.define(:version => 20110329134400) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false
+    t.boolean  "dormant",            :default => false, :null => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -557,7 +557,7 @@ ActiveRecord::Schema.define(:version => 20110329134400) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false
+    t.boolean  "dormant",                                 :default => false, :null => false
     t.datetime "last_ukda_check"
     t.boolean  "ukda_registered"
     t.datetime "last_user_activity"
@@ -630,7 +630,7 @@ ActiveRecord::Schema.define(:version => 20110329134400) do
     t.string   "none_values_distribution_file", :limit => 100
     t.string   "values_distribution_file",      :limit => 100
     t.float    "mean"
-    t.float    "medium"
+    t.float    "median"
     t.float    "mode"
     t.float    "standard_deviation"
     t.float    "min_value"
