@@ -17,7 +17,7 @@ class Variable < ActiveRecord::Base
   has_many :cart_items, :dependent => :destroy
   has_many :value_domains
 
-  acts_as_solr(:fields=>[:name,:value],:include => [:dataset], :if => proc{|record| !record.is_archived?}) if SOLR_ENABLED
+  acts_as_solr(:fields=>[:name, :value, :dataset_id], :if => proc{|record| !record.is_archived?}) if SOLR_ENABLED
   
   acts_as_taggable_on :title
   acts_as_annotatable
