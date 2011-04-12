@@ -164,7 +164,7 @@ class SurveysController < ApplicationController
           #        @surveys_json << "\",\"survey_type\":\"" + survey.survey_type.shortname + "\"},"
         survey.datasets.each do |dataset|
           @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":" + dataset.name.to_json + ",\"survey-type\":" + survey.survey_type.name.to_json + ",\"year\":" +  survey.year.to_json + ",\"type\" : \"Dataset\",\"dataset-description\" :" + dataset.description.to_json
-          @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey.description.to_json + "},"
+          @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey.description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
         end
       end
     end
