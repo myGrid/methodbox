@@ -162,3 +162,14 @@ function showOrHideDatasetList() {
 		$('currently_selected_datasets').hide();
 	}
 }
+
+// If any of the surveys/datasets are selected then return true else false
+function areAnyDatasetsSelected() {
+	var selected = false;
+	for (var dataset_id in allDatasetsMap) {
+		if (allDatasetsMap[dataset_id] == true) {
+			selected = true;
+		}
+	}
+	return selected;
+}

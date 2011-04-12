@@ -2,7 +2,7 @@
 # Configure your app in config/environment.rb and config/environments/*.rb
 
 #if you are running ruby gem 1.6 or higher you need this next line to avoid the unitialized constant ActiveSupport::Dependencies::Mutex (NameError)
-#require 'thread'
+require 'thread'
 
 RAILS_ROOT = "#{File.dirname(__FILE__)}/.." unless defined?(RAILS_ROOT)
 
