@@ -7,7 +7,7 @@
 <% surveys.each do |survey_id| %>
 	<% survey = Survey.find(survey_id) %>
 	<li>
-	<%= check_box_tag "survey_ids[]", survey.id, false %>
+	<%= check_box_tag "survey_ids[]", survey.id, false, :class=>'survey_categories_checkbox' %>
 	<%= survey.title %>
 	</li>
 <% end %>

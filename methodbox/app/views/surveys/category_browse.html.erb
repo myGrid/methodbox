@@ -10,6 +10,14 @@
 <% end %>
 </ul>
 </div>
+<div>
+  Select:
+  <%= link_to_function 'All', "$$('input.survey_categories_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+  ,&nbsp
+  <%= link_to_function 'None', "$$('input.survey_categories_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+  ,&nbsp
+  <%= link_to_function 'Invert selection', "$$('input.survey_categories_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+</div>
 <div id="categories">
 	<%= render :partial => "survey_categories", :locals => {:survey_type => @selected_survey.survey_type, :surveys => @surveys, :all_categories => @categories} -%>
 </div>
