@@ -15,7 +15,6 @@
     month = date.month
     mday = date.mday
     check_date = year.to_s + '-' + sprintf("%02d", month) + '-' + sprintf("%02d",mday)
-    to_base = "http://cspool58.cs.man.ac.uk?" + params[:username] + "&sars_checksum="
     ip = request.env["HTTP_X_FORWARDED_FOR"] || request.env["HTTP_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]
     full_ip = IPAddress ip
     short_ip = full_ip[0].to_s + '.' + full_ip[1].to_s + '.' + full_ip[2].to_s

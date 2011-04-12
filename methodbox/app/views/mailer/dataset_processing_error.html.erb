@@ -1,6 +1,10 @@
-Hi <%= @name %>,
+<h3>Dataset Processing Error<h3>
+	
+<p>Hi <%= @name %>,</p>
 
-There was an error processing dataset, <%= @dataset.name %>.  It is recommended that you check the datafile you tried to load and reload it.
-Find it at <%= dataset_url(@dataset) %> 
+<p>There was an error processing dataset, <%= @dataset.name %>.  It is recommended that you check the datafile you tried to load and reload it.
+Find it at <%= dataset_url(@dataset) %></p>
 
-- The MethodBox Team
+<p>- The MethodBox Team</p>
+
+<%= render :partial "disclaimer" -%>

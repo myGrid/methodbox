@@ -669,3 +669,13 @@ div.exhibit-collectionView-header {
 	font-style: italic;
 	color: red;
 }
+.disclaimer {
+	font-size: 83%;
+	font-style: italic;
+    padding: 0.5em;
+    text-align: center;
+}
+/* to keep some space between the buttons on the category list page */
+#survey_list li {
+	padding-bottom: 10px;
+}

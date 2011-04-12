@@ -1,6 +1,10 @@
-Hi <%= @name %>,
+<h3>Data Extract failure</h3>
 
-Your data extract, <%= @data_extract.title %>, failed to create.
-The error was <%= @error %> 
+<p>Hi <%= @name %>,</p>
 
-- The MethodBox Team
+<p>Your data extract, <%= @data_extract.title %>, failed to create.
+The error was <%= @error %></p>
+
+<p>- The MethodBox Team</p>
+
+<%= render :partial "disclaimer" -%>

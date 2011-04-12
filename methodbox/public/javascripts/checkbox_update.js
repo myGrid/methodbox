@@ -24,3 +24,7 @@ function uncheckAll() {
             checkBoxSelected[checkbox.value] = false;
     });
 }
+
+function setCheckedStatus(checkbox_id) {
+	$(checkbox_id + '_checkbox').checked = checkBoxSelected[checkbox_id];
+}

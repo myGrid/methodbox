@@ -13,16 +13,13 @@ class SessionsController < ApplicationController
     month = date.month
     mday = date.mday
     check_date = year.to_s + '-' + sprintf("%02d", month) + '-' + sprintf("%02d",mday)
-    to_base = "http://cspool58.cs.man.ac.uk?" + params[:username] + "&sars_checksum="
     ip = request.env["HTTP_X_FORWARDED_FOR"] || request.env["HTTP_FORWARDED_FOR"] || request.env["REMOTE_ADDR"]
     full_ip = IPAddress ip
     short_ip = full_ip[0].to_s + '.' + full_ip[1].to_s + '.' + full_ip[2].to_s
-    puts short_ip
     user = params[:username]
     user.gsub!("+"," ")
     pre_hash =  check_date + SARS_SHARED_SECRET + short_ip + user
     digest = Digest::MD5.hexdigest(pre_hash)
-    puts pre_hash + " " + digest
     sars_checksum = params[:sars_checksum]
     calculated_hash = digest
     respond_to do |format|

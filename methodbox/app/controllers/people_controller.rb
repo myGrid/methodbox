@@ -67,35 +67,6 @@ class PeopleController < ApplicationController
   # GET /people/1.xml
   def show
     @person = Person.find(params[:id])
-
-    #    check each archive to see if it is complete or not
-    archives = Csvarchive.find_all_by_user_id(@person.user)
-
-    archives.each do |a|
-      if !a.complete
-        http = Net::HTTP.new('localhost',25000)
-        puts "requesting status of " + a.filename
-        response = http.get('/eos/download/' + a.filename)
-        http.read_timeout=6000
-        if response.response.class == Net::HTTPOK
-
-          if response.content_type == 'application/zip'
-            # the file is ready so update the archive status but ignore since we don't want to download the file here
-
-            a.update_attributes(:complete=>true)
-            puts 'file ready, archive id ' + a.filename
-          end
-        end
-      end
-    end
-
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @person.to_xml}
-    end
-
-  rescue SystemCallError
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @person.to_xml}

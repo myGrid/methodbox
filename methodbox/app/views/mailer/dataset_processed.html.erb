@@ -1,6 +1,10 @@
-Hi <%= @name %>,
+<h3>Dataset processed</h3>
 
-Your dataset, <%= @dataset.name %>, has been processed and is ready for download.
-Find it at <%= dataset_url @dataset %> 
+<p>Hi <%= @name %>,</p>
 
-- The MethodBox Team
+<p>Your dataset, <%= @dataset.name %>, has been processed and is ready for download.
+Find it at <%= dataset_url @dataset %></p>
+
+<p>- The MethodBox Team</p>
+
+<%= render :partial "disclaimer" -%>

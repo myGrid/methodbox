@@ -1,7 +1,11 @@
-Hi <%= @name %>,
+<h3>You have a new message</h3>
 
-The message is as follows:
+<p>Hi <%= @name %>,</p>
 
-<%= @message %>
+<p>The message is as follows:</p>
 
-- The MethodBox Team
+<p><%= @message %></p>
+
+<p>- The MethodBox Team</p>
+
+<%= render :partial "disclaimer" -%>

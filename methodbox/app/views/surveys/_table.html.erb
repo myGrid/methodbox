@@ -15,7 +15,7 @@
   <% popularity = VariableList.all(:conditions=>"variable_id=" + item.id.to_s).size -%>
 
   <%= render :partial => "surveys/variables_table_row",:locals=>{:lineage=>lineage, :extract_lineage => extract_lineage, :extract_id => extract_id, :item => item, :dataset => dataset, :popularity => popularity, :curr_cycle=>cycle("_even","_odd"), :row_name => item.id.to_s} %>
-  <%= render :partial => "surveys/variables_table_expanded_row",:locals=>{:lineage=>lineage, :extract_lineage => extract_lineage, :extract_id => extract_id, :item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle, :row_name => item.id.to_s} %>
+  <%#= render :partial => "surveys/variables_table_expanded_row",:locals=>{:lineage=>lineage, :extract_lineage => extract_lineage, :extract_id => extract_id, :item => item, :dataset => dataset, :popularity => popularity, :hidden=>true,:curr_cycle=>current_cycle, :row_name => item.id.to_s} %>
 
 <% end %>
 

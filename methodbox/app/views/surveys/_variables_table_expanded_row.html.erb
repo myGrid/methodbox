@@ -1,4 +1,5 @@
 <%= javascript_include_tag 'toggler.js' %>
+<%= javascript_include_tag 'http://www.google.com/jsapi'%>
 
 <div id= "<%= row_name + "_expanded" -%>" style="display: <%= hidden ? "none":"inline" -%>">
   <div>
@@ -9,11 +10,17 @@
 	<% end %>
       <li>
 		<% if item.is_archived? %>
-		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox',:disabled=>true,:id=>"#{row_name + '_expanded_checkbox'}" -%></div>
-        <div class="col2"><%= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript: Element.hide($('#{row_name + '_expanded'}'));Element.show($('#{row_name}'));") -%></div>
+		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox',:disabled=>true,:id=>"#{row_name + '_checkbox'}" -%></div>
+        <!-- <div class="col2"> -->
+<%#= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript: Element.hide($('#{row_name + '_expanded'}'));Element.show($('#{row_name}'));") -%>
+<!-- </div> -->
+      <div class="col2"><%= link_to_remote (image_tag("folds/fold.png",:title=>"Hide details...",:alt=>"Hide details...", :border => 0), :url=>{:action => 'collapse_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name + "_expanded", :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
 		<% else %>
-		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_expanded_checkbox'}" -%></div>
-        <div class="col2"><%= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_expanded_checkbox'}').checked == true) {$('#{row_name + '_checkbox'}').checked =true} else {$('#{row_name + '_checkbox'}').checked=false};Field.disable('#{row_name + '_expanded_checkbox'}');Field.enable('#{row_name + '_checkbox'}');Element.hide($('#{row_name + '_expanded'}'));Element.show($('#{row_name}'));") -%></div>
+		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_checkbox'}" -%></div>
+        <!-- <div class="col2"> -->
+<%#= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_expanded_checkbox'}').checked == true) {$('#{row_name + '_checkbox'}').checked =true} else {$('#{row_name + '_checkbox'}').checked=false};Field.disable('#{row_name + '_expanded_checkbox'}');Field.enable('#{row_name + '_checkbox'}');Element.hide($('#{row_name + '_expanded'}'));Element.show($('#{row_name}'));") -%>
+<!-- </div> -->
+      <div class="col2"><%= link_to_remote (image_tag("folds/fold.png",:title=>"Hide details...",:alt=>"Hide details...", :border => 0), :url=>{:action => 'collapse_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name + "_expanded", :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
 		<% end %>
 	<% if item.is_archived? %>
 	<% if item.name.size > 20 -%>
@@ -192,8 +199,6 @@
 </div>
 </div>
 <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      function draw<%= row_name + "_expanded_stats_chart" -%>Chart() {
 		var hash_size = <%=var_hash.size %>
 		if (hash_size > 1 && hash_size <= 20) {
         var data = new google.visualization.DataTable();
@@ -206,7 +211,7 @@
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
 
-        var chart = new google.visualization.PieChart(document.getElementById('<%= row_name + "_expanded_stats_chart" -%>'));
+        var chart = new google.visualization.PieChart($('<%= row_name + "_expanded_stats_chart" -%>'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
 	} else if (hash_size > 1) {
 		var data = new google.visualization.DataTable();
@@ -219,8 +224,10 @@
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('<%= row_name + "_expanded_stats_chart" -%>'));
+        var chart = new google.visualization.ColumnChart($('<%= row_name + "_expanded_stats_chart" -%>'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
-	}
 }
     </script>
+<script type="text/javascript">
+	setCheckedStatus('<%= row_name -%>');
+</script>

@@ -28,6 +28,23 @@ class SurveysController < ApplicationController
   
   after_filter :update_last_user_activity
   
+  #After the user clicks on the 'collapse' for a row in the variable table
+  def collapse_row
+    variable = Variable.find(params[:id])
+    item = variable
+    row_name = item.id.to_s
+    dataset = Dataset.find(params[:dataset])
+    render :partial => 'variables_table_row', :locals=>{:item=>item,:row_name=>row_name, :curr_cycle=>params[:curr_cycle], :dataset=>dataset,:popularity=>params[:popularity], :id=>params[:id], :extract_lineage=>params[:extract_lineage], :extract_id=>params[:extract_id], :lineage=>params[:lineage]}
+  end
+  #After the user clicks on the drop down for a variable row
+  def expand_row
+    variable = Variable.find(params[:id])
+    item = variable
+    row_name = item.id.to_s
+    dataset = Dataset.find(params[:dataset])
+    render :partial => 'variables_table_expanded_row', :locals=>{:hidden=>false, :item=>item,:row_name=>row_name, :curr_cycle=>params[:curr_cycle], :dataset=>dataset,:popularity=>params[:popularity], :id=>params[:id], :extract_lineage=>params[:extract_lineage], :extract_id=>params[:extract_id], :lineage=>params[:lineage]}
+  end
+  
   #list of surveys to add to the db
   def add_nesstar_surveys
     respond_to do |format|
