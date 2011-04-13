@@ -21,7 +21,7 @@ gem "POpen4",  "0.1.4", :require => "popen4"
 gem "nesstar-api", "0.0.2"
 gem "metric_fu"
 gem 'sunspot_rails', '~> 1.2.1'
-
+gem 'addressable', '2.2.4'
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"
