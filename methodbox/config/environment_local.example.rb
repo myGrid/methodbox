@@ -6,7 +6,7 @@ SARS_SHARED_SECRET = "something"
 SHIB_LOGIN_URL = "http://some.url:port"
 #where should completed data extracts be stored
 CSV_OUTPUT_DIRECTORY = "/Users/you/data/#{ENV['RAILS_ENV']}/complete"
-#is the server running ssl routes or not
+#is the server running ssl routes or not, to get the dev server to use http set it to false
 HTTPS_ON = true
 #you need this so it doesn't do eg localhost:3000:3001 in ssl paths and redirects to correct port from https to http
 #(is this needed when running in eg apache - no idea)

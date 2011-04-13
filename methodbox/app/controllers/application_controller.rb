@@ -399,6 +399,13 @@ class ApplicationController < ActionController::Base
 
   protected
   
+  #To make it easier in dev mode using webrick etc this checks if you want
+  #https.  Although the routes will be defined as https in the routes by default
+  #you can override it by setting HTTPS_ON to false
+  def ssl_required?
+    HTTPS_ON
+  end
+  
   #had to override this to test the exception notifier plugin
   #when running production locally.  Articles on web seem to say
   #you don't need to do this but I couldn't figure out another way

@@ -50,10 +50,10 @@ module SslRequirement
     return true if ssl_allowed?
 #the second 3001 needs removed before deployment since it should just be for development and not production
     if ssl_required? && !request.ssl?
-      redirect_to "https://" + request.host + (RAILS_ENV == 'development' ? ':3001' : ':3001') + request.request_uri
+      redirect_to "https://" + request.host + (RAILS_ENV == 'development' ? ':3001' : '') + request.request_uri
       return false
     elsif request.ssl? && !ssl_required?
-      redirect_to "http://" + request.host + (RAILS_ENV == 'development' ? ':3000' : ':3001') + request.request_uri
+      redirect_to "http://" + request.host + (RAILS_ENV == 'development' ? ':3000' : '') + request.request_uri
       return false
     end
   end
