@@ -26,6 +26,8 @@ class SurveysController < ApplicationController
 
   before_filter :find_notes, :only => [ :show ]
   
+  before_filter :find_groups, :only => [:new_nesstar_datasource]
+  
   after_filter :update_last_user_activity
   
   #After the user clicks on the 'collapse' for a row in the variable table
@@ -1003,6 +1005,10 @@ class SurveysController < ApplicationController
         @survey =Survey.find(params[:id])
         @notes = Note.all(:conditions=>{:notable_type => "Survey", :user_id=>current_user.id, :notable_id => @survey.id})
       end
+    end
+    
+    def find_groups
+      @groups = WorkGroup.all
     end
 
 end

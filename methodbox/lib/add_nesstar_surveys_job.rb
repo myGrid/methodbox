@@ -103,7 +103,6 @@ module AddNesstarSurveysJob
                       #the frequency statistics for the value domain
                       #guessing that 'freq' is consistent, however......
                         if statistic.type == 'freq'
-                          puts "stats for " +  variable.name + ", value: " + statistic.value
                           val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain => valDom)
                           val_dom_stat.save
                           break
@@ -123,7 +122,7 @@ module AddNesstarSurveysJob
                         var.update_attributes(:valid_entries => summary_stat.value)
                       end
                     rescue
-                      logger.warn Time.now.to_s 'One of the summary stats failed for variable ' +  var.id.to_s
+                      logger.warn Time.now.to_s + 'One of the summary stats failed for variable ' +  var.id.to_s
                     end
                     end
                     question = variable.question != nil ? variable.question : ""
@@ -147,7 +146,7 @@ module AddNesstarSurveysJob
       
       # email_user
     rescue Exception => e     
-      logger.error Time.now.to_s "Problem processing nesstar catalogs " + e
+      logger.error Time.now.to_s + "Problem processing nesstar catalogs " + e
       # send an error message
       # Mailer.deliver_nesstar_catalogs_processing_error(dataset, user_id, e, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
       

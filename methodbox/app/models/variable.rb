@@ -23,11 +23,11 @@ class Variable < ActiveRecord::Base
   acts_as_annotatable
   
   #sunspot solr
-  searchable do
-      text :name
-      text :value
-      integer :dataset_id
-    end
+  # searchable do
+  #     text :name
+  #     text :value
+  #     integer :dataset_id
+  #   end
   
   def to_param
     "#{id}-#{name.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')

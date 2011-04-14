@@ -12,7 +12,7 @@
 <li style="display: inline;list-style-type: none;">Everyone <%= radio_button_tag('sharing_scope', 'everyone',false, :onclick=>"$('groups_div').hide()") %></li>
 <li style="display: inline;list-style-type: none;">Some groups<%= radio_button_tag('sharing_scope', 'some groups', false, :onclick=>"$('groups_div').show();") %></li>
 <div id="groups_div" style="display: none;">
-<%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups", :collection=>[],:selected=>[],:authorization_for_showing_already_done => false } -%>
+<%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups", :collection=>@groups,:selected=>[],:authorization_for_showing_already_done => false } -%>
 </div>
 </ul>
 </div>

@@ -56,11 +56,11 @@ class Person < ActiveRecord::Base
   named_scope :not_registered,:include=>:user,:conditions=>"users.person_id IS NULL"
   
   #sunspot solr
-  searchable do
-      text :first_name
-      text :last_name
-      text :expertise
-    end
+  # searchable do
+  #     text :first_name
+  #     text :last_name
+  #     text :expertise
+  #   end
 
   def self.userless_people
     p=Person.find(:all)

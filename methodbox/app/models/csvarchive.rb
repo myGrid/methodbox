@@ -36,10 +36,10 @@ class Csvarchive < ActiveRecord::Base
   acts_as_solr(:fields=>[:title,:description]) if SOLR_ENABLED
   
   #sunspot solr
-  searchable do
-      text :title
-      text :description
-    end
+  # searchable do
+  #     text :title
+  #     text :description
+  #   end
   
   def to_param
     "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
