@@ -45,6 +45,13 @@ module AddNesstarSurveysJob
                     catalog_survey_types = SurveyType.all(:conditions=>{:name => survey_type_info.label})
                     if catalog_survey_types.empty?
                       catalog_survey_type = SurveyType.new(:name => survey_type_info.label, :nesstar_id => survey_type, :nesstar_uri => nesstar_url)
+                      #create a new forum for the catalog
+                      forum = Forum.new()
+                      forum.name = catalog_survey_type.name
+                      forum.description = "Questions about " + catalog_survey_type.name
+                      forum.position = 4
+                      forum.save
+
                       catalog_survey_type.save
                       if survey_type_info.description != nil
                           catalog_survey_type.update_attributes(:description => survey_type_info.description.gsub(/<\/?[^>]*>/, ""))
@@ -57,6 +64,11 @@ module AddNesstarSurveysJob
                     if catalog_survey_types.size == 0
                       catalog_survey_type = SurveyType.new(:name => 'none', :description => 'Surveys which do not have a specified survey type')
                       catalog_survey_type.save
+                      forum = Forum.new()
+                      forum.name = "surveys with no parent catalog"
+                      forum.description = "Questions about surveys with no parent catalog"
+                      forum.position = 4
+                      forum.save
                     else
                       catalog_survey_type = catalog_survey_types[0]
                     end
