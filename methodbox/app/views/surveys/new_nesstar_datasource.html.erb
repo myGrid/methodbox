@@ -1,3 +1,4 @@
+<%= javascript_include_tag "link_adder.js" -%>
 <div class="survey-table" style="width:100%">
 	<h1 class="contribution_title" style="border-bottom: 1px dotted; margin-bottom: 1em;">Select some catalogs/datasets and add them</h1>
 <% form_tag add_nesstar_surveys_surveys_url do %>
@@ -7,19 +8,22 @@
 <div><%= submit_tag 'Add these surveys'%></div>
 <div>
 <ul><li style="display: inline;list-style-type: none;">Share with:</li> 
-<li style="display: inline;list-style-type: none;">No one<%= radio_button_tag('sharing_scope', 'no-one', true, :onclick=>"$('groups_div').hide()") %></li>
-<li style="display: inline;list-style-type: none;">Registered Users only<%= radio_button_tag('sharing_scope', 'registered-users-only',false, :onclick=>"$'(groups_div').hide()") %></li>
-<li style="display: inline;list-style-type: none;">Everyone <%= radio_button_tag('sharing_scope', 'everyone',false, :onclick=>"$('groups_div').hide()") %></li>
-<li style="display: inline;list-style-type: none;">Some groups<%= radio_button_tag('sharing_scope', 'some groups', false, :onclick=>"$('groups_div').show();") %></li>
+<li style="display: inline;list-style-type: none;">No one<%= radio_button_tag('sharing_scope', '0', true, :onclick=>"$('groups_div').hide()") %></li>
+<li style="display: inline;list-style-type: none;">Registered Users only<%= radio_button_tag('sharing_scope', '3',false, :onclick=>"$'(groups_div').hide()") %></li>
+<li style="display: inline;list-style-type: none;">Everyone <%= radio_button_tag('sharing_scope', '4',false, :onclick=>"$('groups_div').hide()") %></li>
+<li style="display: inline;list-style-type: none;">Some groups<%= radio_button_tag('sharing_scope', '1', false, :onclick=>"$('groups_div').show();") %></li>
+</ul>
 <div id="groups_div" style="display: none;">
 <%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups", :collection=>@groups,:selected=>[],:authorization_for_showing_already_done => false } -%>
 </div>
-</ul>
+<div style="clear:both;">
 </div>
 </div>
-	<table style="width:100%; border-bottom: 1px solid black;">
-		<thead style="border: 1px solid black;">		
-			<tr style="text-align: center;"><th style="width:10%; border-right: 1px solid black; border-bottom: 1px solid black;"></th><th style="background-color: gold; width:10%; border: 1px solid black;">Parent Catalogue</th><th style="background-color: gold; width:40%; border: 1px solid black;">Dataset Catalogue</th><th style="background-color: gold; width:40%; border: 1px solid black;">Dataset</th></tr>	
+</div>
+<div class="datasource-table">
+	<table>
+		<thead>		
+			<tr><th style="width:10%; border-right: 1px solid black; border-bottom: 1px solid black;"></th><th style="background-color: gold; width:10%; border: 1px solid black;">Parent Catalogue</th><th style="background-color: gold; width:40%; border: 1px solid black;">Dataset Catalogue</th><th style="background-color: gold; width:40%; border: 1px solid black;">Dataset</th></tr>	
 		</thead>
 		<tbody>
 			<% @survey_types.each_key do |survey_type| %>
@@ -33,6 +37,7 @@
 			<% end %>
 		</tbody>
 	</table>
+</div>
 <div class="center" style="margin-top: 1em;">
 	<%= submit_tag 'Add these surveys'%>
 </div>

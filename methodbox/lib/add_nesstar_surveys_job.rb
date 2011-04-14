@@ -4,7 +4,7 @@ require 'nesstar-api'
 
 module AddNesstarSurveysJob
   
-  class StartJobTask < Struct.new(:datasets, :nesstar_url, :nesstar_catalog, :user_id, :base_host)
+  class StartJobTask < Struct.new(:datasets, :nesstar_url, :nesstar_catalog, :groups, :sharing_scope, :user_id, :base_host)
     
     
     cattr_accessor :logger
@@ -70,9 +70,16 @@ module AddNesstarSurveysJob
                         catalog_survey.update_attributes(:description => parent_info.description.gsub(/<\/?[^>]*>/, ""))
                     end
                     #TODO user can define policy when adding the surveys
-                    policy = Policy.create(:name => "survey_policy", :sharing_scope => 3, :use_custom_sharing => false, :access_type => 2, :contributor => User.find(user_id))
+                    
+                    policy = Policy.create(:name => "survey_policy", :sharing_scope => sharing_scope, :use_custom_sharing => sharing_scope == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false, :access_type => 2, :contributor => User.find(user_id))
+                    if groups != nil && sharing_scope == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+                       groups.each do |workgroup_id|
+                          policy.permissions << Permission.create(:contributor_id => workgroup_id, :contributor_type => "WorkGroup", :policy => policy, :access_type => 2)
+                        end
+                    end
                     catalog_survey.asset.policy = policy
                     policy.save
+                        
                     catalog_survey.asset.contributor_type='User'
                     catalog_survey.asset.contributor_id = user_id
                     catalog_survey.asset.save

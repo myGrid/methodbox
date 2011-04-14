@@ -51,7 +51,7 @@ class SurveysController < ApplicationController
   def add_nesstar_surveys
     respond_to do |format|
       begin
-        Delayed::Job.enqueue AddNesstarSurveysJob::StartJobTask.new(params[:datasets], params[:nesstar_url], params[:nesstar_catalog], current_user.id, base_host)
+        Delayed::Job.enqueue AddNesstarSurveysJob::StartJobTask.new(params[:datasets], params[:nesstar_url], params[:nesstar_catalog], params[:groups], params[:sharing_scope], current_user.id, base_host)
         flash[:notice] = "Surveys are being added to MethodBox.  You will receive an email when it is complete."
       rescue Exception => e
         flash[:error] = "There was a problem adding the datasets. Please try again later."

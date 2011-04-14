@@ -679,3 +679,16 @@ div.exhibit-collectionView-header {
 #survey_list li {
 	padding-bottom: 10px;
 }
+#groups_div {
+	margin-bottom:1em;
+	margin-top: 2em;
+}
+.datasource-table table {
+	width:100%; border-bottom: 1px solid black;
+}
+.datasource-table thead {
+	border: 1px solid black;
+}
+.datasource-table tr {
+	text-align: center;
+}
