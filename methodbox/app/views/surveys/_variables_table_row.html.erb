@@ -11,13 +11,13 @@
       <!-- <div class="col2"> -->
 <%#= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:Element.hide($('#{row_name}'));Element.show($('#{row_name + '_expanded'}'));") -%>
 <!-- </div> -->
-      <div class="col2"><%= link_to_remote (image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0), :url=>{:action => 'expand_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name, :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
+      <div class="col2"><%= link_to_remote(image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0), :url=>{:action => 'expand_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name, :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
 	<% else %>
 	<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse();addOrRemoveHiddenFieldForVariable(#{item.id})",:id=>"#{row_name + '_checkbox'}" -%></div>
       <!-- <div class="col2"> -->
 <%#= image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_checkbox'}').checked == true) {$('#{row_name + '_expanded_checkbox'}').checked =true} else {$('#{row_name + '_expanded_checkbox'}').checked=false};Field.disable('#{row_name + '_checkbox'}');Field.enable('#{row_name + '_expanded_checkbox'}');draw#{row_name + '_expanded_stats_chart'}Chart();Element.hide($('#{row_name}'));Element.show($('#{row_name + '_expanded'}'));") -%>
 <!-- </div> -->
-      <div class="col2"><%= link_to_remote (image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0), :url=>{:action => 'expand_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name, :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
+      <div class="col2"><%= link_to_remote(image_tag("folds/unfold.png",:title=>"More details...",:alt=>"More details...", :border => 0), :url=>{:action => 'expand_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name, :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
 <% end %>
 <% if item.is_archived? %>
 <% if item.name.size > 20 -%>
