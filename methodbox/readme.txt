@@ -32,7 +32,7 @@ Production
 
 = To HTTPS or not HTTPS
 
-By default all the routes are set to be protocol => 'https' in routes.rb.  There is an alternative routes file called http_routes.rb that you can swap in to do these routes.  You should also set the HTTPS_ON boolean constant in environment_local.rb to be true or false depending on whether you want the routes to default to https or not.  By setting the HTTPS_ON to false then you can navigate to http:// and there will be no redirecting to the https:// version but by default all the routes in the app will still point to https so if you clicked on one of the links it would take you to the https url. It will probably cause you confusion etc unless you are running an https dev server as well using the script/server_ssl version as well as the script/server. In the controllers it uses the ssl_requirement plugin and overrides the ssl_required? method to return whatever you put in the HTTPS_ON constant.
+The protocol (ie http or https) for the routes is set by the constant ROUTES_PROTOCOL in your development/procuction/test.rb file.  All the routes in routes.rb will be set to use this protocol. You should also set the HTTPS_ON boolean constant in environment_local.rb to be true or false depending on whether you want the routes to require ssl or not.  By setting the HTTPS_ON to false and ROUTES_PROTOCOL to http then you can run http routes when developing (or in production if you do not want ssl). In the controllers it uses the ssl_requirement plugin and overrides the ssl_required? method to return whatever you put in the HTTPS_ON constant via a method in the ApplicationController.
 
 = Data
 

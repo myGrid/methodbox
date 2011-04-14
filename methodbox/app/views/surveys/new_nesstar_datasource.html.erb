@@ -8,9 +8,9 @@
 <div>
 <ul><li style="display: inline;list-style-type: none;">Share with:</li> 
 <li style="display: inline;list-style-type: none;">No one<%= radio_button_tag('sharing_scope', 'no-one', true, :onclick=>"$('groups_div').hide()") %></li>
-<li style="display: inline;list-style-type: none;">Registered Users only<%= radio_button_tag('sharing_scope', 'registered-users-only', :onclick=>"$'(groups_div').hide()") %></li>
-<li style="display: inline;list-style-type: none;">Everyone <%= radio_button_tag('sharing_scope', 'everyone', :onclick=>"$('groups_div').hide()") %></li>
-<li style="display: inline;list-style-type: none;">Some groups<%= radio_button_tag('sharing_scope', 'some groups', :onclick=>"$('groups_div').show()") %></li>
+<li style="display: inline;list-style-type: none;">Registered Users only<%= radio_button_tag('sharing_scope', 'registered-users-only',false, :onclick=>"$'(groups_div').hide()") %></li>
+<li style="display: inline;list-style-type: none;">Everyone <%= radio_button_tag('sharing_scope', 'everyone',false, :onclick=>"$('groups_div').hide()") %></li>
+<li style="display: inline;list-style-type: none;">Some groups<%= radio_button_tag('sharing_scope', 'some groups', false, :onclick=>"$('groups_div').show();") %></li>
 <div id="groups_div" style="display: none;">
 <%= render :partial => "assets/workgroup_selector", :locals => { :resource_id => "groups", :resource_type => "Groups", :collection=>[],:selected=>[],:authorization_for_showing_already_done => false } -%>
 </div>
