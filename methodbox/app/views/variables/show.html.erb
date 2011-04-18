@@ -1,3 +1,4 @@
+<%#= javascript_include_tag 'https://www.google.com/jsapi' -%>
 <ul class="buttons">
   <%# if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
     <!-- <li> -->
@@ -133,100 +134,10 @@
 
       <p>
         <b>Statistics:</b>
-        <div class="box_standout">
-          <%= render :partial => "variables/statistics_table",:locals=>{:variable => @variable} %>
-        </div>
-      </p>
-      <!-- TODO Style cleanup Including highlighting header line. -->
-      <% no_var_hash = @variable.none_values_hash -%> 
 
-     <!-- TODO add a paramter to control when it long values lists - could be in the thousands -->
-     <!-- TODO Style cleanup Including highlighting header line.-->
- 	<% no_var_hash = @variable.none_values_hash -%> 
-	<% var_hash = @variable.values_hash -%>
-	<% value_domain_hash = Hash.new %>
-	<% var_hash.each_key do |key| %>
-		<% @variable.value_domains.each do |value_domain| %>
-			<% if value_domain.value.to_i.eql?(key.to_i) %> 
-				<% value_domain_hash[key] = value_domain.label %>
-				<% break %>
-			<% end %>
-		<% end %>
-	<% end %>
-	<% no_var_hash.each_key do |key| %>
-		<% @variable.value_domains.each do |value_domain| %>
-			<% if value_domain.value.to_i.eql?(key.to_i) %> 
-				<% value_domain_hash[key] = value_domain.label %>
-				<% break %>
-			<% end %>
-		<% end %>
-	<% end %>
-      <% if var_hash.size > 0 && var_hash.size <= 20 -%>
-<div class="left box_standout">
-        <p>
-          <b>Value frequency counts:</b>
-            <table class="values-table">
-				<thead>
-              <tr>
-                <th>Value</th>
-                <th>Frequency</th>
-				<th>Label</th>
-              <tr> 
-	 			</thead>
-				<tbody>
-              <% var_hash.sort.each do |value, frequency| -%>
-                <tr>
-                  <td><%= value %></td>
-                  <td><%= frequency %></td>
-				  <td><%= value_domain_hash[value] ? value_domain_hash[value] : "N/A" %>
-                <tr>                  
-              <% end -%>
-              <% no_var_hash.sort.each do |value, frequency| -%>
-                <tr>
-                  <td> <%= value %> </td>
-                  <td> <%= frequency %> </td>
-				<td><%= value_domain_hash[value] ? value_domain_hash[value] : "N/A" %>
-                <tr>                  
-              <% end -%>
-			</tbody>
-            </table>
-        </p>
-</div> 
-<!-- figure out what type of stats we are dealing with - discrete, continuous etc... -->
-<!-- firstly see if we have some metadata for the type -->
-<% if var.interval %>
-
-<% elsif var.info %>
-	<% var_type_line = var.info.split("\n").first %>
-		<% if var_type_line.include?("scale") || var_type_line.include?("discrete") || var_type_line.include?("nominal") || var_type_line.include?("ordinal") -%>
-			<%= stat_type="disc" %>
-		<% elsif var_type_line.include?("contin") %>
-			<%= stat_type="contin" %>
-		<% else %>
-		<!-- we have info but no stats type mentioned so figure out the stat type by 'guessing' -->
-			<% if var_hash.size > 20 %>
-				<%= stat_type="contin" %>
-			<% else %>
-				<%= stat_type="disc" %>
-			<% end %>
-		<% end %>
-<% else %>
-	<!-- guess the type from the amount of unique data counted in the  -->
-	<% if var_hash && var_hash.size > 20 %>
-		<%= stat_type="contin" %>
-	<% elsif var_hash %>
-		<%= stat_type="disc" %>
-	<% else %>
-		<!-- errrm, no idea what the stat type is, don't show any -->
-	<% end %>
-<% end %>
-		<div class="gviz-chart" id="frequency_count_chart_div"></div>
+<%=  render :partial=>"statistics_table2", :locals => {:variable => @variable} -%>
 		<div style="clear:both;">
 			</div>
-		<% else %>
-		<b>There are <%= var_hash.size -%> unique values</b>
-		<div class="gviz-chart" id="frequency_count_chart_div"></div>
-      <% end -%> 
 
      <!-- TODO Style cleanup Including highlighting header line.-->
       <% unless @variable.updated_by.blank? %>
@@ -274,29 +185,3 @@
 				<% end %>
 </div>
 </div>
-
-<script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {
-		var stat_type = <%= stat_type %>
-		var hash_size = <%=var_hash.size %>
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Value');
-        data.addColumn('number', 'Count');
-              <% var_hash.sort.each do |value, frequency| -%>
-data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
-              <% end -%>
-			              <% no_var_hash.sort.each do |value, frequency| -%>
-			data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
-			              <% end -%>
-		if (hash_size > 1 && stat_type == "disc") {
-        var chart = new google.visualization.PieChart(document.getElementById('frequency_count_chart_div'));
-        chart.draw(data, {width: 600, height: 400, is3D: true});
-} else if (hash_size > 1 && stat_type == "contin") {
-
-        var chart = new google.visualization.ColumnChart(document.getElementById('frequency_count_chart_div'));
-        chart.draw(data, {width: 800, height: 400, is3D: true});
-	}
-}
-    </script>

@@ -2,6 +2,7 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload="></script>autoload=%7B%22modules%22%3A%5B%7B%22name%22%3A%22search%22%2C%22version%22%3A%221.0%22%2C%22language%22%3A%22en%22%7D%2C%7B%22name%22%3A%22maps%22%2C%22version%22%3A%222.X%22%7D%2C%7B%22name%22%3A%22elements%22%2C%22version%22%3A%221.0%22%2C%22packages%22%3A%5B%22localsearch%22%5D%7D%5D%7D&key=INSERT-YOUR-KEY
 		<link rel="shortcut icon" href="/favicon.ico" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<title>
@@ -148,10 +149,5 @@
 			//]]>
 			</script>
 			<%# NB! These javascript include should be here - otherwise folds / tabs will not be displayed on any pages. -%><%= javascript_include_tag "folds.js" %><%#= javascript_include_tag "tabber-minimized.js" %><%= javascript_include_tag "tabber-new.js" %>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-  // Load the Visualization API and the piechart package.
-  google.load('visualization', '1', {'packages':['corechart']});
-</script>
 		</body>
 </html>
