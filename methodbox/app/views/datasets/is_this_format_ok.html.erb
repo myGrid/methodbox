@@ -1,0 +1,29 @@
+<%= javascript_include_tag "sharing.js" %>
+
+<ul class="buttons">
+  <li><%= icon('script', survey_path(@survey), 'Return to Survey', nil, 'Return to Survey') -%></li>
+</ul>
+
+<div class="show_basic">
+	<center>
+      <div style="width: 90%;">
+		<% form_tag({:action => :create}) do %>
+		<%= hidden_field_tag "dataset[file]", @file_path -%>
+		<%= hidden_field_tag "dataset[go_on]", true -%>
+		<%= hidden_field_tag "dataset[original_filename]", @original_filename -%>
+		<%= hidden_field_tag "dataset[uuid_filename]", @uuid_filename -%>
+		<%=hidden_field_tag "dataset[description]", @description -%>
+		<%=hidden_field_tag "dataset[title]", @title -%>
+		<%=hidden_field_tag "dataset[survey]", @survey -%>
+	<p style="font-weight: bold;">
+Is this really a tab or csv file?  We've had a look and something seems odd about it?  It seems to be a <%= mime_type -%>. However, you know much better (and we might have made a mistake) so if you really want to you can try uploading it.
+<%= submit_tag "I really want to upload this file" -%>
+
+	</p>	
+<p style="font-weight: bold;">
+If you don't want to then just click <%= link_to "Cancel", survey_path(@survey) -%>
+	</p>
+    
+  <% end %>
+  </center>
+</div>

@@ -163,11 +163,11 @@ module AddNesstarSurveysJob
           end
         end
       
-      # email_user
+      email_user
     rescue Exception => e     
       logger.error Time.now.to_s + "Problem processing nesstar catalogs " + e
       # send an error message
-      # Mailer.deliver_nesstar_catalogs_processing_error(dataset, user_id, e, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+      Mailer.deliver_nesstar_catalogs_processing_error(dataset, user_id, e, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
       
     end
     end
@@ -175,7 +175,7 @@ module AddNesstarSurveysJob
     # can different people add datasets to a survey - permissions issue?
     # tell the user that the dataset has been processed. 
     def email_user
-      # Mailer.deliver_nesstar_catalogs_processed(datasets, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+      Mailer.deliver_nesstar_catalogs_processed(datasets, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
     end
 
 end

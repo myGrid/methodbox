@@ -692,3 +692,7 @@ div.exhibit-collectionView-header {
 .datasource-table tr {
 	text-align: center;
 }
+/* The stats table in the variable table drop down */
+.variable_row_info {
+	padding-right: 1em;
+}

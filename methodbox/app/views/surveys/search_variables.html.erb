@@ -2,6 +2,10 @@
 <%= javascript_include_tag "variable_table_check.js" -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
+<script type="text/javascript">
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1', {'packages':['corechart']});
+</script>
 <% form_tag :url => { :action => "add_to_cart"} do -%>
   <div class="show_basic" style="padding-right: 2em;">
     <% if !logged_in? -%>

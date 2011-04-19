@@ -3,6 +3,25 @@ class Mailer < ActionMailer::Base
 
   NOREPLY_SENDER="methodbox+no-reply@googlemail.com"
   
+  def nesstar_catalogs_processing_error(dataset, user_id, error, base_host)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Problem processing nesstar catalogs"
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :error => error,
+         :host=>base_host
+  end
+  
+  def nesstar_catalogs_processed(datasets, user_id, base_host)
+    recipients User.find(user_id).person.email
+    from NOREPLY_SENDER
+    subject "Nesstar Catalogs Processed"
+    sent_on    Time.now
+    body :name => User.find(user_id).person.name,
+         :host=>base_host
+  end
+  
   def metadata_processing_error(dataset_id, user_id, error, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER

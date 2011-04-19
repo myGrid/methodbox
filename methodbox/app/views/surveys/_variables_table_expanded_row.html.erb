@@ -1,5 +1,4 @@
 <%= javascript_include_tag 'toggler.js' %>
-<%= javascript_include_tag 'http://www.google.com/jsapi'%>
 
 <div id= "<%= row_name + "_expanded" -%>" style="display: <%= hidden ? "none":"inline" -%>">
   <div>
@@ -11,15 +10,9 @@
       <li>
 		<% if item.is_archived? %>
 		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox',:disabled=>true,:id=>"#{row_name + '_checkbox'}" -%></div>
-        <!-- <div class="col2"> -->
-<%#= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript: Element.hide($('#{row_name + '_expanded'}'));Element.show($('#{row_name}'));") -%>
-<!-- </div> -->
       <div class="col2"><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...",:alt=>"Hide details...", :border => 0), :url=>{:action => 'collapse_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name + "_expanded", :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
 		<% else %>
 		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_checkbox'}" -%></div>
-        <!-- <div class="col2"> -->
-<%#= image_tag("folds/fold.png", :title=>"Hide details...",:alt=>"Hide details...", :border => 0, :onclick=>"javascript:if ($('#{row_name + '_expanded_checkbox'}').checked == true) {$('#{row_name + '_checkbox'}').checked =true} else {$('#{row_name + '_checkbox'}').checked=false};Field.disable('#{row_name + '_expanded_checkbox'}');Field.enable('#{row_name + '_checkbox'}');Element.hide($('#{row_name + '_expanded'}'));Element.show($('#{row_name}'));") -%>
-<!-- </div> -->
       <div class="col2"><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...",:alt=>"Hide details...", :border => 0), :url=>{:action => 'collapse_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name + "_expanded", :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
 		<% end %>
 	<% if item.is_archived? %>
@@ -51,7 +44,7 @@
           <%  end -%>
         </div>
 	       <div class="col6">
-	        <%= dataset.survey.survey_type.shortname ? dataset.survey.survey_type.shortname : truncate(dataset.survey.title, 10, "...")-%>
+	        <%= dataset.survey.survey_type.shortname ? dataset.survey.survey_type.shortname : truncate(dataset.survey.title, 10, "...") -%>
 	      </div>
 	      <div class="col7">
 	        <%= link_to dataset.name, dataset_url(dataset) -%>
@@ -70,68 +63,21 @@
 </li>
     </ul>
   </div>
-<div class="medium-padding">
-  <% if item.name.size > 20 -%>
-    <div style="margin:auto;">Actual Variable name: <%= item.name -%></div>
-    <br/>
-  <% end -%>
-<% if lineage %>
-  <div>
-	Lineage of term (ie. where/why you added it to your cart) - <%= display_lineage_for_variable(item.id, extract_lineage, extract_id) %>
-  </div>
-<br/>
-<% end %>
-  <div>
-    <% unless item.document.blank? -%>
-      <div style="margin:auto;">Document: 
-        <%= link_to(item.document + ", page " + item.page, open_pdf_variable_url(item) + "#page=" + item.page,:title=>"Open the PDF document with information about this variable") -%>
-      </div>
-    <% else -%>
-      <div style="margin:auto;color:red;">No documentation listed</div>
-    <% end -%>
-  </div>
-  <br/>
-  <div>
-    <% if item.category != nil -%>
-      <div style="margin:auto;">Category: <%= item.category -%></div>
-    <% else -%>
-      <div style="margin:auto;color:red;">No category recorded for this variable</div>
-    <% end -%>
-  </div>
-  <br/>
-  <div>
-    <% unless item.dertype.blank? -%>
-      <div style="margin:auto;">Variable source: <%= item.dertype %></div>
-    <% else -%>
-      <div style="margin:auto;color:red;">No source</div>
-    <% end -%>
-  </div>
-  <br/>
-  <div>
-    <% unless item.dermethod.blank? -%>
-      <div style="margin:auto;">Derivation method:</div>
-      <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre style='white-space: normal;'><%=  item.dermethod -%></pre></div>
-    <% else -%>
-      <div style="margin:auto;color:red;">No derivation method recorded for this variable</div>
-    <% end -%>
-  </div>
-  <br/>
-  <div>
-    <% if item.info != nil -%>
-      <div style="margin:auto;">Allowed values:</div>
-      <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
-	<% elsif !item.value_domains.empty? %>
-		<% item.value_domains.each do |value_domain| %>
-			<%= value_domain.label + " " + value_domain.value unless value_domain.label == 'N/A' %>
-			<br/>
-		<% end %>
-    <% else -%>
-      <div style="margin:auto;color:red;">No value information recorded for this variable</div>
-    <% end -%>
-  </div>
+<div>
+<%= render :partial => "variable_row_info", :locals => {:item => item, :extract_lineage => extract_lineage, :extract_id => extract_id, :lineage => lineage} %>
+</div>
 
-  <!-- <%= item.name %> -->
-
+<% if item.nesstar_id -%>
+	<% value_domain_hash = Hash.new %>
+	<% var_hash = Hash.new %>
+		<% item.value_domains.each do |value_domain| -%>
+			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
+			<% value_domain_hash[value_domain.id] = value_domain.label %>
+		<% end -%>
+	<% valid_entries = item.valid_entries -%>
+	<% invalid_entries = item.invalid_entries -%>
+	<% total_entries = invalid_entries + valid_entries -%>
+<% else -%>
 <% no_var_hash = item.none_values_hash -%> 
 <% var_hash = item.values_hash -%>
 <% value_domain_hash = Hash.new %>
@@ -143,14 +89,31 @@
 		<% end %>
 	<% end %>
 <% end %>
+<% blank_rows = item.number_of_blank_rows %>
+<% invalid_entries = 0 -%>
 <% no_var_hash.each_key do |key| %>
 	<% item.value_domains.each do |value_domain| %>
 		<% if value_domain.value.to_i.eql?(key.to_i) %> 
 			<% value_domain_hash[key] = value_domain.label %>
 			<% break %>
+		<% else %>
+			<% value_domain_hash[key] = key %>
 		<% end %>
 	<% end %>
+	<% invalid_entries += no_var_hash[key] %>
 <% end %>
+<% invalid_entries += blank_rows -%>
+<% valid_entries = 0 -%>
+<% var_hash.each_key do |key| -%>
+	<% valid_entries += var_hash[key] -%>
+<% end -%>
+<% no_var_hash.each_key do |key| -%>
+	<% valid_entries += var_hash[key] -%>
+<% end -%>
+<% total_entries = invalid_entries + valid_entries -%>
+<% if blank_rows != nil -%>
+	<% total_entries += blank_rows -%>
+<% end -%>
 <!-- If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets -->
 <% if var_hash.empty? %>
 	<% item.value_domains.each do |value_domain| %>
@@ -160,31 +123,16 @@
 		<% end %>
 	<% end %>
 <% end %>
-<% if var_hash.size > 0 -%>
-	<div class="left" id='<%= row_name + "_expanded_stats_chart" -%>'>
-
-	</div>
-<% end %>
-<div>
-  <%= render :partial => "variables/statistics_table",:locals=>{:variable => item} %> 
+<% end -%>
+<div class="left" id='<%= row_name + "_expanded_stats_chart" -%>'>
 </div>
-<%# if var_hash.size > 20 -%>
-<!-- <div style="font-style: italic; ">(Too many values to display in chart)</div> -->
-<%# end %>
+<div class="right variable_row_info">
+	<%= render :partial => "variable_row_stats_info", :locals=>{:item => item,:var_hash => var_hash, :no_var_hash => no_var_hash, :valid_entries => valid_entries, :invalid_entries => invalid_entries, :value_domain_hash => value_domain_hash, :total_entries => total_entries, :blank_rows => blank_rows} %>
+</div>
 <div style="clear:both">
 </div>
 
   <br/>
-<!-- TODO: get this redbox popup working correctly.  It shows ok but the button does not -->
-<!-- grab the value of the note or comment text in the box-->
-<!-- <div id='<%#= "hidden_comment_div_" + item.id.to_s -%>' style="display:none;"> -->
-	<%#= render :partial => "variables/comment_popup", :locals=>{:variable => item} -%>
-<!-- </div> -->
-<!-- <div id='<%#= "hidden_note_div_" + item.id.to_s -%>' style="display: none;"> -->
-	<%#= render :partial => "variables/note_popup", :locals=>{:variable => item}-%>
-<!-- </div> -->
-<%#= link_to_redbox("Add a comment", "hidden_comment_div_" + item.id.to_s ) -%>
-<%#= link_to_redbox("Add a private note", "hidden_note_div_" + item.id.to_s ) -%>
 <div>
 	<% if current_user %>
 	<h3>Comments</h3>
@@ -197,7 +145,6 @@
 				<% end %>
 </div>
 </div>
-</div>
 <script type="text/javascript">
 		var hash_size = <%=var_hash.size %>
 		if (hash_size > 1 && hash_size <= 20) {
@@ -207,11 +154,13 @@
               <% var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
+				<% if no_var_hash != nil -%>
 							              <% no_var_hash.sort.each do |value, frequency| -%>
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+							<% end -%>
 							              <% end -%>
 
-        var chart = new google.visualization.PieChart($('<%= row_name + "_expanded_stats_chart" -%>'));
+        var chart = new google.visualization.BarChart($('<%= row_name + "_expanded_stats_chart" -%>'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
 	} else if (hash_size > 1) {
 		var data = new google.visualization.DataTable();
@@ -220,9 +169,11 @@
               <% var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
+				<% if no_var_hash != nil -%>
 							              <% no_var_hash.sort.each do |value, frequency| -%>
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
+							<% end -%>
 
         var chart = new google.visualization.ColumnChart($('<%= row_name + "_expanded_stats_chart" -%>'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
@@ -231,3 +182,4 @@
 <script type="text/javascript">
 	setCheckedStatus('<%= row_name -%>');
 </script>
+</div>

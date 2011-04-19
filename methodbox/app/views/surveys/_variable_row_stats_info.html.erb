@@ -1,0 +1,30 @@
+<% if item.interval && item.interval == 'contin' || item.nesstar_id == nil && item.number_of_unique_values > 20 -%>
+<p>Mean <%= item.mean -%></p>
+<p>Median <%= item.median -%></p>
+<% end %>
+<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
+<p>Total Records = <%= invalid_entries + valid_entries -%></p>
+<p>Missing records = <%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</p>
+<% end %>
+<table>
+<% if var_hash.size < 20 %>
+<thead>
+<th><tr><td>Value Name</td><td>Number of entries</td><td>Percentage of total</td></tr></th>
+</thead>
+<% end %>
+<tbody>
+<% if var_hash.size < 20 %>
+<% var_hash.each_key do |key| -%>
+<tr><td><%= value_domain_hash[key] -%></td><td><%= var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
+<% end -%> 
+<% if no_var_hash != nil %>
+<% no_var_hash.each_key do |key| -%>
+<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
+<% end -%>
+<% end %>
+<% end %>
+<% if blank_rows %>
+<tr><td>Blank rows</td><td><%= blank_rows -%></td><td><%= total_entries.is_a?(Numeric) ? (blank_rows.to_f/total_entries.to_f * 100).round(2) : 'N/A' -%>%</td></tr>
+<% end %>
+</tbody>
+</table>
