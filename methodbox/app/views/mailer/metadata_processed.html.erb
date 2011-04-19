@@ -1,11 +1,11 @@
-<h3>Metadata processed</h3>
+Metadata processed
 
-<p>Hi <%= @name %>,</p>
+Hi <%= @name %>,
+	
+Your new metadata for dataset, <%= @dataset.name %>, has been processed.
 
-<p>Your new metadata for dataset, <%= @dataset.name %>, has been processed.
+Find the dataset at <%= dataset_url(@dataset) %>
 
-Find the dataset at <%= dataset_url(@dataset) %></p>
-
-<p>- The MethodBox Team</p>
+- The MethodBox Team
 
 <%= render :partial => "disclaimer" -%>
