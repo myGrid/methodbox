@@ -657,6 +657,9 @@ div.exhibit-collectionView-header {
 .normal-margin-bottom {
 	margin-bottom: 1em;
 }
+.small-margin-bottom {
+	margin-bottom: 0.5em;
+}
 .medium-padding {
 	padding: 5px;
 }
