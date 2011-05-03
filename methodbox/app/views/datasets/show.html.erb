@@ -16,6 +16,22 @@
 
 <div class="show_basic">
   <div class="main_content_left_box">
+	<% @survey_search_query="Enter search terms" unless @survey_search_query -%>
+	<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
+		<%= hidden_field_tag "entry_ids[]", @dataset.id.to_s -%>
+	<div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
+	  <div style="position: absolute; ;top:1em;left:1em"><%= text_field_tag :survey_search_query, @survey_search_query %>
+				<%= image_tag(method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
+	    <%= submit_tag 'Search this dataset',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();return true;}" %>
+	  </div>
+		  <% if logged_in? && !@recent_searches.empty? -%>
+		  <div style="position: absolute; top:1em;left:30em">
+			Recent searches:
+		<%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>
+		</div>
+		<% end -%>
+		<% end -%>
+	</div>
     <div class="box_about_actor">
       <p>
         <b>Title:</b>

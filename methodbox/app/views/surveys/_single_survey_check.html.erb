@@ -7,7 +7,7 @@
 
 
 		        <p class="survey_box" id="<%= item.id.to_s + "_survey_box"-%>">
-		          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id})", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_survey_check'}"  %><%= link_to(item.title + " (" + item.datasets.size.to_s + ")", survey_path(item), :title => item.title + " has " + item.datasets.size.to_s + " datasets") -%>
+		          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id}, true)", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_survey_check'}"  %><%= link_to(item.title + " (" + item.datasets.size.to_s + ")", survey_path(item), :title => item.title + " has " + item.datasets.size.to_s + " datasets") -%>
 		        </p>
 		          <p class="hidden_para" style="display:none;" id="<%= item.id.to_s + "_div"-%>">
 

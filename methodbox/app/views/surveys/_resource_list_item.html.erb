@@ -2,6 +2,7 @@
 	<tr>
 		<td colspan=2>
 				<p class="title center">
+					<%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id}, false)", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_survey_check'}"  %>
 				      <% unless item.title.blank? -%>
 				        <% title = h(item.title) -%>
 				      <% else -%>
@@ -35,3 +36,10 @@
 			</td>
 		</tr>
 	</table>
+	<div style="display:none;">
+		<!-- <div> -->
+	<% item.datasets.each do |dataset| -%>
+        <%= check_box_tag "entry_ids[]", dataset.id, false, :onclick=>"checkSelectAllStatus(#{item.id.to_s},#{dataset.id.to_s})", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_' + dataset.id.to_s + '_survey_check'}" %>
+		<%= javascript_tag "addDataset(#{item.id.to_s}, #{dataset.id.to_s})"-%>
+	<% end %>
+	</div>

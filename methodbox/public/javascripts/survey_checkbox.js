@@ -99,21 +99,28 @@ function setDatasets(survey_id, checked) {
 
 //select all of the datasets for a particular
 //survey when the select all checkbox is clicked
-function selectAllDatasetsForYear(id) {
+//change the colour of the datasets box if colour is true
+function selectAllDatasetsForYear(id, colour) {
 	if (checkedSurveyMap[id] == null) {
 		checkedSurveyMap[id] = true;
 		setDatasets(id, true);
-		changeColour(id, true);
+		if (colour == true) {
+			changeColour(id, true);
+		}	
 	} else if (checkedSurveyMap[id] == true) {
 		checkedSurveyMap[id] = false;
 		//set all the individual datasets to false
 		setDatasets(id, false);
-		changeColour(id, false);
+		if (colour == true) {
+			changeColour(id, false);
+		}
 	} else {
 		checkedSurveyMap[id] = true;
 		//set all the individual datasets to true
 		setDatasets(id, true);
-		changeColour(id, true);
+		if (colour == true) {
+			changeColour(id, true);
+		}
 	}
 
 	$$('input.survey_checkbox').each(function(checkbox) { { if (Element.identify(checkbox).startsWith(id + "_") ) {checkbox.checked = checkedSurveyMap[id] }} });
