@@ -59,7 +59,6 @@ class SearchController < ApplicationController
 
     #uts "SEARCH RESULTS: " + @results.to_s
     if @results.empty?
-      puts "flashing no matches"
       flash.now[:notice]="No matches found for '<b>#{@search_query}</b>'."
       #    else
       #      flash[:notice]="#{@results.size} #{@results.size==1 ? 'item' : 'items'} matched '<b>#{@search_query}</b>' within their title or content."
