@@ -28,6 +28,8 @@ class SurveysController < ApplicationController
   
   after_filter :update_last_user_activity
   
+  before_filter :find_previous_searches, :only => [ :show ]
+  
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
     variable = Variable.find(params[:id])
@@ -1008,5 +1010,13 @@ class SurveysController < ApplicationController
     def find_groups
       @groups = WorkGroup.all
     end
+
+  def find_previous_searches
+    search=[]
+    if logged_in?
+      search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
+  end
 
 end

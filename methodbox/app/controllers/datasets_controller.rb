@@ -12,6 +12,7 @@ class DatasetsController < ApplicationController
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter :update_last_user_activity
+  before_filter :find_previous_searches, :only => [ :show ]
   
   #update the datafile for this dataset
   def load_new_data
@@ -394,6 +395,14 @@ class DatasetsController < ApplicationController
       return false
     end
     
+  end
+
+  def find_previous_searches
+    search=[]
+    if logged_in?
+      search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
   end
   
 end
