@@ -23,11 +23,11 @@
       <div><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
 	</div><br/>
 	<div>Select:
-          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-          ,&nbsp
-          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+                  <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; setTrueOrFalse();});" %>
         ,&nbsp
-          <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; setTrueOrFalse();});" %>
+        ,&nbsp
+        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; } else {checkbox.checked = true; } setTrueOrFalse();});" %>
  
    </div>
 	</div>
@@ -51,11 +51,11 @@
 	      <div><%= submit_tag('Add selected variables to cart', :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'year_of_survey')[0].value = 'survey_year';Form.getInputs(this.form, null,'watch_variable')[0].value = 'false';")%>
 		</div><br/>
 		<div>Select:
-	          <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-	          ,&nbsp
-	          <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-	        ,&nbsp
-           	 <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+	                  <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; setTrueOrFalse();});" %>
+        ,&nbsp
+        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; setTrueOrFalse();});" %>
+        ,&nbsp
+        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; } else {checkbox.checked = true; } setTrueOrFalse();});" %>
 
 	    </div>
 		</div>

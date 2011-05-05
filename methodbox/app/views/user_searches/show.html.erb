@@ -24,24 +24,29 @@
   <%= hidden_field_tag 'submit', 'add' %>
   <%= hidden_field_tag 'from_a_previous_search', @search.id %>
   <br/>
-  <table style="background-color:#ACCBE0;width:100%;padding-bottom:5px;
-         padding-left:5px;
-         padding-top:5px;">
-    <tr><td style="text-align:left;"><%= submit_tag'Add selected variables to cart', :name=>"_submit", :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%></td>
-    <td><div id="cart_button">
-		    <%= render :partial => "cart/button" -%>
-		  </div>
-		</td>
-    </tr>
-    <tr><td style="text-align:left;"> Select:
-        <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-        ,&nbsp
-        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-        ,&nbsp
-        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
-
-      </td></tr>
-  </table>
+<div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%; height: 6em;">
+	<% if logged_in? -%>
+		<div style="float:right; padding-right: 1em;">
+			<ul class="vbuttons" style="padding-top: 5px; padding-bottom: 5px;">
+				<li id="cart_button"><%= render :partial => "cart/button" -%></li>
+				<li><%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "if (!isAnythingChecked()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%></li>
+			</ul>
+		</div>
+	<% end -%>
+	<div style="float: left;" class="small-margin-bottom">
+		<div class="small-margin-bottom">
+			<%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
+		</div>
+		<div class="small-margin-bottom">
+		Select:
+        	<%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; setTrueOrFalse();});" %>
+        	,&nbsp
+        	<%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; setTrueOrFalse();});" %>
+        	,&nbsp
+        	<%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; setTrueOrFalse();} else {checkbox.checked = true; } setTrueOrFalse();});" %>
+		</div>
+	</div>
+</div>
 	<p>
     <b>Variables found:</b>
   </p>

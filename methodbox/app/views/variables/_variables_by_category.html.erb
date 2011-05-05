@@ -19,15 +19,17 @@
       <div><%= submit_tag 'Add selected variables to cart', :name=>"_submit", :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'add';" -%>
       </div><br/>
       <div>Select:
-        <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
+                <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; setTrueOrFalse();});" %>
         ,&nbsp
-        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
+        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; setTrueOrFalse();});" %>
         ,&nbsp
-        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false;} else {checkbox.checked = true; } });" %>
+        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; } else {checkbox.checked = true; } setTrueOrFalse();});" %>
 
       </div>
-      <div id="cart_button" style="position: absolute; top:1em; right:1em;">
-        <%= render :partial => "cart/button" -%>
+      <div style="position: absolute; top:1em; right:1em;">
+        <ul class="vbuttons" style="padding-top: 5px; padding-bottom: 5px;">
+				<li id="cart_button"><%= render :partial => "cart/button" -%></li>
+	</ul>
       </div>
     </div>
     <br/>
