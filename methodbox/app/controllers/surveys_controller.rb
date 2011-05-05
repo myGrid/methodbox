@@ -8,8 +8,6 @@ class SurveysController < ApplicationController
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
 
-  before_filter :find_previous_searches, :only => [ :index ]
-
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
   
   before_filter :find_survey, :only => [:show, :edit, :update]

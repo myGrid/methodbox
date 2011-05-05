@@ -2,6 +2,8 @@ class HomeController < ApplicationController
   
   before_filter :login_required, :except=> [ :about ]
 
+  before_filter :find_previous_searches, :only => [ :index ]
+
   layout :select_layout
   
   def about
@@ -62,6 +64,14 @@ class HomeController < ApplicationController
   end
 
   private
+
+  def find_previous_searches
+    search=[]
+    if logged_in?
+      search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
+  end
 
   #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
   def select_authorised collection
