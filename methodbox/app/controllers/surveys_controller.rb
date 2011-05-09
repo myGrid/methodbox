@@ -4,7 +4,7 @@ class SurveysController < ApplicationController
 
   before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
-  before_filter :find_previous_searches, :only => [ :index]
+  before_filter :find_previous_searches, :only => [ :index, :show ]
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
 
@@ -27,8 +27,6 @@ class SurveysController < ApplicationController
   before_filter :find_groups, :only => [:new_nesstar_datasource]
   
   after_filter :update_last_user_activity
-  
-  before_filter :find_previous_searches, :only => [ :show ]
   
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
