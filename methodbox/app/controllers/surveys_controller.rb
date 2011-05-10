@@ -2,11 +2,11 @@ class SurveysController < ApplicationController
   
   # before_filter :is_user_admin_auth, :only =>[ :new, :create]
 
-  before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
+  before_filter :login_required, :except => [ :protovis, :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 
-  before_filter :find_surveys, :only => [ :index, :search_variables ]
+  before_filter :find_surveys, :only => [ :protovis, :index, :search_variables ]
 
   #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
   
@@ -27,6 +27,27 @@ class SurveysController < ApplicationController
   before_filter :find_groups, :only => [:new_nesstar_datasource]
   
   after_filter :update_last_user_activity
+  
+  # Create the javascript hash required to display surveys
+  # using the protovis library
+  def protovis
+    @survey_numbers = "}"
+    @surveys = "{"
+    SurveyType.all.each do |survey_type|
+      @surveys << survey_type.name.to_json + ":{"
+      survey_type.surveys.each do |survey|
+        @survey_numbers << survey.id.to_s + ":" + survey.title.to_json + ","
+        @surveys << survey.title.to_json + ":" + survey.datasets.size.to_s + ","
+      end
+      @survey_numbers.chop!
+      @survey_numbers << "}"
+      @surveys.chop!
+      @surveys << "},"
+    end
+    @surveys.chop!
+    @surveys << "}"
+    # @surveys will be like {type1:{a:10,b:30,c:5},type2:{d:5,e:15},type3:{f:17,g:4}}
+  end
   
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row

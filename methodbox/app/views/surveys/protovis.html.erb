@@ -1,0 +1,103 @@
+    <style type="text/css">
+
+#fig {
+  width: 900px;
+  margin-top: 5px;
+  height: 840px;
+  text-align: center;
+}
+
+    </style>
+<script type="text/javascript">
+var surveys = <%= @surveys -%>;
+</script>
+
+<div id="fig">
+    <script type="text/javascript+protovis">
+
+	var root = pv.dom(surveys)
+	    .root("surveys")
+	    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
+
+	/* Recursively compute the package sizes. */
+	root.visitAfter(function(n) {
+	  if (n.firstChild) {
+	    n.nodeValue = pv.sum(n.childNodes, function(n) n.nodeValue);
+	  }
+	});
+
+	var vis = new pv.Panel()
+	    .width(800)
+	    .height(function() (root.nodes().length + 1) * 12)
+	    .margin(5);
+
+	var layout = vis.add(pv.Layout.Indent)
+	    .nodes(function() root.nodes())
+	    .depth(12)
+	    .breadth(12);
+
+	layout.link.add(pv.Line);
+
+	var node = layout.node.add(pv.Panel)
+	    .top(function(n) n.y - 6)
+	    .height(12)
+	    .right(6)
+	    .strokeStyle(null)
+	    .events("all")
+	    .event("mousedown", toggle);
+
+	node.anchor("left").add(pv.Dot)
+	    .strokeStyle("#1f77b4")
+	    .fillStyle(function(n) n.toggled ? "#1f77b4" : n.firstChild ? "#aec7e8" : "#ff7f0e")
+	    .title(getName)
+	  .anchor("right").add(pv.Label)
+	    .text(function(n) n.nodeName);
+
+	node.anchor("right").add(pv.Label)
+	    .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
+	    .text(function(n) (n.nodeValue) + "Datasets");
+
+	vis.render();
+
+	/* Toggles the selected node, then updates the layout. */
+	function toggle(n) {
+	  n.toggle(pv.event.altKey);
+	// popAlert(n);
+	  return layout.reset().root;
+	}
+	
+	function getName(d) {
+		d.parentNode ? d.parentNode + "." + d.nodeName : d.nodeName;
+	}
+// var vis = new pv.Panel()
+//     .width(800)
+//     .height(800);
+// 
+// var partition = vis.add(pv.Layout.Partition.Fill)
+//     .nodes(pv.dom(surveys).root("surveys").nodes())
+//     .size(function(d) d.nodeValue)
+//     .order("descending")
+//     .orient("radial");
+// 
+// partition.node.add(pv.Wedge)
+//     .fillStyle(pv.Colors.category19().by(function(d) d.parentNode && d.parentNode.nodeName))
+//     .strokeStyle("#fff")
+//     .lineWidth(.5);
+// 
+// partition.label.add(pv.Label)
+//     .visible(function(d) d.angle * d.outerRadius >= 6);
+// 
+// vis.render();
+
+// /* Update the layout's size method and re-render. */
+// function update(method) {
+//   switch (method) {
+//     case "byte": partition.size(function(d) d.nodeValue); break;
+//     case "file": partition.size(function(d) d.firstChild ? 0 : 1); break;
+//   }
+//   vis.render();
+// }
+
+    </script>
+
+  </div>
