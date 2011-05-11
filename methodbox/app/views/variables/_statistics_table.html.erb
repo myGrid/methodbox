@@ -11,8 +11,8 @@
 			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
 			<% value_domain_hash[value_domain.id] = value_domain.label %>
 		<% end -%>
-	<%= valid_entries = variable.valid_entries -%>
-	<%= invalid_entries = variable.invalid_entries -%>
+	<% valid_entries = variable.valid_entries -%>
+	<% invalid_entries = variable.invalid_entries -%>
 	<% total_entries = invalid_entries + valid_entries -%>
 <% else -%>
 <% no_var_hash = variable.none_values_hash -%> 
