@@ -128,7 +128,7 @@
       <p>
         <b>Survey:</b>
       <div class="box_standout">
-        <%= link_to(Dataset.find(@variable.dataset_id).survey.survey_type.shortname + " " + Dataset.find(@variable.dataset_id).survey.year, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
+        <%= link_to(Dataset.find(@variable.dataset_id).survey.survey_type.name + " " + Dataset.find(@variable.dataset_id).survey.year, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
       </p>
 

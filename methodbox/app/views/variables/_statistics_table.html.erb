@@ -8,7 +8,7 @@
 	<% value_domain_hash = Hash.new %>
 	<% var_hash = Hash.new %>
 		<% variable.value_domains.each do |value_domain| -%>
-			<% var_hash[value_domain.id] = value_domain.value_domain_statistic -%>
+			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
 			<% value_domain_hash[value_domain.id] = value_domain.label %>
 		<% end -%>
 	<%= valid_entries = variable.valid_entries -%>
@@ -62,7 +62,7 @@
 <% end %>
 <% end -%>
 <div class="left">
-<% if variable.interval && variable.interval == 'contin' || variable.number_of_unique_values > 20 -%>
+<% if variable.interval && variable.interval == 'contin' || variable.number_of_unique_values && variable.number_of_unique_values > 20 -%>
 <!-- histogram -->
 <div class="gviz-chart" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
 
@@ -78,9 +78,11 @@ function drawChart() {
               <% var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
+<% if !variable.nesstar_id -%>
 							              <% no_var_hash.sort.each do |value, frequency| -%>
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
+<% end -%>
 
         var chart = new google.visualization.ColumnChart($('<%= variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
@@ -109,9 +111,11 @@ function drawChart() {
               <% var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
+<% if !variable.nesstar_id -%>
 							              <% no_var_hash.sort.each do |value, frequency| -%>
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
+<% end -%>
 
         var chart = new google.visualization.BarChart($('<%= variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
@@ -133,8 +137,10 @@ function drawChart() {
 <% var_hash.each_key do |key| -%>
 	<tr><td><%= value_domain_hash[key] -%></td><td><%= var_hash[key] -%></td><td><%= (var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
 <% end -%>  
+<% if !variable.nesstar_id -%>
 <% no_var_hash.each_key do |key| -%>
 	<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% end -%>
 <% end -%>
 <% end %>
 <% if blank_rows %>
