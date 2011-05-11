@@ -124,9 +124,9 @@
 	<% end %>
 <% end %>
 <% end -%>
-<div class="left" id='<%= row_name + "_expanded_stats_chart" -%>'>
+<div class="left" style="width:40%" id='<%= row_name + "_expanded_stats_chart" -%>'>
 </div>
-<div class="right variable_row_info">
+<div class="right variable_row_info" style="width:40%">
 	<%= render :partial => "variable_row_stats_info", :locals=>{:item => item,:var_hash => var_hash, :no_var_hash => no_var_hash, :valid_entries => valid_entries, :invalid_entries => invalid_entries, :value_domain_hash => value_domain_hash, :total_entries => total_entries, :blank_rows => blank_rows} %>
 </div>
 <div style="clear:both">

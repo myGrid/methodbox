@@ -49,10 +49,18 @@
       <div style="margin:auto;">Allowed values:</div>
       <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
 	<% elsif !item.value_domains.empty? %>
+		<table class="listings_table">
+			<thead>
+				<tr><th>Label</th><th>Value</th></tr>
+			</thead>
+			<tbody>
 		<% item.value_domains.each do |value_domain| %>
-			<%= value_domain.label + " " + value_domain.value unless value_domain.label == 'N/A' %>
-			<br/>
+			<% unless value_domain.label == 'N/A' -%>
+				<tr><td><%= value_domain.label-%></td><td><%= value_domain.value -%></td></tr>
+			<% end -%>
 		<% end %>
+			</tbody>
+		</table>
     <% else -%>
       <div style="margin:auto;color:red;">No value information recorded for this variable</div>
     <% end -%>

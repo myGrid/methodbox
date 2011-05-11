@@ -110,10 +110,21 @@
       </p>
       <p>
         <b>Allowed values:</b>
-        <% unless @variable.info.blank? -%>
+        <% if !@variable.info.blank? -%>
         <div class="box_standout">
           <%= simple_format(white_list(@variable.info)) -%>
         </div>
+      <% elsif !@variable.value_domains.empty? -%>
+	<table class='listings_table'>
+		<thead>
+			<tr><th>Label</th><th>Value</th></tr>
+		</thead>
+		<tbody>
+        	<% @variable.value_domains.each do |value_domain| -%>
+           		<tr><td><%= value_domain.label -%></td><td><%= value_domain.value -%></td></tr>
+        	<% end -%>
+		</tbody>
+	</table>
       <% else -%>
         <p class="none_text">
           No allowed values

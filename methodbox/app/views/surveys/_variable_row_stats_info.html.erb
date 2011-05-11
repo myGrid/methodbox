@@ -1,15 +1,19 @@
 <% if item.interval && item.interval == 'contin' || item.nesstar_id == nil && item.number_of_unique_values > 20 -%>
-<p>Mean <%= item.mean -%></p>
-<p>Median <%= item.median -%></p>
+<table class="listings_table">
+<tr><td>Mean</td><td><%= item.mean -%></td></tr>
+<tr><td>Median</td><td><%= item.median -%></td></tr>
+</table>
 <% end %>
 <% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
-<p>Total Records = <%= invalid_entries + valid_entries -%></p>
-<p>Missing records = <%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</p>
+<table class="listings_table">
+<tr><td>Total Records</td><td><%= invalid_entries + valid_entries -%></td></tr>
+<tr><td>Missing records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+</table>
 <% end %>
-<table>
+<table class="listings_table">
 <% if var_hash.size < 20 %>
 <thead>
-<th><tr><td>Value Name</td><td>Number of entries</td><td>Percentage of total</td></tr></th>
+<tr><th>Value Name</th><th>Number of entries</th><th>Percentage of total</th></tr>
 </thead>
 <% end %>
 <tbody>
