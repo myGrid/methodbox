@@ -4,31 +4,31 @@
 <tr><td>Median</td><td><%= item.median -%></td></tr>
 </table>
 <% end %>
-<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
 <table class="listings_table">
+<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
 <tr><td>Total Records</td><td><%= invalid_entries + valid_entries -%></td></tr>
 <tr><td>Missing records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
-</table>
 <% end %>
+<% if blank_rows %>
+<tr><td>Blank rows</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
+<% end %>
+</table>
 <table class="listings_table">
 <% if var_hash.size < 20 %>
 <thead>
-<tr><th>Value Name</th><th>Number of entries</th><th>Percentage of total</th></tr>
+<tr><th>Label</th><th>Value</th><th>Number of entries</th><th>Percentage of total</th></tr>
 </thead>
 <% end %>
 <tbody>
 <% if var_hash.size < 20 %>
 <% var_hash.each_key do |key| -%>
-<tr><td><%= value_domain_hash[key] -%></td><td><%= var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
+<tr><td><%= value_domain_hash[key] -%></td><td><%= item.nesstar_id ? ValueDomain.find(key).value : key -%></td><td><%= var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
 <% end -%> 
 <% if no_var_hash != nil %>
 <% no_var_hash.each_key do |key| -%>
-<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
+<tr><td><%= value_domain_hash[key] -%></td><td><%= item.nesstar_id ? ValueDomain.find(key).value : key -%></td><td><%= no_var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
 <% end -%>
 <% end %>
-<% end %>
-<% if blank_rows %>
-<tr><td>Blank rows</td><td><%= blank_rows -%></td><td><%= total_entries.is_a?(Numeric) ? (blank_rows.to_f/total_entries.to_f * 100).round(2) : 'N/A' -%>%</td></tr>
 <% end %>
 </tbody>
 </table>

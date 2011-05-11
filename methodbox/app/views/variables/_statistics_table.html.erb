@@ -123,8 +123,13 @@ function drawChart() {
 </div>
 <div class="right" style="width:40%">
 <table class='listings_table'>
+<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
 <tr><td>total records</td><td><%= invalid_entries + valid_entries -%></td></tr>
 <tr><td>Missing Records</td><td><%= invalid_entries -%> (<%= (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+<% end -%>
+<% if blank_rows %>
+	<tr><td>Blank rows</td><td><%= blank_rows -%><%= ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' -%>%</td></tr>
+<% end %>
 </table>
 <table class='listings_table'>
 <% if var_hash.size < 20 %>
@@ -142,9 +147,6 @@ function drawChart() {
 	<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
 <% end -%>
 <% end -%>
-<% end %>
-<% if blank_rows %>
-	<tr><td>Blank rows</td><td><%= blank_rows -%></td><td><%= (blank_rows.to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
 <% end %>
 </tbody>
 </table>
