@@ -60,6 +60,8 @@ class VariablesController < ApplicationController
 
   def open_pdf
     find_variable
+    #TODO: the survey type shortname is only relevant to HSE/GHS, at some point may want to phase it out
+    #completely
     type = Survey.find(Dataset.find(@variable.dataset_id).survey_id).survey_type.shortname.downcase
     year = Survey.find(Dataset.find(@variable.dataset_id).survey_id).year
     send_file(RAILS_ROOT + "/" + "filestore" + "/docs" + "/" + type + "/" + year + "/" + @variable.document, :type => 'application/pdf', :disposition => 'inline')

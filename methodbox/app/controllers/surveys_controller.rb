@@ -366,7 +366,7 @@ class SurveysController < ApplicationController
     when "category"   then "category"
       @sorted_variables = @unsorted_vars.sort_by { |m| if m.category then m.category.upcase else "ZZZZ" end }
     when "survey" then "survey"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.survey_type.shortname.upcase }
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.survey_type.name.upcase }
     when "year" then "year"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }
     when "popularity" then "popularity"
@@ -380,7 +380,7 @@ class SurveysController < ApplicationController
     when "dataset_reverse"   then "dataset DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).name.upcase }.reverse
     when "survey_reverse" then "survey DESC"
-      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.survey_type.shortname.upcase }.reverse
+      @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.survey_type.name.upcase }.reverse
     when "year_reverse" then "year DESC"
       @sorted_variables = @unsorted_vars.sort_by { |m| Dataset.find(m.dataset_id).survey.year }.reverse
     when "popularity_reverse" then "popularity DESC"
@@ -465,7 +465,8 @@ class SurveysController < ApplicationController
   end
 
   def create
-    
+    #TODO: Remove the survey type shortname, it's very artificial and not needed.  Was only relevant to 
+    #the original HSE and GHS surveys
     if (params[:survey_type_name])!= "" && (params[:survey_type_shortname]) != ""
       s_type = SurveyType.new
       s_type.name = params[:survey_type_name]
