@@ -34,7 +34,7 @@
 
   <indexDefaults>
    <!-- Values here affect all index writers and act as a default unless overridden. -->
-    <useCompoundFile>false</useCompoundFile>
+    <useCompoundFile>true</useCompoundFile>
     <mergeFactor>20</mergeFactor>
     <maxBufferedDocs>1000</maxBufferedDocs>
     <maxMergeDocs>2147483647</maxMergeDocs>
@@ -45,7 +45,7 @@
 
   <mainIndex>
     <!-- options specific to the main on-disk lucene index -->
-    <useCompoundFile>false</useCompoundFile>
+    <useCompoundFile>true</useCompoundFile>
     <mergeFactor>20</mergeFactor>
     <maxBufferedDocs>1000</maxBufferedDocs>
     <maxMergeDocs>2147483647</maxMergeDocs>

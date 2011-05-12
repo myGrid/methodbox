@@ -71,7 +71,9 @@
 	<% value_domain_hash = Hash.new %>
 	<% var_hash = Hash.new %>
 		<% item.value_domains.each do |value_domain| -%>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.id] = value_domain.label %>
 		<% end -%>
 	<% valid_entries = item.valid_entries -%>
@@ -118,7 +120,9 @@
 <% if var_hash.empty? %>
 	<% item.value_domains.each do |value_domain| %>
 		<% if value_domain.value_domain_statistic %>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.value] = value_domain.label %>
 		<% end %>
 	<% end %>
@@ -145,6 +149,7 @@
 				<% end %>
 </div>
 </div>
+<% if !var_hash.empty? -%>
 <script type="text/javascript">
 		var hash_size = <%=var_hash.size %>
 		if (hash_size > 1 && hash_size <= 20) {
@@ -179,6 +184,7 @@
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
     </script>
+<% end -%>
 <script type="text/javascript">
 	setCheckedStatus('<%= row_name -%>');
 </script>

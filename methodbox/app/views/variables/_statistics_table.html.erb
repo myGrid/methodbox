@@ -8,7 +8,9 @@
 	<% value_domain_hash = Hash.new %>
 	<% var_hash = Hash.new %>
 		<% variable.value_domains.each do |value_domain| -%>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.id] = value_domain.label %>
 		<% end -%>
 	<% valid_entries = variable.valid_entries -%>
@@ -55,7 +57,9 @@
 <% if var_hash.empty? %>
 	<% variable.value_domains.each do |value_domain| %>
 		<% if value_domain.value_domain_statistic %>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.value] = value_domain.label %>
 		<% end %>
 	<% end %>
@@ -66,7 +70,7 @@
 <!-- histogram -->
 <div class="gviz-chart" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
 
-
+<% if !var_hash.empty? -%>
 <script type="text/javascript">
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
@@ -88,16 +92,18 @@ function drawChart() {
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
 </script>
+<% end -%>
 <table class='listings_table'>
 <tbody>
 <tr><td>Mean</td><td><%= variable.mean -%></td></tr>
-<tr><td>Median</td><td><%= variable.median -%></td></tr>
+<tr><td>Median</td><td><%= variable.median ? variable.median : 'N/A' -%></td></tr>
 <tr><td>Missing</td><td><%= variable.nesstar_id ? variable.invalid_entries : variable.number_of_blank_rows -%></td></tr>
 </tbody>
 </table>
 <% else -%>
 <!-- side on bar chart-->
 <div class="gviz-chart left" style="width:50%" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
+<% if !var_hash.empty? -%>
 <script type="text/javascript">
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
@@ -120,6 +126,7 @@ function drawChart() {
 }
 </script>
 <% end -%>
+<% end -%>
 </div>
 <div class="right" style="width:40%">
 <table class='listings_table'>
@@ -132,7 +139,7 @@ function drawChart() {
 <% end %>
 </table>
 <table class='listings_table'>
-<% if var_hash.size < 20 %>
+<% if !var_hash.empty? && var_hash.size < 20 %>
 <thead>
 <tr><th>Value Name</th><th>Number of entries</th><th>Percentage of total</th></tr>
 </thead>

@@ -1,7 +1,7 @@
 <% if item.interval && item.interval == 'contin' || item.nesstar_id == nil && item.number_of_unique_values > 20 -%>
 <table class="listings_table">
 <tr><td>Mean</td><td><%= item.mean -%></td></tr>
-<tr><td>Median</td><td><%= item.median -%></td></tr>
+<tr><td>Median</td><td><%= item.median ? item.median : 'N/A' -%></td></tr>
 </table>
 <% end %>
 <table class="listings_table">
@@ -13,6 +13,7 @@
 <tr><td>Blank rows</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
 <% end %>
 </table>
+<% if !var_hash.empty? -%>
 <table class="listings_table">
 <% if var_hash.size < 20 %>
 <thead>
@@ -32,3 +33,4 @@
 <% end %>
 </tbody>
 </table>
+<% end -%>
