@@ -1,6 +1,6 @@
 <% if item.interval && item.interval == 'contin' || item.nesstar_id == nil && item.number_of_unique_values > 20 -%>
 <table class="listings_table">
-<tr><td>Mean</td><td><%= item.mean -%></td></tr>
+<tr><td>Mean</td><td><%= item.mean ? item.mean : 'N/A' -%></td></tr>
 <tr><td>Median</td><td><%= item.median ? item.median : 'N/A' -%></td></tr>
 </table>
 <% end %>

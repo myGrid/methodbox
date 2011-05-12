@@ -635,13 +635,6 @@ display: block;
 .small-padding {
 	padding: 2px;
 }
-.bold {
-	font-weight: bold;
-	font-size: large;
-}
-.small-font {
-	font-size: 83%;
-}
 /* extra styling for exhibit facet view */
 div.exhibit-collectionView-header {
 	text-align: center;
@@ -664,10 +657,19 @@ div.exhibit-collectionView-header {
 	padding: 5px;
 }
 /* extra marging and padding settings over */
-/* quickly use bold fonts */
+
+/* extra font settings */
 .bold {
 	font-weight: bold;
 }
+.italic {
+	font-style: italic;
+}
+.small-font {
+	font-size: 83%;
+}
+/* end of extra font settings*/
+
 .warning-message {
 	font-style: italic;
 	color: red;
