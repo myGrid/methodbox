@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110405141352) do
+ActiveRecord::Schema.define(:version => 20110516124846) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -301,7 +301,7 @@ ActiveRecord::Schema.define(:version => 20110405141352) do
     t.integer  "status_id",          :default => 0
     t.boolean  "is_pal",             :default => false
     t.boolean  "send_notifications", :default => false
-    t.boolean  "dormant",            :default => false, :null => false
+    t.boolean  "dormant",            :default => false
   end
 
   create_table "permissions", :force => true do |t|
@@ -557,7 +557,7 @@ ActiveRecord::Schema.define(:version => 20110405141352) do
     t.datetime "reset_password_code_until"
     t.integer  "posts_count",                             :default => 0
     t.datetime "last_seen_at"
-    t.boolean  "dormant",                                 :default => false, :null => false
+    t.boolean  "dormant",                                 :default => false
     t.datetime "last_ukda_check"
     t.boolean  "ukda_registered"
     t.datetime "last_user_activity"
@@ -572,6 +572,8 @@ ActiveRecord::Schema.define(:version => 20110405141352) do
     t.datetime "updated_at"
   end
 
+  add_index "value_domain_statistics", ["value_domain_id"], :name => "index_value_domain_statistics_on_value_domain_id"
+
   create_table "value_domains", :force => true do |t|
     t.integer  "variable_id"
     t.string   "label"
@@ -579,6 +581,8 @@ ActiveRecord::Schema.define(:version => 20110405141352) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "value_domains", ["variable_id"], :name => "index_value_domains_on_variable_id"
 
   create_table "variable_linkages", :force => true do |t|
     t.integer  "variable_link_id"
