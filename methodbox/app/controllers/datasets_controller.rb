@@ -1,9 +1,11 @@
 require 'rest_client'
 require 'uuidtools'
+require 'simple-spreadsheet-extractor'
 
 class DatasetsController < ApplicationController
 
   include ProcessDatasetJob
+  include SysMODB::SpreadsheetExtractor
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new, :create ]
@@ -11,7 +13,7 @@ class DatasetsController < ApplicationController
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
-  after_filter :update_last_user_activity
+  after_filter  :update_last_user_activity
   before_filter :find_previous_searches, :only => [ :show ]
   
   #update the datafile for this dataset
@@ -227,13 +229,22 @@ class DatasetsController < ApplicationController
   def load_dataset filename, dataset
     datafile = File.open(filename, "r")
     @new_variables =[]
-    header =  datafile.readline
     #split by tab
     if params[:dataset_format] == "Tab Separated"
+	header =  datafile.readline
         headers = header.split("\t")
         separator = "\t"
-    else
+    #split by comma
+    elsif params[:dataset_format] == "Comma Separated"
+	header =  datafile.readline
         headers = header.split(",")
+        separator = ","
+    #spreadsheet so convert to csv then split by comma
+    else
+	#use the spreadsheet gem
+	converted_file = spreadsheet_to_csv(datafile)
+	header = converted_file.readline
+	headers = header.split(",")
         separator = ","
     end
     
@@ -266,14 +277,22 @@ class DatasetsController < ApplicationController
   def load_new_dataset filename
     datafile = File.open(filename, "r")
     @new_variables =[]
-    header =  datafile.readline
     #split by tab
-
     if params[:dataset_format] == "Tab Separated"
+	header =  datafile.readline
         headers = header.split("\t")
         separator = "\t"
-    else
+    #split by comma
+    elsif params[:dataset_format] == "Comma Separated"
+	header =  datafile.readline
         headers = header.split(",")
+        separator = ","
+    #spreadsheet so convert to csv then split by comma
+    else
+	#use the spreadsheet gem
+	converted_file = spreadsheet_to_csv(datafile)
+	header = converted_file.readline
+	headers = header.split(",")
         separator = ","
     end
     
