@@ -50,7 +50,7 @@ class HomeController < ApplicationController
     @results.concat(scripts)
     @results.concat(archives)
     @results.concat(datasets)
-    select_authorised collection @results
+    select_authorised_collection @results
     respond_to do |format|
       format.html # index.html.erb      
     end
