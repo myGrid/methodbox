@@ -12,27 +12,27 @@ module ProcessDatasetJob
     
     def perform
       begin
-      dataset = Dataset.find(dataset_id)
-      process_dataset(dataset)
+      	dataset = Dataset.find(dataset_id)
+      	process_dataset(dataset)
 
-      #Get the updated variables
-      variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset_id}")
-      variables.each do |variable|
-        begin
-          process_variable(variable)
-        rescue Exception => e
-          logger.info(Time.now.to_s + " Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
+      	#Get the updated variables
+      	variables = Variable.all(:conditions => "dataset_id =  #{dataset_id}")
+      	variables.each do |variable|
+          begin
+            process_variable(variable)
+          rescue Exception => e
+            logger.info(Time.now.to_s + " Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
+          end
         end
+        dataset.update_attributes(:has_data=>true)
+        email_user
+      rescue Exception => e 
+        logger.error Time.now.to_s + " Problem processing dataset " + dataset.id.to_s + ", "  + e.inspect + e.backtrace
+        # send an error message
+        Mailer.deliver_dataset_processing_error(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
       end
-      dataset.update_attributes(:has_data=>true)
-      email_user
-    rescue Exception => e     
-      logger.error Time.now.to_s + " Problem processing dataset " + dataset.id.to_s + ", "  + e
-      # send an error message
-      Mailer.deliver_dataset_processing_error(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
-      
     end
-    end
+
     # TODO - surveys need to belong to a user.  datasets need to belong to a user.
     # can different people add datasets to a survey - permissions issue?
     # tell the user that the dataset has been processed. 
@@ -40,129 +40,110 @@ module ProcessDatasetJob
       Mailer.deliver_dataset_processed(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
     end
     
-    #split the dataset into columns
-def process_dataset(dataset)
-  dataset_file = dataset.uuid_filename
-  csv_path = File.join(CSV_FILE_PATH, dataset_file)
-  csv_file = File.open(csv_path, "r")
+  #split the dataset into columns
+  def process_dataset(dataset)
+    dataset_file = dataset.uuid_filename
+    csv_path = File.join(CSV_FILE_PATH, dataset_file)
+    csv_file = File.open(csv_path, "r")
   
-  #try and guess the encoding of the file so that the headers mean something
-  begin
-    cd = CharDet.detect(csv_file.readline)
-    encoding = cd['encoding']
-  rescue
-    encoding="UTF-8"
-  ensure
-    csv_file.close
-  end
-  csv_file = File.open(csv_path, "r:" + encoding)
-  header_line = csv_file.readline
-  header_line.chop!
-  all_headers = header_line.split(separator)
-  
-  did = dataset.id
-  # variables = Variable.all(:conditions => "dataset_id =  #{did}")
-  count = all_headers.size
-  # count = variables.size
-  if count <= 250
-    process_part_dataset(dataset, 0, count-1)
-  else
-    first_column = 0
-    last_column = 249
-    while first_column < count  
-      #uts count.to_s + " < " + count.to_s
-      process_part_dataset(dataset, first_column, last_column)
-      first_column = last_column + 1
-      last_column = last_column + 250
-      if last_column >= count
-        last_column = count - 1
-      end
-    end  
-  end
-end
-
-def process_part_dataset(dataset, first_column, last_column)
-  dataset_file = dataset.uuid_filename
-  data_directory = File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
-  FileUtils.mkdir_p  data_directory
-  csv_path = File.join(CSV_FILE_PATH, dataset_file)
-  #uts File.exist?(csv_path)
-  if (!File.exist?csv_path)
-    raise "ERROR path not found " + csv_path
-  end 
-  csv_file = File.open(csv_path, "r")
-  #tat = csv_file.stat
-  #uts csv_file.ctime.to_s
-  header_line = csv_file.readline
-  header_line.chop!
-  all_headers = header_line.split(separator)
-  if all_headers.size <= last_column
-    logger.error Time.now.to_s + " Error processing dataset " + dataset.id.to_s + " Less than expected headers found. Expected " + last_column.to_s + " found " + all_headers.size.to_s
-    raise "Incorrect header"
-  end
-  all_headers.each do |header|
-    if (header.match('([A-Za-z0-9]+)') == nil)
-      raise "There is an empty column header"
+    #try and guess the encoding of the file so that the headers mean something
+    begin
+      cd = CharDet.detect(csv_file.readline)
+      encoding = cd['encoding']
+    rescue
+      encoding="UTF-8"
+    ensure
+      csv_file.close
     end
-  end
-  #uts last_column
-  #uts all_headers.size
-  column_files = []
-  all_columns = (first_column..last_column)
-  #uts all_columns
-  all_columns.each do |column| 
-    #make sure there are some characters in the column
-    # if !(column['/\S/'].empty?)
-    name = all_headers[column].downcase
-    variable = Variable.find_by_name_and_dataset_id(name, dataset.id)
-    if !variable
-      #OK lets try some scrubing
-      name.tr!('"\'',' ')
-      name.strip!
-      #puts name
-      variable = Variable.find_by_name_and_dataset_id(name, dataset.id)
-    end      	
-    if !variable
-      raise "Variable not found " + name + " in dataset " + dataset.id.to_s + " file " + dataset_file
-    end
-    #uts column_files.size
-    
-    path = File.join(data_directory, name + ".txt")
-    #no need for the data_file path since it will be the name of the variable under File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
-    # variable.data_file = path
-    # variable.save
-    file = File.open(path, "w")
-    #uts file
-    column_files[column] = file
-    #uts column_files[column]
-  # else
-  #   raise "There is a empty column header"
-  # end 
-  end    
-  #uts "all files open"
+    csv_file = File.open(csv_path, "r:" + encoding)
+    faster_csv_file = FCSV.new(csv_file, :headers=>true, :return_headers=>true)
+    header_line = faster_csv_file.shift
+    all_headers = header_line.headers
+    #header_line = csv_file.readline
+    #header_line.chop!
+    #all_headers = header_line.split(separator)
   
-  #copy data
-  csv_file.each_line do |row|
-    row.chop!
-    #use faster csv to split the line to handle commas inside quoted values
-    if separator == ","
-      line = row.parse_csv()  
+    did = dataset.id
+    count = all_headers.size
+    if count <= 250
+      process_part_dataset(dataset, 0, count-1)
     else
-      line = row.parse_csv(:col_sep => "\t")  
-    end    
-    all_columns.each do |column| 
-      column_files[column].write(line[column] + "\n")
-    end  
+      first_column = 0
+      last_column = 249
+      while first_column < count  
+        process_part_dataset(dataset, first_column, last_column)
+        first_column = last_column + 1
+        last_column = last_column + 250
+        if last_column >= count
+          last_column = count - 1
+        end
+      end  
+    end
   end
-  #uts "done copy data"
+
+  def process_part_dataset(dataset, first_column, last_column)
+    dataset_file = dataset.uuid_filename
+    data_directory = File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
+    FileUtils.mkdir_p  data_directory
+    csv_path = File.join(CSV_FILE_PATH, dataset_file)
+    if (!File.exist?csv_path)
+      raise "ERROR path not found " + csv_path
+    end 
+    csv_file = File.open(csv_path, "r")
+    if separator == ","
+      sep = ','
+    else
+      sep ='/t'
+    end
+    faster_csv_file = FCSV.new(csv_file, :headers=>true, :return_headers=>true, :col_sep => sep)
+    all_headers = faster_csv_file.shift
+    #header_line = csv_file.readline
+    #header_line.chop!
+    #all_headers = header_line.split(separator)
+    if all_headers.size <= last_column
+      logger.error Time.now.to_s + " Error processing dataset " + dataset.id.to_s + " Less than expected headers found. Expected " + last_column.to_s + " found " + all_headers.size.to_s
+      raise "Incorrect header"
+    end
+    all_headers.headers.each do |header|
+      if (header.match('([A-Za-z0-9]+)') == nil)
+        raise "There is an empty column header"
+      end
+    end
+    column_files = []
+    all_columns = (first_column..last_column)
+    all_columns.each do |column| 
+      #make sure there are some characters in the column
+      # if !(column['/\S/'].empty?)
+      name = all_headers[column].downcase
+      variable = Variable.find_by_name_and_dataset_id(name, dataset.id)
+      if !variable
+        #could be some extraneous characters in the name, so lets try some scrubbing
+        name.tr!('"\'',' ')
+        name.strip!
+        variable = Variable.find_by_name_and_dataset_id(name, dataset.id)
+      end      	
+      if !variable
+        raise "Variable not found " + name + " in dataset " + dataset.id.to_s + " file " + dataset_file
+      end
+    
+      path = File.join(data_directory, name + ".txt")
+    #no need for the data_file path since it will be the name of the variable under File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
+      file = FCSV.open(path, "w")
+      column_files[column] = file 
+    end   
+
+    #we have already removed the headers so this is the rest of the rows containing only data
+    faster_csv_file.each do |row|   
+      all_columns.each do |column|
+	row.field(all_headers[column]) != nil ? column_files[column] << row.field(all_headers[column]) : column_files[column] << ''
+      end  
+    end
   
-  #close
-  csv_file.close
-  all_columns.each do |column| 
-    column_files[column].close
+    csv_file.close
+    all_columns.each do |column| 
+      column_files[column].close
+    end  
   end  
-  #uts "done close"
-end  
 
 def process_variable(variable)
   #Open data file

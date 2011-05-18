@@ -7,10 +7,10 @@
 <table class="listings_table">
 <% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
 <tr><td>Total Records</td><td><%= invalid_entries + valid_entries -%></td></tr>
-<tr><td>Missing records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+<tr><td>Invalid records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
 <% end %>
 <% if blank_rows %>
-<tr><td>Blank rows</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
+<tr><td>Blank rows/Missing records</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
 <% end %>
 </table>
 <% if !var_hash.empty? -%>

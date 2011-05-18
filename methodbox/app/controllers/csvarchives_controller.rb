@@ -453,6 +453,9 @@ class CsvarchivesController < ApplicationController
       all_variables_array = Array.new
       variable_hash = Hash.new
       @current_user.cart_items.each do |item|
+	#expire any cached fragments for these vars since the popularity will now change
+	expire_action :action=>"surveys/collapse_row", :id=>item.variable_id
+	expire_action :action=>"surveys/expand_row", :id=>item.variable_id
         variable = Variable.find(item.variable_id)
         if variable.nesstar_id != nil && @archive.contains_nesstar_variables != true
           @archive.update_attributes(:contains_nesstar_variables => true)

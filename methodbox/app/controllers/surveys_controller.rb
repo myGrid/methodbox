@@ -24,9 +24,11 @@ class SurveysController < ApplicationController
 
   before_filter :find_notes, :only => [ :show ]
   
-  before_filter :find_groups, :only => [:new_nesstar_datasource]
+  before_filter :find_groups, :only => [:new_nesstar_datasource, :new]
   
   after_filter :update_last_user_activity
+
+  caches_action :collapse_row, :expand_row
   
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
