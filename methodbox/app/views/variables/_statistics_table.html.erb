@@ -8,11 +8,13 @@
 	<% value_domain_hash = Hash.new %>
 	<% var_hash = Hash.new %>
 		<% variable.value_domains.each do |value_domain| -%>
-			<% var_hash[value_domain.id] = value_domain.value_domain_statistic -%>
+			<% if value_domain.value_domain_statistic -%>
+			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.id] = value_domain.label %>
 		<% end -%>
-	<%= valid_entries = variable.valid_entries -%>
-	<%= invalid_entries = variable.invalid_entries -%>
+	<% valid_entries = variable.valid_entries -%>
+	<% invalid_entries = variable.invalid_entries -%>
 	<% total_entries = invalid_entries + valid_entries -%>
 <% else -%>
 <% no_var_hash = variable.none_values_hash -%> 
@@ -55,18 +57,20 @@
 <% if var_hash.empty? %>
 	<% variable.value_domains.each do |value_domain| %>
 		<% if value_domain.value_domain_statistic %>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.value] = value_domain.label %>
 		<% end %>
 	<% end %>
 <% end %>
 <% end -%>
-<div class="left">
-<% if variable.interval && variable.interval == 'contin' || variable.number_of_unique_values > 20 -%>
+<div class="left" style="width: 40%">
+<% if variable.interval && variable.interval == 'contin' || variable.number_of_unique_values && variable.number_of_unique_values > 20 -%>
 <!-- histogram -->
 <div class="gviz-chart" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
 
-
+<% if !var_hash.empty? -%>
 <script type="text/javascript">
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
@@ -78,26 +82,28 @@ function drawChart() {
               <% var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
+<% if !variable.nesstar_id -%>
 							              <% no_var_hash.sort.each do |value, frequency| -%>
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
+<% end -%>
 
         var chart = new google.visualization.ColumnChart($('<%= variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
 </script>
-<table>
-<thead>
-</thead>
+<% end -%>
+<table class='listings_table'>
 <tbody>
-<tr><td>Mean</td><td><%= variable.mean -%></td></tr>
-<tr><td>Median</td><td><%= variable.median -%></td></tr>
+<tr><td>Mean</td><td><%= variable.mean ? variable.mean : 'N/A' -%></td></tr>
+<tr><td>Median</td><td><%= variable.median ? variable.median : 'N/A' -%></td></tr>
 <tr><td>Missing</td><td><%= variable.nesstar_id ? variable.invalid_entries : variable.number_of_blank_rows -%></td></tr>
 </tbody>
 </table>
 <% else -%>
 <!-- side on bar chart-->
-<div class="gviz-chart left" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
+<div class="gviz-chart left" style="width:50%" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
+<% if !var_hash.empty? -%>
 <script type="text/javascript">
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
@@ -109,23 +115,33 @@ function drawChart() {
               <% var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
+<% if !variable.nesstar_id -%>
 							              <% no_var_hash.sort.each do |value, frequency| -%>
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
+<% end -%>
 
         var chart = new google.visualization.BarChart($('<%= variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
 </script>
 <% end -%>
+<% end -%>
 </div>
-<div class="right">
-	<p>Total Records = <%= invalid_entries + valid_entries -%></p>
-	<p>Missing records = <%= invalid_entries -%> (<%= (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</p>
-<table>
-<% if var_hash.size < 20 %>
+<div class="right" style="width:40%">
+<table class='listings_table'>
+<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
+<tr><td>total records</td><td><%= invalid_entries + valid_entries -%></td></tr>
+<tr><td>Missing Records</td><td><%= invalid_entries -%> (<%= (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+<% end -%>
+<% if blank_rows %>
+	<tr><td>Blank rows</td><td><%= blank_rows -%><%= ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' -%>%</td></tr>
+<% end %>
+</table>
+<table class='listings_table'>
+<% if !var_hash.empty? && var_hash.size < 20 %>
 <thead>
-<th><tr><td>Value Name</td><td>Number of entries</td><td>Percentage of total</td></tr></th>
+<tr><th>Value Name</th><th>Number of entries</th><th>Percentage of total</th></tr>
 </thead>
 <% end %>
 <tbody>
@@ -133,12 +149,11 @@ function drawChart() {
 <% var_hash.each_key do |key| -%>
 	<tr><td><%= value_domain_hash[key] -%></td><td><%= var_hash[key] -%></td><td><%= (var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
 <% end -%>  
+<% if !variable.nesstar_id -%>
 <% no_var_hash.each_key do |key| -%>
 	<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
 <% end -%>
-<% end %>
-<% if blank_rows %>
-	<tr><td>Blank rows</td><td><%= blank_rows -%></td><td><%= (blank_rows.to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% end -%>
 <% end %>
 </tbody>
 </table>

@@ -1,59 +1,54 @@
 <div class="medium-padding">
   <% if item.name.size > 20 -%>
-    <div style="margin:auto;">Actual Variable name: <%= item.name -%></div>
+    <div style="margin:auto;"><b>Actual Variable name:</b> <%= item.name -%></div>
     <br/>
   <% end -%>
 <% if lineage %>
   <div>
-	Lineage of term (ie. where/why you added it to your cart) - <%= display_lineage_for_variable(item.id, extract_lineage, extract_id) %>
+	<b>Lineage of term</b>(<i>ie. where/why you added it to your cart</i>) - <%= display_lineage_for_variable(item.id, extract_lineage, extract_id) %>
   </div>
 <br/>
 <% end %>
   <div>
     <% unless item.document.blank? -%>
-      <div style="margin:auto;">Document: 
-        <%= link_to(item.document + ", page " + item.page, open_pdf_variable_url(item) + "#page=" + item.page,:title=>"Open the PDF document with information about this variable") -%>
+      <div><span>Document:</span> 
+        <span class="small-padding"><%= link_to(item.document + ", page " + item.page, open_pdf_variable_url(item) + "#page=" + item.page,:title=>"Open the PDF document with information about this variable") -%></span>
       </div>
     <% else -%>
-      <div style="margin:auto;color:red;">No documentation listed</div>
+      <div><span class="bold">Document:</span><span class= "small-padding warning-message">No documentation listed</span></div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% if item.category != nil -%>
-      <div style="margin:auto;">Category: <%= item.category -%></div>
+      <div><span class="bold">Category:</span><span class="small-padding"><%= item.category -%></span></div>
     <% else -%>
-      <div style="margin:auto;color:red;">No category recorded for this variable</div>
+      <div><span class="bold">Category:</span><span class="small-padding warning-message">No category recorded for this variable</span></div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% unless item.dertype.blank? -%>
-      <div style="margin:auto;">Variable source: <%= item.dertype %></div>
+      <div><span class="bold">Variable source:</span><span class="small-padding"><%= item.dertype %></span></div>
     <% else -%>
-      <div style="margin:auto;color:red;">No source</div>
+      <div><span class="bold">Variable source:</span><span class="small-padding warning-message">No source</span></div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% unless item.dermethod.blank? -%>
-      <div style="margin:auto;">Derivation method:</div>
+      <div><span class="bold">Derivation method:</span></div>
       <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre style='white-space: normal;'><%=  item.dermethod -%></pre></div>
     <% else -%>
-      <div style="margin:auto;color:red;">No derivation method recorded for this variable</div>
+      <div><span class="bold">Derivation method:</span><span class="small-padding warning-message">No derivation method recorded for this variable</span></div>
     <% end -%>
   </div>
   <br/>
   <div>
     <% if item.info != nil -%>
-      <div style="margin:auto;">Allowed values:</div>
+      <div><span class="bold">Allowed values:</span></div>
       <div style="margin:auto;border:0.2em solid #ACCBE0;"><pre><%= item.info -%></pre></div>
-	<% elsif !item.value_domains.empty? %>
-		<% item.value_domains.each do |value_domain| %>
-			<%= value_domain.label + " " + value_domain.value unless value_domain.label == 'N/A' %>
-			<br/>
-		<% end %>
-    <% else -%>
-      <div style="margin:auto;color:red;">No value information recorded for this variable</div>
+    <% elsif item.value_domains.empty? -%>
+      <div><span class="bold">Allowed values:</span><span class="small-padding warning-message">No value information recorded for this variable</span></div>
     <% end -%>
   </div>

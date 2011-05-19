@@ -1,11 +1,8 @@
-	<% tableize @survey_hash[key],
-	  :cols => 6,
-	  :class => 'survey_table',
-	  :generate_css => 'true' do |item| %>            
-
-	          <b class="spiffy" id="<%= item.id.to_s + "_spiffy_top"-%>"><b class="spiffy1" id="<%= item.id.to_s + "_spiffy_top_1"-%>"><b></b></b><b class="spiffy2" id="<%= item.id.to_s + "_spiffy_top_2"-%>"><b></b></b><b class="spiffy3" id="<%= item.id.to_s + "_spiffy_top_3"-%>"></b><b class="spiffy4" id="<%= item.id.to_s + "_spiffy_top_4"-%>"></b><b class="spiffy5" id="<%= item.id.to_s + "_spiffy_top_5"-%>"></b></b>
-
-
+<ul>
+<% @survey_hash[key].each do |item| -%>
+<%# tableize @survey_hash[key], :cols => 6, :class => 'survey_table', :generate_css => 'true' do |item| %>            
+<li style="display:inline-block; vertical-align:top; margin-bottom: 1em;">
+	          <div style="-webkit-border-radius: 10px; border-radius: 10px; -moz-border-radius:10px; -moz-box-shadow: #777 2px 3px 5px; -webkit-box-shadow: 2px 3px 5px #777777; box-shadow: 2px 3px 5px #777; background-color: #FFFFCC;	text-align: center; border:1px solid #DDDDDD;">
 		        <p class="survey_box" id="<%= item.id.to_s + "_survey_box"-%>">
 		          <%= image_tag("folds/unfold.png", :onclick=>"hideOrShowThisDiv(#{item.id.to_s})", :title=>"Hide or show datasets for this survey") -%><%= check_box_tag item.title + "_survey_ids[]", item.id,false,:onclick=>"selectAllDatasetsForYear(#{item.id}, true)", :title=> "Select/Unselect all datasets for this survey", :class=>'survey_checkbox', :id=>"#{item.id.to_s + '_survey_check'}"  %><%= link_to(item.title + " (" + item.datasets.size.to_s + ")", survey_path(item), :title => item.title + " has " + item.datasets.size.to_s + " datasets") -%>
 		        </p>
@@ -18,6 +15,7 @@
 		<%= javascript_tag "addDataset(#{item.id.to_s}, #{dataset.id.to_s})"-%>
 		        <% end -%>
     </p>
-		      <b class="spiffy" id="<%= item.id.to_s + "_spiffy_bottom"-%>"><b class="spiffy5" id="<%= item.id.to_s + "_spiffy_bottom_5"-%>"></b><b class="spiffy4" id="<%= item.id.to_s + "_spiffy_bottom_4"-%>"></b><b class="spiffy3" id="<%= item.id.to_s + "_spiffy_bottom_3"-%>"></b><b class="spiffy2" id="<%= item.id.to_s + "_spiffy_bottom_2"-%>"><b></b></b><b class="spiffy1" id="<%= item.id.to_s + "_spiffy_bottom_1"-%>"><b></b></b></b>
-
+</div>
+</li>
 	<% end %>
+</ul>

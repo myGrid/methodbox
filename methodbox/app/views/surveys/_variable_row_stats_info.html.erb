@@ -1,30 +1,36 @@
 <% if item.interval && item.interval == 'contin' || item.nesstar_id == nil && item.number_of_unique_values > 20 -%>
-<p>Mean <%= item.mean -%></p>
-<p>Median <%= item.median -%></p>
+<table class="listings_table">
+<tr><td>Mean</td><td><%= item.mean ? item.mean : 'N/A' -%></td></tr>
+<tr><td>Median</td><td><%= item.median ? item.median : 'N/A' -%></td></tr>
+</table>
 <% end %>
+<table class="listings_table">
 <% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
-<p>Total Records = <%= invalid_entries + valid_entries -%></p>
-<p>Missing records = <%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</p>
+<tr><td>Total Records</td><td><%= invalid_entries + valid_entries -%></td></tr>
+<tr><td>Invalid records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
 <% end %>
-<table>
+<% if blank_rows %>
+<tr><td>Blank rows/Missing records</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
+<% end %>
+</table>
+<% if !var_hash.empty? -%>
+<table class="listings_table">
 <% if var_hash.size < 20 %>
 <thead>
-<th><tr><td>Value Name</td><td>Number of entries</td><td>Percentage of total</td></tr></th>
+<tr><th>Label</th><th>Value</th><th>Number of entries</th><th>Percentage of total</th></tr>
 </thead>
 <% end %>
 <tbody>
 <% if var_hash.size < 20 %>
 <% var_hash.each_key do |key| -%>
-<tr><td><%= value_domain_hash[key] -%></td><td><%= var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
+<tr><td><%= value_domain_hash[key] -%></td><td><%= item.nesstar_id ? ValueDomain.find(key).value : key -%></td><td><%= var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
 <% end -%> 
 <% if no_var_hash != nil %>
 <% no_var_hash.each_key do |key| -%>
-<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
+<tr><td><%= value_domain_hash[key] -%></td><td><%= item.nesstar_id ? ValueDomain.find(key).value : key -%></td><td><%= no_var_hash[key] -%></td><td><%= total_entries.is_a?(Numeric) ? (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) : 'N/A'-%>%</td></tr>
 <% end -%>
 <% end %>
 <% end %>
-<% if blank_rows %>
-<tr><td>Blank rows</td><td><%= blank_rows -%></td><td><%= total_entries.is_a?(Numeric) ? (blank_rows.to_f/total_entries.to_f * 100).round(2) : 'N/A' -%>%</td></tr>
-<% end %>
 </tbody>
 </table>
+<% end -%>

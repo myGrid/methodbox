@@ -71,7 +71,9 @@
 	<% value_domain_hash = Hash.new %>
 	<% var_hash = Hash.new %>
 		<% item.value_domains.each do |value_domain| -%>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.id] = value_domain.label %>
 		<% end -%>
 	<% valid_entries = item.valid_entries -%>
@@ -102,7 +104,7 @@
 	<% end %>
 	<% invalid_entries += no_var_hash[key] %>
 <% end %>
-<% invalid_entries += blank_rows -%>
+<%# invalid_entries += blank_rows -%>
 <% valid_entries = 0 -%>
 <% var_hash.each_key do |key| -%>
 	<% valid_entries += var_hash[key] -%>
@@ -118,15 +120,17 @@
 <% if var_hash.empty? %>
 	<% item.value_domains.each do |value_domain| %>
 		<% if value_domain.value_domain_statistic %>
+			<% if value_domain.value_domain_statistic -%>
 			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
+			<% end -%>
 			<% value_domain_hash[value_domain.value] = value_domain.label %>
 		<% end %>
 	<% end %>
 <% end %>
 <% end -%>
-<div class="left" id='<%= row_name + "_expanded_stats_chart" -%>'>
+<div class="left" style="width:40%" id='<%= row_name + "_expanded_stats_chart" -%>'>
 </div>
-<div class="right variable_row_info">
+<div class="right variable_row_info" style="width:40%">
 	<%= render :partial => "variable_row_stats_info", :locals=>{:item => item,:var_hash => var_hash, :no_var_hash => no_var_hash, :valid_entries => valid_entries, :invalid_entries => invalid_entries, :value_domain_hash => value_domain_hash, :total_entries => total_entries, :blank_rows => blank_rows} %>
 </div>
 <div style="clear:both">
@@ -145,6 +149,7 @@
 				<% end %>
 </div>
 </div>
+<% if !var_hash.empty? -%>
 <script type="text/javascript">
 		var hash_size = <%=var_hash.size %>
 		if (hash_size > 1 && hash_size <= 20) {
@@ -179,6 +184,7 @@
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
     </script>
+<% end -%>
 <script type="text/javascript">
 	setCheckedStatus('<%= row_name -%>');
 </script>
