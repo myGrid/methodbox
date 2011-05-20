@@ -143,6 +143,10 @@ function downloadFromNesstar (nesstarUris) {
 	nesstarUris.forEach(function(item) { window.open(item, 'nesstar download') });
 }
 
+function popAlert(n) {
+	alert(n);
+}
+
 
 
 // document.observe('dom:loaded', function() {  

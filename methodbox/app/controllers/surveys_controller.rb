@@ -36,10 +36,14 @@ class SurveysController < ApplicationController
     @survey_numbers = "}"
     @surveys = "{"
     SurveyType.all.each do |survey_type|
-      @surveys << survey_type.name.to_json + ":{"
-      survey_type.surveys.each do |survey|
-        @survey_numbers << survey.id.to_s + ":" + survey.title.to_json + ","
-        @surveys << survey.title.to_json + ":" + survey.datasets.size.to_s + ","
+      if survey_type.surveys.empty?
+        @surveys << survey_type.name.to_json + ":{ "
+      else
+        @surveys << survey_type.name.to_json + ":{"
+        survey_type.surveys.each do |survey|
+          @survey_numbers << survey.id.to_s + ":" + survey.title.to_json + ","
+          @surveys << survey.title.to_json + ":" + survey.datasets.size.to_s + ","
+        end
       end
       @survey_numbers.chop!
       @survey_numbers << "}"

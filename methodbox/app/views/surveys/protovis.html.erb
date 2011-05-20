@@ -3,13 +3,13 @@
 #fig {
   width: 900px;
   margin-top: 5px;
-  height: 840px;
+  /* height: 840px; */
   text-align: center;
 }
 
     </style>
 <script type="text/javascript">
-var surveys = <%= @surveys -%>;
+	var surveys = <%= @surveys -%>;
 </script>
 
 <div id="fig">
@@ -17,12 +17,16 @@ var surveys = <%= @surveys -%>;
 
 	var root = pv.dom(surveys)
 	    .root("surveys")
-	    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));
+	    .sort(function(a, b) pv.naturalOrder(a.nodeName, b.nodeName));	
 
 	/* Recursively compute the package sizes. */
 	root.visitAfter(function(n) {
 	  if (n.firstChild) {
 	    n.nodeValue = pv.sum(n.childNodes, function(n) n.nodeValue);
+	  }
+	  //hide the surveys for each type by default
+	  if (n.parentNode != null && n.parentNode.nodeName == 'surveys') {
+		n.toggle(true);
 	  }
 	});
 
@@ -53,16 +57,18 @@ var surveys = <%= @surveys -%>;
 	  .anchor("right").add(pv.Label)
 	    .text(function(n) n.nodeName);
 
-	node.anchor("right").add(pv.Label)
-	    .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
-	    .text(function(n) (n.nodeValue) + "Datasets");
+	//node.anchor("right").add(pv.Label)
+	 //   .textStyle(function(n) n.firstChild || n.toggled ? "#aaa" : "#000")
+	   // .text(function(n) (n.nodeValue) + "Datasets");
 
 	vis.render();
 
 	/* Toggles the selected node, then updates the layout. */
 	function toggle(n) {
+	  if (n.parentNode.nodeName != 'surveys') {
+	  	alert("you clicked on " + n.nodeName)
+	  }
 	  n.toggle(pv.event.altKey);
-	// popAlert(n);
 	  return layout.reset().root;
 	}
 	
