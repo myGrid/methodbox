@@ -17,6 +17,8 @@ class CsvarchivesController < ApplicationController
   after_filter :update_last_user_activity
   before_filter :find_comments, :only => [ :show ]
   before_filter :find_notes, :only => [ :show ]
+
+  caches_action :show
   
   #a users notes about a resource
   def add_note
@@ -383,6 +385,7 @@ class CsvarchivesController < ApplicationController
     
     respond_to do |format|
       if @archive.update_attributes(params[:csvarchive])
+	expire_action :action=>"show", :id=>@archive.id
         # the Script was updated successfully, now need to apply updated policy / permissions settings to it
         policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
 

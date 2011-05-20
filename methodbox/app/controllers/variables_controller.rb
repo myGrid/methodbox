@@ -5,6 +5,8 @@ class VariablesController < ApplicationController
   after_filter :update_last_user_activity
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
+
+  caches_page :show
   
   #a users private notes about a variable
   def add_note
@@ -217,7 +219,7 @@ class VariablesController < ApplicationController
     @variable.title_list = str
     @variable.save_tags
 
-
+    expire_page :action=>"show", :id=>@variable.id
 
     respond_to do |format|
       format.html { redirect_to variable_path(@variable) }
