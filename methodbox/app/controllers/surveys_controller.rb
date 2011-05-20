@@ -24,9 +24,11 @@ class SurveysController < ApplicationController
 
   before_filter :find_notes, :only => [ :show ]
   
-  before_filter :find_groups, :only => [:new_nesstar_datasource]
+  before_filter :find_groups, :only => [:new_nesstar_datasource, :new]
   
   after_filter :update_last_user_activity
+
+  caches_action :collapse_row, :expand_row, :index
   
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
@@ -47,6 +49,7 @@ class SurveysController < ApplicationController
   
   #list of surveys to add to the db
   def add_nesstar_surveys
+    expire_action :action=>"index"
     respond_to do |format|
       begin
         Delayed::Job.enqueue AddNesstarSurveysJob::StartJobTask.new(params[:datasets], params[:nesstar_url], params[:nesstar_catalog], params[:groups], params[:sharing_scope], current_user.id, base_host)
@@ -496,6 +499,7 @@ class SurveysController < ApplicationController
        
       respond_to do |format|
         if @survey.save
+	   expire_action :action=>"index"
            policy = Policy.create(:name => "survey_policy", :sharing_scope => params[:sharing][:sharing_scope], :use_custom_sharing => params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false, :access_type => 2, :contributor => current_user)
             @survey.asset.policy = policy
             policy.save

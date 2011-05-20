@@ -104,7 +104,7 @@
 	<% end %>
 	<% invalid_entries += no_var_hash[key] %>
 <% end %>
-<% invalid_entries += blank_rows -%>
+<%# invalid_entries += blank_rows -%>
 <% valid_entries = 0 -%>
 <% var_hash.each_key do |key| -%>
 	<% valid_entries += var_hash[key] -%>

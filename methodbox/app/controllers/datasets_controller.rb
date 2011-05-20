@@ -243,19 +243,22 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     #split by tab
     if params[:dataset_format] == "Tab Separated"
-	header =  datafile.readline
-        headers = header.split("\t")
-        separator = "\t"
+	separator = '/t'
+	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
+        all_headers = faster_csv_file.shift
+	headers = all_headers.headers
     #split by comma
     elsif params[:dataset_format] == "Comma Separated"
-	header =  datafile.readline
-        headers = header.split(",")
-        separator = ","
+	separator = ','
+	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
+        all_headers = faster_csv_file.shift
+        headers = all_headers.headers
     #spreadsheet should already be converted
     else
-	header =  datafile.readline
-        headers = header.split(",")
-        separator = ","
+	separator = ','
+	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
+        all_headers = faster_csv_file.shift
+        headers = all_headers.headers
     end
     
     headers.collect!{|item| item.strip}
@@ -289,19 +292,22 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     #split by tab
     if params[:dataset_format] == "Tab Separated"
-	header =  datafile.readline
-        headers = header.split("\t")
-        separator = "\t"
+	separator = '/t'
+	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
+        all_headers = faster_csv_file.shift
+	headers = all_headers.headers
     #split by comma
     elsif params[:dataset_format] == "Comma Separated"
-	header =  datafile.readline
-        headers = header.split(",")
-        separator = ","
+	separator = ','
+	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
+        all_headers = faster_csv_file.shift
+        headers = all_headers.headers
     #spreadsheet should already be converted
     else
-	header =  datafile.readline
-        headers = header.split(",")
-        separator = ","
+	separator = ','
+	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
+        all_headers = faster_csv_file.shift
+        headers = all_headers.headers
     end
     
     headers.collect!{|item| item.strip}
@@ -311,7 +317,12 @@ class DatasetsController < ApplicationController
 
     all_variables = Array.new(all_var.size){|i| all_var[i].name}
     
-    
+   #expire any existing fragments
+   all_var.each do |var|
+	expire_action :action=>"surveys/collapse_row", :id=>var.id
+	expire_action :action=>"surveys/expand_row", :id=>var.id
+   end    
+
     missing_variables = all_variables - headers
     
     
@@ -348,7 +359,7 @@ class DatasetsController < ApplicationController
     end  
   end
   
-   #if you own the parent survey or it is a ukda one and you are an admin
+  #if you own the parent survey or it is a ukda one and you are an admin
   def can_add_or_edit_datasets
     dataset = Dataset.find(params[:id])
     if !Authorization.is_authorized?("edit", nil, dataset.survey, current_user)

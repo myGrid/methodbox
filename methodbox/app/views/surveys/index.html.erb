@@ -73,20 +73,23 @@
       <div id="table"></div> -->
 
 <div class="yui-skin-sam">
-<div id="demo" class="yui-navset">
+<div id="surveys" class="yui-navset">
     <ul class="yui-nav">
 	<% tab_count = 1 %>
 	<% @survey_hash.each_key do |key| -%>
 		<% if tab_count == 1 %>
-        	<li class="selected"><a href="#tab<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
+        	<li class="selected"><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
 		<% else %>
-			<li><a href="#tab<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
+			<li><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
 		<% end %>
+		<% tab_count += 1 %>
 	<% end %>
     </ul>            
     <div class="yui-content">
+	<% tab_id = 1 -%>
 	<% @survey_hash.each_key do |key| -%>
-        <div><%= render :partial => "single_survey_check", :locals => { :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %></div>
+        <div id="<%= 'survey_tab_' + tab_id.to_s -%>"><%= render :partial => "single_survey_check", :locals => { :tab_id => tab_id, :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %></div>
+	<% tab_id += 1 -%>
 	<% end %>
     </div>
 </div>
@@ -117,8 +120,89 @@
 <% else %>
 <h1>There are no surveys available to view.</h1>
 <% end %>
-<script>
-var myTabs = new YAHOO.widget.TabView("demo");
+<script type="text/javascript">
+(function () {
+
+    // The initially selected tab will be chosen in the following order:
+    //
+    // URL fragment identifier (it will be there if the user previously
+    // bookmarked the application in a specific state)
+    //
+    //         or
+    //
+    // "tab0" (default)
+
+    var bookmarkedTabViewState = YAHOO.util.History.getBookmarkedState("tabview");
+    var initialTabViewState = bookmarkedTabViewState || "survey_tab_1";
+
+    var tabView;
+
+    // Register our TabView module. Module registration MUST
+    // take place before calling YAHOO.util.History.initialize.
+    YAHOO.util.History.register("tabview", initialTabViewState, function (state) {
+        // This is called after calling YAHOO.util.History.navigate, or after the user
+        // has trigerred the back/forward button. We cannot discrminate between
+        // these two situations.
+
+        // "state" can be "survey_tab_1", "survey_tab_2" etc.
+        // Select the right tab:
+        tabView.set("activeIndex", state);
+    });
+
+    function handleTabViewActiveTabChange (e) {
+        var newState, currentState;
+
+        newState = "survey_tab_" + this.getTabIndex(e.newValue);
+
+        try {
+            currentState = YAHOO.util.History.getCurrentState("tabview");
+            // The following test is crucial. Otherwise, we end up circling forever.
+            // Indeed, YAHOO.util.History.navigate will call the module onStateChange
+            // callback, which will call tabView.set, which will call this handler
+            // and it keeps going from here...
+            if (newState != currentState) {
+		splitState = newState.split("_");
+                YAHOO.util.History.navigate("tabview", splitState.pop());
+            }
+        } catch (e) {
+		splitState = newState.split("_");
+            	tabView.set("activeIndex", splitState.pop());
+        }
+    }
+
+    function initTabView () {
+        // Instantiate the TabView control...
+        tabView = new YAHOO.widget.TabView("surveys");
+        tabView.addListener("activeTabChange", handleTabViewActiveTabChange);
+    }
+
+    // Use the Browser History Manager onReady method to instantiate the TabView widget.
+    YAHOO.util.History.onReady(function () {
+        var currentState;
+
+        initTabView();
+
+        // This is the tricky part... The onLoad event is fired when the user
+        // comes back to the page using the back button. In this case, the
+        // actual tab that needs to be selected corresponds to the last tab
+        // selected before leaving the page, and not the initially selected tab.
+        // This can be retrieved using getCurrentState:
+        currentState = YAHOO.util.History.getCurrentState("tabview");
+	splitState = currentState.split("_");
+        tabView.set("activeIndex", splitState.pop());
+    });
+
+    // Initialize the browser history management library.
+    try {
+        YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");
+    } catch (e) {
+        // The only exception that gets thrown here is when the browser is
+        // not supported (Opera, or not A-grade) Degrade gracefully.
+        initTabView();
+    }
+
+})();
+
 </script>
 <!-- jquery grid experiment -->
   <%# form_tag(:action => "grid_view") do -%>

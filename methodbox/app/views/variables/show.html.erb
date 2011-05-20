@@ -142,6 +142,9 @@
         <%= link_to(Dataset.find(@variable.dataset_id).survey.title, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
       </p>
+<% if @variable.nesstar_id && @variable.dataset.nesstar_uri.include?("esds") -%>
+	<p><b>More information:</b><%= link_to(image_tag('sqb_big.jpg', :alt=>"View information about this variable on the Survey Question Bank website", :size=>"100x100", :style=>"vertical-align:top;"), 'http://www.surveynet.ac.uk/sqb/qb/questiondetail.asp?sn=' +  @variable.dataset.nesstar_id.split('-')[0] + '&varid=' + @variable.nesstar_id, {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this variable on the Survey Question Bank website"})-%></p>
+<% end -%>
 
       <p>
         <b>Statistics:</b>
