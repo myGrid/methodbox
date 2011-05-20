@@ -1,11 +1,11 @@
 require 'rest_client'
 require 'uuidtools'
-require 'simple-spreadsheet-extractor'
+#require 'simple-spreadsheet-extractor'
 
 class DatasetsController < ApplicationController
 
   include ProcessDatasetJob
-  include SysMODB::SpreadsheetExtractor
+  #include SysMODB::SpreadsheetExtractor
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new, :create ]
@@ -30,8 +30,12 @@ class DatasetsController < ApplicationController
       #create directory and zip file for the archive
       filename = CSV_FILE_PATH + "/" + uuid + ".data"
       uf = File.open(filename,"w")
-      params[:file][:data].each_line do |line|                
-        uf.write(line)
+      if params[:dataset_format] = "Excel"
+        uf.write(spreadsheet_to_csv(params[:file][:data],"1"))
+      else
+        params[:file][:data].each_line do |line|                
+          uf.write(line)
+        end
       end
       uf.close
     
@@ -123,8 +127,13 @@ class DatasetsController < ApplicationController
       #write out the dataset into a new file
       filename=CSV_FILE_PATH + "/" + uuid + ".data"
       uf = File.open(filename,"w")
-      params[:dataset][:data].each_line do |line|                
-        uf.write(line)
+      if params[:dataset_format] == "Excel"
+	#convert the file to csv before writing out
+	uf.write(spreadsheet_to_csv(params[:dataset][:data],"1"))
+      else
+        params[:dataset][:data].each_line do |line|                
+          uf.write(line)
+        end
       end
       uf.close
       
@@ -192,6 +201,9 @@ class DatasetsController < ApplicationController
   private
   
   def update_dataset
+    if params[:dataset_format] = "Excel"
+
+    end
     header =  params[:file][:data].readline
     #split by tab
     if params[:dataset_format] == "Tab Separated"
@@ -239,12 +251,10 @@ class DatasetsController < ApplicationController
 	header =  datafile.readline
         headers = header.split(",")
         separator = ","
-    #spreadsheet so convert to csv then split by comma
+    #spreadsheet should already be converted
     else
-	#use the spreadsheet gem
-	converted_file = spreadsheet_to_csv(datafile)
-	header = converted_file.readline
-	headers = header.split(",")
+	header =  datafile.readline
+        headers = header.split(",")
         separator = ","
     end
     
@@ -287,12 +297,10 @@ class DatasetsController < ApplicationController
 	header =  datafile.readline
         headers = header.split(",")
         separator = ","
-    #spreadsheet so convert to csv then split by comma
+    #spreadsheet should already be converted
     else
-	#use the spreadsheet gem
-	converted_file = spreadsheet_to_csv(datafile)
-	header = converted_file.readline
-	headers = header.split(",")
+	header =  datafile.readline
+        headers = header.split(",")
         separator = ","
     end
     
@@ -378,9 +386,10 @@ class DatasetsController < ApplicationController
 
     #first check mime type
     mimetype = `file --mime -br #{datafile.path}`.gsub(/\n/,"").split(';')[0]
-    if mimetype.index("text") == nil && mimetype.index("csv") == nil
-      possible_mimetype = `file -b #{datafile.path}`
-      @datafile_error = "MethodBox cannot process this file.  Is it really a tab or csv file? Checking the mime type revealed this: " + possible_mimetype
+    #TODO not sure if this is really an exhaustive check, should get possible mimes from a list
+    if mimetype.index("text") == nil && mimetype.index("csv") == nil && mimetype.index("office") == nil && mimetype.index("excel") == nil
+      possible_mimetype = `file --mime -br #{datafile.path}`
+      @datafile_error = "MethodBox cannot process this file.  Is it really a tab, csv or excel file? Checking the mime type revealed this: " + possible_mimetype
       return false
     end
     

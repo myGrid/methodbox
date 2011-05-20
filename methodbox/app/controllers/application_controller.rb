@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   include ExceptionNotification::Notifiable
   #https/ssl
   include SslRequirement
+  include SysMODB::SpreadsheetExtractor
 
   helper :all # include all helpers, all the time
   layout "main"
