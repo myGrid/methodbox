@@ -53,6 +53,11 @@
         </p>
       <% end -%>
       </p>
+<div>
+<% if @dataset.nesstar_id && @dataset.nesstar_uri.include?("esds") -%>
+	<b>Source information:</b> <%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this dataset on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
+<% end -%>
+</div>
       <p>
         <b>Parent Survey:</b>
         <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
