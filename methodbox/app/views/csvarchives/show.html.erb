@@ -27,7 +27,7 @@
 	<% end %>
   <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
 <% if @archive.contains_nesstar_variables %>
-<li><%= link_to_function 'Download datasets from Nesstar', "alert('The Nesstar downloads will open in a new window. You are downloading from a third party, MethodBox is not responsible for the content. ');downloadFromNesstar(#{array_or_string_for_javascript(@download_uri_strings)})" -%></li>
+<li><%= link_to_function 'Download datasets from Nesstar', "var answer = confirm('The Nesstar downloads will open in a new window. You are downloading from a third party, MethodBox is not responsible for the content.');if (answer){downloadFromNesstar(#{array_or_string_for_javascript(@download_uri_strings)})}" -%></li>
 <% end %>
 	<% if !@archive.nesstar_only %>
     <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button", :title => "Download the data, metadata and any stats package scripts."}, "Download extract as:") -%></li>
