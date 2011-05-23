@@ -67,67 +67,6 @@
 <%= render :partial => "variable_row_info", :locals => {:item => item, :extract_lineage => extract_lineage, :extract_id => extract_id, :lineage => lineage} %>
 </div>
 
-<% if item.nesstar_id -%>
-	<% value_domain_hash = Hash.new %>
-	<% var_hash = Hash.new %>
-		<% item.value_domains.each do |value_domain| -%>
-			<% if value_domain.value_domain_statistic -%>
-			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
-			<% end -%>
-			<% value_domain_hash[value_domain.id] = value_domain.label %>
-		<% end -%>
-	<% valid_entries = item.valid_entries -%>
-	<% invalid_entries = item.invalid_entries -%>
-	<% total_entries = invalid_entries + valid_entries -%>
-<% else -%>
-<% no_var_hash = item.none_values_hash -%> 
-<% var_hash = item.values_hash -%>
-<% value_domain_hash = Hash.new %>
-<% var_hash.each_key do |key| %>
-	<% item.value_domains.each do |value_domain| %>
-		<% if value_domain.value.to_i.eql?(key.to_i) %> 
-			<% value_domain_hash[key] = value_domain.label %>
-			<% break %>
-		<% end %>
-	<% end %>
-<% end %>
-<% blank_rows = item.number_of_blank_rows %>
-<% invalid_entries = 0 -%>
-<% no_var_hash.each_key do |key| %>
-	<% item.value_domains.each do |value_domain| %>
-		<% if value_domain.value.to_i.eql?(key.to_i) %> 
-			<% value_domain_hash[key] = value_domain.label %>
-			<% break %>
-		<% else %>
-			<% value_domain_hash[key] = key %>
-		<% end %>
-	<% end %>
-	<% invalid_entries += no_var_hash[key] %>
-<% end %>
-<%# invalid_entries += blank_rows -%>
-<% valid_entries = 0 -%>
-<% var_hash.each_key do |key| -%>
-	<% valid_entries += var_hash[key] -%>
-<% end -%>
-<% no_var_hash.each_key do |key| -%>
-	<% valid_entries += var_hash[key] -%>
-<% end -%>
-<% total_entries = invalid_entries + valid_entries -%>
-<% if blank_rows != nil -%>
-	<% total_entries += blank_rows -%>
-<% end -%>
-<!-- If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets -->
-<% if var_hash.empty? %>
-	<% item.value_domains.each do |value_domain| %>
-		<% if value_domain.value_domain_statistic %>
-			<% if value_domain.value_domain_statistic -%>
-			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
-			<% end -%>
-			<% value_domain_hash[value_domain.value] = value_domain.label %>
-		<% end %>
-	<% end %>
-<% end %>
-<% end -%>
 <div class="left" style="width:40%" id='<%= row_name + "_expanded_stats_chart" -%>'>
 </div>
 <div class="right variable_row_info" style="width:40%">
