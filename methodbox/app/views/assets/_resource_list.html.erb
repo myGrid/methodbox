@@ -1,19 +1,20 @@
 <% authorization_for_showing_already_done ||= false -%>
 <% unless collection.empty? -%>
-		<% tableize collection, 
-		  :cols => 3,
-		  :header => nil,
-		  :name => "listings",
-		  :id => "listings_table",
-		  :class => "listings_table",
-		  :generate_css => 'false' do |item| %>
-					<% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-			<% if item.class.name == "Publication" %>
-				<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
-			<% else -%>
-			<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
-			<% end -%>            
-		<% end %>
+<ul>
+<% collection.each do |item| -%>
+		<%# tableize collection, :cols => 3, :header => nil, :name => "listings", :id => "listings_table", :class => "listings_table", :generate_css => 'false' do |item| %>
+			<% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
+				<% if item.class.name == "Publication" %>
+					<li style="display:inline-block; vertical-align:top; margin: 1em; width: 250px;">
+						<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
+					</li>
+				<% else -%>
+					<li style="display:inline-block; vertical-align:top; margin: 1em; width: 250px;">
+						<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
+					</li>
+				<% end -%>            
+			<% end %>
 	<% end %>
+</ul>
 <% end -%>
 
