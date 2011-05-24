@@ -75,6 +75,7 @@ class SearchController < ApplicationController
     else
       @results = @results + Survey.find(:all, :conditions => ["description like ?", '%'+@search_query.downcase+'%'])
     end
+    find_previous_searches
   end
 
   def find_people(query)
@@ -127,6 +128,15 @@ class SearchController < ApplicationController
     else
       return login_required
     end
+  end
+
+  def find_previous_searches
+    search=[]
+    if logged_in?
+      search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
+    end
+    @recent_searches = search
+    puts "FOUND PREVIOUS SEARCHES"
   end
 
 end
