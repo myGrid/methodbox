@@ -34,28 +34,8 @@ class PeopleController < ApplicationController
       condition = ["dormant != ?",false]
     end
 
-    if (!params[:expertise].nil?)
-      @expertise=params[:expertise]
-      @people=Person.tagged_with(@expertise, :on=>:expertise, :conditions =>condition)
-    elsif (!params[:tools].nil?)
-      @tools=params[:tools]
-      @people=Person.tagged_with(@tools, :on=>:tools, :conditions => condition)
-    elsif (params[:discipline_id])
-      @discipline=Discipline.find(params[:discipline_id])
-      #FIXME: strips out the disciplines that don't match
-      @people=Person.find(:all,:include=>:disciplines,:conditions=>["disciplines.id=?",@discipline.id],:page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:last_name, :conditions => condition)
-      #need to reload the people to get their full discipline list - otherwise only get those matched above. Must be a better solution to this
-      @people=@people.collect{|p| Person.find(p.id)}
-    elsif (params[:role_id])
-      @role=Role.find(params[:role_id])
-      @people=Person.find(:all,:include=>[:group_memberships], :order=>:last_name, :conditions => condition)
-      #FIXME: this needs double checking, (a) not sure its right, (b) can be paged when using find.
-      @people=@people.select{|p| !(p.group_memberships & @role.group_memberships).empty?}
-    else
-      @people = Person.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=> "last_name, first_name", :conditions => condition)
-    end
-
-
+      people = Person.all(:order=> "last_name, first_name", :conditions => condition)
+      @people = people.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
 
     respond_to do |format|
       format.html # index.html.erb

@@ -1,0 +1,48 @@
+<div class="main_content_left_box">
+	<div class="box_about_actor">
+		<p>
+			<b>Name:</b> <%= h @person.name %>
+          	</p>
+		<p>
+            		<%= render :partial=>"areas_of_expertise", :locals => {:person=>@person}  %>
+          	</p>
+          	<p>
+            		<% if mine?(@person) || @person.can_be_edited_by?(current_user) -%>
+            			<ul class="sectionIcons" style="text-align:left;">
+              				<li><%= icon('edit', edit_person_path(@person), "Edit Person Profile", nil, 'Edit Profile') -%></li>
+              				<% if mine?(@person) && !@person.user.shibboleth -%>
+                				<li><%= icon "lock", url_for({:controller=>:users, :action=>:edit, :id=>@person.user}), "Change password", nil, "Change password" -%></li>
+              				<% end -%>
+              				<% if current_user.is_admin? || mine?(@person) -%>
+						<% if mine?(@person) -%>
+                					<li><%= icon "destroy", person_path(@person), "Suspend your account", { :confirm => 'This will hide your personal information and make all your data anonymous! Are you sure?', :method => :delete }, "Suspend your account" -%></li>
+						<% else -%>
+	 						<li><%= icon "destroy", person_path(@person), "Suspend account", { :confirm => "This will hide the user's personal information and make all their data anonymous! Are you sure??", :method => :delete }, "Suspend Person" -%></li>
+						<% end -%>
+						<% if @person.user.shibboleth %>
+							<p style="padding-top: 1px;">Authentication method: <b>UK federation</b></p>
+						<% else %>
+							<li><%= icon('lock', "http://academic.sar-data.ccsr.ac.uk/nesstar/?" + SHIB_LOGIN_URL + "/users/shib_convert_after/" + @person.user.id.to_s, "Switch to UK Federation Authentication", {:confirm => "This enables login using UK Federation and shibboleth. You must have a valid account at a UK institution or affiliate for this to work." }, "Switch to UK Federation Authentication") -%></li>
+						<% end %>
+              				<% end -%>
+            			</ul>
+          		<% end %>
+          	</p>
+        </div>
+</div>
+<div class="main_content_right_box">
+	<%= render :partial => "layouts/contribution_section_box_avatar", :locals => { :object => @person, :drag_id => drag_id } -%>
+</div>
+<div style="clear:both;">
+</div>
+<br/>
+<p>
+<b>About me:</b>
+<div id="description" class="box_standout" style="background-color:#FFFFFF;">
+	<%= text_or_not_specified(@person.description, :description=>true) %>
+</div>
+</p>
+<br/>
+<div>
+	<%= render :partial=>"people/contact_details" %>
+</div>

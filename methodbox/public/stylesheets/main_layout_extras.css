@@ -677,8 +677,8 @@ div.exhibit-collectionView-header {
 .disclaimer {
 	font-size: 83%;
 	font-style: italic;
-    padding: 0.5em;
-    text-align: center;
+    	padding: 0.5em;
+    	text-align: center;
 }
 /* to keep some space between the buttons on the category list page */
 #survey_list li {
@@ -702,3 +702,14 @@ div.exhibit-collectionView-header {
 	padding-right: 1em;
 }
 /* end of stats table */
+div.asset-resource-list li {
+	display:inline-block;
+	vertical-align:top;
+	margin: 1em;
+	width: 250px;
+}
+div.asset-resource-list-wide li {
+	vertical-align:top;
+	margin: 1em;
+	list-style: none;
+}

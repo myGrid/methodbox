@@ -1,30 +1,8 @@
-<% if @expertise -%>
-  <h2><%= "People with expertise in '"+h(@expertise)+"' ... " -%></h2>
-<% end %>
-
-<% if @tools -%>
-  <h2><%= "People with experience in '"+h(@tools)+"' ... " -%></h2>
-<% end %>
-
-<% if @discipline -%>
-  <h2><%= "People with the discipline '#{h(@discipline.title)}'" %></h2>
-<%  end -%>
-
-<% if @role -%>
-  <h2><%= "People with the role '#{h(@role.name)}'" %></h2>
-<% end -%>
-
-
-<% if @people.public_methods.include?("page_count") %>
-  <!-- only do the page links if the collection supports it -->
-  <%= render :partial => "layouts/paginate", :locals => { :collection => @people } -%>
-<% end %>
-<div class="no-bg">
-      			<%= render :partial => "assets/resource_list", :locals => { :collection => @people, :authorization_for_showing_already_done=>true} %>
+<%= will_paginate @people, :param_name=>'page' %>
+<div style="text-align: center; margin: 0.5em;">
+	<%= page_entries_info @people %>
 </div>
-<%#= render :partial => "resource_list_item", :collection=>@people %>
-
-<% if @people.public_methods.include?("page_count") %>
-  <!-- only do the page links if the collection supports it -->
-  <%= render :partial => "layouts/paginate", :locals => { :collection => @people } -%>
-<% end %>
+<div class="asset-resource-list">
+      	<%= render :partial => "assets/resource_list", :locals => { :collection => @people, :authorization_for_showing_already_done=>true} %>
+</div>
+<%= will_paginate @people, :param_name=>'page' %>

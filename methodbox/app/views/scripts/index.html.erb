@@ -5,7 +5,10 @@
 <% end %>
 <% end %>
 <%= will_paginate(@scripts) %>
-<div class="no-bg">
+<div style="text-align: center; margin: 0.5em;">
+	<%= page_entries_info @scripts,:entry_name => 'Methods and Scripts' %>
+</div>
+<div class="asset-resource-list">
 <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
 </div>
 <%= will_paginate(@scripts) %>
