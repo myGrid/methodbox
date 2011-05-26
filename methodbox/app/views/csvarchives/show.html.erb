@@ -8,6 +8,9 @@
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
+<div class="right">
+<%= addthis_bookmark_button(csvarchive_url(@archive), @archive.title, :secure => HTTPS_ON) -%>
+</div>
 <ul class="buttons">
   <%= hidden_field_tag "format_type", "csv" -%>
 	<% if current_user && current_user.id != @archive.contributor_id %>

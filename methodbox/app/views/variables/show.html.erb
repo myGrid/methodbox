@@ -1,4 +1,7 @@
 <%#= javascript_include_tag 'https://www.google.com/jsapi' -%>
+<div class="right">
+<%= addthis_bookmark_button(variable_url(@variable), @variable.name + " from " + @variable.dataset.name, :secure => HTTPS_ON) -%>
+</div>
 <ul class="buttons">
   <%# if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
     <!-- <li> -->
