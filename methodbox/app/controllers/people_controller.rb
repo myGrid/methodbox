@@ -28,14 +28,15 @@ class PeopleController < ApplicationController
   # GET /people
   # GET /people.xml
   def index
-    if current_user.is_admin && ADMIN_CAN_SEE_DORMANT
-      condition = nil
-    else
-      condition = ["dormant != ?",false]
-    end
 
-      people = Person.all(:order=> "last_name, first_name", :conditions => condition)
+    if (!params[:expertise].nil?)
+      @expertise=params[:expertise]
+      people=Person.tagged_with(@expertise, :on=>:expertise)
       @people = people.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
+    else
+      people = Person.all(:order=> "last_name, first_name")
+      @people = people.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
+    end
 
     respond_to do |format|
       format.html # index.html.erb

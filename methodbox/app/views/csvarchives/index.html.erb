@@ -4,7 +4,11 @@
 			<% if current_user %>
 				<li class="selected"><a href="#extracts_tab_1" title="All the Data Extracts you have created"><em><%= h 'My Data Extracts' %></em></a></li>
 			<% end -%>
+			<% if current_user %>
 				<li><a href="#extracts_tab_2" title="All the Data Extracts that you have permission to view"><em><%= h 'All Data Extracts' %></em></a></li>
+			<% else -%>
+				<li class="selected"><a href="#extracts_tab_2" title="All the Data Extracts that you have permission to view"><em><%= h 'All Data Extracts' %></em></a></li>
+			<% end -%>
 		</ul>
 		<!-- tab content -->
 		<div class="yui-content">
