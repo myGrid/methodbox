@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110516124846) do
+ActiveRecord::Schema.define(:version => 20110527095801) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -250,6 +250,12 @@ ActiveRecord::Schema.define(:version => 20110516124846) do
     t.string   "subject_field_name"
     t.string   "object_field_name"
     t.integer  "user_id"
+  end
+
+  create_table "matched_variable_lists", :force => true do |t|
+    t.integer "variable_match_id"
+    t.integer "target_variable_id"
+    t.integer "occurences"
   end
 
   create_table "messages", :force => true do |t|
@@ -606,6 +612,10 @@ ActiveRecord::Schema.define(:version => 20110516124846) do
     t.string   "search_term"
     t.integer  "extract_id"
     t.integer  "user_search_id"
+  end
+
+  create_table "variable_matches", :force => true do |t|
+    t.integer "source_variable_id"
   end
 
   create_table "variables", :force => true do |t|

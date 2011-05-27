@@ -41,7 +41,8 @@
 	<% end %>
 	<% invalid_entries += no_var_hash[key] %>
 <% end %>
-<% invalid_entries += blank_rows -%>
+<%# invalid_entries += blank_rows -%>
+<% invalid_entries = 0 -%>
 <% valid_entries = 0 -%>
 <% var_hash.each_key do |key| -%>
 	<% valid_entries += var_hash[key] -%>
@@ -130,12 +131,13 @@ function drawChart() {
 </div>
 <div class="right" style="width:40%">
 <table class='listings_table'>
-<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) %>
-<tr><td>total records</td><td><%= invalid_entries + valid_entries -%></td></tr>
-<tr><td>Missing Records</td><td><%= invalid_entries -%> (<%= (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
-<% end -%>
-<% if blank_rows %>
-	<tr><td>Blank rows</td><td><%= blank_rows -%><%= ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' -%>%</td></tr>
+<% puts invalid_entries.to_s  + "******" + total_entries.to_s-%>
+<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) && total_entries != 0 %>
+<tr><td>Total Records</td><td><%= total_entries -%></td></tr>
+<tr><td>Invalid records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+<% end %>
+<% if blank_rows && total_entries != 0%>
+<tr><td>Blank rows/Missing records</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
 <% end %>
 </table>
 <table class='listings_table'>

@@ -62,9 +62,20 @@ namespace :obesity do
 	end
     end
     match_hash.each_key do |key|
+        var_match = VariableMatch.new(:source_variable => Variable.find(key))
+	var_match.save
+        #matched_vars = []
     	match_hash[key].each_key do |inner_key|
+                #matched_vars << Variable.find(inner_key)
+		matched_var_list = MatchedVariableList.new
+		matched_var_list.variable_match_id = var_match.id
+		matched_var_list.target_variable_id = inner_key
+		matched_var_list.occurences = match_hash[key][inner_key]
+		matched_var_list.save
 		puts key.to_s + " has " + match_hash[key][inner_key].to_s + " matches to " + inner_key.to_s
       	end
+	#var_match.target_variables = matched_vars
+        #var_match.save
    end
 #    number_of_matches_hash = Hash.new
 #    match_hash.each_key do |key|

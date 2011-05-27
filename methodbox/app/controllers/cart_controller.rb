@@ -28,6 +28,13 @@ class CartController < ApplicationController
     if !missing_vars.empty?
       flash[:notice] = "Your cart contained some variables which no longer exist. They have been removed from your cart."
     end
+    @sorted_matches = Hash.new
+    #find the variables which occur in data extracts for each variable in the cart
+    @sorted_variables.each do |var|
+      match = VariableMatch.all(:conditions => {:source_variable_id => var.id})
+      #sort the matches by decreasing number of data extracts the match occurs in
+      @sorted_matches[var.id] = MatchedVariableList.all(:conditions => {:variable_match_id => match[0].id}).sort{|x,y| y.occurences <=> x.occurences}
+    end
   end
 
   def remove_from_cart
