@@ -55,17 +55,23 @@
 	There are no variables in your cart, why not <%= link_to "search for some", surveys_url,:title=>"Search the data sources for variables of interest" -%>
 	<% end -%>
   <% end -%>
+<div style="clear:both">
+<div class="medium-padding">
 <% if !@sorted_variables.empty? -%>
 	<%= "Users who downloaded these variables also selected " -%>
+	<ul>
 	<% @sorted_matches.each_key do |key|-%>
 		<% match_num = 0 -%>
 		<% @sorted_matches[key].each do |match| -%>
 			<% unless match_num > 3 -%>
 				<% linked_var = Variable.find(match.target_variable_id) -%>
-				<%= link_to(linked_var.name + " from " + linked_var.dataset.name, variable_url(linked_var)) -%>
+				<li><%= link_to(linked_var.name + " from " + linked_var.dataset.name, variable_url(linked_var)) -%></li>
 			<% match_num += 1 -%>
 			<% end -%>
 		<% end -%>
 	<% end -%>
+	</ul>
 <% end -%>
+</div>
+</div>
 </div>

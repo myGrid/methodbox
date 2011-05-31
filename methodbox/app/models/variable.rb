@@ -16,9 +16,8 @@ class Variable < ActiveRecord::Base
   has_many :user_searches, :through => :search_variable_lists
   has_many :cart_items, :dependent => :destroy
   has_many :value_domains
-  has_many :matched_variable_lists
-  has_many :variable_matches
-  has_many :variable_matches, :through => :matched_variable_lists
+  has_many :matched_variables
+  has_many :target_variables, :through => :matched_variables, :class_name => "Variable" 
 
   acts_as_solr(:fields=>[:name, :value, :dataset_id], :if => proc{|record| !record.is_archived?}) if SOLR_ENABLED
   

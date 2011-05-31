@@ -1,18 +1,14 @@
 class CreateVariableMatchingTables < ActiveRecord::Migration
   def self.up
-    create_table :variable_matches do |t|
-      t.integer :source_variable_id
-    end
-
-    create_table :matched_variable_lists do |t|
-      t.integer :variable_match_id
+   create_table :matched_variables do |t|
+      t.integer :variable_id
       t.integer :target_variable_id
       t.integer :occurences
+      t.timestamps
     end
   end
 
   def self.down
-    drop_table :variable_matches
-    drop_table :matched_variable_lists
+    drop_table :matched_variables
   end
 end

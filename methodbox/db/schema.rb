@@ -252,8 +252,8 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
     t.integer  "user_id"
   end
 
-  create_table "matched_variable_lists", :force => true do |t|
-    t.integer "variable_match_id"
+  create_table "matched_variables", :force => true do |t|
+    t.integer "variable_id"
     t.integer "target_variable_id"
     t.integer "occurences"
   end
@@ -612,10 +612,6 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
     t.string   "search_term"
     t.integer  "extract_id"
     t.integer  "user_search_id"
-  end
-
-  create_table "variable_matches", :force => true do |t|
-    t.integer "source_variable_id"
   end
 
   create_table "variables", :force => true do |t|
