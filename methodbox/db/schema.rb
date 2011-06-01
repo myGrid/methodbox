@@ -253,9 +253,11 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
   end
 
   create_table "matched_variables", :force => true do |t|
-    t.integer "variable_id"
-    t.integer "target_variable_id"
-    t.integer "occurences"
+    t.integer  "variable_id"
+    t.integer  "target_variable_id"
+    t.integer  "occurences"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "messages", :force => true do |t|

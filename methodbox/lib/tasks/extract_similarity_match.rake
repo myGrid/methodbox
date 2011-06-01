@@ -51,26 +51,22 @@ namespace :obesity do
 				if !match_hash[var].has_key?(check_var)
 					match_hash[var][check_var] = 0
 				end
-				puts "source var " + var.to_s + " matched to target var " + check_var.to_s + " in extract " + extract_with_this_var.id.to_s
+				#puts "source var " + var.to_s + " matched to target var " + check_var.to_s + " in extract " + extract_with_this_var.id.to_s
               			match_hash[var][check_var] += 1 
             		end
 	    	end
 	end
     end
-    number_of_matches_hash = Hash.new
-    match_hash.each_key do |key|
+    end
+        match_hash.each_key do |key|
     	match_hash[key].each_key do |inner_key|
-        	puts key.to_s + " has " + match_hash[key][inner_key].to_s + " matches of " + inner_key.to_s
-        	if !number_of_matches_hash.has_key?(match_hash[key][inner_key].to_s)
-			number_of_matches_hash[match_hash[key][inner_key].to_s] = 1
-		else
-			number_of_matches_hash[match_hash[key][inner_key].to_s] += 1
-		end
+		matched_var = MatchedVariable.new
+		matched_var.variable_id = key
+		matched_var.target_variable_id = inner_key
+		matched_var.occurences = match_hash[key][inner_key]
+		matched_var.save
+		puts key.to_s + " has " + match_hash[key][inner_key].to_s + " matches to " + inner_key.to_s
       	end
    end
-   number_of_matches_hash.each_key do |key|
-	puts "Number of matches " + key.to_s + " = " + number_of_matches_hash[key].to_s
-   end
-    end
   end
 end
