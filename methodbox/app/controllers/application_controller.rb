@@ -520,6 +520,25 @@ class ApplicationController < ActionController::Base
     end
 
   end
+  
+  # Expire the surveys index fragment cache for each user
+  def expire_survey_cache
+    #a new dataset has been added so expire the surveys index fragment for all users 
+    begin
+      User.all.each do |user|
+        fragment = 'surveys_index_' + user.id.to_s
+        if fragment_exist?(fragment)
+          logger.info Time.now.to_s + " New dataset so expiring cached fragment " + fragment
+          expire_fragment(fragment)
+        end
+      end
+      if fragment_exist?('surveys_index_anon')
+        expire_fragment('surveys_index_anon')
+      end
+    rescue Exception => e
+      logger.error Time.now.to_s + "Problem expiring cached fragment " + e.backtrace 
+    end
+  end
 
   # See ActionController::Base for details
   # Uncomment this to filter the contents of submitted sensitive data parameters

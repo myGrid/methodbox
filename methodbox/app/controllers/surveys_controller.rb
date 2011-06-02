@@ -463,56 +463,37 @@ class SurveysController < ApplicationController
     else
       params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
     end
-      # prepare some extra metadata to store in Survey files instance
-      params[:survey][:contributor_type] = "User"
-      params[:survey][:contributor_id] = current_user.id
-
-
-      @survey = Survey.new(params[:survey])
-       #TODO: the flow seems to break the active record error display.
-      respond_to do |format|
-        if @survey.save
-	  #a new dataset has been added so expire the surveys index fragment for all users 
-          begin
-            User.all.each do |user|
-              fragment = 'surveys_index_' + user.id.to_s
-              if fragment_exist?(fragment)
-		logger.info Time.now.to_s + " New survey so expiring cached fragment " + fragment
-                expire_fragment(fragment)
-              end
-            end
-            if fragment_exist?('surveys_index_anon')
-              expire_fragment('surveys_index_anon')
-            end
-          rescue Exception => e
-            logger.error Time.now.to_s + "Problem expiring cached fragment " + e.backtrace 
+    # prepare some extra metadata to store in Survey files instance
+    params[:survey][:contributor_type] = "User"
+    params[:survey][:contributor_id] = current_user.id
+    @survey = Survey.new(params[:survey])
+    #TODO: the flow seems to break the active record error display.
+    respond_to do |format|
+      if @survey.save
+        expire_survey_cache
+        policy = Policy.create(:name => "survey_policy", :sharing_scope => params[:sharing][:sharing_scope], :use_custom_sharing => params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false, :access_type => 2, :contributor => current_user)
+        @survey.asset.policy = policy
+        policy.save
+        @survey.asset.save
+        if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
+          params[:groups].each do |workgroup_id|
+            policy.permissions << Permission.create(:contributor_id => workgroup_id, :contributor_type => "WorkGroup", :policy => policy, :access_type => 2)
           end
-         
-	   #expire_action :action=>"index"
-           policy = Policy.create(:name => "survey_policy", :sharing_scope => params[:sharing][:sharing_scope], :use_custom_sharing => params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false, :access_type => 2, :contributor => current_user)
-            @survey.asset.policy = policy
-            policy.save
-            @survey.asset.save
-            if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-              params[:groups].each do |workgroup_id|
-                policy.permissions << Permission.create(:contributor_id => workgroup_id, :contributor_type => "WorkGroup", :policy => policy, :access_type => 2)
-              end
-            end
-
-          # update attributions
-          Relationship.create_or_update_attributions(@survey, params[:attributions])
-
-          flash[:notice] = 'Survey was successfully uploaded and saved.'
-          format.html { redirect_to survey_path(@survey) }
-        else
-          format.html {
-            #TODO: this flash should really not be needed but the active record errors_for stuff is broke because of the page flow somehow.
-            flash[:error] = 'There was an problem saving the survey.  Is the name unique?'
-            set_parameters_for_sharing_form()
-            redirect_to :action => "new"
-          }
         end
+
+        # update attributions
+        Relationship.create_or_update_attributions(@survey, params[:attributions])
+        flash[:notice] = 'Survey was successfully uploaded and saved.'
+        format.html { redirect_to survey_path(@survey) }
+      else
+        format.html {
+          #TODO: this flash should really not be needed but the active record errors_for stuff is broke because of the page flow somehow.
+          flash[:error] = 'There was an problem saving the survey.  Is the name unique?'
+          set_parameters_for_sharing_form()
+          redirect_to :action => "new"
+        }
       end
+    end
   end
 
   def show
