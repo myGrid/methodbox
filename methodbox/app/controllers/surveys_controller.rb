@@ -1,14 +1,10 @@
 class SurveysController < ApplicationController
   
-  # before_filter :is_user_admin_auth, :only =>[ :new, :create]
-
   before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
-
-  #before_filter :find_survey_auth, :except => [ :index, :new, :create,:survey_preview_ajax, :help ]
   
   before_filter :find_survey, :only => [:show, :edit, :update]
 
@@ -28,7 +24,7 @@ class SurveysController < ApplicationController
   
   after_filter :update_last_user_activity
 
-  caches_action :collapse_row, :expand_row, :index
+  caches_action :collapse_row, :expand_row
   
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
@@ -139,21 +135,13 @@ class SurveysController < ApplicationController
     @datasets = Hash.new
     begin
       nesstar_api.parse_surveys_from_nodes nodes.root, @surveys, @survey_types
-      # @surveys.each_key do |survey|
-      #   @surveys[survey].each do |dataset|
-      #     info = nesstar_api.get_simple_study_information @nesstar_url, dataset.split('/').last
-      #     @datasets[dataset] = info.title
-      #   end
-      # end
     rescue Exception => e
       respond_to do |format|
         flash[:error] = "There seems to be problems with the nesstar server.  Please try again later."
         format.html {redirect_to surveys_url}
       end
     end
-    # render :update, :status=>:created do |page|
-    #   page.replace_html "nesstar-survey-table", :partial => "nesstar_surveys", :locals=>{:surveys => surveys, :survey_types => survey_types}
-    # end
+
   end
   
   #entry route to add a catalog
@@ -228,8 +216,6 @@ class SurveysController < ApplicationController
     @surveys_json << "\"items\":["
     Survey.all.each do |survey|
       unless !Authorization.is_authorized?("show", nil, survey, current_user)
-           # @surveys_json << "{\"label\":\"" + survey.title + "\",\"year\":\"" + survey.year + "\",\"type\" : \"Survey\",\"survey_description\" :\"" + survey.description
-          #        @surveys_json << "\",\"survey_type\":\"" + survey.survey_type.shortname + "\"},"
         survey.datasets.each do |dataset|
           @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":" + dataset.name.to_json + ",\"survey-type\":" + survey.survey_type.name.to_json + ",\"year\":" +  survey.year.to_json + ",\"type\" : \"Dataset\",\"dataset-description\" :" + dataset.description.to_json
           @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey.description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
@@ -255,7 +241,6 @@ class SurveysController < ApplicationController
       source_archives = []
       source_scripts = []
       # no survey link to publications yet, maybe in the future
-      # source_publications = []
 
       links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link",:user_id=>current_user.id })
 
@@ -265,8 +250,6 @@ class SurveysController < ApplicationController
           source_archives.push(link.subject)
         when "Script"
           source_scripts.push(link.subject)
-        # when "Publication"
-        #         source_publications.push(link.subject)
         end
       end
 
@@ -275,8 +258,6 @@ class SurveysController < ApplicationController
     when "all"
       source_archives = []
       source_scripts = []
-      # no survey link to publications yet, maybe in the future
-      # source_publications = []
 
       links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => params[:survey_id], :predicate => "link" })
 
@@ -286,8 +267,6 @@ class SurveysController < ApplicationController
           source_archives.push(link.subject)
         when "Script"
           source_scripts.push(link.subject)
-        # when "Publication"
-        #         source_publications.push(link.subject)
         end
       end
 
@@ -297,16 +276,6 @@ class SurveysController < ApplicationController
     
     render :update do |page|
         page.replace_html "links",:partial=>"assets/link_view",:locals=>{:archives=>@archives, :scripts=>@scripts}
-    end
-  end
-    
-#experimental code for doing jgrid table using jqgrid plugin
-  def grid_view
-    @query= params[:survey_search_query]
-    datasets=params[:entry_ids]
-    @dataset_request = ""
-    datasets.each do |dataset|
-      @dataset_request = @dataset_request + "&datasets[]=" + dataset
     end
   end
 
@@ -333,17 +302,6 @@ class SurveysController < ApplicationController
     end
     page_res = temp_variables.paginate(:page=>params[:page], :per_page=>params[:rows])
 
-    #    @variables = Variable.find(:all, :conditions=>"category='income'")
-    #    start_value = (params[:page] - 1) * params[:rows]
-    #    end_value = params[:page] * params[:rows]
-    #    @paged_variables = Array.new
-    #    if @variables
-    #
-    #    end
-    #    for i in start_value..end_value
-    #      @paged_variables.push(@variables[i])
-    #    end
-    #    @variables_json = page_res.to_jqgrid_json([:id,:name,:value,:category],params[:page],params[:rows],temp_variables.size)
     @variables_json = page_res.to_jqgrid_json([:name,:value,:category],params[:page],params[:rows],temp_variables.size)
 
     respond_to do |format|
@@ -351,12 +309,6 @@ class SurveysController < ApplicationController
       format.json { render :json => @variables_json }
 
     end
-
-    #     respond_to do |format|
-    #        logger.info("rendering grid view")
-    #        format.html
-    #        format.xml
-    #      end
   end
 
   def search_variables
@@ -365,24 +317,16 @@ class SurveysController < ApplicationController
 
 # list all the surveys that the current user can see.
   def index
-    #@surveys=Authorization.authorize_collection("show",@surveys,current_user)
-    # if current_user != nil
-    #   @ukda_registered = ukda_registration_check(current_user)
-    # else
-    #   @ukda_registered = false
-    # end
     @survey_hash = Hash.new
     @empty_surveys = []
     @surveys.each do |survey|
       unless survey.datasets.empty? 
         unless !Authorization.is_authorized?("show", nil, survey, current_user)
-      # unless survey.survey_type.is_ukda && !@ukda_registered
           if (!@survey_hash.has_key?(survey.survey_type.name))
             @survey_hash[survey.survey_type.name] = Array.new
           end
           @survey_hash[survey.survey_type.name].push(survey)
         end
-    # end
       else
         @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
       end
@@ -397,20 +341,6 @@ class SurveysController < ApplicationController
       #stripped off before the rdf+xml transfer, this <?xml version="1.0" encoding="UTF-8"?>
       #becomes ?xml version="1.0" encoding="UTF-8"?>
       format.rdf { render :layout => false, :content_type => 'application/rdf+xml' }
-    end
-  end
-
-  def data
-
-    results = Variable.find_by_solr("height",:limit => 1000).docs do
-      paginate :page => params[:page], :per_page => params[:rows]
-      order_by "#{params[:sidx]} #{params[:sord]}"
-    end
-    logger.info(results.to_jqgrid_json([:id,:name,:value,"survey.title"], params[:page], params[:rows], results.size))
-    respond_to do |format|
-      logger.info("rendering")
-      format.html
-      format.json {render :json => results.to_jqgrid_json([:name,:value,"survey.title","survey.survey_type.shortname"], params[:page], params[:rows], results.size)}
     end
   end
 
@@ -483,23 +413,8 @@ class SurveysController < ApplicationController
   end
 
   def view_variables
-    #    @surveys = Survey.find(params[:entry_ids])
-    #    items_per_page = 10
-
     @variables = Array.new
     @survey_list = Array.new(params[:entry_ids])
-
-
-
-    #    conditions = ["name LIKE ?", "%#{params[:query]}%"] unless params[:query].nil?
-
-    #    @total = Survey.find(params[:entry_ids])
-    #    @items_pages, @items = paginate :surveys, :order => sort, :per_page => items_per_page
-    #    @variables.clear
-    #    if request.xml_http_request?
-    #      render :partial => "view_variables", :layout => false
-    #    end
-
   end
 
   # DELETE /models/1
@@ -523,22 +438,15 @@ class SurveysController < ApplicationController
     end
     
     respond_to do |format|
-      # if Authorization.is_member?(current_user.person_id, nil, nil)
       format.html # new.html.erb
-      #else
-      # flash[:error] = "You are not authorized to upload new Surveys. Only members of known projects, institutions or work groups are allowed to create new content."
-      #format.html { redirect_to surveys_path }
-      #end
     end
   end
 
   def create
-    #TODO: Remove the survey type shortname, it's very artificial and not needed.  Was only relevant to 
-    #the original HSE and GHS surveys
-    if (params[:survey_type_name])!= "" && (params[:survey_type_shortname]) != ""
+    if (params[:survey_type_name])!= ""
       s_type = SurveyType.new
       s_type.name = params[:survey_type_name]
-      s_type.shortname = params[:survey_type_shortname]
+      #s_type.shortname = params[:survey_type_shortname]
       s_type.description = params[:survey_type_description]
       if params[:ukda_survey] == "yes"
         s_type.is_ukda = true
@@ -547,11 +455,11 @@ class SurveysController < ApplicationController
       end
       s_type.save
       params[:survey][:survey_type] = s_type
-      forum = Forum.new()
-      forum.name = s_type.shortname
-      forum.description = "Questions about " + s_type.name
-      forum.position = 4
-      forum.save
+      #forum = Forum.new()
+      #forum.name = s_type.shortname
+      #forum.description = "Questions about " + s_type.name
+      #forum.position = 4
+      #forum.save
     else
       params[:survey][:survey_type] = SurveyType.find(params[:survey][:survey_type].to_i)
     end
@@ -561,10 +469,26 @@ class SurveysController < ApplicationController
 
 
       @survey = Survey.new(params[:survey])
-       
+       #TODO: the flow seems to break the active record error display.
       respond_to do |format|
         if @survey.save
-	   expire_action :action=>"index"
+	  #a new dataset has been added so expire the surveys index fragment for all users 
+          begin
+            User.all.each do |user|
+              fragment = 'surveys_index_' + user.id.to_s
+              if fragment_exist?(fragment)
+		logger.info Time.now.to_s + " New survey so expiring cached fragment " + fragment
+                expire_fragment(fragment)
+              end
+            end
+            if fragment_exist?('surveys_index_anon')
+              expire_fragment('surveys_index_anon')
+            end
+          rescue Exception => e
+            logger.error Time.now.to_s + "Problem expiring cached fragment " + e.backtrace 
+          end
+         
+	   #expire_action :action=>"index"
            policy = Policy.create(:name => "survey_policy", :sharing_scope => params[:sharing][:sharing_scope], :use_custom_sharing => params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s ? true : false, :access_type => 2, :contributor => current_user)
             @survey.asset.policy = policy
             policy.save
@@ -582,8 +506,10 @@ class SurveysController < ApplicationController
           format.html { redirect_to survey_path(@survey) }
         else
           format.html {
+            #TODO: this flash should really not be needed but the active record errors_for stuff is broke because of the page flow somehow.
+            flash[:error] = 'There was an problem saving the survey.  Is the name unique?'
             set_parameters_for_sharing_form()
-            render :action => "new"
+            redirect_to :action => "new"
           }
         end
       end
@@ -591,21 +517,12 @@ class SurveysController < ApplicationController
 
   def show
     unless !Authorization.is_authorized?("show", nil, @survey, current_user)
-    # store timestamp of the previous last usage
-    #    @last_used_before_now = @survey.last_used_at
 
-    # update timestamp in the current Survey file record
-    # (this will also trigger timestamp update in the corresponding Asset)
-    #    @survey.last_used_at = Time.now
-    #    @survey.save_without_timestamping
-
-    # @survey = Survey.find(params[:id])
-    @forum = Forum.all(:conditions=>["name=?", @survey.survey_type.shortname])[0]
+    #@forum = Forum.all(:conditions=>["name=?", @survey.survey_type.shortname])[0]
 
     source_archives = []
     source_scripts = []
     # no survey link to publications yet, maybe in the future
-    # source_publications = []
 
     links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link" })
 
@@ -615,8 +532,6 @@ class SurveysController < ApplicationController
         source_archives.push(link.subject)
       when "Script"
         source_scripts.push(link.subject)
-      # when "Publication"
-      #         source_publications.push(link.subject)
       end
     end
 
@@ -624,7 +539,6 @@ class SurveysController < ApplicationController
     @scripts = source_scripts
     
     find_all_categories_for_survey
-    # @publications = source_publications
 
     respond_to do |format|
       format.html # show.html.erb
@@ -707,7 +621,21 @@ class SurveysController < ApplicationController
      
     respond_to do |format|
       if @survey.update_attributes(params[:survey])
-
+      #expire the surveys index fragment for all users 
+      begin
+        User.all.each do |user|
+          fragment = 'surveys_index_' + user.id.to_s
+          if fragment_exist?(fragment)
+            logger.info Time.now.to_s + " New survey so expiring cached fragment " + fragment
+            expire_fragment(fragment)
+          end
+        end
+        if fragment_exist?('surveys_index_anon')
+          expire_fragment('surveys_index_anon')
+        end
+      rescue Exception => e
+        logger.error Time.now.to_s + "Problem expiring cached fragment " + e.backtrace 
+      end
         # update attributions
         Relationship.create_or_update_attributions(@survey, params[:attributions])
 
@@ -773,42 +701,25 @@ class SurveysController < ApplicationController
   end
 
   def find_surveys
-    found = Survey.find(:all,
-      :order => "title")
-
-    # this is only to make sure that actual binary data isn't sent if download is not
-    # allowed - this is to increase security & speed of page rendering;
-    # further authorization will be done for each item when collection is rendered
-    #    found.each do |survey|
-    #      survey.content_blob.data = nil unless Authorization.is_authorized?("download", nil, survey, current_user)
-    #    end
-
+    found = Survey.find( :all, :order => "title" )
     @surveys = found
   end
 
 
   def find_survey_auth
-      action=action_name
-
-      survey = Survey.find(params[:id])
-
-      return Authorization.is_authorized?(action_name, nil, survey, current_user)
+    action=action_name
+    survey = Survey.find(params[:id])
+    return Authorization.is_authorized?(action_name, nil, survey, current_user)
   end
 
   def set_parameters_for_sharing_form
     policy = nil
     policy_type = "survey_policy"
-    # @survey = Survey.find(params[:id])
 
     # # obtain a policy to use
     if defined?(@survey) && @survey.asset
       if (policy = @survey.asset.policy)
-    #     # Surveyfile exists and has a policy associated with it - normal case
-    #     puts "we have a policy"
         policy_type = "survey_policy"
-    #   elsif @survey.asset.project && (policy = @survey.asset.project.default_policy)
-    #     # Surveyfile exists, but policy not attached - try to use project default policy, if exists
-    #     policy_type = "project"
       end
     end
     # 
@@ -910,8 +821,6 @@ class SurveysController < ApplicationController
               @term_results[term].push(variable)
               if !@sorted_variables.include?(variable)
                 @sorted_variables.push(variable)
-                #ogger.info("variable.dataset_id = "+variable.dataset_id.to_s)
-                #ogger.info("@vars_by_dataset[variable.dataset_id] = "+@vars_by_dataset[variable.dataset_id.to_s].to_s)
                 @vars_by_dataset[variable.dataset_id.to_s]+= 1
                 @total_vars+= 1
               end
@@ -931,7 +840,7 @@ class SurveysController < ApplicationController
             user_search.save
           end
 
-        end #search_terms.each do |term|
+        end
 
         respond_to do |format|
           format.html { render :action =>:search_variables }
@@ -945,20 +854,6 @@ class SurveysController < ApplicationController
       find_surveys
       check_search_parameters
       do_search_variables
-      #respond_to do |format|
-      #  format.html do
-      #    store_location
-      #    if session[:return_to] != root_path
-      #      flash[:message] = "Please reenter your search"
-      #    end
-      #    redirect_to surveys_path
-      #  end
-      #end
-       #return false
-       #params[:entry_ids] = params[:entry_ids].split(',')
-       ##params[:survey_search_query] = "beer"
-       #bad = bad + 2
-       #action = search_variables
      else
 	return true
      end
@@ -973,65 +868,6 @@ class SurveysController < ApplicationController
       else
         results = Variable.find(:all, :conditions => ["name like ? or value like ? and dataset_id = ?", '%'+term+'%','%'+term+'%', dataset.to_s])
       end
-    end
-    
-    #new - not tested via ui yet
-    #Load a new CSV/Tabbed file for a survey.
-    #Create the dataset and the variables from the header line
-    def load_new_dataset file, survey, dataset_name
-      dataset = Dataset.new
-      dataset.survey = survey
-      dataset.name = dataset_name
-      dataset.save
-      header = File.open(file) {|f| f.readline}
-      #split by tab
-      headers = header.split("\t")
-      headers.each do |var|
-        variable = Variable.new
-        variable.name = name
-        variable.dataset = dataset
-        variable.save
-      end
-      
-      #TODO - push the file over to the CSV server (or just copy it to a directory somewhere?!?)
-      
-    end
-    
-    #new - not tested via ui yet
-    #Read the metadata from a ccsr type xml file for a particular survey
-    def read_ccsr_metadata file,dataset_id
-      
-      data = file.read
-      parser = XML::Parser.io(file, :encoding => XML::Encoding::ISO_8859_1)
-      doc = parser.parse
-
-        nodes = doc.find('//ccsrmetadata/variables')
-        # doc.close
-
-        nodes[0].each_element do |node|
-          if (/^id_/.match(node.name)) 
-            name = node["variable_name"]
-            label = node["variable_label"]
-            value_map = String.new
-            node.each_element do |child_node| 
-              if (!child_node.empty?) 
-                value_map <<  "value " + child_node["value"] + " label " + child_node["value_name"] + "\r\n"
-              end
-            end
-            variable = Variable.new
-                     variable.name = name
-                     variable.value= label
-            #          variable.dertype = variable_dertype
-            #          variable.dermethod = variable_dermethod
-                     variable.info = value_map
-            #          variable.category = variable_category
-                     variable.dataset_id = dataset_id;
-            #          variable.page = page
-            #          variable.document = document
-                     variable.save
-            end
-          end
-          
     end
     
     #find the variable categories for a specific survey (@survey)
@@ -1049,7 +885,6 @@ class SurveysController < ApplicationController
     
     #find the variable categories for all surveys with a survey_type
     def find_all_categories survey_type_id
-      # @all_categories = Variable.all(:select => "DISTINCT(category)",:conditions=>({:dataset.survey_type_id => survey_type_id}), :joins=>:dataset)
       categories = Variable.find_by_sql("select distinct(variables.category) from variables, datasets, surveys, survey_types where variables.dataset_id = datasets.id and datasets.survey_id = surveys.id and surveys.survey_type_id = #{survey_type_id}")
       @all_categories = categories.collect{|var| var.category}
       @all_categories.delete_if{|cat| cat==nil}

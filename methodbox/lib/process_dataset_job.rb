@@ -3,35 +3,49 @@
 
 module ProcessDatasetJob
   
-  class StartJobTask < Struct.new(:dataset_id, :user_id, :separator, :base_host)
+ class StartJobTask < Struct.new(:dataset_id, :user_id, :separator, :base_host)
     
-    require 'fastercsv'
+   require 'fastercsv'
     
-    cattr_accessor :logger
-    self.logger = RAILS_DEFAULT_LOGGER
+   cattr_accessor :logger
+   self.logger = RAILS_DEFAULT_LOGGER
     
-    def perform
-      begin
-      	dataset = Dataset.find(dataset_id)
-      	process_dataset(dataset)
-
-      	#Get the updated variables
-      	variables = Variable.all(:conditions => "dataset_id =  #{dataset_id}")
-      	variables.each do |variable|
-          begin
-            process_variable(variable)
-          rescue Exception => e
-            logger.info(Time.now.to_s + " Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
-          end
-        end
-        dataset.update_attributes(:has_data=>true)
-        email_user
-      rescue Exception => e 
-        logger.error Time.now.to_s + " Problem processing dataset " + dataset.id.to_s + ", "  + e.inspect + e.backtrace
-        # send an error message
-        Mailer.deliver_dataset_processing_error(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
-      end
-    end
+   def perform
+     begin
+       dataset = Dataset.find(dataset_id)
+       process_dataset(dataset)
+       #Get the updated variables
+       variables = Variable.all(:conditions => "dataset_id =  #{dataset_id}")
+       variables.each do |variable|
+         begin
+           process_variable(variable)
+         rescue Exception => e
+           logger.info(Time.now.to_s + " Problem with variable "  + variable.name  + "in " + dataset_id.to_s + " " + e  + " probably just doesn't exist in new dataset")
+         end
+       end
+       dataset.update_attributes(:has_data=>true)
+       email_user
+       #a new dataset has been added so expire the surveys index fragment for all users 
+       begin
+         User.all.each do |user|
+           fragment = 'surveys_index_' + user.id.to_s
+           if fragment_exist?(fragment)
+             logger.info Time.now.to_s + " New dataset so expiring cached fragment " + fragment
+             expire_fragment(fragment)
+           end
+         end
+         if fragment_exist?('surveys_index_anon')
+           expire_fragment('surveys_index_anon')
+         end
+       rescue Exception => e
+         logger.error Time.now.to_s + "Problem expiring cached fragment " + e.backtrace 
+       end
+     rescue Exception => e 
+       logger.error Time.now.to_s + " Problem processing dataset " + dataset.id.to_s + ", "  + e.inspect + e.backtrace
+       # send an error message
+       Mailer.deliver_dataset_processing_error(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+     end
+   end
 
     # TODO - surveys need to belong to a user.  datasets need to belong to a user.
     # can different people add datasets to a survey - permissions issue?

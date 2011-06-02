@@ -29,7 +29,7 @@ class Survey < ActiveRecord::Base
 #  belongs_to :content_blob,
 #             :dependent => :destroy
   
-    validates_uniqueness_of :title, :scope => [ :contributor_id, :contributor_type ], :message => "error - you already have a Survey with such title."
+    validates_uniqueness_of :title, :scope => [ :contributor_id, :contributor_type, :survey_type_id ], :message => "error - you already have a Survey with such a title."
 
     #sunspot solr
     # searchable do

@@ -274,7 +274,21 @@ class DatasetsController < ApplicationController
         variable.save
         @new_variables.push(variable.id)
     end
-    
+            #a new dataset has been added so expire the surveys index fragment for all users 
+          User.all.each do |user|
+            fragment = 'surveys_index_' + user.id.to_s
+            logger.error 'expiring ' + fragment
+            if fragment_exist(fragment)
+              begin
+                expire_fragment(fragment)
+              rescue Exception => e
+                logger.error "fragmentoops " + e.backtrace 
+              end
+            end
+          end
+          if fragment_exist(fragment)
+            expire_fragment 'surveys_index_anon'
+          end
     begin 
       logger.info(Time.now.to_s + " processing dataset " + dataset.id.to_s + " user " + current_user.id.to_s + " and separator " + separator)
       Delayed::Job.enqueue ProcessDatasetJob::StartJobTask.new(dataset.id, current_user.id, separator, base_host)

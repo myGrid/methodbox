@@ -2,23 +2,23 @@
 <%= javascript_include_tag 'link_adder.js'-%>
 <h1>New Survey</h1>
 <div class="show_basic">
-  <% form_tag({:action => :create}, :multipart => true) do -%>
-    <%= error_messages_for :survey -%>
+  <% form_for(:survey, :url => {:action => :create}, :multipart => true) do |form| -%>
+    <%= error_messages_for 'survey' -%>
 <div class="right" style="width: 50%;">
 				<div id="new-survey-step-2">
 				<fieldset style="background-color: #FFFFCC;">
 					<legend style="font-size:150%;">2: Details for the new Survey</legend>
 			        <p style="margin-top: 0.5em;">
 			          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
-			          <%= text_field_tag 'survey[title]','', :style => "width: 100%;" -%>
+			          <%= form.text_field :title, :style => "width: 100%;" -%>
 			        </p>
 	        <p style="margin-top: 0.5em;">
 	          <b>Description:</b> (Enter a description of the survey here)<br/>
-	          <%= text_area_tag 'survey[description]', '', :style => "width: 100%;", :rows => 5 -%>
+	          <%= form.text_area :description, :style => "width: 100%;", :rows => 5 -%>
 	        </p>
 	        <p style="margin-top: 0.5em;">
 	          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
-	          <%= text_field_tag 'survey[year]', '', :style => "width: 40%;" -%>
+	          <%= form.text_field :year, :style => "width: 40%;" -%>
 	        </p>
 	</fieldset>
 	</div>
@@ -38,8 +38,7 @@
 		<% if SurveyType.all.size >=1 %>
 <p>
 	<b>Select an existing Survey type</b><br/>
-			<%= select_tag 'survey[survey_type]' ,options_from_collection_for_select(@survey_types, 'id', 'shortname')
-			 -%>
+			<%= form.select :survey_type ,options_from_collection_for_select(@survey_types, :id, :truncated_value) -%>
 			</p>
 
 			<p>
@@ -54,21 +53,19 @@
 
 
 				<b>Name:</b> (Enter full survey name here eg Health Survey for England)<br/>
-			<%= text_field_tag 'survey_type_name', '', :style => "width: 100%;margin-bottom:0.5em;" -%><br/>
-			<b>Short Name:</b> (Enter short survey name here eg HSE)<br/>
-			<%= text_field_tag 'survey_type_shortname', '', :style => "width: 40%;margin-bottom:0.5em;" -%><br/>
+			<%= text_field_tag 'survey_type_name', nil, :style => "width: 100%;margin-bottom:0.5em;" -%><br/>
 			<b>Description:</b> (Enter a description of the new survey type here)<br/>
-			<%= text_area_tag 'survey_type_description', '', :style => "width: 100%;margin-bottom:0.5em;", :rows => 5 -%>
+			<%= text_area_tag 'survey_type_description', nil, :style => "width: 100%;margin-bottom:0.5em;", :rows => 5 -%>
 				</p>
 				<p>
 				<% if current_user.is_admin? %>
 				<b>UKDA Survey?</b>
 				Yes
-				<%= radio_button_tag 'ukda_survey', 'yes', false, :onclick=>"$('world_sharing_div').hide();$('sharing_scope_4').disabled = true;$('sharing_scope_4').selected = false;if (this.checked) { this.checked == false; $('sharing_scope_3').checked = true;};" -%>
+				<%= radio_button_tag :ukda_survey, 'yes', {:checked=>false, :onclick=>"$('world_sharing_div').hide();$('sharing_scope_4').disabled = true;$('sharing_scope_4').selected = false;if (this.checked) { this.checked == false; $('sharing_scope_3').checked = true;};"} -%>
 				No
-				<%= radio_button_tag 'ukda_survey', 'no', true, :onclick=>"$('world_sharing_div').show();$('sharing_scope_4').enable();" -%>
+				<%= radio_button_tag :ukda_survey, 'no', {:checked => true, :onclick=>"$('world_sharing_div').show();$('sharing_scope_4').enable();"} -%>
 				<% else %>
-				<%= hidden_field_tag 'ukda_survey', false -%>
+				<%= hidden_field_tag :ukda_survey, false -%>
 				<% end %>
 				</p>
 			</fieldset>
@@ -85,23 +82,6 @@
 		</div>
 		<div style="clear:both;">
 			</div>
-      <p style="margin: 2.5em 0 0 0;">
-        <%#= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
-      </p>
-    <!--</center>-->
-
-
-
-
-    <!-- <p style="margin: 2.5em 0 0 0;"> -->
-      <%#= render :partial => "assets/sharing_form" -%>
-    <!-- </p> -->
-
-    <!-- <p style="margin: 0;"> -->
-      <%#= render :partial => "assets/attribution_form", :locals => { :resource_type => "Survey",  # this is only for presentation, not for any processing
-        :existing_attributions => [],
-        :attribution_suggestions => Survey.get_all_as_json(current_user) } -%>
-    <!-- </p> -->
 
     <p style="text-align: center; margin-top: 1.5em;">
       <%= submit_tag "Create", :id => "survey_submit_btn", :onclick => "javascript: validateSurveyFields(true); return(false);" -%> or <%= link_to 'Cancel', surveys_path -%>
