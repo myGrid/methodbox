@@ -61,7 +61,7 @@ namespace :obesity do
           end
         end
       end
-      match_hash.each_key do |key|
+    match_hash.each_key do |key|
       match_hash[key].each_key do |inner_key|
         #check if this variable pair have already been matched
         mvs = MatchedVariable.all(:conditions=>{:variable_id=>key,:target_variable_id=>inner_key})
@@ -70,10 +70,8 @@ namespace :obesity do
 	  matched_var.variable_id = key
 	  matched_var.target_variable_id = inner_key
 	  matched_var.occurences = match_hash[key][inner_key]
-	  matched_var.save
-	  puts key.to_s + " has " + match_hash[key][inner_key].to_s + " matches to " + inner_key.to_s
+          matched_var.save
         else
-          puts "Already a match for " + key.to_s + " and " + inner_key.to_s + ". Add " + match_hash[key][inner_key].to_s + " to it."
           mvs[0].update_attributes(:occurences=>mvs[0].occurences += match_hash[key][inner_key])
         end
       end

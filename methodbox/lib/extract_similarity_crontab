@@ -1,0 +1,1 @@
+59 11 * * * cd /var/www/my_ror_application  && /usr/bin/rake RAILS_ENV=production obesity:daily_extract_similarity_check

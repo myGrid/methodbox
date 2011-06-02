@@ -2,18 +2,18 @@
 	<div id="extracts" class="yui-navset">
 		<ul class="yui-nav">
 			<% if current_user %>
-				<li class="selected"><a href="#extracts_tab_1" title="All the Data Extracts you have created"><em><%= h 'My Data Extracts' %></em></a></li>
+				<li class="selected"><a href="#extracts_tab_0" title="All the Data Extracts you have created"><em><%= h 'My Data Extracts' %></em></a></li>
 			<% end -%>
 			<% if current_user %>
-				<li><a href="#extracts_tab_2" title="All the Data Extracts that you have permission to view"><em><%= h 'All Data Extracts' %></em></a></li>
+				<li><a href="#extracts_tab_1" title="All the Data Extracts that you have permission to view"><em><%= h 'All Data Extracts' %></em></a></li>
 			<% else -%>
-				<li class="selected"><a href="#extracts_tab_2" title="All the Data Extracts that you have permission to view"><em><%= h 'All Data Extracts' %></em></a></li>
+				<li class="selected"><a href="#extracts_tab_1" title="All the Data Extracts that you have permission to view"><em><%= h 'All Data Extracts' %></em></a></li>
 			<% end -%>
 		</ul>
 		<!-- tab content -->
 		<div class="yui-content">
 			<% if current_user %>
-				<div class="asset-resource-list" id="extracts_tab_1">
+				<div class="asset-resource-list" id="extracts_tab_0">
 					<%= will_paginate @my_archives, :param_name=>'my_page' %>
 				<div style="text-align: center; margin: 0.5em;">
 					<%= page_entries_info @my_archives, :entry_name => 'Data Extract' %>
@@ -22,7 +22,7 @@
 					<%= will_paginate @my_archives, :param_name=>'my_page' %>
 				</div>
 			<% end -%>
-			<div class="asset-resource-list" id="extracts_tab_2">
+			<div class="asset-resource-list" id="extracts_tab_1">
 				<%= will_paginate @all_archives, :param_name=>'all_page' %>
 				<div style="text-align: center; margin: 0.5em;">
 					<%= page_entries_info @all_archives, :entry_name => 'Data Extract' %>
@@ -46,18 +46,18 @@
     // "tab0" (default)
 
     var bookmarkedTabViewState = YAHOO.util.History.getBookmarkedState("tabview");
-    var initialTabViewState = bookmarkedTabViewState || "assets_tab_1";
+    var initialTabViewState = bookmarkedTabViewState || "extracts_tab_0";
 
     var tabView;
 
     // Register our TabView module. Module registration MUST
     // take place before calling YAHOO.util.History.initialize.
-    YAHOO.util.History.register("tabview", initialTabViewState, function (state) {
+    YAHOO.util.History.register("extracts_tabview", initialTabViewState, function (state) {
         // This is called after calling YAHOO.util.History.navigate, or after the user
         // has trigerred the back/forward button. We cannot discrminate between
         // these two situations.
 
-        // "state" can be "extracts_tab_1", "extracts_tab_2"
+        // "state" can be "extracts_tab_0", "extracts_tab_1"
         // Select the right tab:
         tabView.set("activeIndex", state);
     });
@@ -68,14 +68,14 @@
         newState = "extracts_tab_" + this.getTabIndex(e.newValue);
 
         try {
-            currentState = YAHOO.util.History.getCurrentState("tabview");
+            currentState = YAHOO.util.History.getCurrentState("extracts_tabview");
             // The following test is crucial. Otherwise, we end up circling forever.
             // Indeed, YAHOO.util.History.navigate will call the module onStateChange
             // callback, which will call tabView.set, which will call this handler
             // and it keeps going from here...
             if (newState != currentState) {
 		splitState = newState.split("_");
-                YAHOO.util.History.navigate("tabview", splitState.pop());
+                YAHOO.util.History.navigate("extracts_tabview", splitState.pop());
             }
         } catch (e) {
 		splitState = newState.split("_");
@@ -100,7 +100,7 @@
         // actual tab that needs to be selected corresponds to the last tab
         // selected before leaving the page, and not the initially selected tab.
         // This can be retrieved using getCurrentState:
-        currentState = YAHOO.util.History.getCurrentState("tabview");
+        currentState = YAHOO.util.History.getCurrentState("extracts_tabview");
 	splitState = currentState.split("_");
         tabView.set("activeIndex", splitState.pop());
     });
