@@ -73,7 +73,7 @@ namespace :obesity do
           mvs[0].update_attributes(:occurences=>mvs[0].occurences += match_hash[key][inner_key])
         end
       end
-    end
+    #end
    end
   end
 end
