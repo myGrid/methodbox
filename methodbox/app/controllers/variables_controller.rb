@@ -245,9 +245,13 @@ class VariablesController < ApplicationController
     end
   end
 
+  # Find the correct variable, any tags associated with it and variables
+  # which are matched in data extracts with it
   def show
     find_variable
     @tag_array = @variable.title_counts
+    #find the variables which occur in data extracts for this variable
+    @sorted_matches = MatchedVariable.all(:conditions => {:variable_id => @variable.id}, :order => "occurences DESC", :limit => 6)
   end
 
   def save_tags
