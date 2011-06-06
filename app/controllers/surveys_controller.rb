@@ -279,38 +279,6 @@ class SurveysController < ApplicationController
     end
   end
 
-  def search_stuff
-    @selected_surveys = params[:datasets]
-    res = Variable.multi_solr_search(params[:query].downcase, :limit=>1000, :models=>(Variable))
-    solr_docs = res.docs
-    temp_variables = Array.new
-    #    page_res = solr_docs.paginate(:page=>params[:page], :per_page=>params[:per_page])
-    solr_docs.each do |item|
-      @selected_surveys.each do |ids|
-        if Dataset.find(item.dataset_id).id.to_s == ids
-          temp_variables.push(item)
-          break
-        end
-      end
-    end
-    temp_variables.each do |var|
-      var_name = var.name
-      var.name = "<a href='/variables/" + var.id.to_s
-      var.name = var.name + "'>"
-      var.name = var.name + var_name
-      var.name = var.name + "</a>"
-    end
-    page_res = temp_variables.paginate(:page=>params[:page], :per_page=>params[:rows])
-
-    @variables_json = page_res.to_jqgrid_json([:name,:value,:category],params[:page],params[:rows],temp_variables.size)
-
-    respond_to do |format|
-      format.html
-      format.json { render :json => @variables_json }
-
-    end
-  end
-
   def search_variables
     do_search_variables
   end
