@@ -27,7 +27,7 @@ class SessionsController < ApplicationController
         user=User.find_by_shibboleth_user_id(params[:username])
         if user && user.person
           self.current_user = user
-          format.html {redirect_to index_url}
+          format.html {redirect_to person_url(current_user)}
         else
           @user = User.new
           format.html {redirect_to :controller => 'users', :action => 'new_shib', :shib_user_id => params[:username]}
@@ -78,22 +78,22 @@ class SessionsController < ApplicationController
       else
         respond_to do |format|
 #       flash[:notice] = "Logged in successfully"
-
-          if !params[:called_from].blank? && params[:called_from][:controller] != "sessions"
-            if !params[:called_from][:id].blank?
-              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :id => params[:called_from][:id])
-            elsif !params[:called_from][:entry_ids].blank? && !params[:called_from][:survey_search_query].blank?             
-              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :entry_ids => params[:called_from][:entry_ids], :survey_search_query => params[:called_from][:survey_search_query])
-            else
-              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action])
-            end
-          else
-            if session[:return_to] and !session[:return_to].empty?
-              return_to_url = session[:return_to]
-            else
-              return_to_url = root_url
-            end
-          end
+#decided that we should go to the person profile instead of index
+          #if !params[:called_from].blank? && params[:called_from][:controller] != "sessions"
+            #if !params[:called_from][:id].blank?
+              #return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :id => params[:called_from][:id])
+            #elsif !params[:called_from][:entry_ids].blank? && !params[:called_from][:survey_search_query].blank?             
+              #return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :entry_ids => params[:called_from][:entry_ids], :survey_search_query => params[:called_from][:survey_search_query])
+            #else
+              #return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action])
+            #end
+          #else
+            #if session[:return_to] and !session[:return_to].empty?
+              #return_to_url = session[:return_to]
+            #else
+              return_to_url = person_url(current_user)
+            #end
+          #end
 
           format.html { return_to_url.nil? || (return_to_url && URI.parse(return_to_url).path == '/') ? redirect_to(root_url) : redirect_to(return_to_url) }
         end
