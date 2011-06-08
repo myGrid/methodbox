@@ -75,7 +75,9 @@ config.gem 'RedCloth'
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
       :session_key => '_method_box_session',
-      :secret      => '1576ebcfekhjb234hkjhefg0j98273598273598237921cccc605a5abafc299ba87747jhvv9mmlll7c66537361f77'
+      :secret      => '1576ebcfekhjb234hkjhefg0j98273598273598237921cccc605a5abafc299ba87747jhvv9mmlll7c66537361f77',
+      :session_secure      => RAILS_ENV == 'production',
+      :http_only   => true
     }
 
   # Use the database for sessions instead of the cookie-based default,
