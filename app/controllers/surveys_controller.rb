@@ -285,18 +285,32 @@ class SurveysController < ApplicationController
 
 # list all the surveys that the current user can see.
   def index
+    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = []
+    survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
+
     @survey_hash = Hash.new
     @empty_surveys = []
-    @surveys.each do |survey|
-      unless survey.datasets.empty? 
-        unless !Authorization.is_authorized?("show", nil, survey, current_user)
-          if (!@survey_hash.has_key?(survey.survey_type.name))
-            @survey_hash[survey.survey_type.name] = Array.new
+    non_empty_survey_types.each do |survey_type|
+      survey_type.surveys.each do |survey|
+        unless survey.datasets.empty? 
+          unless !Authorization.is_authorized?("show", nil, survey, current_user)
+            if (!@survey_hash.has_key?(survey.survey_type.name))
+              @survey_hash[survey.survey_type.name] = Array.new
+            end
+            @survey_hash[survey.survey_type.name].push(survey)
           end
-          @survey_hash[survey.survey_type.name].push(survey)
+        else
+          @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
         end
-      else
-        @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
       end
     end
 

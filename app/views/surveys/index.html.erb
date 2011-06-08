@@ -61,9 +61,9 @@
                   <% tab_count = 1 %>
                   <% @survey_hash.each_key do |key| -%>
                     <% if tab_count == 1 %>
-                      <li class="selected"><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
+                      <li class="selected"><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name == 'Health Survey for England' || @survey_hash[key][0].survey_type.name == 'General Household Survey' ? @survey_hash[key][0].survey_type.name + ' (MethodBox version - contains metadata from non nesstar source)' : @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name == 'Health Survey for England' || @survey_hash[key][0].survey_type.name == 'General Household Survey' ? @survey_hash[key][0].survey_type.name + ' (MethodBox version)' : @survey_hash[key][0].survey_type.name, :length=> 70, :omission => '...') %></em></a></li>
                     <% else %>
-                      <li><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
+                      <li><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name == 'Health Survey for England' || @survey_hash[key][0].survey_type.name == 'General Household Survey' ? @survey_hash[key][0].survey_type.name + ' (MethodBox version - contains metadata from non nesstar source)' : @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name == 'Health Survey for England' || @survey_hash[key][0].survey_type.name == 'General Household Survey' ? @survey_hash[key][0].survey_type.name + ' (MethodBox version)' : @survey_hash[key][0].survey_type.name, :length=> 70, :omission => '...') %></em></a></li>
                     <% end %>
 	            <% tab_count += 1 %>
                   <% end %>
