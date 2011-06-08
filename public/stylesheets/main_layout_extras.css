@@ -92,10 +92,10 @@ text-decoration: underline;
 	padding: 5px;
 }
 .view-content {
-        width:60%;
+        width:70%;
 }
 .facet-view-content {
-        width:30%;
+        width:25%;
 }
 ol.exhibit-tileView-body li{
         list-style: none outside none;
