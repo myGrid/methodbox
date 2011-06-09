@@ -97,9 +97,6 @@ text-decoration: underline;
 .facet-view-content {
         width:25%;
 }
-ol.exhibit-tileView-body li{
-        list-style: none outside none;
-}
 .sidebar {
 /*	background-color: #F8F2E5;*/
 /*	min-height: 25em;*/
@@ -636,15 +633,25 @@ display: block;
 	padding: 2px;
 }
 /* extra styling for exhibit facet view */
+ol.exhibit-tileView-body li{
+        list-style: none outside none;
+}
 div.exhibit-collectionView-header {
 	text-align: center;
 	border-bottom: 1px dotted;
+}
+div.exhibit-collectionView-group h1 {
+  font-size: 100%;
+}
+div.exhibit-collectionView-group h2 {
+  background-image: none;
+  font-size: 100%;
+  background-color: #FFFFCC;
 }
 /* extra styling for exhibit facet view ends */
 .normal-margin-top {
 	margin-top: 1em;
 }
-/* exhibit styling over */
 
 /* some extra margin and padding settings */
 .normal-margin-bottom {
