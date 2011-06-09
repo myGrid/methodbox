@@ -217,8 +217,16 @@ class SurveysController < ApplicationController
     Survey.all.each do |survey|
       unless !Authorization.is_authorized?("show", nil, survey, current_user)
         survey.datasets.each do |dataset|
-          @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":" + dataset.name.to_json + ",\"survey-type\":" + survey.survey_type.name.to_json + ",\"year\":" +  survey.year.to_json + ",\"type\" : \"Dataset\",\"dataset-description\" :" + dataset.description.to_json
-          @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey.description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
+          dataset.description ? dataset_description = dataset.description : dataset_description = 'N/A'
+          survey.description ? survey_description = survey.description : survey_description = 'N/A'
+          if dataset_description == ''
+            dataset_description = 'N/A'
+          end
+          if survey_description == ''
+            survey_description = 'N/A'
+          end
+          @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":" + dataset.name.to_json + ",\"survey-type\":" + survey.survey_type.name.to_json + ",\"year\":" +  survey.year.to_json + ",\"type\" : \"Dataset\",\"dataset-description\" :" + dataset_description.to_json
+          @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey_description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
         end
       end
     end
