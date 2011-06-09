@@ -3,12 +3,95 @@ class ScriptsController < ApplicationController
   before_filter :login_required, :except => [ :download, :index, :show, :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
-  before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment, :add_note ]
+  before_filter :find_script_auth, :except =>[ :download_all_links, :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment, :add_note ]
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
   before_filter :recommended_by_current_user, :only=>[ :show ]
   after_filter :update_last_user_activity
   
+  def download_all_links
+    begin
+      script = Script.find(params[:id])
+
+      if Authorization.is_authorized?('download', nil, script, current_user)
+        @script = script
+    # update timestamp in the current SOP record
+    # (this will also trigger timestamp update in the corresponding Asset)
+    @script.last_used_at = Time.now
+    @script.save_without_timestamping
+    record_download @script 
+    source_archives = []
+    source_surveys = []
+    source_scripts = []
+    target_archives = []
+    target_surveys = []
+    target_scripts = []
+    #publications link to something, not from
+    @publications = []
+    @archives = []
+    @scripts = []
+    @surveys = []
+      links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => params[:id], :predicate => "link"})
+      links.each do |link|
+        case link.object.class.name
+        when "Csvarchive"
+          source_archives.push(link.object)
+        when "Script"
+          source_scripts.push(link.object)
+        when "Survey"
+          source_surveys.push(link.object)
+        when "Publication"
+          @publications.push(link.object)
+        end
+        
+        target_links = Link.find(:all, :conditions => { :object_type => "Script", :object_id => params[:id], :predicate => "link"})
+        target_links.each do |link|
+          case link.subject.class.name
+          when "Csvarchive"
+            target_archives.push(link.subject)
+          when "Script"
+            target_scripts.push(link.subject)
+          when "Survey"
+            target_surveys.push(link.subject)
+          end
+        end
+      @archives = source_archives | target_archives
+      @scripts = source_scripts | target_scripts
+      @surveys = source_surveys | target_surveys
+    end
+    @archives.each do |extract| 
+      #get the data extract and add it to the zip archive
+      puts 'extract ' + extract.title
+    end
+    @scripts.each do |script| 
+      #get the script blob and add it to the zip archive
+      puts 'script ' + script.title
+    end
+    @surveys.each do |survey|
+      #get the survey metadata and add it to a text file
+      puts 'survey ' + survey.title
+    end
+    @publications.each do |publication|
+      #get the publication metadata and add it to a text file_file
+      puts 'publication ' + publication.title
+    end
+    send_data @script.content_blob.data, :filename => @script.original_filename, :content_type => @script.content_type, :disposition => 'attachment'
+      else
+        respond_to do |format|
+          flash[:error] = "You are not authorized to perform this action"
+          format.html { redirect_to scripts_path }
+        end
+        return false
+      end
+    rescue ActiveRecord::RecordNotFound
+      respond_to do |format|
+        flash[:error] = "Couldn't find the Script or you are not authorized to view it"
+        format.html { redirect_to scripts_path }
+      end
+      return false
+    end
+  end
+
   #a users notes about a resource
   def add_note
     @script = Script.find(params[:resource_id])
@@ -56,7 +139,6 @@ class ScriptsController < ApplicationController
   
   #only show 'my' links or 'all' links
   def show_links
-    puts "doing stuff"
     source_archives = []
     source_surveys = []
     source_scripts = []
