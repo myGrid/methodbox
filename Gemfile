@@ -23,6 +23,11 @@ gem "metric_fu"
 gem 'sunspot_rails', '~> 1.2.1'
 gem 'addressable', '2.2.4'
 gem 'simple-spreadsheet-extractor', '0.5.0'
+
+# linecache is not a gem we pull in directly but it is used by ruby-debug and
+# version 0.45 requires ruby 1.9. 0.43 works with 1.8 so specify it here.
+gem 'linecache', '0.43'
+
 #stop the 'You have already activated rake 0.9.0, but your Gemfile requires rake 0.8.7. Consider using bundle exec' issue
 gem 'rake', '0.8.7'
 
