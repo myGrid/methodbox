@@ -27,7 +27,7 @@
 					<div style="position: absolute; top:250px; left:550px;display: none;z-index:1000;"  id="spinner">
 	              Working....<%= image_tag method_to_icon_filename("large-spinner"), :alt=>"working...", :title=>"working...", :style => "vertical-align: middle;",:height => '64', :width => '64' -%>
 				</div>
-          		<div style="min-height:40em;min-width:70em;">
+          		<div style="min-height:40em;">
 <%# applying styling to error / notice messages -%>
           			<% if flash[:error] %>
             			<div id="error_flash" class="box_standout" style="color: red; font-weight: bold; margin: 0.8em 0.8em; line-height: 1.4;">
