@@ -1,15 +1,17 @@
 <% if @scripts.empty? %>
-<h1>There are no public Methods available to view.</h1>
+  <% if !logged_in? -%>
+    <h1>There are no public Methods available to view.</h1>
+  <% else -%>
+    <h1>There are no Methods available to view.</h1>
+    <p class="center">Why not <%= link_to "add one", new_script_url -%></p>
+  <% end %>
 <% else -%>
-<% if logged_in? %>
-<p class="center">Why not <%= link_to "create one", new_script_url -%></p>
-<% end %>
-<%= will_paginate(@scripts) %>
-<div style="text-align: center; margin: 0.5em;">
-	<%= page_entries_info @scripts,:entry_name => 'Methods and Scripts' %>
-</div>
-<div class="asset-resource-list">
-<%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
-</div>
-<%= will_paginate(@scripts) %>
+  <%= will_paginate(@scripts) %>
+  <div style="text-align: center; margin: 0.5em;">
+    <%= page_entries_info @scripts,:entry_name => 'Methods and Scripts' %>
+  </div>
+  <div class="asset-resource-list">
+    <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
+  </div>
+  <%= will_paginate(@scripts) %>
 <% end -%>
