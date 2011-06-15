@@ -219,7 +219,7 @@ class VariablesController < ApplicationController
     @variable.title_list = str
     @variable.save_tags
 
-    expire_page :action=>"show", :id=>@variable.id
+    #expire_page :action=>"show", :id=>@variable.id
 
     respond_to do |format|
       format.html { redirect_to variable_path(@variable) }
