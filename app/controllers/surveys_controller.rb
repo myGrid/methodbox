@@ -110,7 +110,7 @@ class SurveysController < ApplicationController
   
   #list of surveys to add to the db
   def add_nesstar_surveys
-    expire_action :action=>"index"
+    #expire_action :action=>"index"
     respond_to do |format|
       begin
         Delayed::Job.enqueue AddNesstarSurveysJob::StartJobTask.new(params[:datasets], params[:nesstar_url], params[:nesstar_catalog], params[:groups], params[:sharing_scope], current_user.id, base_host)
