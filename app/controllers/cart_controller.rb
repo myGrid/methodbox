@@ -31,7 +31,10 @@ class CartController < ApplicationController
     @sorted_matches = Hash.new
     #find the variables which occur in data extracts for each variable in the cart
     @sorted_variables.each do |var|     
-      @sorted_matches[var.id] = MatchedVariable.all(:conditions => {:variable_id => var.id}, :order => "occurences DESC", :limit => 3)
+      matches = MatchedVariable.all(:conditions => {:variable_id => var.id}, :order => "occurences DESC", :limit => 3)
+      if !matches.empty?
+        @sorted_matches[var.id] = matches
+      end
     end
   end
 

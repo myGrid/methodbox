@@ -6,7 +6,7 @@ class VariablesController < ApplicationController
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
 
-  caches_page :show
+  #caches_page :show
   
   #a users private notes about a variable
   def add_note
@@ -251,7 +251,11 @@ class VariablesController < ApplicationController
     find_variable
     @tag_array = @variable.title_counts
     #find the variables which occur in data extracts for this variable
-    @sorted_matches = MatchedVariable.all(:conditions => {:variable_id => @variable.id}, :order => "occurences DESC", :limit => 6)
+    @sorted_matches = []
+    matches = MatchedVariable.all(:conditions => {:variable_id => @variable.id}, :order => "occurences DESC", :limit => 6)
+    if !matches.empty?
+      @sorted_matches = matches
+    end
   end
 
   def save_tags
