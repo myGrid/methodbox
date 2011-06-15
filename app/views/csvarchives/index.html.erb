@@ -23,12 +23,16 @@
 				</div>
 			<% end -%>
 			<div class="asset-resource-list" id="extracts_tab_1">
+<% if @all_archives.empty? -%>
+<h1>There are no public Data Extracts available to view.</h1>
+<% else -%>
 				<%= will_paginate @all_archives, :param_name=>'all_page' %>
 				<div style="text-align: center; margin: 0.5em;">
 					<%= page_entries_info @all_archives, :entry_name => 'Data Extract' %>
 				</div>
       				<%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>true } %>
 				<%= will_paginate @all_archives, :param_name=>'all_page' %>
+<% end -%>
 			</div>
 		</div>
 	</div>
