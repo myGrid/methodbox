@@ -249,6 +249,71 @@ class VariablesController < ApplicationController
   # which are matched in data extracts with it
   def show
     find_variable
+    @value_domain_hash = Hash.new
+    @var_hash = Hash.new
+    @no_var_hash = Hash.new
+    @blank_rows = nil
+    @invalid_entries = nil
+    @total_entries = nil
+    @valid_entries = nil
+    if @variable.nesstar_id
+	@variable.value_domains.each do |value_domain|
+	  if value_domain.value_domain_statistic
+	    @var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency
+	  end
+	  @value_domain_hash[value_domain.id] = value_domain.label
+	end
+	@valid_entries = @variable.valid_entries
+	@invalid_entries = @variable.invalid_entries
+	@total_entries = @invalid_entries + @valid_entries
+    else
+      @no_var_hash = @variable.none_values_hash
+      @var_hash = @variable.values_hash
+      @value_domain_hash = Hash.new
+      @var_hash.each_key do |key|
+        @variable.value_domains.each do |value_domain|
+	  if value_domain.value.to_i.eql?(key.to_i)
+	    @value_domain_hash[key] = value_domain.label
+	    break
+	  end
+	end
+      end
+      @blank_rows = @variable.number_of_blank_rows
+      @invalid_entries = 0
+      @no_var_hash.each_key do |key|
+        @variable.value_domains.each do |value_domain|
+	  if value_domain.value.to_i.eql?(key.to_i)
+	    @value_domain_hash[key] = value_domain.label
+	    break
+	  else
+	    @value_domain_hash[key] = key
+	  end
+	end
+	@invalid_entries += @no_var_hash[key]
+      end
+      @valid_entries = 0
+      @var_hash.each_key do |key|
+        @valid_entries += @var_hash[key]
+      end
+      @no_var_hash.each_key do |key|
+        @valid_entries += @var_hash[key]
+      end
+      @total_entries = @invalid_entries + @valid_entries
+      if @blank_rows != nil
+        @total_entries += @blank_rows
+      end
+#If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets
+      if @var_hash.empty?
+        @variable.value_domains.each do |value_domain|
+	  if value_domain.value_domain_statistic
+	    if value_domain.value_domain_statistic
+	      @var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency
+	    end
+	    @value_domain_hash[value_domain.value] = value_domain.label
+	  end
+	end
+      end
+    end
     @tag_array = @variable.title_counts
     #find the variables which occur in data extracts for this variable
     @sorted_matches = []

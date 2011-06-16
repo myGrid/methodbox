@@ -1,128 +1,60 @@
-<!-- TODO Style cleanup -->
-<!-- TODO alignment -->
-<!-- Create the data for the stats table -->
-<!-- TODO use the ValueDomainStatistic model for all the surveys -->
-<!-- TODO push the var stats on file into the valid/invalid entries column-->
-
-<% if variable.nesstar_id -%>
-	<% value_domain_hash = Hash.new %>
-	<% var_hash = Hash.new %>
-		<% variable.value_domains.each do |value_domain| -%>
-			<% if value_domain.value_domain_statistic -%>
-			<% var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency -%>
-			<% end -%>
-			<% value_domain_hash[value_domain.id] = value_domain.label %>
-		<% end -%>
-	<% valid_entries = variable.valid_entries -%>
-	<% invalid_entries = variable.invalid_entries -%>
-	<% total_entries = invalid_entries + valid_entries -%>
-<% else -%>
-<% no_var_hash = variable.none_values_hash -%> 
-<% var_hash = variable.values_hash -%>
-<% value_domain_hash = Hash.new %>
-<% var_hash.each_key do |key| %>
-	<% variable.value_domains.each do |value_domain| %>
-		<% if value_domain.value.to_i.eql?(key.to_i) %> 
-			<% value_domain_hash[key] = value_domain.label %>
-			<% break %>
-		<% end %>
-	<% end %>
-<% end %>
-<% blank_rows = variable.number_of_blank_rows %>
-<% invalid_entries = 0 -%>
-<% no_var_hash.each_key do |key| %>
-	<% variable.value_domains.each do |value_domain| %>
-		<% if value_domain.value.to_i.eql?(key.to_i) %> 
-			<% value_domain_hash[key] = value_domain.label %>
-			<% break %>
-		<% else %>
-			<% value_domain_hash[key] = key %>
-		<% end %>
-	<% end %>
-	<% invalid_entries += no_var_hash[key] %>
-<% end %>
-<%# invalid_entries += blank_rows -%>
-<% invalid_entries = 0 -%>
-<% valid_entries = 0 -%>
-<% var_hash.each_key do |key| -%>
-	<% valid_entries += var_hash[key] -%>
-<% end -%>
-<% no_var_hash.each_key do |key| -%>
-	<% valid_entries += var_hash[key] -%>
-<% end -%>
-<% total_entries = invalid_entries + valid_entries -%>
-<% if blank_rows != nil -%>
-	<% total_entries += blank_rows -%>
-<% end -%>
-<!-- If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets -->
-<% if var_hash.empty? %>
-	<% variable.value_domains.each do |value_domain| %>
-		<% if value_domain.value_domain_statistic %>
-			<% if value_domain.value_domain_statistic -%>
-			<% var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency -%>
-			<% end -%>
-			<% value_domain_hash[value_domain.value] = value_domain.label %>
-		<% end %>
-	<% end %>
-<% end %>
-<% end -%>
 <div class="left" style="width: 40%">
 <% if variable.interval && variable.interval == 'contin' || variable.number_of_unique_values && variable.number_of_unique_values > 20 -%>
 <!-- histogram -->
 <div class="gviz-chart" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
 
-<% if !var_hash.empty? -%>
+<% if !@var_hash.empty? -%>
 <script type="text/javascript">
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
 function drawChart() {
-		var hash_size = <%=var_hash.size %>
+		var hash_size = <%=@var_hash.size %>
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Value');
         data.addColumn('number', 'Count');
               <% var_hash.sort.each do |value, frequency| -%>
-				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+				data.addRow(['<%= @value_domain_hash[value] ? escape_javascript(@value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
-<% if !variable.nesstar_id -%>
-							              <% no_var_hash.sort.each do |value, frequency| -%>
-							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+<% if !@variable.nesstar_id -%>
+							              <% @no_var_hash.sort.each do |value, frequency| -%>
+							data.addRow(['<%= @value_domain_hash[value] ? escape_javascript(@value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
 <% end -%>
 
-        var chart = new google.visualization.ColumnChart($('<%= variable.id -%>_frequency_count_chart_div'));
+        var chart = new google.visualization.ColumnChart($('<%= @variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
 </script>
 <% end -%>
 <table class='listings_table'>
 <tbody>
-<tr><td>Mean</td><td><%= variable.mean ? variable.mean : 'N/A' -%></td></tr>
-<tr><td>Median</td><td><%= variable.median ? variable.median : 'N/A' -%></td></tr>
-<tr><td>Missing</td><td><%= variable.nesstar_id ? variable.invalid_entries : variable.number_of_blank_rows -%></td></tr>
+<tr><td>Mean</td><td><%= @variable.mean ? @variable.mean : 'N/A' -%></td></tr>
+<tr><td>Median</td><td><%= @variable.median ? @variable.median : 'N/A' -%></td></tr>
+<tr><td>Missing</td><td><%= @variable.nesstar_id ? @variable.invalid_entries : @variable.number_of_blank_rows -%></td></tr>
 </tbody>
 </table>
 <% else -%>
 <!-- side on bar chart-->
-<div class="gviz-chart left" style="width:50%" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
-<% if !var_hash.empty? -%>
+<div class="gviz-chart left" style="width:50%" id="<%= @variable.id.to_s -%>_frequency_count_chart_div"></div>
+<% if !@var_hash.empty? -%>
 <script type="text/javascript">
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
 function drawChart() {
-		var hash_size = <%=var_hash.size %>
+		var hash_size = <%=@var_hash.size %>
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Value');
         data.addColumn('number', 'Count');
-              <% var_hash.sort.each do |value, frequency| -%>
-				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+              <% @var_hash.sort.each do |value, frequency| -%>
+				data.addRow(['<%= @value_domain_hash[value] ? escape_javascript(@value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
-<% if !variable.nesstar_id -%>
-							              <% no_var_hash.sort.each do |value, frequency| -%>
-							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
+<% if !@variable.nesstar_id -%>
+							              <% @no_var_hash.sort.each do |value, frequency| -%>
+							data.addRow(['<%= @value_domain_hash[value] ? escape_javascript(@value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
 <% end -%>
 
-        var chart = new google.visualization.BarChart($('<%= variable.id -%>_frequency_count_chart_div'));
+        var chart = new google.visualization.BarChart($('<%= @variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
 }
 </script>
@@ -131,29 +63,32 @@ function drawChart() {
 </div>
 <div class="right" style="width:40%">
 <table class='listings_table'>
-<% puts invalid_entries.to_s  + "******" + total_entries.to_s-%>
-<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) && total_entries != 0 %>
-<tr><td>Total Records</td><td><%= total_entries -%></td></tr>
-<tr><td>Invalid records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+<% if @invalid_entries.is_a?(Numeric) && @valid_entries.is_a?(Numeric) && @total_entries != 0 %>
+<tr><td>Total Records</td><td><%= @total_entries -%></td></tr>
+<tr><td>Invalid records</td><td><%= @invalid_entries -%> (<%=  (@invalid_entries.to_f/@total_entries.to_f * 100).round(2) -%>%)</td></tr>
 <% end %>
-<% if blank_rows && total_entries != 0%>
-<tr><td>Blank rows/Missing records</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
+<% if @blank_rows && @total_entries != 0%>
+<tr><td>Blank rows/Missing records</td><td><%= @blank_rows -%><%= @total_entries.is_a?(Numeric) ? ' (' + (@blank_rows.to_f/@total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
 <% end %>
 </table>
 <table class='listings_table'>
-<% if !var_hash.empty? && var_hash.size < 20 %>
+<% if !@var_hash.empty? && @var_hash.size < 20 %>
 <thead>
 <tr><th>Value Name</th><th>Number of entries</th><th>Percentage of total</th></tr>
 </thead>
 <% end %>
 <tbody>
-<% if var_hash.size < 20 %>
-<% var_hash.each_key do |key| -%>
-	<tr><td><%= value_domain_hash[key] -%></td><td><%= var_hash[key] -%></td><td><%= (var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% if @var_hash.size < 20 %>
+<% unless @total_entries == 0 or @total_entries == nil -%>
+<% @var_hash.each_key do |key| -%>
+	<tr><td><%= @value_domain_hash[key] -%></td><td><%= @var_hash[key] -%></td><td><%= (@var_hash[key].to_f/@total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% end -%>
 <% end -%>  
-<% if !variable.nesstar_id -%>
-<% no_var_hash.each_key do |key| -%>
-	<tr><td><%= value_domain_hash[key] -%></td><td><%= no_var_hash[key] -%></td><td><%= (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% if !@variable.nesstar_id -%>
+<% unless @total_entries == 0 or @total_entries == nil -%>
+<% @no_var_hash.each_key do |key| -%>
+	<tr><td><%= @value_domain_hash[key] -%></td><td><%= @no_var_hash[key] -%></td><td><%= (@no_var_hash[key].to_f/@total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% end -%>
 <% end -%>
 <% end -%>
 <% end %>
