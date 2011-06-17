@@ -1,5 +1,5 @@
 <div class="left" style="width: 40%">
-<% if variable.interval && variable.interval == 'contin' || variable.number_of_unique_values && variable.number_of_unique_values > 20 -%>
+<% if @variable.interval && @variable.interval == 'contin' || @variable.number_of_unique_values && @variable.number_of_unique_values > 20 -%>
 <!-- histogram -->
 <div class="gviz-chart" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
 
@@ -12,7 +12,7 @@ function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Value');
         data.addColumn('number', 'Count');
-              <% var_hash.sort.each do |value, frequency| -%>
+              <% @var_hash.sort.each do |value, frequency| -%>
 				data.addRow(['<%= @value_domain_hash[value] ? escape_javascript(@value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 				              <% end -%>
 <% if !@variable.nesstar_id -%>
