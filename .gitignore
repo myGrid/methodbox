@@ -1,5 +1,6 @@
 .metadata
 .project
+.idea
 config/environment.rb
 config/environment_local.rb
 config/environments/development.rb
