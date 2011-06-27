@@ -5,6 +5,9 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<link rel="shortcut icon" href="/favicon.ico" />
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <% if defined? @atom_feed and !@atom_feed.blank? -%>
+            <%= auto_discovery_link_tag :atom, :action => 'feed' %>
+        <% end -%>
 		<title>
 			<%= page_title controller.controller_name, controller.action_name %>
 		</title>

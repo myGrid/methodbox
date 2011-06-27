@@ -855,6 +855,8 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
       return "famfamfam_silk/page.png"
     when "scripts"
       return "famfamfam_silk/page_copy.png"
+    when "feed"
+      return "famfamfam_silk/feed.png"
     else
       return nil
     end

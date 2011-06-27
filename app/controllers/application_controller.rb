@@ -398,6 +398,22 @@ class ApplicationController < ActionController::Base
     session[:user_id]=nil
   end
 
+  #
+  # Generic Atom feed support code
+  #
+
+  # mark this page as containing a feed and set up the path to it
+  def init_atom_feed
+    @atom_feed = "#{params[:controller]}/feed"
+  end
+
+  # GET /:controller/feed/:id
+  def feed
+    respond_to do |format|
+      format.atom { render :layout => false } # feed.atom.builder
+    end
+  end
+
   protected
   
   #To make it easier in dev mode using webrick etc this checks if you want
