@@ -8,8 +8,9 @@ class CsvarchivesController < ApplicationController
   
   include DataExtractJob
   
-  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download_stats_script]
-  before_filter :find_archives_by_page, :only => [ :index]
+  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download_stats_script, :feed ]
+  before_filter :find_archives_by_page, :init_atom_feed, :only => [ :index]
+  before_filter :find_archives_by_id, :only => [ :feed ]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download, :download_stats_script ]
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
@@ -580,6 +581,18 @@ class CsvarchivesController < ApplicationController
     end
 
     @scripts = found
+  end
+
+  def find_archives_by_id
+    id = params[:id]
+    return find_archives if id.nil?
+    @archives = []
+    begin
+      archive = Csvarchive.find(id)
+      @archives << archive if Authorization.is_authorized?("show", nil, archive, current_user)
+    rescue ActiveRecord::RecordNotFound
+      @archives
+    end
   end
 
   def find_archives
