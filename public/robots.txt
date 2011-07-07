@@ -9,4 +9,5 @@ Disallow: /csvarchives
 Disallow: /work_groups
 Disallow: /publications
 Disallow: /forums
+Disallow: /variables
 
