@@ -76,12 +76,12 @@ class VariablesController < ApplicationController
       survey_id = params[:survey]
       survey = Survey.find(survey_id)
       survey.datasets.each do |dataset|
-        @sorted_variables.concat(Variable.find(:all, :conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
+        @sorted_variables.concat(Variable.all(:conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
       end
       @sorted_variables.uniq!
       @title = "Variables from " + survey.title
     else
-      @sorted_variables = Variable.find(:all, :conditions=>"category='" + params[:category] + "'")
+      @sorted_variables = Variable.all(:conditions=>({:category=> params[:category]}))
       @title = "All variables"
     end
   end
