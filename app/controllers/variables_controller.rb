@@ -266,9 +266,9 @@ class VariablesController < ApplicationController
         @valid_entries = @variable.valid_entries
         @invalid_entries = @variable.invalid_entries
 
-      if(@valid_entries == nil)
+      if @valid_entries == nil
         @total_entries = @invalid_entries
-      elsif(@invalid_entries == nil)
+      elsif @invalid_entries == nil
         @total_entries = @valid_entries
       else
         @total_entries = @invalid_entries + @valid_entries
@@ -305,9 +305,9 @@ class VariablesController < ApplicationController
       @no_var_hash.each_key do |key|
         @valid_entries += @var_hash[key]
       end
-       if(@valid_entries == nil)
+       if @valid_entries == nil
          @total_entries = @invalid_entries
-       elsif(@invalid_entries == nil)
+       elsif @invalid_entries == nil
         @total_entries = @valid_entries
        else
          @total_entries = @invalid_entries + @valid_entries

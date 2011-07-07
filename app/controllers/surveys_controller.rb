@@ -56,7 +56,13 @@ class SurveysController < ApplicationController
 	end
 	valid_entries = variable.valid_entries
 	invalid_entries = variable.invalid_entries
-	total_entries = invalid_entries + valid_entries
+        if valid_entries == nil
+          total_entries = invalid_entries
+        elsif invalid_entries == nil
+         total_entries = valid_entries
+        else
+          total_entries = invalid_entries + valid_entries
+        end
     else
       no_var_hash = variable.none_values_hash
       var_hash = variable.values_hash
@@ -89,7 +95,13 @@ class SurveysController < ApplicationController
       no_var_hash.each_key do |key|
         valid_entries += var_hash[key]
       end
-      total_entries = invalid_entries + valid_entries
+        if valid_entries == nil
+          total_entries = invalid_entries
+        elsif invalid_entries == nil
+         total_entries = valid_entries
+        else
+          total_entries = invalid_entries + valid_entries
+        end
       if blank_rows != nil
         total_entries += blank_rows
       end
