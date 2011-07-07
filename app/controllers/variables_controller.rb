@@ -257,15 +257,22 @@ class VariablesController < ApplicationController
     @total_entries = nil
     @valid_entries = nil
     if @variable.nesstar_id
-	@variable.value_domains.each do |value_domain|
-	  if value_domain.value_domain_statistic
-	    @var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency
-	  end
-	  @value_domain_hash[value_domain.id] = value_domain.label
+      @variable.value_domains.each do |value_domain|
+        if value_domain.value_domain_statistic
+	  @var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency
 	end
-	@valid_entries = @variable.valid_entries
-	@invalid_entries = @variable.invalid_entries
-	@total_entries = @invalid_entries + @valid_entries
+	  @value_domain_hash[value_domain.id] = value_domain.label
+      end
+        @valid_entries = @variable.valid_entries
+        @invalid_entries = @variable.invalid_entries
+
+      if(@valid_entries == nil)
+        @total_entries = @invalid_entries
+      elsif(@invalid_entries == nil)
+        @total_entries = @valid_entries
+      else
+        @total_entries = @invalid_entries + @valid_entries
+      end
     else
       @no_var_hash = @variable.none_values_hash
       @var_hash = @variable.values_hash
@@ -298,7 +305,13 @@ class VariablesController < ApplicationController
       @no_var_hash.each_key do |key|
         @valid_entries += @var_hash[key]
       end
-      @total_entries = @invalid_entries + @valid_entries
+       if(@valid_entries == nil)
+         @total_entries = @invalid_entries
+       elsif(@invalid_entries == nil)
+        @total_entries = @valid_entries
+       else
+         @total_entries = @invalid_entries + @valid_entries
+       end
       if @blank_rows != nil
         @total_entries += @blank_rows
       end
