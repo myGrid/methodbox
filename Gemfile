@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 source 'http://localhost:8808'
 source :gemcutter
-gem "rails", "2.3.5"
+gem "rails", "2.3.12"
 gem "rmagick", "2.13.1"
 gem "RedCloth", "4.2.3"
 gem "will_paginate", "2.3.12"
