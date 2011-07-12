@@ -37,16 +37,29 @@ function clickTerm(term) {
 						if (termsHash[key].indexOf(x) != -1) {//if the variable is visible due to another term but could be hidden due to the term that was clicked
 							Element.show($(x));//make sure the variable shows
 						} else {
-							Element.hide($(x));//hide the variable
-							Element.hide($(x + '_expanded'));
-							//switch off the checkbox for that variable
-							$(x +'_checkbox').checked = false;
+							//might be an expanded row. might not try-catch just in case the element does not exist
+							try {
+								Element.hide($(x));//hide the variable
+							} catch (err) {
+							}
+							try {
+								Element.hide($(x + '_expanded'));
+								//switch off the checkbox for that variable
+								$(x +'_checkbox').checked = false;
+							} catch (err) {
+							}
 						}	
 				} else {
-					Element.hide($(x));//hide the variable
-					Element.hide($(x + '_expanded'));
-					//switch off the checkbox for that variable
-					$(x +'_checkbox').checked = false;
+					try {
+						Element.hide($(x));//hide the variable
+					} catch (err) {
+					}
+					try {
+						Element.hide($(x + '_expanded'));
+						//switch off the checkbox for that variable
+						$(x +'_checkbox').checked = false;
+					} catch (err) {
+					}
 				}
 		}
 		});
@@ -72,13 +85,26 @@ function highlightTerm(term) {
 			//switch off the current highlight
 			termsHash[key].each(function(x) {
 				if (stripesHash[x] == "_odd") {
-					$(x).down('ul').setStyle({backgroundColor:"#EEEEEE"});
-					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#EEEEEE"});
-					$(x + '_expanded').setStyle({backgroundColor:"#EEEEEE"});
+					//might be an expanded row. might not try-catch just in case the element does not exist
+					try {
+						$(x).down('ul').setStyle({backgroundColor:"#EEEEEE"});
+					} catch (err) {
+					}
+					try {
+						$(x + '_expanded').down('ul').setStyle({backgroundColor:"#EEEEEE"});
+						$(x + '_expanded').setStyle({backgroundColor:"#EEEEEE"});
+					} catch (err) {
+					}
 				} else {
-					$(x).down('ul').setStyle({backgroundColor:"#FFFFFF"});
-					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#FFFFFF"});
-					$(x + '_expanded').setStyle({backgroundColor:"#FFFFFF"});
+					try {
+						$(x).down('ul').setStyle({backgroundColor:"#FFFFFF"});
+					} catch (err) {
+					}
+					try {
+						$(x + '_expanded').down('ul').setStyle({backgroundColor:"#FFFFFF"});
+						$(x + '_expanded').setStyle({backgroundColor:"#FFFFFF"});
+					} catch (err) {
+					}
 				}
 			});
 			termsHighlight[key] = false;
@@ -92,13 +118,25 @@ function highlightTerm(term) {
 			//switch off the current highlight
 			termsHash[key].each(function(x) {
 				if (stripesHash[x] == "_odd") {
-					$(x).down('ul').setStyle({backgroundColor:"#EEEEEE"});
-					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#EEEEEE"});
-					$(x + '_expanded').setStyle({backgroundColor:"#EEEEEE"});
+					try {
+						$(x).down('ul').setStyle({backgroundColor:"#EEEEEE"});
+					} catch (err) {
+					}
+					try {
+						$(x + '_expanded').down('ul').setStyle({backgroundColor:"#EEEEEE"});
+						$(x + '_expanded').setStyle({backgroundColor:"#EEEEEE"});
+					} catch (err) {
+					}
 				} else {
-					$(x).down('ul').setStyle({backgroundColor:"#FFFFFF"});
-					$(x + '_expanded').down('ul').setStyle({backgroundColor:"#FFFFFF"});
-					$(x + '_expanded').setStyle({backgroundColor:"#FFFFFF"});
+					try {
+						$(x).down('ul').setStyle({backgroundColor:"#FFFFFF"});
+					} catch (err) {
+					}
+					try {
+						$(x + '_expanded').down('ul').setStyle({backgroundColor:"#FFFFFF"});
+						$(x + '_expanded').setStyle({backgroundColor:"#FFFFFF"});
+					} catch (err) {
+					}
 				}
 			});
 			termsHighlight[key] = false;
@@ -108,9 +146,15 @@ function highlightTerm(term) {
 	}
 	//switch on highlighting for the newly selected term
 	termsHash[term].each(function(x) {
-		$(x).down('ul').setStyle({backgroundColor:"#E2DDB5"});
-		$(x + '_expanded').down('ul').setStyle({backgroundColor:"#E2DDB5"});
-		$(x + '_expanded').setStyle({backgroundColor:"#E2DDB5"});
+		try {
+			$(x).down('ul').setStyle({backgroundColor:"#E2DDB5"});
+		} catch (err) {
+		}
+		try {
+			$(x + '_expanded').down('ul').setStyle({backgroundColor:"#E2DDB5"});
+			$(x + '_expanded').setStyle({backgroundColor:"#E2DDB5"});
+		} catch (err) {
+		}
 	});
 	termsHighlight[term] = true;
 }
