@@ -267,6 +267,7 @@ ul.buttons li a {
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
   color: #595246;
+  white-space: pre-wrap;
 }
 
 ul.buttons li a:hover {
@@ -326,6 +327,7 @@ ul.vbuttons li a {
   -moz-box-shadow: 2px 2px 2px gray;
   -webkit-box-shadow: gray 2px 2px 2px;
   box-shadow: 2px 2px 2px gray;
+  white-space: pre-wrap;
 }
 
 ul.vbuttons li a:hover {

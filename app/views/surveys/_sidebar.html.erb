@@ -1,18 +1,19 @@
 <div class="sidebar">
-	<ul class="vbuttons">
-<% if logged_in? -%>
-	  <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
-	  <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", nil, "Add a new datasource" %></li>
-	<% if controller.action_name == "show" %>
-		<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-	<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-	<% end %>
-	<% end %>
-		<% end -%>
-			<li><%= icon "show", surveys_url, "Browse by surveys", nil, "Browse by surveys" %></li>
-	<li><%= icon "show", category_browse_surveys_url, "Browse by categories", nil, "Browse by categories" %></li>
-		<li><%= icon "show", facets_surveys_url, "Browse by facets", nil, "Browse by facets" %></li>
-	</ul>
+  <ul class="vbuttons">
+    <% if logged_in? -%>
+      <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
+      <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", nil, "Add a new datasource" %></li>
+      <% if controller.action_name == "show" %>
+        <% if current_user.is_admin? && @survey.survey_type.is_ukda %>
+          <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
+        <% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
+          <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
+        <% end %>
+      <% end %>
+    <% end -%>
+    <li><%= icon "show", surveys_url, "Browse by surveys", nil, "Browse by surveys" %></li>
+    <li><%= icon "show", category_browse_surveys_url, "Browse by categories", nil, "Browse by categories" %></li>
+    <li><%= icon "show", facets_surveys_url, "Browse by facets", nil, "Browse by facets" %></li>
+  </ul>
+<%= render :partial => 'help_sidebar' -%>
 </div>
