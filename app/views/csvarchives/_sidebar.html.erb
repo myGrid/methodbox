@@ -1,3 +1,4 @@
+<div class="sidebar-bg">
 <div class="sidebar">
 	<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
 <% if logged_in? -%>
@@ -6,3 +7,5 @@
 	</ul>
 <% end %>
 </div>
+</div>
+<%= render :partial=>"help_sidebar" -%>

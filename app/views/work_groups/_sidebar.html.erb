@@ -1,7 +1,10 @@
 <% if logged_in? -%>
-	<div class="sidebar">
-		<ul class="vbuttons">
-			<li><%= icon "new", new_work_group_url, "Add a new workgroup", nil, "Add a new workgroup" %></li>
-		</ul>
-	</div>
+  <div class="sidebar-bg">
+    <div class="sidebar">
+      <ul class="vbuttons">
+        <li><%= icon "new", new_work_group_url, "Add a new group", {:title=>"Create a new group of users to share resources with"}, "Add a new group" %></li>
+      </ul>
+    </div>
+  </div>
 <% end %>
+<%= render :partial=> "help_sidebar" -%>

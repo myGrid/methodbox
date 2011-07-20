@@ -1,13 +1,12 @@
-<div class="sidebar">
-	<ul class="vbuttons">
-		<% unless controller.controller_name =="surveys" || controller.controller_name =="home" %>
-		<li><%= icon "show", surveys_url, "Search for variables", nil, "Search for variables" %></li>
-		<% end %>
-		<% unless controller.controller_name =="help" %>
-		<li><%= icon "help", help_index_url, "General help", nil, "General help" %></li>
-		<% end %>
-	</ul>
-</div>
+<% unless controller.controller_name =="help" %>
+  <div class="sidebar-bg">
+    <div class="sidebar">
+      <ul class="vbuttons">
+          <li><%= icon "help", help_index_url, "General help", {:title=>"Help on using MethodBox"}, "General help" %></li>
+      </ul>
+    </div>
+  </div>
+<% end %>
 
 
 

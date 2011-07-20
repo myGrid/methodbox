@@ -1,12 +1,15 @@
 <% if logged_in? -%>
-	<div class="sidebar">
-		<ul class="vbuttons">
-			<% if controller.action_name != "show" %>
-			<li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
-			<% end %>
-			<% if controller.action_name != "edit" %>
-				<li><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
-			<% end %>
-		</ul>
-	</div>
+  <div class="sidebar-bg">
+    <div class="sidebar">
+      <ul class="vbuttons">
+        <% if controller.action_name != "show" %>
+          <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
+        <% end %>
+        <% if controller.action_name != "edit" %>
+          <li><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
 <% end %>
+<%= render :partial=>"help_sidebar" -%>
