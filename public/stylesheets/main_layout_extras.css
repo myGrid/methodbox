@@ -677,6 +677,9 @@ div.exhibit-collectionView-group h2 {
 .small-font {
 	font-size: 83%;
 }
+.larger-font {
+  font-size: larger;
+}
 /* end of extra font settings*/
 
 .warning-message {
