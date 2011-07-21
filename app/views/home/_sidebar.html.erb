@@ -1,7 +1,9 @@
 <div class="sidebar-bg">
   <div class="sidebar">
     <ul class="vbuttons">
-      <li><%= icon "show", surveys_url, "Search for variables", nil, "Search for variables" %></li>
+      <li><%= icon "show", surveys_url, "Browse by surveys", {:title=>"Look at the surveys using the tabular view and search them for variables"}, "Browse by surveys" %></li>
+      <li><%= icon "show", category_browse_surveys_url, "Browse by categories", {:title=>"Show the variables for a particular survey category"}, "Browse by categories" %></li>
+      <li><%= icon "show", facets_surveys_url, "Browse by facets", {:title=>"Select datasets to search for variables through a faceted view"}, "Browse by facets" %></li>
     </ul>
   </div>
 </div>
@@ -9,17 +11,19 @@
   <div class="sidebar-bg">
     <div class="sidebar">
       <ul class="vbuttons">
-        <li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
-        <li><%= icon "new", new_survey_url, "Create a new survey", {:title=>"Add a new survey to MethodBox"}, "Create a new survey" %></li>
-        <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a new datasource" %></li>
+        <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
+        <li><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
       </ul>
     </div>
   </div>
+<% end -%>
+<% if logged_in? -%>
   <div class="sidebar-bg">
     <div class="sidebar">
       <ul class="vbuttons">
-        <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
-        <li><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
+        <li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
+        <li><%= icon "new", new_survey_url, "Create a new survey", {:title=>"Add a new survey to MethodBox"}, "Create a new survey" %></li>
+        <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a new datasource" %></li>
       </ul>
     </div>
   </div>

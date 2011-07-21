@@ -3,7 +3,7 @@
     <%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
     <ul class="vbuttons">
       <% if logged_in? -%>
-        <li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
+        <li><%= icon "new", new_publication_url, "Add a new publication", {:title=>"Fetch publication details from PubMed"}, "Add a new publication" %></li>
       <% end %>
     </ul>
   </div>
