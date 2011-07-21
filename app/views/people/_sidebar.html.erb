@@ -2,6 +2,11 @@
   <div class="sidebar-bg">
     <div class="sidebar">
       <ul class="vbuttons">
+        <% if controller.action_name == "show" %>
+          <% if !mine?(@person) -%>
+            <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
+          <% end -%>
+        <% end %>
         <% if controller.action_name != "show" %>
           <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
         <% end %>
