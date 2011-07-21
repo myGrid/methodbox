@@ -126,7 +126,7 @@ class DatasetsController < ApplicationController
     begin
       uuid = UUIDTools::UUID.random_create.to_s
       #write out the dataset into a new file
-      filename=CSV_FILE_PATH + "/" + uuid + ".data"
+      filename=File.join(CSV_FILE_PATH, uuid + ".data")
       uf = File.open(filename,"w")
       if params[:dataset_format] == "Excel"
 	#convert the file to csv before writing out
