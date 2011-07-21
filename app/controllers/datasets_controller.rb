@@ -30,7 +30,7 @@ class DatasetsController < ApplicationController
       #create directory and zip file for the archive
       filename = CSV_FILE_PATH + "/" + uuid + ".data"
       uf = File.open(filename,"w")
-      if params[:dataset_format] = "Excel"
+      if params[:dataset_format] == "Excel"
         uf.write(spreadsheet_to_csv(params[:file][:data],"1"))
       else
         params[:file][:data].each_line do |line|                
@@ -202,7 +202,7 @@ class DatasetsController < ApplicationController
   private
   
   def update_dataset
-    if params[:dataset_format] = "Excel"
+    if params[:dataset_format] == "Excel"
 
     end
     header =  params[:file][:data].readline
