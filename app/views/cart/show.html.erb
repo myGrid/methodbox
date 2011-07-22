@@ -20,29 +20,10 @@
 		<br/>
 		<% end -%>
   <% form_remote_tag :url => { :action => "remove_from_cart"} do -%>
+<div id="cart_container">
 	<% if !@sorted_variables.empty? -%>
     <%= hidden_field_tag 'submit', 'remove_variables' %>
-  <%# form_tag('/surveys/search_varsearch_variables_surveys_urliables') do -%>
-  <%#= hidden_field_tag 'survey_array', @survey_list %>
-  <%# if @selected_surveys!=nil %>
-  <%# @selected_surveys.each do |val| %>
-  <%#= hidden_field_tag "survey_list[]", val %>
-  <%# end %>
-  <%# end %>
-    <div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
-      <div><%= submit_tag 'Remove selected variables from cart', :name=>"_submit", :src=>'/images/famfamfam_silk/cart_add.png', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'remove_variables';" %>
-      </div><br/>
-      <div style="position: absolute; top:1em; right:1em;"><%= submit_tag 'Create Data Extract', :name=>'_submit', :onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'create_archive';" -%>
-      </div>
-      <div>Select:
-                <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; });" %>
-        ,&nbsp
-        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; });" %>
-        ,&nbsp
-        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; } else {checkbox.checked = true; }});" %>
-
-      </div>
-    </div>
+  <%= render :partial => "table_buttons" -%>
     <br/>
     <br/>
     <div id="table_header" class="faux_table_header_container">
@@ -52,23 +33,13 @@
       <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables,:lineage => true, :extract_lineage => false, :extract_id => nil} -%>
     </div>
 	<% else -%>
-	There are no variables in your cart, why not <%= link_to "search for some", surveys_url,:title=>"Search the data sources for variables of interest" -%>
+  <%= render :partial => "no_variables" %>
 	<% end -%>
   <% end -%>
 <div style="clear:both">
-<div class="medium-padding">
-<% if !@sorted_matches.empty? -%>
-	<%= "Users who downloaded these variables also selected " -%>
-	<ul>
-	<% @sorted_matches.each_key do |key|-%>
-		<% match_num = 0 -%>
-		<% @sorted_matches[key].each do |match| -%>
-			<% linked_var = Variable.find(match.target_variable_id) -%>
-			<li><%= link_to(linked_var.name + " from " + linked_var.dataset.name, variable_url(linked_var)) -%></li>
-		<% end -%>
-	<% end -%>
-	</ul>
-<% end -%>
+<div class="medium-padding" id="cart_suggestions">
+ <%= render :partial => "cart_suggestions", :locals=>{:sorted_matches => @sorted_matches} -%>
+</div>
 </div>
 </div>
 </div>
