@@ -50,7 +50,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users, :member => { :shib_convert_after => :get }, :collection=>{ :new_shib => :get, :create_shib => :post, :activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get], :resend_activation_code =>[:get]}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resource :session, :collection => { :shibboleth => :get}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resource :session, :collection => { :pre_shibboleth_login => :get, :shibboleth => :get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   # page for admin tasks
   map.admin '/admin/', :controller=>'admin',:action=>'show', :requirements => {:protocol => ROUTES_PROTOCOL}
