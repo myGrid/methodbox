@@ -342,8 +342,7 @@ class CsvarchivesController < ApplicationController
 
     params[:csvarchive][:last_used_at] = Time.now
       
-    links = Link.find(:all, 
-                                 :conditions => { :subject_type => "Csvarchive", 
+    links = Link.all(:conditions => { :subject_type => "Csvarchive", 
                                                   :subject_id => @archive.id,
                                                   :predicate => "link" })
 

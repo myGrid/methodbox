@@ -51,7 +51,7 @@
 <h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @archive.recommendations.size } %></div></h1>
 
 <div class="show_basic">
-  <div class="box_about_actor">
+  <div class="box_about_actor left" style="width:70%">
     <p>
       <b>Title:</b>
       <% unless @archive.title.blank? -%>
@@ -95,6 +95,11 @@
 	<%= render :partial => "complete" %>
     <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
   </div>
+<div class="right" style="width:20%">
+  <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @archive } -%>
+  <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @archive, :attributed_to => Authorization.authorize_collection("show", @archive.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
+</div>
+<div style="clear: both;"></div>
   <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
 	<%= hidden_field_tag 'extract_id', @archive.id %>
     <%= hidden_field_tag 'submit', 'add' %>
