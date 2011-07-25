@@ -1,16 +1,18 @@
 <!-- <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;"> -->
-	<div class="fold">
-	    <div class="foldTitle">Total number of variables in search: <%= @total_vars -%></div>
-	    <div class="foldContent" style="display:none;">
+<div class="fold">
+  <div class="foldTitle">Total number of variables in search: <%= @total_vars -%></div>
+  <div class="foldContent" style="display:none;">
 Number of variables in search by dataset:
-<br/>
-<ul>
-  <% @vars_by_dataset.each_key do |key|-%>
-    <% dataset = Dataset.find(key) -%>
-    <li class="var_number_list"><%= link_to(dataset.name, dataset_url(dataset)) -%> has <%= @vars_by_dataset[key].to_s -%> <%= @vars_by_dataset[key] ==  1 ? 'variable' : 'variables' -%></li>
-  <% end %>
-</ul>
-<%= render :partial => "search_terms_switcher", :locals=>{:search_terms => @search_terms} -%>
-<%= render :partial => "search_terms_highlighter", :locals=>{:search_terms => @search_terms} -%>
-</div>
+    <br/>
+    <ul>
+      <% @vars_by_dataset.each_key do |key|-%>
+        <% dataset = Dataset.find(key) -%>
+        <% unless @vars_by_dataset[key] == 0 -%>
+          <li class="var_number_list"><%= link_to(dataset.name, dataset_url(dataset)) -%> has <%= @vars_by_dataset[key].to_s -%> <%= @vars_by_dataset[key] ==  1 ? 'variable' : 'variables' -%></li>
+        <% end -%>
+      <% end %>
+    </ul>
+    <%= render :partial => "search_terms_switcher", :locals=>{:search_terms => @search_terms} -%>
+    <%= render :partial => "search_terms_highlighter", :locals=>{:search_terms => @search_terms} -%>
+  </div>
 </div>
