@@ -7,6 +7,18 @@ class SessionsController < ApplicationController
   
   layout 'main'
   
+  #find out from the SARs shibboleth service what the magic
+  #url is
+  def pre_shibboleth_login
+    url = URI.parse("http://academic.sar-data.ccsr.ac.uk/nesstar/?" + SHIB_LOGIN_URL + "/session/shibboleth")
+    res = Net::HTTP.get url
+    doc = Nokogiri::HTML(res)
+    links = doc.css('a').map { |link| link['href'] }
+    shib_links =  links.reject{|entry| entry.rindex('shibboleth') == nil}
+    shib_link = shib_links[0]
+    redirect_to shib_link
+  end
+  
   def shibboleth
     date = DateTime.now
     year = date.year
