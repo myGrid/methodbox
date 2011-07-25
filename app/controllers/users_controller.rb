@@ -45,26 +45,38 @@
       # uncomment at your own risk
       reset_session
     end
-    @user = User.new(params[:user])
-    @person = Person.new(params[:person])
-    @person.email = @user.email
-    @user.person=@person
+    users = User.all(:conditions=>{:email=>params[:user][:email]})
+    #does a user with this email already exist
+    if users.empty?
+      @user = User.new(params[:user])
+      @person = Person.new(params[:person])
+      @person.email = @user.email
+      @user.person=@person
 
-    @user.save
-    respond_to do |format|
-    if @user.errors.empty?
-       self.current_user = @user
-        if !ACTIVATION_REQUIRED
-          @user.activate
-          @user.save
-          Mailer.deliver_welcome self.current_user, base_host
-          format.html {redirect_to(root_url)}
-       else
+      @user.save
+      respond_to do |format|
+        if @user.errors.empty?
+          self.current_user = @user
+          if !ACTIVATION_REQUIRED
+            @user.activate
+            @user.save
+            Mailer.deliver_welcome self.current_user, base_host
+            format.html {redirect_to(root_url)}
+          else
             Mailer.deliver_shibboleth_signup(current_user,base_host)
             flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
             logout_user
             format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+          end
+        else
+          flash[:notice]="There was a problem with the login process.  Please try again"
+          format.html {redirect_to login_url}
         end
+      end
+    else
+      respond_to do |format|
+        flash[:notice]="This account is already activated. To use UK Federation please login as normal and click the button on your profile page marked \"Switch to UK Federation Authentication\". If you have forgotten your password then please reset it by clicking the \"Forgotten Password?\" link on the login page"
+        format.html {redirect_to login_url}
       end
     end
   end
