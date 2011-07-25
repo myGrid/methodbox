@@ -19,6 +19,8 @@ class SessionsController < ApplicationController
     redirect_to shib_link
   end
   
+  #the return action for the shibboleth login round trip
+  #figure out what the user id is by parsing the response
   def shibboleth
     date = DateTime.now
     year = date.year
