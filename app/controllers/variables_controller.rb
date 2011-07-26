@@ -86,16 +86,8 @@ class VariablesController < ApplicationController
     end
   end
 
-  # GET /variable
-  # GET /variable.xml
   def index
-
-    if (!params[:variable].nil?)
-      @tag = params[:variable]
-      @variables = Variable.tagged_with(@tag, :on=>:title)
-    else
-      @variables = Variable.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:name)
-    end
+    @variables = Variable.all(:page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:name)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -249,6 +241,7 @@ class VariablesController < ApplicationController
   # which are matched in data extracts with it
   def show
     find_variable
+    if authorized_to_see @variable
     @value_domain_hash = Hash.new
     @var_hash = Hash.new
     @no_var_hash = Hash.new
@@ -334,6 +327,14 @@ class VariablesController < ApplicationController
     if !matches.empty?
       @sorted_matches = matches
     end
+    
+  else
+    respond_to do |format|
+      flash[:error] = "You are not authorized to view this variable"
+      format.html {redirect_to back}
+    end
+  end
+    
   end
 
   def save_tags
@@ -362,6 +363,10 @@ class VariablesController < ApplicationController
       @variable =Variable.find(params[:id])
       @notes = Note.all(:conditions=>{:notable_type => "Variable", :user_id=>current_user.id, :notable_id => @variable.id})
     end
+  end
+  
+  def authorized_to_see variable
+    Authorization.is_authorized?("show", nil, variable.dataset.survey, current_user)
   end
 
 end

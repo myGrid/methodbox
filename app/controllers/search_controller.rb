@@ -30,6 +30,9 @@ class SearchController < ApplicationController
     when("people")
       find_people(query)
       @results = select_authorised @results
+    when("variables")
+        find_variables(query)
+        @results = select_authorised_variables @results
     when("surveys")
       find_surveys(query)
       @results = select_authorised @results
@@ -112,10 +115,23 @@ class SearchController < ApplicationController
       #todo
     end
   end
+  
+  def find_variables(query)
+    if (SOLR_ENABLED)
+      @results = @results + Publication.find_by_solr(query, :limit => 1000).results
+    #else
+      #todo
+    end
+  end
 
 
   #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
   def select_authorised collection
+    collection.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
+  end
+  
+  #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
+  def select_authorised_variables collection
     collection.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
   end
 

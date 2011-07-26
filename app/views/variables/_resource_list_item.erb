@@ -1,4 +1,5 @@
 <% variable=resource_list_item -%>
+<% if Authorization.is_authorized?("show", nil, variable.dataset.survey, current_user) %>
 
 <% truncate_projects_institutions_length = 25 -%>
 
@@ -32,3 +33,4 @@
 
 
 </div>
+<% end -%>
