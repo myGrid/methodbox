@@ -67,7 +67,6 @@
 <% end -%>
 
 <script type="text/javascript">
-(function () {
 
     // The initially selected tab will be chosen in the following order:
     //
@@ -78,21 +77,21 @@
     //
     // "tab0" (default)
 
-    var bookmarkedTabViewState = YAHOO.util.History.getBookmarkedState("tabview");
-    var initialTabViewState = bookmarkedTabViewState || "assets_tab_1";
+    var bookmarkedTabViewState = YAHOO.util.History.getBookmarkedState("assets_tabview");
+    var initialTabViewState = bookmarkedTabViewState || "assets_tab_0";
 
     var tabView;
 
     // Register our TabView module. Module registration MUST
     // take place before calling YAHOO.util.History.initialize.
-    YAHOO.util.History.register("tabview", initialTabViewState, function (state) {
+    YAHOO.util.History.register("assets_tabview", initialTabViewState, function (state) {
         // This is called after calling YAHOO.util.History.navigate, or after the user
         // has trigerred the back/forward button. We cannot discrminate between
         // these two situations.
 
         // "state" can be "survey_tab_1", "survey_tab_2" etc.
         // Select the right tab:
-        tabView.set("activeIndex", state);
+        tabView.set("activeIndex", state.split("_").pop());
     });
 
     function handleTabViewActiveTabChange (e) {
@@ -101,17 +100,16 @@
         newState = "assets_tab_" + this.getTabIndex(e.newValue);
 
         try {
-            currentState = YAHOO.util.History.getCurrentState("tabview");
+            currentState = "assets_tab_" + YAHOO.util.History.getCurrentState("assets_tabview");
             // The following test is crucial. Otherwise, we end up circling forever.
             // Indeed, YAHOO.util.History.navigate will call the module onStateChange
             // callback, which will call tabView.set, which will call this handler
             // and it keeps going from here...
             if (newState != currentState) {
-		splitState = newState.split("_");
-                YAHOO.util.History.navigate("tabview", splitState.pop());
+                YAHOO.util.History.navigate("assets_tabview", newState);
             }
         } catch (e) {
-		splitState = newState.split("_");
+		        splitState = newState.split("_");
             	tabView.set("activeIndex", splitState.pop());
         }
     }
@@ -133,7 +131,7 @@
         // actual tab that needs to be selected corresponds to the last tab
         // selected before leaving the page, and not the initially selected tab.
         // This can be retrieved using getCurrentState:
-        currentState = YAHOO.util.History.getCurrentState("tabview");
+        currentState = YAHOO.util.History.getCurrentState("assets_tabview");
 	splitState = currentState.split("_");
         tabView.set("activeIndex", splitState.pop());
     });
@@ -146,7 +144,4 @@
         // not supported (Opera, or not A-grade) Degrade gracefully.
         initTabView();
     }
-
-})();
-
 </script>

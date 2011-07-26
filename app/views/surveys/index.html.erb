@@ -76,9 +76,7 @@
   <h1>There are no surveys available to view.</h1>
 <% end %>
 <script type="text/javascript">
-(function () {
-
-    // The initially selected tab will be chosen in the following order:
+// The initially selected tab will be chosen in the following order:
     //
     // URL fragment identifier (it will be there if the user previously
     // bookmarked the application in a specific state)
@@ -88,7 +86,7 @@
     // "tab0" (default)
 
     var bookmarkedTabViewState = YAHOO.util.History.getBookmarkedState("tabview");
-    var initialTabViewState = bookmarkedTabViewState || "survey_tab_1";
+    var initialTabViewState = bookmarkedTabViewState || "survey_tab_0";
 
     var tabView;
 
@@ -110,17 +108,17 @@
         newState = "survey_tab_" + this.getTabIndex(e.newValue);
 
         try {
-            currentState = YAHOO.util.History.getCurrentState("tabview");
+            currentState = "survey_tab_" + YAHOO.util.History.getCurrentState("tabview");
             // The following test is crucial. Otherwise, we end up circling forever.
             // Indeed, YAHOO.util.History.navigate will call the module onStateChange
             // callback, which will call tabView.set, which will call this handler
             // and it keeps going from here...
             if (newState != currentState) {
-		splitState = newState.split("_");
-                YAHOO.util.History.navigate("tabview", splitState.pop());
+		        splitState = newState.split("_");
+                YAHOO.util.History.navigate("tabview", newState);
             }
         } catch (e) {
-		splitState = newState.split("_");
+		        splitState = newState.split("_");
             	tabView.set("activeIndex", splitState.pop());
         }
     }
@@ -155,9 +153,6 @@
         // not supported (Opera, or not A-grade) Degrade gracefully.
         initTabView();
     }
-
-})();
-
 </script>
 <script type="text/javascript">
   document.observe('dom:loaded', function() {

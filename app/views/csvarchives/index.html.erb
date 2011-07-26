@@ -38,8 +38,6 @@
 	</div>
 </div>
 <script type="text/javascript">
-(function () {
-
     // The initially selected tab will be chosen in the following order:
     //
     // URL fragment identifier (it will be there if the user previously
@@ -78,11 +76,11 @@
             // callback, which will call tabView.set, which will call this handler
             // and it keeps going from here...
             if (newState != currentState) {
-splitState = newState.split("_");
-                YAHOO.util.History.navigate("extracts_tabview", splitState.pop());
+                splitState = newState.split("_");
+                YAHOO.util.History.navigate("extracts_tabview", newState);
             }
         } catch (e) {
-splitState = newState.split("_");
+             splitState = newState.split("_");
              tabView.set("activeIndex", splitState.pop());
         }
     }
@@ -105,7 +103,7 @@ splitState = newState.split("_");
         // selected before leaving the page, and not the initially selected tab.
         // This can be retrieved using getCurrentState:
         currentState = YAHOO.util.History.getCurrentState("extracts_tabview");
-splitState = currentState.split("_");
+        splitState = currentState.split("_");
         tabView.set("activeIndex", splitState.pop());
     });
 
@@ -117,7 +115,4 @@ splitState = currentState.split("_");
         // not supported (Opera, or not A-grade) Degrade gracefully.
         initTabView();
     }
-
-})();
-
 </script>
