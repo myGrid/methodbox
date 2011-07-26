@@ -5,6 +5,7 @@ class PublicationsController < ApplicationController
   before_filter :login_required
   before_filter :fetch_publication, :only => [:show, :edit, :update, :destroy]
   before_filter :associate_authors, :only => [:edit, :update]
+  before_filter :init_atom_feed, :only => [:index]
   after_filter :update_last_user_activity
   
   # GET /publications
@@ -16,6 +17,11 @@ class PublicationsController < ApplicationController
       format.html # index.html.erb
       format.xml
     end
+  end
+
+  def feed
+    @publications = Publication.all
+    super
   end
 
   # GET /publications/1

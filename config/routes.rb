@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :user_searches, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :publications,:collection=>{:fetch_preview=>:post},:member=>{:disassociate_authors=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :publications,:collection=>{:fetch_preview=>:post, :feed => :get},:member=>{:disassociate_authors=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   # map.resources :home
 
