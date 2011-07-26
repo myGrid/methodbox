@@ -32,7 +32,7 @@ class SearchController < ApplicationController
       @results = select_authorised @results
     when("variables")
         find_variables(query)
-        @results = select_authorised_variables @results
+        @results = select_authorised_variables find_variables(query)
     when("surveys")
       find_surveys(query)
       @results = select_authorised @results
@@ -53,9 +53,9 @@ class SearchController < ApplicationController
       find_csvarchive(query)
       find_publications(query)
       find_surveys(query)
-      find_variables(query)
       
       @results = select_authorised @results
+      @results += select_authorised_variables find_variables(query)
     else
       logger.info("Unexpected search_type "+@search_query)
       flash[:error]="Unexpected search_type"
@@ -120,7 +120,7 @@ class SearchController < ApplicationController
   
   def find_variables(query)
     if (SOLR_ENABLED)
-      @results = @results + Variable.find_by_solr(query, :limit => 1000).results
+      Variable.find_by_solr(query, :limit => 1000).results
     end
   end
 
