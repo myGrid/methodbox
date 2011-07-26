@@ -2,12 +2,14 @@
 <% unless collection.empty? -%>
 <ul>
 <% collection.each do |item| -%>
-		<%# tableize collection, :cols => 3, :header => nil, :name => "listings", :id => "listings_table", :class => "listings_table", :generate_css => 'false' do |item| %>
+
 			<% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-				<% if item.class.name == "Publication" %>
-					<li>
-						<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
-					</li>
+				<% if item.class.name == "Variable" %>
+				  <% if Authorization.is_authorized?("show", nil, item.dataset.survey, current_user) %>
+				    <li>
+					  <%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
+				    </li>
+				  <% end %>	
 				<% else -%>
 					<li>
 						<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>

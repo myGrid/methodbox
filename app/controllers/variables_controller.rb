@@ -331,7 +331,7 @@ class VariablesController < ApplicationController
   else
     respond_to do |format|
       flash[:error] = "You are not authorized to view this variable"
-      format.html {redirect_to back}
+      format.html {redirect_to :back}
     end
   end
     

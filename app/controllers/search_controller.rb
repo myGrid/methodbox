@@ -53,6 +53,8 @@ class SearchController < ApplicationController
       find_csvarchive(query)
       find_publications(query)
       find_surveys(query)
+      find_variables(query)
+      
       @results = select_authorised @results
     else
       logger.info("Unexpected search_type "+@search_query)
@@ -118,9 +120,7 @@ class SearchController < ApplicationController
   
   def find_variables(query)
     if (SOLR_ENABLED)
-      @results = @results + Publication.find_by_solr(query, :limit => 1000).results
-    #else
-      #todo
+      @results = @results + Variable.find_by_solr(query, :limit => 1000).results
     end
   end
 
@@ -132,7 +132,7 @@ class SearchController < ApplicationController
   
   #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
   def select_authorised_variables collection
-    collection.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
+    collection.select {|el| Authorization.is_authorized?("show", nil, el.dataset.survey, current_user)}
   end
 
   # Surveys and Data Extracts can be searched for by non logged in users
