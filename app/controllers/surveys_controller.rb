@@ -248,9 +248,21 @@ class SurveysController < ApplicationController
   
   # browse surveys using exhibit
   def facets
+    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = []
+    survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
     @surveys_json = "{types:{\"Dataset\":{pluralLabel:\"Datasets\"}},"
     @surveys_json << "\"items\":["
-    Survey.all.each do |survey|
+    non_empty_survey_types.each do |survey_type|
+    survey_type.surveys.each do |survey|
       unless !Authorization.is_authorized?("show", nil, survey, current_user)
         survey.datasets.each do |dataset|
           dataset.description ? dataset_description = dataset.description : dataset_description = 'N/A'
@@ -266,6 +278,7 @@ class SurveysController < ApplicationController
         end
       end
     end
+end
     @surveys_json.chop!
     @surveys_json << "]}"
   end
