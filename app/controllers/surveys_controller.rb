@@ -204,20 +204,44 @@ class SurveysController < ApplicationController
   #display all the different survey types
   def category_browse
     @sorted_variables = []
-    @survey_types = SurveyType.all
+    #@survey_types = SurveyType.all
+    @survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = []
+    @survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
+    @survey_types = non_empty_survey_types
     var = nil
-    Dataset.all.each do |dataset|
-      var = Variable.first(:all, :conditions => ["dataset_id =? and category is not ?", dataset.id, nil])
+    @survey_types.each do |survey_type|
+      survey_type.surveys.each do |survey|
+        survey.datasets.each do |dataset|
+          var = Variable.first(:all, :conditions => ["dataset_id =? and category is not ?", dataset.id, nil])
+          if var != nil
+            break
+          end
+        end
+        if var != nil
+          break
+        end
+      end
       if var != nil
         break
       end
     end
+    #TODO this assumes that there will be a category somewhere for a variable
     if var != nil
       @selected_survey = var.dataset.survey
     end
     if var != nil
       @categories = find_all_categories @selected_survey.survey_type.id
     end
+
     @surveys = Survey.all(:conditions=>({:survey_type_id=>@selected_survey.survey_type.id}))
     @surveys.reject! {|survey| !Authorization.is_authorized?("show", nil, survey, current_user)}
   end
