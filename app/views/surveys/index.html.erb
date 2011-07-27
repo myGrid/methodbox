@@ -77,6 +77,18 @@
 <% end %>
 <script type="text/javascript">
   tabView = new YAHOO.widget.TabView("surveys");
+   tabView.addListener("activeTabChange", handleTabViewActiveTabChange); 
+   function handleTabViewActiveTabChange (e) {
+      var newState;
+      newState = this.getTabIndex(e.newValue);
+      YAHOO.util.Cookie.set("surveys_tab", newState, {
+        path: "/"
+      });
+   }
+   var value = YAHOO.util.Cookie.get("surveys_tab");
+   if (value != null) {
+     tabView.set("activeIndex", value); 
+   }
 </script>
 <script type="text/javascript">
   document.observe('dom:loaded', function() {

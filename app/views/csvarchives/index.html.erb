@@ -39,4 +39,16 @@
 </div>
 <script type="text/javascript">
    tabView = new YAHOO.widget.TabView("extracts");
+   tabView.addListener("activeTabChange", handleTabViewActiveTabChange); 
+   function handleTabViewActiveTabChange (e) {
+      var newState;
+      newState = this.getTabIndex(e.newValue);
+      YAHOO.util.Cookie.set("extracts_tab", newState, {
+        path: "/"
+      });
+   }
+   var value = YAHOO.util.Cookie.get("extracts_tab");
+   if (value != null) {
+     tabView.set("activeIndex", value); 
+   }
 </script>
