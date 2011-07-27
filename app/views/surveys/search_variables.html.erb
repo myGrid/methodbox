@@ -26,8 +26,8 @@
 		<% if logged_in? -%>
 		      <div style="float:right; padding-right: 1em;">
 					<ul class="vbuttons" style="padding-top: 5px; padding-bottom: 5px;">
-						<li id="cart_button"><%= render :partial => "cart/button" -%></li>
-					  	<li><%= icon "new", new_csvarchive_url, "Create a new Data Extract using the variables currently in your cart", {:title=>"Create a new Data Extract using the variables currently in your cart"}, "Create a new Data Extract" %></li>
+						<li id="cart_button"><%= render :partial => "cart/button" unless current_user.cart_items.empty? -%></li>
+                                                <li id="create-data-extract-button"><%= render :partial => "create_extract_button" unless current_user.cart_items.empty? -%></li>
 					</ul>
 		        <li><%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "if (!isAnythingChecked()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%></li>
 		      </div>

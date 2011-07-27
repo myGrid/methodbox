@@ -237,6 +237,7 @@ class ApplicationController < ActionController::Base
 
       render :update, :status=>:created do |page|
         page.replace_html "cart_button", :partial=>"cart/button"
+        page.replace_html "create-data-extract-button", :partial=>"surveys/create_extract_button"
         page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
       end
 
