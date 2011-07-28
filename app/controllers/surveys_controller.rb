@@ -819,7 +819,7 @@ end
           when "no"
             #don't have to do anything
         end
-
+        #selected_surveys here are actually datasets!! - TODO - use the same terminology
         @selected_surveys = Array.new(params[:entry_ids])
         @vars_by_dataset = Hash.new
         @selected_surveys.each do |dataset|

@@ -12,7 +12,7 @@ Number of variables in search by dataset:
         <% end -%>
       <% end %>
     </ul>
-    <%= render :partial => "search_terms_switcher", :locals=>{:search_terms => @search_terms} -%>
-    <%= render :partial => "search_terms_highlighter", :locals=>{:search_terms => @search_terms} -%>
+    <%= render :partial => "surveys/search_terms_switcher", :locals=>{:search_terms => @search_terms} -%>
+    <%= render :partial => "surveys/search_terms_highlighter", :locals=>{:search_terms => @search_terms} -%>
   </div>
 </div>

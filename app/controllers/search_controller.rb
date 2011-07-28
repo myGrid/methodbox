@@ -33,6 +33,7 @@ class SearchController < ApplicationController
     when("variables")
         find_variables(query)
         @results = select_authorised_variables find_variables(query)
+        order_and_find_datasets @results, query
     when("surveys")
       find_surveys(query)
       @results = select_authorised @results
@@ -55,7 +56,9 @@ class SearchController < ApplicationController
       find_surveys(query)
       
       @results = select_authorised @results
-      @results += select_authorised_variables find_variables(query)
+      variables = select_authorised_variables find_variables(query)
+      order_and_find_datasets variables, query
+      @results += variables
     else
       logger.info("Unexpected search_type "+@search_query)
       flash[:error]="Unexpected search_type"
@@ -65,8 +68,6 @@ class SearchController < ApplicationController
     #uts "SEARCH RESULTS: " + @results.to_s
     if @results.empty?
       flash.now[:notice]="No matches found for '<b>#{@search_query}</b>'."
-      #    else
-      #      flash[:notice]="#{@results.size} #{@results.size==1 ? 'item' : 'items'} matched '<b>#{@search_query}</b>' within their title or content."
     end
 
   end
@@ -153,6 +154,31 @@ class SearchController < ApplicationController
     end
     @recent_searches = search
     puts "FOUND PREVIOUS SEARCHES"
+  end
+
+  def order_and_find_datasets variables, search_term
+        @selected_surveys = Dataset.all
+        @vars_by_dataset = Hash.new
+        @total_vars = 0
+
+        @search_terms = [search_term.downcase]
+
+        @sorted_variables = []
+        @term_results = Hash.new
+
+          @term_results[search_term] = []
+            variables.each do | variable |
+              @term_results[search_term].push(variable)
+              if @vars_by_dataset.has_key? variable.dataset
+                @sorted_variables.push(variable)
+                @vars_by_dataset[variable.dataset]+= 1
+                @total_vars+= 1
+              else
+                @sorted_variables.push(variable)
+                @vars_by_dataset[variable.dataset] = 1
+                @total_vars+= 1
+              end
+            end
   end
 
 end

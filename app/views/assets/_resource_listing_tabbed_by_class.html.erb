@@ -47,10 +47,12 @@
 	<!-- Need a form to wrap the surveys tab so that variable searching can take place -->
 						<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
 							<%= render :partial=>"surveys/survey_search_box" -%>
-							<div class="asset-resource-list">
+							<div class="asset-resource-list" id="<%= 'assets_tab_' + tab_id.to_s -%>">
 								<%= render :partial => "assets/resource_list", :locals => { :collection => resources, :narrow_view => narrow_view, :authorization_for_showing_already_done => authorization_already_done } -%>
 							</div>
 						<% end %>
+                                        <% elsif resource_type.downcase == "variable"-%>
+<%= render :partial => "variables/search_table", :locals => {:variables => resources} -%>
 					<% else %>
 					<div class="asset-resource-list" id="<%= 'assets_tab_' + tab_id.to_s -%>">
 						<%= render :partial => "assets/resource_list", :locals => { :collection => resources, :narrow_view => narrow_view, :authorization_for_showing_already_done => authorization_already_done } -%>
