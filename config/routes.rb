@@ -35,7 +35,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :expertise, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :people, :collection=>{:select=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL} do |person|
+  map.resources :people, :collection=>{:select=>:get, :feed => :get}, :requirements => {:protocol => ROUTES_PROTOCOL} do |person|
     # avatars / pictures 'owned by' person
     person.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
   end
