@@ -725,3 +725,7 @@ div.asset-resource-list-wide li {
 	margin: 1em;
 	list-style: none;
 }
+.variable-suggestions li {
+  display: inline;
+  list-style-type: none;
+}
