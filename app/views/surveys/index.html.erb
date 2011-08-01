@@ -5,7 +5,7 @@
 
 <% if !@survey_hash.empty? %>
   <% if !Survey.all.empty? && !Dataset.all.empty? -%>
-    <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
+    <%# @survey_search_query="Enter search terms" unless @survey_search_query -%>
     <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
     <div class="show_basic" style="padding-right: 2em;">
       <div id="survey_selector">
