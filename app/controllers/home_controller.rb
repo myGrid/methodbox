@@ -1,11 +1,17 @@
 class HomeController < ApplicationController
   
-  before_filter :login_required, :except=> [ :about ]
+  before_filter :login_required, :except=> [ :about, :search ]
 
   before_filter :find_previous_searches, :only => [ :index ]
 
   layout :select_layout
   
+  def search
+    respond_to do |format|
+        format.html # about.html.erb  
+    end    
+  end
+
   def about
     respond_to do |format|
         if logged_in?

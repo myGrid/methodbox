@@ -18,14 +18,14 @@
 /*    background-color:#ACCBE0;*/
 }
 #bd {
-	min-height: 550px;
+/*	min-height: 550px; */
 	background-color: white;
 /*	-webkit-box-shadow: #777 1px 1px 3px; */
-	-webkit-border-radius: 6px; 
-	border-radius: 6px;
+/*	-webkit-border-radius: 0 0 6px 6px;  */
+/*	border-radius: 0 0 6px 6px; */
 /*	box-shadow: 1px 1px 3px #777;*/
 /*	margin-top:0;*/
-	-moz-border-radius:6px;
+/*	-moz-border-radius:0 0 6px 6px; */
 /*	-moz-box-shadow: 1px 1px 3px #777777; */
 /*	border: 1px solid #C0C4C6; */
 	color: #000000; 
@@ -456,6 +456,12 @@ ul.vbuttons .category-browse.li {
 }
 #welcome-text {
 	font-size: 20px;
+background-color: #C6DFF0; 
+/* -webkit-border-radius: 6px 6px 0 0; */
+/* border-radius: 6px 6px 0 0; */
+/* -moz-border-radius:6px 6px 0 0; */
+padding-top:10px; 
+padding-bottom: 10px;
 /*	margin-top: 0.5em;*/
 }
 #welcome-wrapper {
@@ -730,4 +736,47 @@ div.asset-resource-list-wide li {
 .variable-suggestions li {
   display: inline;
   list-style-type: none;
+}
+#error_flash {
+color: red; 
+font-weight: bold; 
+margin: 0.8em 0.8em; 
+line-height: 1.4;
+}
+#notice_flash {
+color: green; 
+font-weight: bold; 
+margin: 0.8em 0.8em; 
+line-height: 1.4;
+}
+/* sticky footer */
+html, body {height: 100%;}
+
+#wrap {min-height: 100%;}
+
+#main {overflow:auto;
+	padding-bottom: 150px;}  /* must be same height as the footer */
+
+#footer {position: relative;
+	margin-top: -150px; /* negative value of footer height */
+	height: 150px;
+	clear:both;
+        background-color: #EFDED2;
+} 
+
+/*Opera Fix*/
+body:before {
+	content:"";
+	height:100%;
+	float:left;
+	width:0;
+	margin-top:-32767px;/
+}
+/* end sticky footer */
+
+/* remove 10px border from yui grid */
+#doc3 {margin:auto;}
+#ft {
+  background-color: #EFDED2;
+  margin: 0;
 }

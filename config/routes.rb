@@ -75,7 +75,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # used by the "sharing" form to get settings from an existing policy
   map.request_policy_settings '/policies/request_settings', :controller => 'policies', :action => 'send_policy_data', :requirements => {:protocol => ROUTES_PROTOCOL}
-  map.root :controller=>'home', :action=>'about', :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.root :controller=>'home', :action=>'search', :requirements => {:protocol => ROUTES_PROTOCOL}
   map.index '/index', :controller => 'home', :action=>'index', :requirements => {:protocol => ROUTES_PROTOCOL}
 
   # See how all your routes lay out with "rake routes"
