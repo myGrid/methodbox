@@ -4,6 +4,8 @@
 <% if logged_in? && current_user.is_admin? -%>
 <%= link_to "Admin functions", admin_url -%>
 <% end -%>
+<div style="clear:both;">
+</div>
 <% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
 <%= render :partial => "layouts/simple_logged_in_controls" -%>
 <% elsif logged_in? -%>
@@ -14,7 +16,7 @@
 <% if controller.controller_name.downcase == "home" && controller.action_name.downcase == "search" -%>
 <%= render :partial => "layouts/welcome_message" -%>
 <% else -%>
-<div class="left" style="margin-left: 1em; padding-top: 2px; position: absolute; left: 0;">
+<div class="left" style="margin-left: 1em; padding-top: 2px;">
 <%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65), root_url -%>
 </div>
 <%= render :partial => "layouts/header_search_bar" -%>
