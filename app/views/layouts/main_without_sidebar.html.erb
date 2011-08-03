@@ -34,36 +34,37 @@
 
 </script>
 </head>
-<body style="background-color: white;min-width:1100px;">
-    <div id="wrap">
-    <div id="main">
-  <div id="doc3" class="yui-t2">
-    <div>
-      <%= render :partial=>"layouts/main_header" %>
-    </div>
-    <div class="logged-out-main" id="bd">
-      <div id="yui-main">
-          <% if flash[:error] %>
-            <div id="error_flash" class="box_standout">
-              <%= link_to_function image_tag("close.gif", :style => "float: right;"), visual_effect(:toggle_slide, "error_flash", :duration => 0.3) %><%= white_list flash[:error] %>
-            </div>
-          <% end %>
-          <% if flash[:notice] %>
-            <div id="notice_flash" class="box_standout">
-            <%= link_to_function image_tag("close.gif", :style => "float: right;"), visual_effect(:toggle_slide, "notice_flash", :duration => 0.3) %><%= white_list flash[:notice] %>
-            </div>
-          <% end %>
-          <%= yield :layout %>
+<body style="background-color: white; min-width:1100px;">
+<div id="wrap">
+<div id="main">
+      <div id="doc3" class="yui-t2">
+        <div>
+          <%= render :partial=>"layouts/main_header" %>
         </div>
-      </div>
+        <div class="logged-out-main" id="bd">
+          <div id="yui-main">
+            <% if flash[:error] %>
+              <div id="error_flash" class="box_standout">
+                <%= link_to_function image_tag("close.gif", :style => "float: right;"), visual_effect(:toggle_slide, "error_flash", :duration => 0.3) %><%= white_list flash[:error] %>
+              </div>
+            <% end %>
+            <% if flash[:notice] %>
+              <div id="notice_flash" class="box_standout">
+                <%= link_to_function image_tag("close.gif", :style => "float: right;"), visual_effect(:toggle_slide, "notice_flash", :duration => 0.3) %><%= white_list flash[:notice] %>
+              </div>
+            <% end %>
+            <%= yield :layout %>
+          </div>
+        </div>
+</div>
+</div>
+</div>
+<div id="footer">
+    <div id="ft">
+      <%= render :partial=>"layouts/footer" %>
     </div>
-    </div>
-    </div>
-    <div id="footer">
-      <div id="ft">
-        <%= render :partial=>"layouts/footer" %>
-      </div>
-    </div>
-  </div>
+</div>
+<%# NB! These javascript include should be here - otherwise folds will not be displayed on any pages. -%>
+<%= javascript_include_tag "folds.js" %>
 </body>
 </html>

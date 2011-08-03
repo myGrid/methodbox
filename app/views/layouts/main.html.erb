@@ -35,9 +35,9 @@
 
 </script>
 	</head>
-<body style="background-color: white;min-width:1100px;">
-  <div id="wrap">
-    <div id="main">
+<body style="background-color: white; min-width:1100px;">
+<div id="wrap">
+<div id="main">
       <div id="doc3" class="yui-t2">
         <div>
           <%= render :partial=>"layouts/main_header" %>
@@ -65,13 +65,15 @@
           </div>
           <div class="yui-b"><%= render_sidebar -%><%= render :partial=>"layouts/sidebar" %></div>
         </div>
-        <div id="footer">
-          <div id="ft">
-            <%= render :partial=>"layouts/footer" %>
-          </div>
-        </div>
       </div>
+</div>
+</div>
+<div id="footer">
+    <div id="ft">
+      <%= render :partial=>"layouts/footer" %>
     </div>
-  </div>
+</div>
+<%# NB! These javascript include should be here - otherwise folds / tabs will not be displayed on any pages. -%>
+<%= javascript_include_tag "folds.js" %>
 </body>
 </html>

@@ -7,6 +7,11 @@ class HomeController < ApplicationController
   layout :select_layout
   
   def search
+    if params[:advanced_controls]
+      @advanced_controls = true
+    else
+      @advanced_controls = false
+    end
     respond_to do |format|
         format.html # about.html.erb  
     end    

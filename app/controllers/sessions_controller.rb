@@ -57,7 +57,7 @@ class SessionsController < ApplicationController
         user=User.find_by_shibboleth_user_id(params[:username])
         if user && user.person
           self.current_user = user
-          format.html {redirect_to person_url(current_user)}
+          format.html {redirect_to surveys_url}
         else
           @user = User.new
           format.html {redirect_to :controller => 'users', :action => 'new_shib', :shib_user_id => params[:username]}
@@ -121,7 +121,7 @@ class SessionsController < ApplicationController
             #if session[:return_to] and !session[:return_to].empty?
               #return_to_url = session[:return_to]
             #else
-              return_to_url = person_url(current_user)
+              return_to_url = surveys_url
             #end
           #end
 
