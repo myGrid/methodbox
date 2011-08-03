@@ -1,4 +1,4 @@
-<!-- <div style="position:relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;"> -->
+<% if defined? @vars_by_dataset -%>
 <div class="fold">
   <div class="foldTitle">Total number of variables in search: <%= @total_vars -%></div>
   <div class="foldContent" style="display:none;">
@@ -16,3 +16,4 @@ Number of variables in search by dataset:
     <%= render :partial => "search_terms_highlighter", :locals=>{:search_terms => @search_terms} -%>
   </div>
 </div>
+<% end -%>

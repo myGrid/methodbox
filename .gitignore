@@ -6,6 +6,7 @@ config/environments/development.rb
 config/environments/production.rb
 config/environments/test.rb
 config/database.yml
+config/sunspot.yml
 #methodbox/db/schema.rb
 Gemfile.lock
 

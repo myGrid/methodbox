@@ -2,14 +2,14 @@ production:
   solr:
     hostname: localhost
     port: 8983
-    solr_home: '/home/ian/obesity_data/sunspot/production'
+    solr_home: '/path/to/sunspot/solr/data'
     log_level: WARNING
 
 development:
   solr:
     hostname: localhost
     port: 8982
-    solr_home: '/home/ian/obesity_data/sunspot/development'
+    solr_home: '/path/to/sunspot/solr/data'
     log_level: INFO
 
 test:

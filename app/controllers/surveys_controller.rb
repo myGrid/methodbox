@@ -337,7 +337,8 @@ end
   end
 
   def search_variables
-    do_search_variables
+    sunspot_search_variables
+    #do_search_variables
   end
 
 # list all the surveys that the current user can see.
@@ -797,6 +798,20 @@ end
   end
 
  private 
+
+  def sunspot_search_variables
+    #fihure out what datasets the current user is allowed to see
+    authorized_datasets=[]
+    params[:entry_ids].each do |dataset_id| 
+      authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Survey.find(Dataset.find(dataset_id)), current_user)
+    end
+    result = Sunspot.search(Variable) do
+      keywords params[:survey_search_query]
+      with(:dataset_id, authorized_datasets)
+    end
+
+    @sorted_variables = result.results
+  end
 
     def do_search_variables
         @survey_search_query = params[:survey_search_query]
