@@ -1,35 +1,36 @@
-<div style="float: left;">
-	<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65),root_path -%>
+<div style="float:left;">
+<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65),root_path -%>
 </div>
-<div id="small-hd" class="right">
-<div class="center">
-	<b>
-		<% if REGISTRATION_CLOSED -%>
-			<%= link_to "Request Access", signup_url %>
-		<% else -%>
-			<%= link_to "Sign up", signup_url %>
-		<% end -%>
-	</b>
-	/
-	<b>
-		<%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
-	</b>
+<div id="small-hd" style="float:right;">
+<div>
+<b>
+<% if REGISTRATION_CLOSED -%>
+<%= link_to "Request Access", signup_url %>
+<% else -%>
+<%= link_to "Sign up", signup_url %>
+<% end -%>
+</b>
+/
+<b>
+<%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
+</b>
 </div>
 <div id="login_box" style="display: none; z-index: 100; position: absolute; right: 2em;">
 	<%= render :partial=>"gadgets/sign_in_popup" %>
 </div>
-<div class="center">or</div>
-<div class="center">
-	<b><%= link_to "try it out", surveys_url %></b>
 </div>
+<div style="padding-top: 20px;">
+<% form_tag '/search/' do -%>
+<!-- search for everything from the main page -->
+<%= hidden_field_tag 'search_type[]', 'surveys' -%>
+<%= hidden_field_tag 'search_type[]', 'variables' -%>
+<%= hidden_field_tag 'search_type[]', 'people' -%>
+<%= hidden_field_tag 'search_type[]', 'publications' -%>
+<%= hidden_field_tag 'search_type[]', 'extracts' -%>
+<%= hidden_field_tag 'search_type[]', 'methods' -%>
+<div style="text-align: center; padding-bottom:5px;">
+<%= text_field_tag :search_query, @search_query, :style=>"width: 40%; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods" -%>
+<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods"  -%>
 </div>
-<div id="welcome-wrapper">
-<div class="center" id="welcome-text">
-	<b>Browse</b> <i>datasets</i>, <b>shop</b> for <i>variables</i> and <b>share</b> your <i>knowledge</i>.
-</div>
-<div class="no-search-margin">
-<div id="search-bar-hd">
-	<%= render :partial=>"search/search_bar" %>
-</div>
-</div>
+<% end  -%>
 </div>

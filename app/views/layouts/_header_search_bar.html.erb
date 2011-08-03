@@ -1,0 +1,19 @@
+<div style="padding-top: 20px;background-color: #ACCBE0;">
+<% form_tag '/search/' do -%>
+<!-- search for everything from the main page -->
+<%= hidden_field_tag 'search_type[]', 'surveys' -%>
+<%= hidden_field_tag 'search_type[]', 'variables' -%>
+<%= hidden_field_tag 'search_type[]', 'people' -%>
+<%= hidden_field_tag 'search_type[]', 'publications' -%>
+<%= hidden_field_tag 'search_type[]', 'extracts' -%>
+<%= hidden_field_tag 'search_type[]', 'methods' -%>
+<div style="text-align: center; padding-bottom:5px;">
+<div>
+<%= text_field_tag :search_query, @search_query, :style=>"width: 40%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables, surveys, people and methods" -%>
+<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods"  -%>
+</div>
+<div>
+<%= link_to 'Advanced search', root_url, :style=>"display:block; font-size: xx-small;" -%>
+</div>
+<% end -%>
+</div>

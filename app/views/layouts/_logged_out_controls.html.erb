@@ -1,0 +1,18 @@
+<div id="small-hd" style="position: absolute; right: 0;">
+<div>
+<b>
+<% if REGISTRATION_CLOSED -%>
+<%= link_to "Request Access", signup_url %>
+<% else -%>
+<%= link_to "Sign up", signup_url %>
+<% end -%>
+</b>
+/
+<b>
+<%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
+</b>
+</div>
+<div id="login_box" style="display: none; z-index: 100; position: absolute; right: 2em; width: 300px;">
+	<%= render :partial=>"gadgets/sign_in_popup" %>
+</div>
+</div>
