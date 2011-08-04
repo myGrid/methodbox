@@ -356,21 +356,20 @@ end
     end
 
     @survey_hash = Hash.new
+    @surveys = []
     @empty_surveys = []
     non_empty_survey_types.each do |survey_type|
       survey_type.surveys.each do |survey|
         unless survey.datasets.empty? 
-          unless !Authorization.is_authorized?("show", nil, survey, current_user)
-            if (!@survey_hash.has_key?(survey.survey_type.name))
-              @survey_hash[survey.survey_type.name] = Array.new
-            end
-            @survey_hash[survey.survey_type.name].push(survey)
-          end
+          @surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
         else
-          @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
+          @empty_surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
         end
       end
     end
+
+    surveys_hash = @surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => s.description, "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}
+    @surveys_json = surveys_hash.to_json
 
     @variables = Array.new
 
