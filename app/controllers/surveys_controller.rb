@@ -803,13 +803,14 @@ end
     #fihure out what datasets the current user is allowed to see
     authorized_datasets=[]
     params[:entry_ids].each do |dataset_id| 
-      authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Survey.find(Dataset.find(dataset_id)), current_user)
+      authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)
     end
     result = Sunspot.search(Variable) do
-      keywords params[:survey_search_query]
+      keywords(params[:survey_search_query]) {minimum_match 1}
       with(:dataset_id, authorized_datasets)
     end
-
+    #keep track of what  datasets have been searched
+    @selected_datasets = authorized_datasets
     @sorted_variables = result.results
   end
 

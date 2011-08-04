@@ -46,7 +46,7 @@ class Person < ActiveRecord::Base
 
   has_one :user, :dependent => :destroy
 
-  acts_as_solr(:fields => [ :first_name, :last_name,:expertise ]) if SOLR_ENABLED
+  #acts_as_solr(:fields => [ :first_name, :last_name,:expertise ]) if SOLR_ENABLED
 
   named_scope :without_group, :include=>:group_memberships, :conditions=>"group_memberships.person_id IS NULL"
   named_scope :registered,:include=>:user,:conditions=>"users.person_id != 0"
@@ -56,11 +56,11 @@ class Person < ActiveRecord::Base
   named_scope :not_registered,:include=>:user,:conditions=>"users.person_id IS NULL"
   
   #sunspot solr
-  # searchable do
-  #     text :first_name
-  #     text :last_name
-  #     text :expertise
-  #   end
+  searchable do
+    text :first_name
+    text :last_name
+    text :expertise
+  end
 
   def self.userless_people
     p=Person.find(:all)

@@ -11,7 +11,7 @@
     <%= page_entries_info @scripts,:entry_name => 'Methods and Scripts' %>
   </div>
   <div class="asset-resource-list">
-    <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true } %>
+    <%= render :partial => "assets/resource_list", :locals => { :collection => @scripts, :authorization_for_showing_already_done=>true, :paginate => false } %>
   </div>
   <%= will_paginate(@scripts) %>
 <% end -%>

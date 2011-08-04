@@ -18,7 +18,7 @@
 				<div style="text-align: center; margin: 0.5em;">
 					<%= page_entries_info @my_archives, :entry_name => 'Data Extract' %>
 				</div>
- 					<%= render :partial => "assets/resource_list", :locals => { :collection => @my_archives, :authorization_for_showing_already_done=>true } %>
+ 					<%= render :partial => "assets/resource_list", :locals => { :collection => @my_archives, :authorization_for_showing_already_done=>true, :paginate => false } %>
 					<%= will_paginate @my_archives, :param_name=>'my_page' %>
 				</div>
 			<% end -%>
@@ -30,7 +30,7 @@
 				<div style="text-align: center; margin: 0.5em;">
 					<%= page_entries_info @all_archives, :entry_name => 'Data Extract' %>
 				</div>
-      				<%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>true } %>
+      				<%= render :partial => "assets/resource_list", :locals => { :collection => @all_archives, :authorization_for_showing_already_done=>true, :paginate => false } %>
 				<%= will_paginate @all_archives, :param_name=>'all_page' %>
 <% end -%>
 			</div>

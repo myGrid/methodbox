@@ -1,6 +1,13 @@
 <div style="padding-top: 20px;background-color: #ACCBE0;">
 <% form_tag '/search/' do -%>
 <!-- search for everything from the main page -->
+<!-- return first page of results -->
+<%= hidden_field_tag 'person_page', 1 -%>
+<%= hidden_field_tag 'survey_page', 1 -%>
+<%= hidden_field_tag 'script_page', 1 -%>
+<%= hidden_field_tag 'csvarchive_page', 1 -%>
+<%= hidden_field_tag 'publication_page', 1 -%>
+<%= hidden_field_tag 'variable_page', 1 -%>
 <%= hidden_field_tag 'search_type[]', 'surveys' -%>
 <%= hidden_field_tag 'search_type[]', 'variables' -%>
 <%= hidden_field_tag 'search_type[]', 'people' -%>

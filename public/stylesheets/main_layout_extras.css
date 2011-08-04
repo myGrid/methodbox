@@ -654,7 +654,7 @@ font-weight: bold;
 margin: 0.8em 0.8em; 
 line-height: 1.4;
 }
-/* sticky footer */
+/* sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html */
 html, body {height: 100%;}
 
 #wrap {min-height: 100%;}

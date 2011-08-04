@@ -2,7 +2,13 @@
 <div style="text-align: center;"><%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>100),root_path -%></div>
 <% form_tag '/search/' do -%>
 <!-- search for everything from the main page -->
-<%#= hidden_field_tag 'search_type', 'all' -%>
+<!-- initial search is for first page -->
+<%= hidden_field_tag 'person_page', 1 -%>
+<%= hidden_field_tag 'survey_page', 1 -%>
+<%= hidden_field_tag 'script_page', 1 -%>
+<%= hidden_field_tag 'csvarchive_page', 1 -%>
+<%= hidden_field_tag 'publication_page', 1 -%>
+<%= hidden_field_tag 'variable_page', 1 -%>
 <div style="text-align: center; padding-bottom:5px;">
 <%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods" -%>
 </div>

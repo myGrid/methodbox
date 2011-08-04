@@ -18,16 +18,16 @@ class Publication < ActiveRecord::Base
   
   has_many :non_seek_authors, :class_name => 'PublicationAuthor', :dependent => :destroy
   
-  acts_as_solr(:fields=>[:title,:abstract,:journal]) if SOLR_ENABLED  
+  #acts_as_solr(:fields=>[:title,:abstract,:journal]) if SOLR_ENABLED  
   
   acts_as_uniquely_identifiable  
   
   #sunspot solr
-  # searchable do
-  #     text :title
-  #     text :abstract
-  #     text :journal
-  #   end
+  searchable do
+    text :title
+    text :abstract
+    text :journal
+  end
   
   #belongs_to :contributor, :polymorphic => true
   

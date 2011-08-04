@@ -33,6 +33,7 @@ class Survey < ActiveRecord::Base
 
     #sunspot solr
     searchable do
+      integer :id
       text :description
       text :title
       text :year
