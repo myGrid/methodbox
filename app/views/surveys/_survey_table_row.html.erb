@@ -1,0 +1,3 @@
+<% @survey.datasets.each do |dataset| %>
+  <%= check_box_tag 'entry_ids[]', dataset.id -%><%= dataset.name -%>
+<% end %>
