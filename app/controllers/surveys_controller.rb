@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
+  before_filter :login_required, :except => [ :retrieve_details, :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 
@@ -26,6 +26,10 @@ class SurveysController < ApplicationController
 
   caches_action :collapse_row, :expand_row
   
+  def retrieve_details
+    @survey = Survey.find(params[:survey_id])
+    render :partial => 'survey_table_row'
+  end
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
     variable = Variable.find(params[:id])
@@ -368,7 +372,7 @@ end
       end
     end
 
-    surveys_hash = @surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => s.description, "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}
+    surveys_hash = @surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}
     @surveys_json = surveys_hash.to_json
 
     @variables = Array.new

@@ -25,7 +25,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :autocomplete_message_to => :post, :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
 
-  map.resources :surveys, :member => { :show_all_variables => :post, :add_note => :post, :download => :get}, :collection => {:collapse_row => :post, :expand_row => :post, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :post, :category_browse => :get, :facets => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :show_links=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :surveys, :member => { :show_all_variables => :post, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :post, :expand_row => :post, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :post, :category_browse => :get, :facets => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :show_links=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:recreate => :post, :help => :get, :help2 => :get,:show_links=>:post, :check_for_complete => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
 

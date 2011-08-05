@@ -29,7 +29,6 @@
 <div id="surveys_table"></div>
 </div>
 <% end -%>
-
 <script type= "text/javascript">
 var results = <%= raw @surveys_json -%>;
 
@@ -62,7 +61,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
                 columnDefs, dataSource, {caption:"List of all surveys", rowExpansionTemplate :
-				                    '{description}' });
+				                    '{id}' });
 		this.dataTable.subscribe( 'cellClickEvent',
 				dataTable.onEventToggleRowExpansion );
         return {

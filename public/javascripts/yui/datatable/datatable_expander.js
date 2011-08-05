@@ -301,7 +301,7 @@
              * @return {Boolean} successful
             **/
             expandRow : function( record_id, restore ){
-
+                var thisObj = this;
                 var state = this._getRecordState( record_id );
 
                 if (state.expanded && !restore) {
@@ -334,55 +334,55 @@
                 new_row.appendChild( new_column );
 
                 var liner_element = new_row.firstChild.firstChild;
+                var retrieved_data; 
 
-                if( YAHOO.lang.isString( template ) ){
+				var handleSuccess = function(o){
+					if(o.responseText !== undefined){
+						liner_element.innerHTML = YAHOO.lang.substitute( 
+	                        o.responseText, 
+	                        expanded_data
+	                    );
+		                newRow = Dom.insertAfter( new_row, row );
 
-                    liner_element.innerHTML = YAHOO.lang.substitute( 
-                        template, 
-                        expanded_data
-                    );
+		                if (newRow.innerHTML.length) {
 
-                } else if( YAHOO.lang.isFunction( template ) ) {
+		                    thisObj._setRecordState( record_id, 'expanded', true );
 
-                    template( {
-                        row_element : new_row,
-                        liner_element : liner_element,
-                        data : row_data, 
-                        state : state 
-                    } );
+		                    if( !restore ){
 
-                } else {
+		                        thisObj.a_rowExpansions.push( thisObj.getRecord( record_id ).getId() );
 
-                    return false;
+		                    }
 
-                }
+		                    Dom.removeClass( row, CLASS_COLLAPSED );
+		                    Dom.addClass( row, CLASS_EXPANDED );
 
-                //Insert new row
-                newRow = Dom.insertAfter( new_row, row );
+		                    //Fire custom event
+		                    thisObj.fireEvent( "rowExpandEvent", { record_id : row_data.getId() } );
 
-                if (newRow.innerHTML.length) {
+		                    return true;
 
-                    this._setRecordState( record_id, 'expanded', true );
+		                } else {
 
-                    if( !restore ){
+		                    return false;
 
-                        this.a_rowExpansions.push( this.getRecord( record_id ).getId() );
+		                }
+					}
+				}
 
-                    }
+				var handleFailure = function(o){
+					if(o.responseText !== undefined){
+						retrieved_data = o.responseText;
+					}
+				}
 
-                    Dom.removeClass( row, CLASS_COLLAPSED );
-                    Dom.addClass( row, CLASS_EXPANDED );
+				var callback =
+				{
+				  success:handleSuccess,
+				  failure: handleFailure
+				};
+				var transaction = YAHOO.util.Connect.asyncRequest('GET', 'http://localhost:3000/surveys/retrieve_details?survey_id='+ expanded_data.id, callback, null);
 
-                    //Fire custom event
-                    this.fireEvent( "rowExpandEvent", { record_id : row_data.getId() } );
-
-                    return true;
-
-                } else {
-
-                    return false;
-
-                } 
 
             },
 
@@ -520,5 +520,13 @@
         el.innerHTML = '<a class="yui-dt-expandablerow-trigger-inner" href="javascript:void(0);"></a>';
 
     };
-
+    
+    function retrieveExpandedData(id, data) {
+		var callback = {
+			  success: function(o) {data =  o.responseText;},
+			  failure: function(o) {alert('failure');},
+			  timeout: 5000
+			};
+	var transaction = YAHOO.util.Connect.asyncRequest('GET', 'http://localhost:3000/surveys/retrieve_details?survey_id='+id, callback, null);
+}
 })();
