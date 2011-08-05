@@ -1,7 +1,7 @@
 <% authorization_for_showing_already_done ||= false -%>
 <% unless collection.empty? -%>
 <% if collection.methods.include?('total_pages') && paginate-%>
-  <%= will_paginate collection, :param_name => collection.first.class.name.downcase + '_page', :params=>{:search_query => @search_query} %>
+  <%= will_paginate collection, :param_name => collection.first.class.name.downcase + '_page', :params=>{:search_query => @search_query, :search_type => @search_types} %>
 <% end -%>
 <ul>
 <% collection.each do |item| -%>
@@ -22,7 +22,7 @@
 	<% end %>
 </ul>
 <% if collection.methods.include?('total_pages') && paginate -%>
-  <%= will_paginate collection, :param_name => collection.first.class.name.downcase + '_page', :params=>{:search_query => @search_query} %>
+  <%= will_paginate collection, :param_name => collection.first.class.name.downcase + '_page', :params=>{:search_query => @search_query, :search_type => @search_types} %>
 <% end -%>
 <% end -%>
 

@@ -8,6 +8,7 @@ class SearchController < ApplicationController
     if !defined? params[:search_type] || params[:search_type].empty?
       params[:search_type] = ['people', 'surveys', 'methods', 'extracts', 'publications', 'variables'] 
     end
+    @search_types = params[:search_type]
     @results_hash = Hash.new
     @search_query = params[:search_query]
     @search_query||=""
@@ -17,7 +18,7 @@ class SearchController < ApplicationController
 
     if (query.nil? or query.strip.empty?)
       flash[:error]="Sorry your query appeared blank. Please try again"
-      return
+      redirect_to :back
     end
     #if (query.include?(' OR ') && query.include?(' AND '))
      # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'

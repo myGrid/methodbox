@@ -5,19 +5,41 @@
 
 <% if !@surveys.empty? -%>
 <div class="yui-skin-sam">
-<%= @surveys_json -%>
+<div id="surveys_table"></div>
 </div>
 <% end -%>
 <script type="text/javascript">
-var columnDefs = [
-    { key: "title", label: "Title", sortable: true },
-    { key: "description", label: "Description", sortable: true },
-    { key: "year", label: "Year", sortable: true },
-    { key: "type", label: "Type", sortable: true }
-];
-// Defer instantiation
+var results = <%= raw @surveys_json -%>;
+
 YAHOO.util.Event.addListener(window, "load", function() {
-    var myDataTableDeferred = new YAHOO.widget.DataTable("survey_container", columnDefs, myDataSource);
+    YAHOO.example.Basic = function() {
+        var columnDefs = [
+            { label: "", formatter: "checkbox"},
+		    { key: "title", label: "Title", sortable: true, maxWidth: 100 },
+		    { key: "description", label: "Description", sortable: true, width: 500 },
+		    { key: "year", label: "Year", sortable: true, maxWidth: 100 },
+		    { key: "type", label: "Type", sortable: true, maxWidth: 150 }
+		];
+
+        var dataSource = new YAHOO.util.LocalDataSource(results);
+        dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSARRAY;
+        dataSource.responseSchema = {
+            fields: ["id","title","description","year","type"]
+        };
+
+        this.dataTable = new YAHOO.widget.DataTable("surveys_table",
+                columnDefs, dataSource, {caption:"List of all surveys"});
+        return {
+            oDS: dataSource,
+            oDT: dataTable
+        };
+    }();
+    this.dataTable.subscribe("checkboxClickEvent", function(oArgs){ 
+	  var elCheckbox = oArgs.target; 
+	  var oRecord = this.getRecord(elCheckbox); 
+	  var id = oRecord.getData().id;
+	  oRecord.setData("check",elCheckbox.checked); 
+	});
 });
 </script>
 <script type="text/javascript">
