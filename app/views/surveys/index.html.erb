@@ -2,18 +2,51 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
-
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
 <% if !@surveys.empty? -%>
 <div class="yui-skin-sam">
 <div id="surveys_table"></div>
 </div>
 <% end -%>
-<script type="text/javascript">
+
+<script type= "text/javascript">
 var results = <%= raw @surveys_json -%>;
 
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.example.Basic = function() {
+	    var expansionFormatter  = function(el, oRecord, oColumn, oData) {
+            var cell_element    = el.parentNode;
+
+            //Set trigger
+            if( oData ){ //Row is closed
+                YAHOO.util.Dom.addClass( cell_element,
+                    "yui-dt-expandablerow-trigger" );
+            }
+
+        };
         var columnDefs = [
+            { label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
             { label: "", formatter: "checkbox"},
 		    { key: "title", label: "Title", sortable: true, maxWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, width: 500 },
@@ -27,8 +60,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
             fields: ["id","title","description","year","type"]
         };
 
-        this.dataTable = new YAHOO.widget.DataTable("surveys_table",
-                columnDefs, dataSource, {caption:"List of all surveys"});
+        this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
+                columnDefs, dataSource, {caption:"List of all surveys", rowExpansionTemplate :
+				                    '{description}' });
+		this.dataTable.subscribe( 'cellClickEvent',
+				dataTable.onEventToggleRowExpansion );
         return {
             oDS: dataSource,
             oDT: dataTable
