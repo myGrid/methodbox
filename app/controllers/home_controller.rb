@@ -7,11 +7,12 @@ class HomeController < ApplicationController
   layout :select_layout
   
   def search
-    if params[:advanced_controls]
+    #always show the advanced controls (?)
+    #if params[:advanced_controls]
       @advanced_controls = true
-    else
-      @advanced_controls = false
-    end
+    #else
+      #@advanced_controls = false
+    #end
     respond_to do |format|
         format.html # about.html.erb  
     end    

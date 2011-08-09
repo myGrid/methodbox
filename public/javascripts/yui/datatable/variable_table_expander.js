@@ -41,14 +41,14 @@
      * @param oDataSource {YAHOO.util.DataSource} DataSource instance.
      * @param oConfigs {object} (optional) Object literal of configuration values.
      */
-    YAHOO.widget.RowExpansionDataTable = function(elContainer,aColumnDefs,oDataSource,oConfigs) {
+    YAHOO.widget.VariableRowExpansionDataTable = function(elContainer,aColumnDefs,oDataSource,oConfigs) {
 
-        YAHOO.widget.RowExpansionDataTable.superclass.constructor.call(this, elContainer,aColumnDefs,oDataSource,oConfigs); 
+        YAHOO.widget.VariableRowExpansionDataTable.superclass.constructor.call(this, elContainer,aColumnDefs,oDataSource,oConfigs); 
 
     };
 
     YAHOO.lang.extend( 
-        YAHOO.widget.RowExpansionDataTable,
+        YAHOO.widget.VariableRowExpansionDataTable,
         YAHOO.widget.DataTable, 
         {
 
@@ -115,7 +115,7 @@
                 if (this.get('dynamicData')) {
                     this.collapseAllRows();
                 }
-                YAHOO.widget.RowExpansionDataTable.superclass.onPaginatorChangeRequest.apply(this, arguments);
+                YAHOO.widget.VariableRowExpansionDataTable.superclass.onPaginatorChangeRequest.apply(this, arguments);
 
             },
 
@@ -131,7 +131,7 @@
                 if (this.get('dynamicData')) {
                     this.collapseAllRows();
                 }
-                YAHOO.widget.RowExpansionDataTable.superclass.sortColumn.apply(this, arguments);
+                YAHOO.widget.VariableRowExpansionDataTable.superclass.sortColumn.apply(this, arguments);
 
             },
 
@@ -149,7 +149,7 @@
                     this.collapseAllRows();
                 }
 
-                YAHOO.widget.RowExpansionDataTable.superclass._setColumnWidth.apply(this, arguments);
+                YAHOO.widget.VariableRowExpansionDataTable.superclass._setColumnWidth.apply(this, arguments);
 
                 if (save) {
                     this.a_rowExpansions = save;
@@ -221,7 +221,7 @@
 
                 oConfigs = oConfigs || {};
 
-                YAHOO.widget.RowExpansionDataTable.superclass.initAttributes.call( this, oConfigs );
+                YAHOO.widget.VariableRowExpansionDataTable.superclass.initAttributes.call( this, oConfigs );
 
                 /**
                  * The rowExpansionTemplate attribute can accept a string
@@ -389,10 +389,9 @@
                                 //stop multiple clicks of the expand button
                                 if (pos == -1) {
                                   expanded_rows.push(expanded_data.id);
-				  var transaction = YAHOO.util.Connect.asyncRequest('GET', surveys_url + '/retrieve_details?survey_id='+ expanded_data.id, callback, null);
+				  var transaction = YAHOO.util.Connect.asyncRequest('POST', surveys_url + '/expand_row?id='+ expanded_data.id, callback, null);
                                   Element.show('spinner');
                                 }
-
 
             },
 
@@ -424,7 +423,6 @@
 
                         //Fire custom event
                         this.fireEvent("rowCollapseEvent", { record_id : row_data.getId() } );
-                        //row is collapsed so allow users to click on it again
                         var row_id = row_data.getData().id;
                         pos = expanded_rows.indexOf(row_id);
                         expanded_rows.splice(pos, 1);
@@ -527,10 +525,11 @@
 
         });
 
-    YAHOO.widget.RowExpansionDataTable.formatRowExpansion = function(el, oRecord, oColumn, oData) {
+    YAHOO.widget.VariableRowExpansionDataTable.formatRowExpansion = function(el, oRecord, oColumn, oData) {
 
         Dom.addClass( el.parentNode, "yui-dt-expandablerow-trigger" );
         el.innerHTML = '<a class="yui-dt-expandablerow-trigger-inner" href="javascript:void(0);"></a>';
 
     };
+    
 })();

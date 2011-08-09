@@ -10,6 +10,9 @@ var termsHighlight = {};
 //variable to its striping odd/even colour
 var stripesHash = {};
 
+//keep track of which variables have been selected
+var variables_checked = [];
+
 //add all the variables to the hash of search terms
 function addVariable(term, variable) {
 	if (termsHash[term] == null) {
@@ -180,4 +183,28 @@ function addOrRemoveHiddenFieldForVariable(variable) {
 				}
 			}
 	}
+}
+
+//Add or remove a dataset from the list
+//of selected ones
+function selectVariable(variable_id) {
+  pos = variables_checked.indexOf(variable_id);
+  if (pos != -1) {
+    variables_checked.splice(pos, 1);
+    $('selected_variable' + '_' + variable_id).remove();
+  } else {
+    variables_checked.push(variable_id);
+    var hidden_input = new Element('input',{'id': 'selected_variable' + '_' + variable_id,'name': 'variable_ids[]','type':'hidden'});
+    hidden_input.value = variable_id;
+    $('selected_variables').insert(hidden_input);
+  }
+}
+
+function anyVariablesSelected() {
+  if ($('selected_variables').descendants().size() > 0) {
+    return true;
+  } else {
+    return false;
+  }
+
 }

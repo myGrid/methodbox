@@ -1,5 +1,6 @@
 <%= javascript_include_tag "sharing.js" -%>
 <%= javascript_include_tag 'survey_checkbox.js' -%>
+<%= javascript_include_tag 'yui_checkbox.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <style type="text/css">
@@ -25,9 +26,22 @@
 }
 </style>
 <% if !@surveys.empty? -%>
+<% @surveys.each do |survey| -%>
+  <% survey.datasets.each do |dataset| -%>
+      <%= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
+  <% end -%>
+<% end -%>
+<% form_tag search_variables_surveys_url do -%>
+<div id="selected_datasets">
+</div>
+<div style="text-align: center; padding-bottom:10px;">
+<%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+</div>
 <div class="yui-skin-sam">
 <div id="surveys_table"></div>
 </div>
+<% end  -%>
 <% end -%>
 <script type= "text/javascript">
 var results = <%= raw @surveys_json -%>;
@@ -54,13 +68,14 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		];
 
         var dataSource = new YAHOO.util.LocalDataSource(results);
-        dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSARRAY;
+        dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         dataSource.responseSchema = {
+            resultsList : "results",
             fields: ["id","title","description","year","type"]
         };
-
+        var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: results.total_entries});
         this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, dataSource, {caption:"List of all surveys", rowExpansionTemplate :
+                columnDefs, dataSource, {paginator: pag, rowExpansionTemplate :
 				                    '{id}' });
 		this.dataTable.subscribe( 'cellClickEvent',
 				dataTable.onEventToggleRowExpansion );
@@ -69,12 +84,22 @@ YAHOO.util.Event.addListener(window, "load", function() {
             oDT: dataTable
         };
     }();
-    this.dataTable.subscribe("checkboxClickEvent", function(oArgs){ 
-	  var elCheckbox = oArgs.target; 
-	  var oRecord = this.getRecord(elCheckbox); 
-	  var id = oRecord.getData().id;
-	  oRecord.setData("check",elCheckbox.checked); 
+    this.dataTable.subscribe("checkboxClickEvent", function(oArgs){
+var elCheckbox = oArgs.target;
+var newValue = elCheckbox.checked;
+var record = this.getRecord(elCheckbox);
+var column = this.getColumn(elCheckbox);
+record.setData(column.key,newValue); 
+	  ///var elCheckbox = oArgs.target; 
+	  //var oRecord = this.getRecord(elCheckbox); 
+	  var id = record.getData().id;
+	  //oRecord.setData("check",elCheckbox.checked); 
+          selectSurvey(id);
 	});
+
+    //this.dataTable.doBeforeSortColumn = function(oColumn, sSortDir) {
+     //                                   recheckSurveys();
+      //                                   }
 });
 </script>
 <script type="text/javascript">

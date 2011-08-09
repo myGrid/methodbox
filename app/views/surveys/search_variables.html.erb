@@ -1,104 +1,146 @@
-<%= javascript_include_tag "checkbox_update.js" -%>
-<%= javascript_include_tag "variable_table_check.js" -%>
+<%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'variable_table_check.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <script type="text/javascript">
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
-<% form_tag ({:url => { :action => "add_to_cart"}}, {:onSubmit=>"$('search_variables_button').disable();"}) do -%>
-  <div class="show_basic" style="padding-right: 2em;">
-    <% if !logged_in? -%>
-      <h2>Welcome, guest. Browse the table, look at the variable metadata.  If you want to download any variables then you need to 
-        <% if REGISTRATION_CLOSED -%>
-          <%= link_to "Request Access", signup_url %>
-        <% else -%>
-          <%= link_to "Sign up", signup_url %>
-        <% end -%>		
-        <br/>Don't see what you want - try another search with different terms.  Or choose some different <%= link_to "surveys", surveys_url -%>
-      </h2><br/>
-    <% else -%>
-      <h2>Browse the table, select some variables, look at the metadata and add them to your cart.  <br/><br/>Don't see what you want - try another search with different terms or different <%= link_to "surveys", surveys_url -%>.  You could also ask a <%= link_to "question in the forums", forums_url -%>.</h2><br/>
-    <% end -%>
-    <%#= render :partial => "total_vars" -%>
-<br/>
-    <div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;">
-		<% if logged_in? -%>
-		      <div style="float:right; padding-right: 1em;">
-					<ul class="vbuttons" style="padding-top: 5px; padding-bottom: 5px;">
-						<li id="cart_button"><%= render :partial => "cart/button" unless current_user.cart_items.empty? -%></li>
-                                                <li id="create-data-extract-button"><%= render :partial => "create_extract_button" unless current_user.cart_items.empty? -%></li>
-					</ul>
-		        <li><%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "if (!isAnythingChecked()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%></li>
-		      </div>
-		<% end -%>
-	<div style="float: left;" class="small-margin-bottom">
-      <div class="small-margin-bottom">
-        <%= hidden_field_tag 'previous_query', @survey_search_query %>
-        <%= text_field_tag :survey_search_query, @survey_search_query,:onclick=>"javascript:$('survey_search_query').select();",:title=>@survey_search_query %>
-				<%= image_tag( method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
-        <%= submit_tag 'Search selected surveys again', :name=>"_submit", :id => "search_variables_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_variables_button').value='Searching for variables......';Form.getInputs(this.form, null,'submit')[0].value = 'search';};" %>
-      </div>
-      <div class="small-margin-bottom">
-              <%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
-      </div>
-      <div class="small-margin-bottom">
-        Add results to current table?
-        <%= radio_button_tag 'add_results', 'yes', false -%>Yes
-        <%= radio_button_tag 'add_results', 'no', true -%>No
-      </div>
-      <div class="small-margin-bottom">
-	      <div id="help_box" style="display: none; z-index: 100; position: absolute;">
-            <%= render :partial=>"term_help_popup" %>
-          </div>
-	Select:
-        <%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; setTrueOrFalse();});" %>
-        ,&nbsp
-        <%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; setTrueOrFalse();});" %>
-        ,&nbsp
-        <%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; } else {checkbox.checked = true; } setTrueOrFalse();});" %>
-
-      </div>
-	</div>
-	<div style="clear: both;"></div>
-      <%= hidden_field_tag 'submit', 'add' -%>
-      <% if @selected_surveys!=nil %>
-        <% @selected_surveys.each do |val| -%>
-          <%= hidden_field_tag "entry_ids[]", val -%>
-        <% end -%>
-      <% end -%>
-<!-- This code used to be used for linking variables together, might be used again-->
-      <!-- <div style="position: absolute; bottom:1em; right:1em;"> -->
-        <%#= text_field_tag :link_variables_text, @link_reason %>
-        <%#= submit_to_remote '_submit', 'Group selected variables', {:url=>{:action=> "add_to_cart"}, :before => "Form.getInputs(this.form, null,'submit')[0].value = 'link';Element.show('spinner')",:success => "Element.hide('spinner')"} -%>
-  <%#= submit_tag 'Group selected variables',:name=>"_submit", :id => "link_variables_button",:onclick => "Form.getInputs(this.form, null,'submit')[0].value = 'link';" -%>
-      <!-- </div> -->
-      <br/>
-<!-- keeps all the hidden inputs which match search term to variables -->
-<div id="search_tracker_div">
-</div>
-<%# if logged_in? -%>
-      <!-- <div id="cart_button" style="position: absolute; top:1em; right:1em;"> -->
-        <%#= render :partial => "cart/button" -%>
-      <!-- </div> -->
-<%# end -%>
-    </div>
-	<br/>
-	<br/>
-    <%= render :partial =>  "total_vars" %>
-<!-- TODO: this should work but doesn't, hmmm, doesn't error so maybe it can't find anything - syntax problem?!? -->
-	<%#= link_to_function "show all", "$$('infinite-show-div').each(function(element) {element.show();} )" -%>
-    <div id="table_header" class="faux_table_header_container">
-      <%= render :partial => "table_header", :locals=>{:sorted_variables => @sorted_variables} -%>
-    </div>
-    <div id="table_container" class="faux_table_container">
-      <%= render :partial => "table", :locals=>{:sorted_variables => @sorted_variables ,:lineage => false, :extract_lineage => false, :extract_id => nil} -%>
-    </div>
-  </div>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
+<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('search_variables_button').disable();"}) do -%>
+<% if @sorted_variables.empty? -%>
+<% if @selected_datasets!=nil %>
+  <% @selected_datasets.each do |val| -%>
+    <%= hidden_field_tag "entry_ids[]", val -%>
+  <% end -%>
 <% end -%>
-<div style="clear: both;"></div>
+<div style="text-align: center; padding-bottom:10px;">
+<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<div class="fold">
+  <div class="foldTitle">Currently selected datasets (click to display)</div>
+  <div class="foldContent" style="display:none;">
+    <ol class="variable-suggestions">
+      <% @selected_datasets.each do |dataset| -%>
+        <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
+      <% end -%>
+    </ol>
+  </div>
+</div>
+</div>
+<% end -%>
+<% if !@sorted_variables.empty? -%>
+<% if @selected_datasets!=nil %>
+  <% @selected_datasets.each do |val| -%>
+    <%= hidden_field_tag "entry_ids[]", val -%>
+  <% end -%>
+<% end -%>
+<div id="selected_variables">
+</div>
+<% if logged_in? -%>
+<div style="float: left">
+<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+</div>
+<% end -%>
+<div style="text-align: center; padding-bottom:10px;">
+<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+</div>
+<div class="fold">
+  <div class="foldTitle">Currently selected datasets (click to display)</div>
+  <div class="foldContent" style="display:none;">
+    <ol class="variable-suggestions">
+      <% @selected_datasets.each do |dataset| -%>
+        <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
+      <% end -%>
+    </ol>
+  </div>
+</div>
+<div class="yui-skin-sam">
+<div id="variables_table"></div>
+</div>
+<% end  -%>
+<% end -%>
+<script type= "text/javascript">
+var results = <%= raw @variables_json -%>;
+
+YAHOO.util.Event.addListener(window, "load", function() {
+    YAHOO.example.Basic = function() {
+	    var expansionFormatter  = function(el, oRecord, oColumn, oData) {
+            var cell_element    = el.parentNode;
+
+            //Set trigger
+            if( oData ){ //Row is closed
+                YAHOO.util.Dom.addClass( cell_element,
+                    "yui-dt-expandablerow-trigger" );
+            }
+
+        };
+        var columnDefs = [
+            { label: "", formatter: YAHOO.widget.VariableRowExpansionDataTable.formatRowExpansion},
+            { label: "", formatter: "checkbox"},
+		    { key: "name", label: "Title", sortable: true, maxWidth: 100, minWidth: 100 },
+		    { key: "description", label: "Description", sortable: true, width: 500, minWidth: 500 },
+		    { key: "survey", label: "Survey", sortable: true, maxWidth: 200, minWidth: 200 },
+		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100, minWidth: 100 }
+		];
+
+        var dataSource = new YAHOO.util.LocalDataSource(results);
+        dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
+        dataSource.responseSchema = {
+            resultsList : "results",
+            fields: ["id","name","description","survey","popularity"]
+        };
+        var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
+        this.dataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
+                columnDefs, dataSource, {paginator : pag, rowExpansionTemplate :'{id}' });
+	this.dataTable.subscribe( 'cellClickEvent', dataTable.onEventToggleRowExpansion );
+        return {
+            oDS: dataSource,
+            oDT: dataTable
+        };
+    }();
+    this.dataTable.subscribe("checkboxClickEvent", function(oArgs){
+var elCheckbox = oArgs.target;
+var newValue = elCheckbox.checked;
+var record = this.getRecord(elCheckbox);
+var column = this.getColumn(elCheckbox);
+record.setData(column.key,newValue); 
+	  ///var elCheckbox = oArgs.target; 
+	  //var oRecord = this.getRecord(elCheckbox); 
+	  var id = record.getData().id;
+	  //oRecord.setData("check",elCheckbox.checked); 
+          selectVariable(id);
+	});
+
+    //this.dataTable.doBeforeSortColumn = function(oColumn, sSortDir) {
+     //                                   recheckSurveys();
+      //                                   }
+});
+</script>
 <script type="text/javascript">
   document.observe('dom:loaded', function() {
-    uncheckAll();
+    //uncheckAll();
   });
 </script>

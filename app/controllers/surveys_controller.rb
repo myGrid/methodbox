@@ -43,7 +43,7 @@ class SurveysController < ApplicationController
     variable = Variable.find(params[:id])
     item = variable
     row_name = item.id.to_s
-    dataset = Dataset.find(params[:dataset])
+    dataset = variable.dataset
     value_domain_hash = Hash.new
     var_hash = Hash.new
     no_var_hash = Hash.new
@@ -372,7 +372,7 @@ end
       end
     end
 
-    surveys_hash = @surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}
+    surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}}
     @surveys_json = surveys_hash.to_json
 
     @variables = Array.new
@@ -780,41 +780,48 @@ end
   end
 
   def check_search_parameters
-    search_query = params[:survey_search_query]
     if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
-      error = "Searching requires a term to be entered in the survey search box."
-    elsif !params[:entry_ids] or params[:entry_ids].size == 0
-      error = "Searching requires at least one survey/dataset selected."
-    else
-      dataset = Dataset.find_all_by_id(params[:entry_ids])
-      if dataset.length == params[:entry_ids].length
-        return true
-      else
-        error = "Incorrect dataset included. Please contact an admin if this reoccurs."
-      end
-    end
     respond_to do |format|
-      flash[:error] = error
+      flash[:error] = "Searching requires a term to be entered in the survey search box."
       format.html { redirect_to :back, :survey_search_query => search_query }
     end
     return false
+  end
   end
 
  private 
 
   def sunspot_search_variables
-    #fihure out what datasets the current user is allowed to see
+    #figure out what datasets the current user is allowed to see
     authorized_datasets=[]
-    params[:entry_ids].each do |dataset_id| 
-      authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)
+    #if there are no datasets selected then just search everything
+    if params[:entry_ids] == nil || params[:entry_ids].empty?
+      Survey.all.each do |survey|
+        survey.datasets.each do |dataset|
+          authorized_datasets.push(dataset.id) unless !Authorization.is_authorized?("show", nil, survey, current_user)
+        end
+      end
+    else
+      params[:entry_ids].each do |dataset_id| 
+        authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)
+      end
     end
     result = Sunspot.search(Variable) do
       keywords(params[:survey_search_query]) {minimum_match 1}
       with(:dataset_id, authorized_datasets)
+      paginate(:page => 1, :per_page => 1000)
     end
+    #sunspot/solr paginates everything, we use client side pagination so just search for 1000 entries and send across - anything more would be a
+    #bit crazy really
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @survey_search_query = params[:survey_search_query]
+    @variables_json = variables_hash.to_json
     #keep track of what  datasets have been searched
     @selected_datasets = authorized_datasets
     @sorted_variables = result.results
+    if @sorted_variables.empty?
+      flash[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
+    end
   end
 
     def do_search_variables

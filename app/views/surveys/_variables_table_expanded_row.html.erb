@@ -1,68 +1,6 @@
 <%= javascript_include_tag 'toggler.js' %>
 
-<div id= "<%= row_name + "_expanded" -%>" style="display: <%= hidden ? "none":"inline" -%>">
-  <div>
-	<% if item.is_archived? %>
-    	<ul class="faux_table_archived">
-	<% else %>
-	   	<ul class="faux_table<%= curr_cycle %>">
-	<% end %>
-      <li>
-		<% if item.is_archived? %>
-		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox',:disabled=>true,:id=>"#{row_name + '_checkbox'}" -%></div>
-      <div class="col2"><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...",:alt=>"Hide details...", :border => 0), :url=>{:action => 'collapse_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name + "_expanded", :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
-		<% else %>
-		<div class="col1"><%= check_box_tag "variable_ids[]", item.id,false, :class=>'variable_checkbox', :onclick => "setTrueOrFalse()",:id=>"#{row_name + '_checkbox'}" -%></div>
-      <div class="col2"><%= link_to_remote(image_tag("folds/fold.png",:title=>"Hide details...",:alt=>"Hide details...", :border => 0), :url=>{:action => 'collapse_row', :controller => 'surveys', :id=>item.id, :curr_cycle => curr_cycle, :dataset=>dataset, :popularity => popularity, :lineage=>lineage, :extract_lineage =>extract_lineage, :extract_id=>extract_id}, :update=>row_name + "_expanded", :before=> "Element.show('spinner')",:success => "Element.hide('spinner')") -%></div>
-		<% end %>
-	<% if item.is_archived? %>
-	<% if item.name.size > 20 -%>
-      <div class="col3"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%>(Archived)</div>
-    <% else -%>
-      <div class="col3"><%= link_to(item.name, variable_path(item)) -%>(Archived)</div>
-    <% end -%>
-	<% else %>
-	<% if item.name.size > 20 -%>
-      <div class="col3"><%= link_to(item.hyphenName, variable_path(item), :title=>item.name) -%></div>
-    <% else -%>
-      <div class="col3"><%= link_to(item.name, variable_path(item)) -%></div>
-    <% end -%>
-	<% end %>
- 
-        <div class="col4">
-          <% if item.value != nil -%>
-            <%= item.value -%>
-          <% else -%>
-            <%= "NO DESCRIPTION" -%>
-          <% end -%>
-        </div>
-        <div class="col5">
-          <% if item.category != nil -%>
-            <%= link_to(item.category, by_category_variables_url(:category=>item.category),:title=>"Show all variables with this category") -%>
-          <% else -%>
-            <%= "NO CATEGORY" -%>
-          <%  end -%>
-        </div>
-	       <div class="col6">
-	        <%= dataset.survey.survey_type.shortname ? dataset.survey.survey_type.shortname : truncate(dataset.survey.title, 10, "...") -%>
-	      </div>
-	      <div class="col7">
-	        <%= link_to dataset.name, dataset_url(dataset) -%>
-	      </div>
-	      <div class="col8">
-			<% if dataset.survey.year != nil %>
-		<!-- replace any '-' characters with space -->
-	        <%= dataset.survey.year.tr('-',' ') -%>
-			<% else %>
-			<%= 'N/A' -%>
-			<% end %>
-	      </div>
-	 <div class="col9">
-        <%= popularity -%>
-      </div>
-</li>
-    </ul>
-  </div>
+<div id= "<%= row_name + "_expanded" -%>" style="border: 1px dashed black;">
 <div>
 <%= render :partial => "variable_row_info", :locals => {:item => item, :extract_lineage => extract_lineage, :extract_id => extract_id, :lineage => lineage} %>
 </div>
@@ -125,6 +63,6 @@
     </script>
 <% end -%>
 <script type="text/javascript">
-	setCheckedStatus('<%= row_name -%>');
+	//setCheckedStatus('<%= row_name -%>');
 </script>
 </div>

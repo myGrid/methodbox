@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   end
 
   def add_to_cart
-    
+    puts "hello there"
     if params[:extract_id]
       extract_id_for_items = params[:extract_id]
     end
@@ -67,33 +67,9 @@ class ApplicationController < ActionController::Base
       previous_search_id = params[:from_a_previous_search]
     end
 
-    @submit = params[:submit]
-#    req = "submit:\'"+@submit+ "\'"
 
-    case params[:submit]
-    when "link"
-      @variable_list = Array.new(params[:variable_ids])
-      if (!@variable_list.empty? && params[:link_variables_text]!="")
-        link = VariableLink.new
-        link.description = params[:link_variables_text]
-        var_array = Array.new
-        @variable_list.each do |var|
-          variable = Variable.find(var)
-          var_array.push(variable)
-        end
-        link.variables = var_array
-        link.person_id = current_user.person_id
-        link.save
-        render :update, :status=>:created do |page|
-        end
-      else
-        render :update, :status=>:created do |page|
-
-        end
-      end
-
+    case params[:value]
     when "add"
-      @selected_surveys = params[:survey_list]
       @variable_list = Array.new(params[:variable_ids])
 
       @variable_list.each do |var|
@@ -134,82 +110,9 @@ class ApplicationController < ActionController::Base
       end
 
       render :update, :status=>:created do |page|
-        page.replace_html "cart_button", :partial=>"cart/button"
-        page.replace_html "create-data-extract-button", :partial=>"surveys/create_extract_button"
+        page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
+        #page.replace_html "create-data-extract-button", :partial=>"surveys/create_extract_button"
         page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
-      end
-
-    when "search"
-      @survey_search_query = params[:survey_search_query]
-      @selected_surveys = Array.new(params[:survey_list])
-
-      downcase_query = @survey_search_query.downcase
-      search_terms = @survey_search_query.split(' ')
-      if search_terms.length > 1
-        downcase_query = @survey_search_query.downcase
-        search_terms.unshift(downcase_query)
-      end
-      temp_variables = Array.new
-      search_terms.each do |term|
-        results = Variable.find_by_solr(term,:limit => 1000)
-        variables = results.docs
-        variables.each do |item|
-          @selected_surveys.each do |ids|
-            if Dataset.find(item.dataset_id).id.to_s == ids
-              logger.info("Found " + item.name + ", from Survey " + item.dataset_id.to_s)
-              temp_variables.push(item)
-              break
-            end
-          end
-
-        end
-      end
-      @sorted_variables = temp_variables
-      case params[:add_results]
-      when "no"
-        render :update, :status=>:created do |page|
-          page.replace_html "table_header", :partial=>"surveys/table_header",:locals=>{:sorted_variables=>@sorted_variables}
-          page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables,:lineage => false, :extract_lineage => false, :extract_id => nil}
-          page.insert_html(:bottom, "table_container", :partial=>"surveys/add_variables_div")
-          page << %[dhtmlHistory.add("add_results_no", "new Ajax.Request('add_to_cart', {asynchronous:false, evalScripts:true, method:'post', parameters:#{req}});")]
-
-          page << "uncheckAll();"
-        end
-      when "yes"
-        remove_list = Array.new
-        current_variables = params[:variable_list]
-        @sorted_variables.each do |var|
-          current_variables.each do |current_var|
-            variable = Variable.find(current_var)
-            if var.id == variable.id
-              remove_list.push(var)
-              break
-            end
-          end
-        end
-        remove_list.each do |var|
-          @sorted_variables.delete(var)
-        end
-        all_search_variables = Array.new
-        current_variables.each do |currvar|
-          all_search_variables.push(currvar)
-        end
-        @sorted_variables.each do |sortvar|
-          all_search_variables.push(sortvar.id.to_s)
-        end
-        current_variables.concat(@sorted_variables)
-
-        var_req = "[{\'32653\':'a'},{\'32641\':'a'},{\'32648\':'a'}]"
-        begin
-        render :update, :status=>:created do |page|
-          page.replace_html "table_header", :partial=>"surveys/table_header",:locals=>{:sorted_variables=>current_variables}
-          page.replace_html "sorted_variables_div", :partial=>"surveys/sorted_variables_div",:locals=>{:sorted_variables=>@sorted_variables}
-          page.insert_html(:before, "add_new_variables", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables,:lineage => false, :extract_lineage => false, :extract_id => nil})
-          page << %[dhtmlHistory.add("add_results_yes", "new Ajax.Request('add_to_cart', {asynchronous:false, evalScripts:true, method:'post', parameters:{vars:#{var_req}} });")]
-        end
-        rescue
-          logger.error($!)
-        end
       end
     end
   end
