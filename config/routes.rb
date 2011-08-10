@@ -16,8 +16,6 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :help, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  #map.resources :about, :requirements => {:protocol => ROUTES_PROTOCOL}
-
   map.cart '/cart/', :controller=>'cart',:action=>'show', :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :datasets, :member => {:update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
