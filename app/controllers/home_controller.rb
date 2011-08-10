@@ -19,13 +19,6 @@ class HomeController < ApplicationController
   end
 
   def about
-    respond_to do |format|
-        if logged_in?
-          format.html {redirect_to index_url}
-        else
-        format.html # about.html.erb  
-      end    
-    end
   end
   
   def index
@@ -69,7 +62,9 @@ class HomeController < ApplicationController
   end
   
   def select_layout
-    if logged_in? && action_name != 'search'
+    if action_name == 'about'
+      return 'main_without_sidebar'
+    elsif logged_in? && action_name != 'search'
       return 'main'
     else
       return 'main_without_sidebar'

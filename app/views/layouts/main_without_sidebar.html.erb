@@ -67,6 +67,11 @@
 </div>
 </div>
 <div id="footer">
+<% if controller.action_name != "about" -%>
+<div style = "text-align: left;">
+<%= link_to 'About MethodBox', about_url -%>
+</div>
+<% end -%>
     <div id="ft">
       <%= render :partial=>"layouts/footer" %>
     </div>

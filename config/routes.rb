@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   
+  map.about '/about', :controller => 'home', :action=>'about', :requirements => {:protocol => ROUTES_PROTOCOL}
+
   map.statistics STATISTICS_ROUTE, :controller=>'statistics',:action=>'index', :requirements => {:protocol => ROUTES_PROTOCOL}
       
   map.resources :cart_items, :requirements => {:protocol => ROUTES_PROTOCOL}
@@ -14,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :help, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :about, :requirements => {:protocol => ROUTES_PROTOCOL}
+  #map.resources :about, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.cart '/cart/', :controller=>'cart',:action=>'show', :requirements => {:protocol => ROUTES_PROTOCOL}
 

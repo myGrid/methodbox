@@ -42,7 +42,7 @@ class SearchController < ApplicationController
       @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
     if params[:search_type].include?('variables')
-      @results_hash['variable'] = find_variables(query, params[:variable_page]).results
+      @results_hash['variable'] = find_variables(query, params[:variable_page]).results.sort!{|x,y| x.name <=> y.name}
     end 
 
     if @results_hash.empty?
@@ -63,7 +63,7 @@ class SearchController < ApplicationController
     res = Sunspot.search(Survey) do
       keywords(query) {minimum_match 1}
       with(:id, surveys)
-      paginate(:page => page ? page : 1, :per_page => 50)
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
     find_previous_searches
     return res
@@ -72,7 +72,7 @@ class SearchController < ApplicationController
   def find_people(query, page)
     res = Sunspot.search(Person) do
       keywords(query) {minimum_match 1}
-      paginate(:page => page ? page : 1, :per_page => 50)
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
   end
@@ -80,7 +80,7 @@ class SearchController < ApplicationController
   def find_methods(query, page)
     res = Sunspot.search(Script) do
       keywords(query) {minimum_match 1}
-      paginate(:page => page ? page : 1, :per_page => 50)
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
   end
@@ -88,7 +88,7 @@ class SearchController < ApplicationController
   def find_csvarchive(query, page)
     res = Sunspot.search(Csvarchive) do
       keywords(query) {minimum_match 1}
-      paginate(:page => page ? page : 1, :per_page => 50)
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
   end
@@ -96,7 +96,7 @@ class SearchController < ApplicationController
   def find_publications(query, page)
     res = Sunspot.search(Publication) do
       keywords(query) {minimum_match 1}
-      paginate(:page => page ? page : 1, :per_page => 50)
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
   end
@@ -111,12 +111,14 @@ class SearchController < ApplicationController
        datasets << dataset.id
       end
     end
-    res = Sunspot.search(Variable) do
+    result = Sunspot.search(Variable) do
       keywords(query) {minimum_match 1}
-      paginate(:page => page ? page : 1, :per_page => 50)
+      paginate(:page => page ? page : 1, :per_page => 1000)
       with(:dataset_id, datasets)
     end
-    return res
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    return result
   end
 
 

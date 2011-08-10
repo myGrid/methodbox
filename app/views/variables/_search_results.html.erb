@@ -29,54 +29,14 @@
 }
 </style>
 <% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('search_variables_button').disable();"}) do -%>
-<% if @sorted_variables.empty? -%>
-<% if @selected_datasets!=nil %>
-  <% @selected_datasets.each do |val| -%>
-    <%= hidden_field_tag "entry_ids[]", val -%>
-  <% end -%>
-<% end -%>
-<div style="text-align: center; padding-bottom:10px;">
-<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<div class="fold">
-  <div class="foldTitle">Currently selected datasets (click to display)</div>
-  <div class="foldContent" style="display:none;">
-    <ol class="variable-suggestions">
-      <% @selected_datasets.each do |dataset| -%>
-        <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
-      <% end -%>
-    </ol>
-  </div>
-</div>
-</div>
-<% end -%>
-<% if !@sorted_variables.empty? -%>
-<% if @selected_datasets!=nil %>
-  <% @selected_datasets.each do |val| -%>
-    <%= hidden_field_tag "entry_ids[]", val -%>
-  <% end -%>
-<% end -%>
+<% if !variables.empty? -%>
 <div id="selected_variables">
 </div>
 <% if logged_in? -%>
-<div style="float: left">
+<div>
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
 </div>
 <% end -%>
-<div style="text-align: center; padding-bottom:10px;">
-<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-</div>
-<div class="fold">
-  <div class="foldTitle">Currently selected datasets (click to display)</div>
-  <div class="foldContent" style="display:none;">
-    <ol class="variable-suggestions">
-      <% @selected_datasets.each do |dataset| -%>
-        <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
-      <% end -%>
-    </ol>
-  </div>
-</div>
 <div class="yui-skin-sam">
 <div id="variables_table"></div>
 </div>
