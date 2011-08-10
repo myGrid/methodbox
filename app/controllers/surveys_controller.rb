@@ -371,7 +371,7 @@ end
         end
       end
     end
-
+    @surveys.sort!{|x,y| x.title <=> y.title}
     surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}}
     @surveys_json = surveys_hash.to_json
 
@@ -813,7 +813,7 @@ end
     end
     #sunspot/solr paginates everything, we use client side pagination so just search for 1000 entries and send across - anything more would be a
     #bit crazy really
-    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @survey_search_query = params[:survey_search_query]
     @variables_json = variables_hash.to_json
     #keep track of what  datasets have been searched

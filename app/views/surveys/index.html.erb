@@ -75,7 +75,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         };
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: results.total_entries});
         this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, dataSource, {paginator: pag, rowExpansionTemplate :
+                columnDefs, dataSource, {sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
 				                    '{id}' });
 		this.dataTable.subscribe( 'cellClickEvent',
 				dataTable.onEventToggleRowExpansion );
