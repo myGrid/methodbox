@@ -372,7 +372,7 @@ end
       end
     end
     @surveys.sort!{|x,y| x.title <=> y.title}
-    surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A'}}}
+    surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? "nesstar" : "methodbox"}}}
     @surveys_json = surveys_hash.to_json
 
     @variables = Array.new
@@ -811,6 +811,11 @@ end
       with(:dataset_id, authorized_datasets)
       paginate(:page => 1, :per_page => 1000)
     end
+    @datasets_with_results = []
+    result.results.each do |var|
+      @datasets_with_results.push(var.dataset) if !@datasets_with_results.include?(var.dataset)
+    end
+    @datasets_without_results = params[:entry_ids] - @datasets_with_results
     #sunspot/solr paginates everything, we use client side pagination so just search for 1000 entries and send across - anything more would be a
     #bit crazy really
     variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}

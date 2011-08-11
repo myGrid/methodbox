@@ -31,12 +31,12 @@
       <%= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
   <% end -%>
 <% end -%>
-<% form_tag search_variables_surveys_url do -%>
+<% form_tag(search_variables_surveys_url, {:onSubmit=>"$('spinner').show();"}) do -%>
 <div id="selected_datasets">
 </div>
 <div style="text-align: center; padding-bottom:10px;">
 <%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
 </div>
 <div class="yui-skin-sam">
 <div id="surveys_table"></div>
@@ -61,21 +61,22 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
             { label: "", formatter: "checkbox"},
-		    { key: "title", label: "Title", sortable: true, maxWidth: 100 },
-		    { key: "description", label: "Description", sortable: true, width: 500 },
-		    { key: "year", label: "Year", sortable: true, maxWidth: 100 },
-		    { key: "type", label: "Type", sortable: true, maxWidth: 150 }
+		    { key: "title", label: "Title", sortable: true, minWidth: 100, maxWidth: 100 },
+		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
+		    { key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
+		    { key: "type", label: "Type", sortable: true, minWidth: 100, maxWidth: 100 },
+                    { key: "source", label: "Source", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
 
         var dataSource = new YAHOO.util.LocalDataSource(results);
         dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         dataSource.responseSchema = {
             resultsList : "results",
-            fields: ["id","title","description","year","type"]
+            fields: ["id","title","description","year","type", "source"]
         };
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: results.total_entries});
         this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, dataSource, {sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
+                columnDefs, dataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
 				                    '{id}' });
 		this.dataTable.subscribe( 'cellClickEvent',
 				dataTable.onEventToggleRowExpansion );

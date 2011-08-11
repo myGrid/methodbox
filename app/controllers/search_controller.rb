@@ -48,8 +48,14 @@ class SearchController < ApplicationController
     if @results_hash.empty?
       flash.now[:notice]="No matches found for '<b>#{@search_query}</b>'."
     end
+    @results_empty = true
     @results_hash.each_key do |key|
-     puts "results for " + key + " : "  + @results_hash[key].class.to_s + " : "+ @results_hash[key].to_s
+      if !@results_hash[key].empty?
+        @results_empty = false
+      end
+    end
+    if @results_empty
+      flash[:notice] = "There were no search results for \"" + params[:search_query] + "\""
     end
   end
 
@@ -57,7 +63,8 @@ class SearchController < ApplicationController
 
   def find_surveys(query, page)
     #only search authorised surveys
-    surveys = Survey.all
+    #surveys are restricted to certain types at the moment
+    surveys = get_surveys
     surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
     surveys.collect!{|el| el.id}
     res = Sunspot.search(Survey) do
@@ -103,7 +110,7 @@ class SearchController < ApplicationController
   
   def find_variables(query, page)
     #which datasets can the current user see
-    surveys = Survey.all
+    surveys = get_surveys
     surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
     datasets = []
     surveys.each do |survey_id|
@@ -138,6 +145,29 @@ class SearchController < ApplicationController
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
+  end
+
+  def get_surveys
+    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = []
+    survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
+    surveys = []
+    non_empty_survey_types.each do |survey_type|
+      survey_type.surveys.each do |survey|
+        unless survey.datasets.empty? 
+          surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
+        end
+      end
+    end
+    return surveys
   end
 
 end
