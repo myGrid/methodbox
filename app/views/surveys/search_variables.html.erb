@@ -29,77 +29,52 @@
 }
 </style>
 <% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
-<% if @sorted_variables.empty? -%>
-<% if @selected_datasets!=nil %>
-  <% @selected_datasets.each do |val| -%>
-    <%= hidden_field_tag "entry_ids[]", val -%>
-  <% end -%>
-<% end -%>
-<div style="text-align: center; padding-bottom:10px;">
-<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<div class="fold">
-  <div class="foldTitle">Currently selected datasets with results (<%= @datasets_with_results.size -%>) (click to display)</div>
-  <div class="foldContent" style="display:none;">
-    <ol class="variable-suggestions">
-      <% @datasets_with_results.each do |dataset| -%>
-        <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
-      <% end -%>
-    </ol>
-  </div>
-</div>
-<div class="fold">
-  <div class="foldTitle">Currently selected datasets without results (<%= @datasets_without_results.size -%>) (click to display)</div>
-  <div class="foldContent" style="display:none;">
-    <ol class="variable-suggestions">
-      <% @datasets_without_results.each do |dataset| -%>
-        <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
-      <% end -%>
-    </ol>
-  </div>
-</div>
-<% end -%>
 <% if !@sorted_variables.empty? -%>
-<% if @selected_datasets!=nil %>
+<% if @selected_datasets.empty? %>
   <% @selected_datasets.each do |val| -%>
     <%= hidden_field_tag "entry_ids[]", val -%>
   <% end -%>
 <% end -%>
-<div id="selected_variables">
-</div>
+<div style="margin-bottom: 10px;">
 <% if logged_in? -%>
-<div style="float: left">
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
-</div>
 <% end -%>
-<div style="text-align: center; padding-bottom:10px;">
-<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;margin-left: 2em;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
 <%= submit_tag "Search for variables", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
 </div>
 <div class="fold">
-  <div class="foldTitle">Currently selected datasets with results (<%= @datasets_with_results.size -%>) (click to display)</div>
+  <div class="foldTitle">Currently selected datasets (click to display)</div>
   <div class="foldContent" style="display:none;">
+<% if !@datasets_with_results.empty? -%>
+  <div>Datasets with search results (<%= @datasets_with_results.size -%>)
     <ol class="variable-suggestions">
       <% @datasets_with_results.each do |dataset| -%>
         <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
       <% end -%>
     </ol>
   </div>
-</div>
-<div class="fold">
-  <div class="foldTitle">Currently selected datasets without results (<%= @datasets_without_results.size -%>) (click to display)</div>
-  <div class="foldContent" style="display:none;">
+<% else -%>
+There were no search results
+<% end -%>
+<% if !@datasets_without_results.empty? -%>
+  <div>Datasets with no search results (<%= @datasets_without_results.size -%>)
     <ol class="variable-suggestions">
       <% @datasets_without_results.each do |dataset| -%>
         <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
       <% end -%>
     </ol>
+   </div>
+<% else -%>
+All datasets returned at least one search result
+<% end -%>
   </div>
+</div>
+<div id="selected_variables">
 </div>
 <div class="yui-skin-sam">
 <div id="variables_table"></div>
 </div>
-<% end  -%>
+<% end -%>
 <% end -%>
 <script type= "text/javascript">
 var results = <%= raw @variables_json -%>;
