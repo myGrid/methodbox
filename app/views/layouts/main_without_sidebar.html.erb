@@ -68,8 +68,12 @@
 </div>
 <div id="footer">
 <% if controller.action_name != "about" -%>
-<div style = "text-align: left;">
-<%= link_to 'About MethodBox', about_url -%>
+<div style = "text-align: left; font-size: larger;">
+<ol class="variable-suggestions">
+<li><%= link_to 'About MethodBox', about_url -%></li>
+<li>|</li>
+<li><%= link_to 'Try it out', surveys_url -%></li>
+<ol>
 </div>
 <% end -%>
     <div id="ft">
