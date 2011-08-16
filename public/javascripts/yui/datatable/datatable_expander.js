@@ -360,6 +360,9 @@
 		                    //Fire custom event
 		                    thisObj.fireEvent( "rowExpandEvent", { record_id : row_data.getId() } );
                                     Element.hide('spinner');
+                                    //click on it again now if you want
+                                    pos = expanded_rows.indexOf(expanded_data.id);
+                                    expanded_rows.splice(pos, 1);
 		                    return true;
 
 		                } else {

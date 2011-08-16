@@ -152,7 +152,7 @@
       <p>
         <b>Statistics:</b>
 
-<%=  render :partial=>"statistics_table", :locals => {:variable => @variable} -%>
+<%=  render :partial=>"statistics_table", :locals => {:variable => @variable, :var_hash => @var_hash, :no_var_hash => @no_var_hash, :total_entries => @total_entries, :invalid_entries => @invalid_entries, :blank_rows => @blank_rows, :value_domain_hash => @value_domain_hash, :valid_entries => @valid_entries} -%>
 		<div style="clear:both;">
 			</div>
 

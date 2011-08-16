@@ -29,12 +29,12 @@
 }
 </style>
 <% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
-<% if !@sorted_variables.empty? -%>
-<% if @selected_datasets.empty? %>
+<% if !@selected_datasets.empty? %>
   <% @selected_datasets.each do |val| -%>
     <%= hidden_field_tag "entry_ids[]", val -%>
   <% end -%>
 <% end -%>
+<% if !@sorted_variables.empty? -%>
 <div style="margin-bottom: 10px;">
 <% if logged_in? -%>
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
@@ -91,12 +91,27 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
 
         };
+        this.variablesURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var id = oRecord.getData().id;
+            var name = oRecord.getData().name;
+            elLiner.innerHTML = "<a href=\"" + variables_url + "/" + id + "\">" + name + "</a>";
+        };
+        // Add the custom formatter to the shortcuts
+        YAHOO.widget.DataTable.Formatter.variablesFormatter = this.variablesURLFormatter;
+
+        this.categoryURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var category = oRecord.getData().category;
+            elLiner.innerHTML = "<a href=\"" + by_category_variables_url + "?category=" + category + "\">" + category + "</a>";
+        };
+        // Add the custom formatter to the shortcuts
+        YAHOO.widget.DataTable.Formatter.categoryFormatter = this.categoryURLFormatter;
+
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.VariableRowExpansionDataTable.formatRowExpansion},
             { label: "", formatter: "checkbox"},
-		    { key: "name", label: "Title", sortable: true, maxWidth: 100, minWidth: 100 },
+		    { key: "name", label: "Title", formatter:"variablesFormatter", sortable: true, maxWidth: 100, minWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, width: 500, minWidth: 500 },
-                    { key: "category", label: "Category", sortable: true, maxWidth: 200, minWidth: 200 },
+                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, maxWidth: 200, minWidth: 200 },
 		    { key: "survey", label: "Survey", sortable: true, maxWidth: 200, minWidth: 200 },
 		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100, minWidth: 100 }
 		];

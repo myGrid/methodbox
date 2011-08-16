@@ -1,12 +1,55 @@
 class VariablesController < ApplicationController
 
-  before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
+  before_filter :login_required, :except => [ :values_array, :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
   after_filter :update_last_user_activity
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
 
   #caches_page :show
+
+  def values_array
+    variable = Variable.find(params[:id])
+    value_domain_hash = Hash.new
+    var_hash = Hash.new
+    no_var_hash = Hash.new
+    if variable.nesstar_id
+      variable.value_domains.each do |value_domain|
+        if value_domain.value_domain_statistic
+          var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency
+        end
+        value_domain_hash[value_domain.id] = value_domain.label
+      end
+    else
+      no_var_hash = variable.none_values_hash
+      var_hash = variable.values_hash
+      var_hash.each_key do |key|
+        variable.value_domains.each do |value_domain|
+	  if value_domain.value.to_i.eql?(key.to_i)
+	    value_domain_hash[key] = value_domain.label
+	    break
+	  end
+	end
+      end
+    end
+#If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets
+    if var_hash.empty?
+      variable.value_domains.each do |value_domain|
+        if value_domain.value_domain_statistic
+          var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency
+        end
+        value_domain_hash[value_domain.value] = value_domain.label
+      end
+    end
+    values_hash = var_hash.merge(no_var_hash)
+    label_to_values_hash = Hash.new
+    values_hash.each_key do |key|
+      value_domain_hash.has_key?(key) ? label_to_values_hash[value_domain_hash[key]] = values_hash[key] : label_to_values_hash[key] = values_hash[key]
+    end
+    labels_hash = value_domain_hash
+    @values = label_to_values_hash
+    render :partial=>"values_array"
+  end
   
   #a users private notes about a variable
   def add_note

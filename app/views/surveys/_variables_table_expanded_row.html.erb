@@ -1,15 +1,14 @@
-<%= javascript_include_tag 'toggler.js' %>
-
+<div id='google_chart_div_2'>
+</div>
 <div id= "<%= row_name + "_expanded" -%>" style="border: 1px dashed black;">
 <div>
 <%= render :partial => "variable_row_info", :locals => {:item => item, :extract_lineage => extract_lineage, :extract_id => extract_id, :lineage => lineage} %>
 </div>
 
-<div class="left" style="width:40%" id='<%= row_name + "_expanded_stats_chart" -%>'>
-</div>
-<div class="right variable_row_info" style="width:40%">
-	<%= render :partial => "variable_row_stats_info", :locals=>{:item => item,:var_hash => var_hash, :no_var_hash => no_var_hash, :valid_entries => valid_entries, :invalid_entries => invalid_entries, :value_domain_hash => value_domain_hash, :total_entries => total_entries, :blank_rows => blank_rows} %>
-</div>
+<%=  render :partial=>"variables/statistics_table", :locals => {:variable => item, :var_hash => var_hash, :no_var_hash => no_var_hash, :total_entries => total_entries, :invalid_entries => invalid_entries, :blank_rows => blank_rows, :value_domain_hash => value_domain_hash, :valid_entries => valid_entries} -%>
+<!-- <div class="right variable_row_info" style="width:40%"> -->
+	<%#= render :partial => "variable_row_stats_info", :locals=>{:item => item,:var_hash => var_hash, :no_var_hash => no_var_hash, :valid_entries => valid_entries, :invalid_entries => invalid_entries, :value_domain_hash => value_domain_hash, :total_entries => total_entries, :blank_rows => blank_rows} %>
+<!-- </div> -->
 <div style="clear:both">
 </div>
 
@@ -25,44 +24,4 @@
 				</div>
 				<% end %>
 </div>
-</div>
-<% if !var_hash.empty? -%>
-<script type="text/javascript">
-		var hash_size = <%=var_hash.size %>
-		if (hash_size > 1 && hash_size <= 20) {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Value');
-        data.addColumn('number', 'Count');
-              <% var_hash.sort.each do |value, frequency| -%>
-				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
-				              <% end -%>
-				<% if no_var_hash != nil -%>
-							              <% no_var_hash.sort.each do |value, frequency| -%>
-							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
-							<% end -%>
-							              <% end -%>
-
-        var chart = new google.visualization.BarChart($('<%= row_name + "_expanded_stats_chart" -%>'));
-        chart.draw(data, {width: 500, height: 200, is3D: true});
-	} else if (hash_size > 1) {
-		var data = new google.visualization.DataTable();
-		data.addColumn('string', 'Value');
-        data.addColumn('number', 'Count');
-              <% var_hash.sort.each do |value, frequency| -%>
-				data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
-				              <% end -%>
-				<% if no_var_hash != nil -%>
-							              <% no_var_hash.sort.each do |value, frequency| -%>
-							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
-							              <% end -%>
-							<% end -%>
-
-        var chart = new google.visualization.ColumnChart($('<%= row_name + "_expanded_stats_chart" -%>'));
-        chart.draw(data, {width: 500, height: 200, is3D: true});
-}
-    </script>
-<% end -%>
-<script type="text/javascript">
-	//setCheckedStatus('<%= row_name -%>');
-</script>
 </div>

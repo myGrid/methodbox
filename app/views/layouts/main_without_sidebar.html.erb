@@ -8,7 +8,9 @@
 </title>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-  var surveys_url = "<%= surveys_url -%>"
+  var surveys_url = "<%= surveys_url -%>";
+  var variables_url = "<%= variables_url -%>";
+  var by_category_variables_url = "<%= by_category_variables_url -%>";
 </script>
 <%= javascript_include_tag :defaults, 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js', 'exhibit/ajax/api/simile-ajax-api.js', 'exhibit/webapp/api/exhibit-api.js?autoCreate=false', 'yui/yahoo-dom-event/yahoo-dom-event.js', 'yui/element/element-min.js', 'yui/tabview/tabview-min.js',  'yui/cookie/cookie-min.js', 'yui/datatable/datatable-min.js', 'yui/datasource/datasource-min.js', 'yui/connection/connection-min.js', 'yui/json/json-min.js', 'yui/datatable/datatable_expander.js', 'yui/datatable/variable_table_expander.js', 'yui/paginator/paginator-min.js' -%>
 <%= stylesheet_link_tag 'alphabetical_pagination', 'main_layout_extras', 'reset-fonts-grids', 'base-min', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav','tabview/assets/skins/sam/tabview', 'datatable/assets/skins/sam/datatable', 'paginator/assets/skins/sam/paginator', 'main_layout_extras', :cache=>'css_cached' -%>

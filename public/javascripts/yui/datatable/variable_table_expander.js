@@ -360,6 +360,10 @@
 		                    //Fire custom event
 		                    thisObj.fireEvent( "rowExpandEvent", { record_id : row_data.getId() } );
                                     Element.hide('spinner');
+                                    //click on it again now if you want
+                                    pos = expanded_rows.indexOf(expanded_data.id);
+                                     expanded_rows.splice(pos, 1);
+
 		                    return true;
 
 		                } else {
@@ -385,11 +389,45 @@
 				  success:handleSuccess,
 				  failure: handleFailure
 				};
+				var handleJSONFailure = function(o){
+                                        //failed to retrieve data about the values
+					
+				}
+                                var handleJSONSuccess = function(o){
+                                  var data = new google.visualization.DataTable();
+                                  data.addColumn('string', 'Value');
+                                  data.addColumn('number', 'Count');
+                                  var number_of_vals = 0;
+				  if(o.responseText !== undefined){
+                                    var messages = YAHOO.lang.JSON.parse(o.responseText);
+                                    for (var k in messages) {
+                                     data.addRow([k,messages[k]]);
+                                     number_of_vals += 1;
+                                    }
+                                  }
+                                  if (number_of_vals > 20) {
+                                    var chart = new google.visualization.ColumnChart($(expanded_data.id + '_frequency_count_chart_div'));
+                                    chart.draw(data, {width: 500, height: 200, is3D: true});
+                                  } else if (number_of_vals > 1) {
+                                    var chart = new google.visualization.BarChart($(expanded_data.id + '_frequency_count_chart_div'));
+                                    chart.draw(data, {width: 500, height: 200, is3D: true});
+                                  }
+                                }
+
+				var json_callback =
+				{
+				  success:handleJSONSuccess,
+				  failure: handleJSONFailure
+				};
                                 pos = expanded_rows.indexOf(expanded_data.id);
                                 //stop multiple clicks of the expand button
                                 if (pos == -1) {
                                   expanded_rows.push(expanded_data.id);
+                                  //retrieve general info
 				  var transaction = YAHOO.util.Connect.asyncRequest('POST', surveys_url + '/expand_row?id='+ expanded_data.id, callback, null);
+                                  //retrieve values and their counts - need to do it this way instead of javascript inside the partial since
+                                  //it would not run it - possible yui issue?
+                                  var json_transaction = YAHOO.util.Connect.asyncRequest('POST', variables_url + '/values_array?id='+ expanded_data.id, json_callback, null);
                                   Element.show('spinner');
                                 }
 

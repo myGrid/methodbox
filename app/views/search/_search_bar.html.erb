@@ -4,7 +4,7 @@
 <%# if logged_in? && current_user.is_admin? -%>
   <%#= icon "lock", admin_url, "Admin enabled", {:id=>"adminmode"}, "Admin enabled" -%>
 <%# end -%>
-<% if SOLR_ENABLED -%>
+<%# if SOLR_ENABLED -%>
   <% form_tag '/search/' do -%>
     <%= text_field_tag :search_query, @search_query -%>
 	<% if logged_in? -%>
@@ -15,5 +15,5 @@
 	<% end %>
     <%= submit_tag "Search"  -%>
   <% end  -%>
-<% end -%>
+<%# end -%>
 
