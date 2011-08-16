@@ -39,7 +39,6 @@ function drawChart() {
 <div class="gviz-chart left" style="width:50%" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
 <% if !var_hash.empty? -%>
 <script type="text/javascript">
-alert("hello");
 google.load('visualization', '1', {'packages':['corechart']});
 google.setOnLoadCallback(drawChart);
 function drawChart() {

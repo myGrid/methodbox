@@ -55,7 +55,6 @@ class ApplicationController < ActionController::Base
   end
 
   def add_to_cart
-    puts "hello there"
     if params[:extract_id]
       extract_id_for_items = params[:extract_id]
     end

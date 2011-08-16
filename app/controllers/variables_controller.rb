@@ -119,14 +119,16 @@ class VariablesController < ApplicationController
       survey_id = params[:survey]
       survey = Survey.find(survey_id)
       survey.datasets.each do |dataset|
-        @sorted_variables.concat(Variable.all(:conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
+        @sorted_variables.concat(Variable.all(:order=>"name ASC", :conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
       end
       @sorted_variables.uniq!
       @title = "Variables from " + survey.title
     else
-      @sorted_variables = Variable.all(:conditions=>({:category=> params[:category]}))
+      @sorted_variables = Variable.all(:order=>"name ASC", :conditions=>({:category=> params[:category]}))
       @title = "All variables"
     end
+    variables_hash = {"results" => @sorted_variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "category"=>variable.category, "year" => variable.dataset.survey.year, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
   end
 
   def index
@@ -144,25 +146,6 @@ class VariablesController < ApplicationController
     @all_tags = @variable.title_counts
   end
 
-  def add_to_cart
-    find_variable
-
-
-    if CartItem.find_by_user_id_and_variable_id(current_user,@variable)
-    else
-      an_item = CartItem.new
-      an_item.user = current_user
-      an_item.variable = @variable
-      an_item.save
-      current_user.reload
-    end
-
-    respond_to do |format|
-      flash[:notice] = "Variable has been added to the cart"
-      format.html { redirect_to variable_path(@variable) }
-    end
-
-  end
 
   def add_multiple_to_cart
     @variable_list = Array.new(params[:variable_ids])
