@@ -57,13 +57,28 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
 
         };
+        this.variablesURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var id = oRecord.getData().id;
+            var name = oRecord.getData().name;
+            elLiner.innerHTML = "<a href=\"" + variables_url + "/" + id + "\">" + name + "</a>";
+        };
+        // Add the custom formatter to the shortcuts
+        YAHOO.widget.DataTable.Formatter.variablesFormatter = this.variablesURLFormatter;
+
+        this.categoryURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var category = oRecord.getData().category;
+            elLiner.innerHTML = "<a href=\"" + by_category_variables_url + "?category=" + category + "\">" + category + "</a>";
+        };
+        // Add the custom formatter to the shortcuts
+        YAHOO.widget.DataTable.Formatter.categoryFormatter = this.categoryURLFormatter;
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.VariableRowExpansionDataTable.formatRowExpansion},
             { label: "", formatter: "checkbox"},
-		    { key: "name", label: "Title", sortable: true, maxWidth: 100, minWidth: 100 },
+		    { key: "name", label: "Title", formatter:"variablesFormatter", sortable: true, maxWidth: 100, minWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, width: 500, minWidth: 500 },
-                    { key: "category", label: "Category", sortable: true, maxWidth: 200, minWidth: 200 },
+                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, maxWidth: 200, minWidth: 200 },
 		    { key: "survey", label: "Survey", sortable: true, maxWidth: 200, minWidth: 200 },
+		    { key: "year", label: "Year", sortable: true, maxWidth: 100, minWidth: 100 },
 		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100, minWidth: 100 }
 		];
 
@@ -71,7 +86,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         dataSource.responseSchema = {
             resultsList : "results",
-            fields: ["id","name","description","survey", "category","popularity"]
+            fields: ["id","name","description","survey", "category","year", "popularity"]
         };
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
         this.dataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",

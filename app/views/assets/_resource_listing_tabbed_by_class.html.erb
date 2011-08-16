@@ -83,7 +83,7 @@
    }
    var value = YAHOO.util.Cookie.get("search_tab");
    if (value != null) {
-       if (tabview.getTab(value) != nil){
+       if (tabView.getTab(value) != null){
          tabView.set("activeIndex", value);
        } else {
           tabView.set("activeIndex", <%= tab_count -1 -%>);

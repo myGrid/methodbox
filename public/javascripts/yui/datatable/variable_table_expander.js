@@ -401,7 +401,7 @@
 				  if(o.responseText !== undefined){
                                     var messages = YAHOO.lang.JSON.parse(o.responseText);
                                     for (var k in messages) {
-                                     data.addRow([k,messages[k]]);
+                                     data.addRow([k,parseInt(messages[k])]);
                                      number_of_vals += 1;
                                     }
                                   }
