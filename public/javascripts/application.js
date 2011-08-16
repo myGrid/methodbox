@@ -146,11 +146,6 @@ function downloadFromNesstar (nesstarUris) {
 	}
 }
 
-function drawChartForVariable(div_id, data) {
-        var chart = new google.visualization.BarChart($(div_id));
-        chart.draw(data, {width: 500, height: 200, is3D: true});
-}
-
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  

@@ -20,13 +20,10 @@ function drawChart() {
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
 <% end -%>
-//drawChartForVariable('<%= variable.id -%>_frequency_count_chart_div', data);
-try {
+
         var chart = new google.visualization.ColumnChart($('<%= variable.id -%>_frequency_count_chart_div'));
         chart.draw(data, {width: 500, height: 200, is3D: true});
-} catch (exception) {
-alert("hello");
-}
+
 }
 </script>
 <% end -%>
@@ -58,14 +55,9 @@ function drawChart() {
 							data.addRow(['<%= value_domain_hash[value] ? escape_javascript(value_domain_hash[value].to_s) : escape_javascript(value.to_s) %>', <%= frequency %>]);
 							              <% end -%>
 <% end -%>
-try {
+  var chart = new google.visualization.BarChart($('<%= variable.id -%>_frequency_count_chart_div'));
+  chart.draw(data, {width: 500, height: 200, is3D: true});
 
-drawChartForVariable('<%= variable.id -%>_frequency_count_chart_div', data);
-} catch (exception) {
-alert("hello");
-}
-        //var chart = new google.visualization.BarChart($('<%= variable.id -%>_frequency_count_chart_div'));
-        //chart.draw(data, {width: 500, height: 200, is3D: true});
 }
 </script>
 <% end -%>
