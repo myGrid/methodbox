@@ -21,7 +21,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         this.categoryURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var category = oRecord.getData().category;
-            elLiner.innerHTML = "<a href=\"" + by_category_variables_url + "?category=" + category + "\">" + category + "</a>";
+            if (category != null) {
+              elLiner.innerHTML = "<a href=\"" + by_category_variables_url + "?category=" + category + "\">" + category + "</a>";
+            } else {
+              elLiner.innerHTML = "N/A";
+            }
         };
         // Add the custom formatter to the shortcuts
         YAHOO.widget.DataTable.Formatter.categoryFormatter = this.categoryURLFormatter;
@@ -43,6 +47,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             resultsList : "results",
             fields: ["id","name","description","survey", "category","popularity", "year"]
         };
+
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
         this.dataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
                 columnDefs, dataSource, {sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator : pag, rowExpansionTemplate :'{id}' });
