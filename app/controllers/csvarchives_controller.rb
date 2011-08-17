@@ -20,6 +20,40 @@ class CsvarchivesController < ApplicationController
 
   #caches_action :show
   
+  #ajax action that gets called when you remove vars from your cart
+  #on the new data extract page
+  def remove_from_cart
+    @var_list = params[:variable_ids]
+    unless @var_list.empty?
+      @var_list.each do |var|
+        item = CartItem.find_by_user_id_and_variable_id(current_user,var)
+        if item
+          item.destroy
+        end  
+      end
+      current_user.reload
+    end
+    @sorted_variables = Array.new
+    current_user.cart_items.each do |item|
+      var = Variable.find(item.variable_id)
+      @sorted_variables.push(var)
+    end
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    if current_user.cart_items.empty?
+      render :update do |page|
+        page.redirect_to(:controller => "surveys", :action => "index")
+        page << "alert('You have no variables left in your cart.  To create a new Data Extract you need to search for some and add to your cart.');"    
+      end
+    else
+      render :update do |page|
+        #refresh the var table with the remaining variables
+        page << "updateTable('#{@variables_json}');"
+        page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
+        page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
+      end
+    end
+  end
   #a users notes about a resource
   def add_note
     @extract = Csvarchive.find(params[:resource_id])
@@ -173,8 +207,10 @@ class CsvarchivesController < ApplicationController
   def new
     set_parameters_for_sharing_form
     # code that allows 'world' access to extracts or not
+    @sorted_variables = Array.new
     @current_user.cart_items.each do |item|
       variable = Variable.find(item.variable_id)
+      @sorted_variables.push(variable)
         if variable.dataset.survey.survey_type.is_ukda
           @ukda_only = true
           break
@@ -186,6 +222,8 @@ class CsvarchivesController < ApplicationController
     @scripts = Script.find(:all)
     @scripts=Authorization.authorize_collection("show",@scripts,current_user)
     @surveys = Survey.find(:all)
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
     #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
 
@@ -248,6 +286,8 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     #    check_available
     @sorted_variables = @archive.variables
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
     # @surveys = @archive.surveys
     # @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
     

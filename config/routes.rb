@@ -18,6 +18,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.cart '/cart/', :controller=>'cart',:action=>'show', :requirements => {:protocol => ROUTES_PROTOCOL}
 
+  map.resources :cart, :collection => {:remove_from_cart => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+
   map.resources :datasets, :member => {:update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :variable_links, :requirements => {:protocol => ROUTES_PROTOCOL}
@@ -27,7 +29,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :surveys, :member => { :show_all_variables => :post, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :post, :expand_row => :post, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :post, :category_browse => :get, :facets => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :post,:sort_variables => :post, :help => :get, :help2 => :get, :show_links=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:recreate => :post, :help => :get, :help2 => :get,:show_links=>:post, :check_for_complete => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :help => :get, :help2 => :get,:show_links=>:post, :check_for_complete => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get, :open_pdf => :get, :deprecate => :post}, :collection =>{:values => :post, :find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 

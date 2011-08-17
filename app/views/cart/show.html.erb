@@ -2,6 +2,7 @@
 <%= stylesheet_link_tag 'faux_table'%>
 <%= javascript_include_tag 'variable_table_check.js' %>
 <%= javascript_include_tag 'checkbox_update.js' %>
+<%= javascript_include_tag 'variables_table.js' -%>
 <%= hidden_field_tag 'tag_button', 'tag' %>
 <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
 <%= hidden_field_tag 'variable_name', 'variable_name' %>
@@ -11,35 +12,66 @@
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
 <div class="show_basic" style="padding-right: 2em;">
-	<% if !@archived_vars.empty? %>
-	The following variables have been archived and have been removed from your cart:
-	<% @archived_vars.each do |item| %>
-		<%= link_to item.variable.name, variable_path(item.variable) -%>
-		<% end -%>
-		<br/>
-		<% end -%>
-  <% form_remote_tag :url => { :action => "remove_from_cart"} do -%>
-<div id="cart_container">
-	<% if !@sorted_variables.empty? -%>
-    <%= hidden_field_tag 'submit', 'remove_variables' %>
-  <%= render :partial => "table_buttons" -%>
-    <br/>
-    <br/>
-    <div id="table_header" class="faux_table_header_container">
-      <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables} -%>
-    </div>
-    <div id="table_container" class="faux_table_container">
-      <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @sorted_variables,:lineage => true, :extract_lineage => false, :extract_id => nil} -%>
-    </div>
-	<% else -%>
-  <%= render :partial => "no_variables" %>
-	<% end -%>
-  <% end -%>
+<% if !@archived_vars.empty? %>
+The following variables have been archived and have been removed from your cart:
+<% @archived_vars.each do |item| %>
+<%= link_to item.variable.name, variable_path(item.variable) -%>
+<% end -%>
+<br/>
+<% end -%>
+<% form_tag remove_from_cart_cart_url, {:onSubmit=>"$('spinner').show();"} do -%>
+<% if !@sorted_variables.empty? -%>
+<%= submit_to_remote '_submit', 'Remove selected variables from cart', {:url=>{:action=> "remove_from_cart", :value=>"remove"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to remove from your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+<div id="selected_variables">
+</div>
+<%#= submit_tag 'Remove selected variables from cart', :name=>"submit", :onclick => "if (!anyVariablesSelected()) {alert('There are no variables selected to remove from your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}" -%>
+<% end -%>
+<% if !@sorted_variables.empty? -%>
+<%= hidden_field_tag 'submit', 'remove_variables' %>
+<br/>
+<br/>
+<div class="yui-skin-sam">
+<div id="variables_table"></div>
+</div>
+<% else -%>
+<%= render :partial => "no_variables" %>
+<% end -%>
+<% end -%>
 <div style="clear:both">
+</div>
 <div class="medium-padding" id="cart_suggestions">
- <%= render :partial => "cart_suggestions", :locals=>{:target_matches => @target_matches} -%>
+<%= render :partial => "cart_suggestions", :locals=>{:target_matches => @target_matches} -%>
 </div>
+<% form_tag new_csvarchive_url, {:onSubmit=>"$('spinner').show();"} do -%>
+<% if !@sorted_variables.empty? -%>
+<%= submit_tag 'Create a new data extract' %>
+<% end -%>
+<% end -%>
 </div>
-</div>
-</div>
+<script type="text/javascript">
+var results = <%= raw @variables_json -%>;
+createTable();
+</script>

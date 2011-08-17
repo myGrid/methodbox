@@ -1,3 +1,12 @@
+var dt;
+
+function updateTable(data) {
+this.dataSource.liveData = data;
+this.dataTable.getDataSource().sendRequest(null,
+  {success: dataTable.onDataReturnInitializeTable},
+  dataTable);
+}
+
 function createTable() {
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.example.Basic = function() {
@@ -41,7 +50,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100, minWidth: 100 }
 		];
 
-        var dataSource = new YAHOO.util.LocalDataSource(results);
+        this.dataSource = new YAHOO.util.LocalDataSource(results);
         dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         dataSource.responseSchema = {
             resultsList : "results",
@@ -51,6 +60,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
         this.dataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
                 columnDefs, dataSource, {sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator : pag, rowExpansionTemplate :'{id}' });
+        dt = this.dataTable;
 	this.dataTable.subscribe( 'cellClickEvent', dataTable.onEventToggleRowExpansion );
         return {
             oDS: dataSource,

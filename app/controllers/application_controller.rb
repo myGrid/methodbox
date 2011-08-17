@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery  :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
-  
+
   def truncate_words(text, length = 30, end_string = ' …')
     return if text == nil
     words = text.split()

@@ -1,4 +1,5 @@
-<% @sorted_variables.each do |item| %>
-  <%= render :partial => "surveys/variables_table_row",:locals=>{:item => item} %>
-
-<% end %>
+<div id="variables_table"></div>
+<script type="text/javascript">
+var results = <%= raw @variables_json -%>;
+createTable();
+</script>

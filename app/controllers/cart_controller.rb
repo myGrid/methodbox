@@ -47,11 +47,11 @@ class CartController < ApplicationController
     end
     @target_matches.delete_if{|key,value| current_cart.include?(key)}
     @target_matches.sort{|a,b| b[1]<=>a[1]}
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
   end
 
   def remove_from_cart
-    case params[:submit]
-    when "remove_variables"
     @var_list = params[:variable_ids]
     unless @var_list.empty?
       @var_list.each do |var|
@@ -85,18 +85,20 @@ class CartController < ApplicationController
     end
     @target_matches.delete_if{|key,value| current_cart.include?(key)}
     @target_matches.sort{|a,b| b[1]<=>a[1]}
-    
-    render :update, :status=>:created do |page|
-      if !current_user.cart_items.empty?
-        page.replace_html "table_header", :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables}
-        page.replace_html "table_container", :partial=>"surveys/table",:locals=>{:sorted_variables=>@sorted_variables,:lineage => false, :extract_lineage => false, :extract_id => nil}
-        page.replace_html "cart_suggestions", :partial=>"cart/cart_suggestions", :locals=>{:target_matches=>@target_matches}
-      else
-        page.replace_html "cart_container", :partial => "cart/no_variables"
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    if current_user.cart_items.empty?
+      render :update do |page|
+        page.redirect_to(:controller => "surveys", :action => "index")
+        page << "alert('You have no variables left in your cart.  To create a new Data Extract you need to search for some and add to your cart.');"    
       end
-    end
-    when "create_archive"
-      download_all_variables
+    else
+      render :update do |page|
+        #refresh the var table with the remaining variables
+        page << "updateTable('#{@variables_json}');"
+        page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
+        page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
+      end
     end
   end
 

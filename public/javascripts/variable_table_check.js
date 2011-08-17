@@ -206,5 +206,4 @@ function anyVariablesSelected() {
   } else {
     return false;
   }
-
 }

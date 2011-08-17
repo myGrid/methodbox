@@ -1,12 +1,5 @@
-<div class="sidebar-bg">
-<div class="sidebar">
-	<%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
-<% if logged_in? -%>
-	<ul class="vbuttons">
-		<li><%= icon "new", new_csvarchive_url, "Create a data extract", nil, "Create a data extract" %></li>
-	</ul>
-<% end %>
-</div>
+<div id="cart-buttons">
+<%= render :partial => "cart/all_buttons" -%>
 </div>
 <div class="sidebar-bg">
   <div class="sidebar">
