@@ -113,20 +113,35 @@ class VariablesController < ApplicationController
   end
 
   def by_category
+    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = []
+    survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
+
+    surveys = []
+    non_empty_survey_types.each do |survey_type|
+      survey_type.surveys.each do |survey|
+        unless survey.datasets.empty? 
+          surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
+        end
+      end
+    end
     @sorted_variables = []
     @category = params[:category]
-    if params[:survey]
-      survey_id = params[:survey]
-      survey = Survey.find(survey_id)
+    surveys.each do |survey|
       survey.datasets.each do |dataset|
         @sorted_variables.concat(Variable.all(:order=>"name ASC", :conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
       end
       @sorted_variables.uniq!
-      @title = "Variables from " + survey.title
-    else
-      @sorted_variables = Variable.all(:order=>"name ASC", :conditions=>({:category=> params[:category]}))
-      @title = "All variables"
     end
+
     variables_hash = {"results" => @sorted_variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "category"=>variable.category, "year" => variable.dataset.survey.year, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
   end
