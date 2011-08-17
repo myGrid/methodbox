@@ -41,13 +41,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
                     { key: "source", label: "Source", formatter:"sourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
 
-        var dataSource = new YAHOO.util.LocalDataSource(results);
+        var dataSource = new YAHOO.util.LocalDataSource(survey_results);
         dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         dataSource.responseSchema = {
             resultsList : "results",
             fields: ["id","title","description","year","type", "source"]
         };
-        var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: results.total_entries});
+        var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
         this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
                 columnDefs, dataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
 				                    '{id}' });
