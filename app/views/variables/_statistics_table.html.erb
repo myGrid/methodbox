@@ -27,13 +27,14 @@ function drawChart() {
 }
 </script>
 <% end -%>
-<table class='listings_table'>
+<!-- not sure the stats are always correct so don't show them -->
+<!-- <table class='listings_table'>
 <tbody>
 <tr><td>Mean</td><td><%= variable.mean ? variable.mean : 'N/A' -%></td></tr>
 <tr><td>Median</td><td><%= variable.median ? variable.median : 'N/A' -%></td></tr>
 <tr><td>Missing</td><td><%= variable.nesstar_id ? variable.invalid_entries : variable.number_of_blank_rows -%></td></tr>
 </tbody>
-</table>
+</table> -->
 <% else -%>
 <!-- side on bar chart-->
 <div class="gviz-chart left" style="width:50%" id="<%= variable.id.to_s -%>_frequency_count_chart_div"></div>
