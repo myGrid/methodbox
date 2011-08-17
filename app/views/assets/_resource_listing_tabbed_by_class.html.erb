@@ -39,20 +39,9 @@
 			<% visible_resource_type = "Methods and Scripts" if visible_resource_type=="Scripts" %>
 			<% unless (resources = asset_hash[resource_type]).nil? || resources.empty? -%>
 					<% if resource_type.downcase == "survey" -%>
-						<% @survey_hash = Hash.new %>
-						<% resources.each do |survey| %>
-							<% if (!@survey_hash.has_key?(survey.survey_type.name)) -%>
-	            				<% @survey_hash[survey.survey_type.name] = Array.new -%>
-	          				<% end -%>
-	          				<% @survey_hash[survey.survey_type.name].push(survey) -%>
-	        			<% end -%>
-	<!-- Need a form to wrap the surveys tab so that variable searching can take place -->
-						<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
-							<%= render :partial=>"surveys/survey_search_box" -%>
-							<div class="asset-resource-list" id="<%= 'assets_tab_' + tab_id.to_s -%>">
-								<%= render :partial => "assets/resource_list", :locals => { :collection => resources, :narrow_view => narrow_view, :authorization_for_showing_already_done => authorization_already_done, :paginate => true } -%>
-							</div>
-						<% end %>
+                                          <div id="<%= 'assets_tab_' + tab_id.to_s -%>">
+                                            <%= render :partial => "surveys/search_results", :locals=> {:surveys => resources, :surveys_json => @surveys_json} -%>
+	                                  </div>				
 					<% elsif resource_type.downcase == "variable" %>
                                           <div id="<%= 'assets_tab_' + tab_id.to_s -%>">
                                             <%= render :partial => "variables/search_results", :locals=> {:variables => resources} -%>

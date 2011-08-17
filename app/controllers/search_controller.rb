@@ -30,7 +30,12 @@ class SearchController < ApplicationController
       @results_hash['people'] = find_people(query, params[:person_page]).results
     end  
     if params[:search_type].include?('surveys')
-      @results_hash['survey'] = find_surveys(query, params[:survey_page]).results
+      results = find_surveys(query, params[:survey_page]).results
+      @results_hash['survey'] = results
+      surveys = results.sort!{|x,y| x.title <=> y.title}
+      surveys_hash = {"total_entries" => surveys.size, "results"=>surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
+      puts surveys_hash.to_json
+      @surveys_json = surveys_hash.to_json
     end 
     if params[:search_type].include?('methods')
       @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results

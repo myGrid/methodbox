@@ -26,8 +26,8 @@
 	padding-right: 10px;
 }
 </style>
-<% if !@surveys.empty? -%>
-<% @surveys.each do |survey| -%>
+<% if !surveys.empty? -%>
+<% surveys.each do |survey| -%>
   <% survey.datasets.each do |dataset| -%>
       <%= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
   <% end -%>
@@ -45,7 +45,7 @@
 <% end  -%>
 <% end -%>
 <script type= "text/javascript">
-var results = <%= raw @surveys_json -%>;
+var results = <%= raw surveys_json -%>;
 createSurveyTable();
 </script>
 <script type="text/javascript">
