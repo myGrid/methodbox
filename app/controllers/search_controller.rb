@@ -151,27 +151,4 @@ class SearchController < ApplicationController
     @recent_searches = search
   end
 
-  def get_surveys
-    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
-    non_empty_survey_types = []
-    survey_types.each do |survey_type|
-      any_datasets = false
-      survey_type.surveys.each do |survey|
-        any_datasets = true unless survey.datasets.empty?
-      end
-      if any_datasets 
-        non_empty_survey_types << survey_type
-      end
-    end
-    surveys = []
-    non_empty_survey_types.each do |survey_type|
-      survey_type.surveys.each do |survey|
-        unless survey.datasets.empty? 
-          surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
-        end
-      end
-    end
-    return surveys
-  end
-
 end

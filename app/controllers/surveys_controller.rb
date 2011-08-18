@@ -253,7 +253,7 @@ class SurveysController < ApplicationController
   # browse surveys using exhibit
   def facets
     survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
-    non_empty_survey_types = []
+    non_empty_survey_types = get_surveys
     survey_types.each do |survey_type|
       any_datasets = false
       survey_type.surveys.each do |survey|
@@ -347,30 +347,7 @@ end
 
 # list all the surveys that the current user can see.
   def index
-    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
-    non_empty_survey_types = []
-    survey_types.each do |survey_type|
-      any_datasets = false
-      survey_type.surveys.each do |survey|
-        any_datasets = true unless survey.datasets.empty?
-      end
-      if any_datasets 
-        non_empty_survey_types << survey_type
-      end
-    end
-
-    @survey_hash = Hash.new
-    @surveys = []
-    @empty_surveys = []
-    non_empty_survey_types.each do |survey_type|
-      survey_type.surveys.each do |survey|
-        unless survey.datasets.empty? 
-          @surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
-        else
-          @empty_surveys << survey unless !Authorization.is_authorized?("show", nil, survey, current_user)
-        end
-      end
-    end
+    @surveys = get_surveys
     @surveys.sort!{|x,y| x.title <=> y.title}
     surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
     @surveys_json = surveys_hash.to_json
@@ -796,12 +773,12 @@ end
     authorized_datasets=[]
     #if there are no datasets selected then just search everything
     if params[:entry_ids] == nil || params[:entry_ids].empty?
-      Survey.all.each do |survey|
+      get_surveys.each do |survey|
         survey.datasets.each do |dataset|
           authorized_datasets.push(dataset.id) unless !Authorization.is_authorized?("show", nil, survey, current_user)
         end
       end
-      params[:entry_ids] = Survey.all.collect{|survey| survey.id.to_s}
+      params[:entry_ids] = authorized_datasets.collect{|dataset_id| dataset_id.to_s}
     else
       params[:entry_ids].each do |dataset_id| 
         authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)
