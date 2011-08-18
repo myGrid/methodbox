@@ -16,7 +16,7 @@
 <%= hidden_field_tag 'search_type[]', 'methods' -%>
 <div style="padding-bottom:5px;">
 <div class="right" style="width: 20%;">
-<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods"  -%>
+<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods", :onclick => "Element.show('spinner');"  -%>
 <%= link_to 'Advanced search', root_url(:advanced_controls=>true), :style=>"display:block; font-size: xx-small;" -%>
 </div>
 <div class="right" style="width: 40%; padding-right: 10px;">

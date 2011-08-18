@@ -1,3 +1,26 @@
+function selectAllSurveyCheckboxes(checked){
+  var rs = this.surveyDataTable.getRecordSet();
+  len = rs.getLength();
+
+  for (var index=0; index < len; index++) {
+    rs.getRecord(index).setData('Select',checked);
+    var id = rs.getRecord(index).getData().id;
+    selectSurvey(id);
+  }  
+  this.surveyDataTable.render();
+}
+function invertAllSurveyCheckboxes(){
+  var rs = this.surveyDataTable.getRecordSet();
+  len = rs.getLength();
+
+  for (var index=0; index < len; index++) {
+    rs.getRecord(index).setData('Select',!rs.getRecord(index).getData('Select'));
+    var id = rs.getRecord(index).getData().id;
+    selectSurvey(id);
+  }  
+  this.surveyDataTable.render();
+}
+
 function createSurveyTable(){
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.example.Basic = function() {
@@ -33,7 +56,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
-            { label: "", formatter: "checkbox"},
+            { key:"Select", label: "", formatter: "checkbox"},
 		    { key: "title", label: "Title", formatter:"surveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
 		    { key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
@@ -41,31 +64,31 @@ YAHOO.util.Event.addListener(window, "load", function() {
                     { key: "source", label: "Source", formatter:"sourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
 
-        var dataSource = new YAHOO.util.LocalDataSource(survey_results);
-        dataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
-        dataSource.responseSchema = {
+        var surveyDataSource = new YAHOO.util.LocalDataSource(survey_results);
+        surveyDataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
+        surveyDataSource.responseSchema = {
             resultsList : "results",
             fields: ["id","title","description","year","type", "source"]
         };
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
-        this.dataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, dataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
+        this.surveyDataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
+                columnDefs, surveyDataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
 				                    '{id}' });
-		this.dataTable.subscribe( 'cellClickEvent',
-				dataTable.onEventToggleRowExpansion );
+		this.surveyDataTable.subscribe( 'cellClickEvent',
+				surveyDataTable.onEventToggleRowExpansion );
         return {
-            oDS: dataSource,
-            oDT: dataTable
+            oDS: surveyDataSource,
+            oDT: surveyDataTable
         };
     }();
-    this.dataTable.subscribe("checkboxClickEvent", function(oArgs){
-var elCheckbox = oArgs.target;
-var newValue = elCheckbox.checked;
-var record = this.getRecord(elCheckbox);
-var column = this.getColumn(elCheckbox);
-record.setData(column.key,newValue); 
-	  var id = record.getData().id;
-          selectSurvey(id);
-	});
+    this.surveyDataTable.subscribe("checkboxClickEvent", function(oArgs){
+      var elCheckbox = oArgs.target;
+      var newValue = elCheckbox.checked;
+      var record = this.getRecord(elCheckbox);
+      var column = this.getColumn(elCheckbox);
+      record.setData(column.key,newValue); 
+      var id = record.getData().id;
+      selectSurvey(id);
+    });
 });
 }

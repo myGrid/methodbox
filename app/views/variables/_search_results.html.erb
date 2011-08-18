@@ -38,6 +38,11 @@
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
 </div>
 <% end -%>
+<div style= "margin-top: 5px;">
+<%= button_to_function 'Select all', "selectAllVariableCheckboxes(true);", :title=>"Select all the variables (from all pages)" -%>
+<%= button_to_function 'Select none', "selectAllVariableCheckboxes(false);", :title=>"De-select all the variables (from all pages)" -%>
+<%= button_to_function 'Invert selection', "invertAllVariableCheckboxes();", :title=>"De-select currently selected variables and vice-versa (from all pages)" -%>
+</div>
 <div class="yui-skin-sam">
 <div id="variables_table"></div>
 </div>

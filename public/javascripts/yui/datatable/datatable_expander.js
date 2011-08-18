@@ -7,6 +7,7 @@
  * @class YAHOO.widget.RowExpansionDataTable
  ***********/
 (function(){
+
     var expanded_rows = [];
     var Dom = YAHOO.util.Dom,
 
