@@ -801,6 +801,7 @@ end
           authorized_datasets.push(dataset.id) unless !Authorization.is_authorized?("show", nil, survey, current_user)
         end
       end
+      params[:entry_ids] = Survey.all.collect{|survey| survey.id.to_s}
     else
       params[:entry_ids].each do |dataset_id| 
         authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)

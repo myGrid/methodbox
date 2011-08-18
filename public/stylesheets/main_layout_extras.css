@@ -382,7 +382,7 @@ ul.vbuttons .category-browse.li {
     left: 50%;
     position: fixed;
     top: 25%;
-	z-index:1000;
+    z-index:1000;
 }
 #welcome-text {
 	font-size: 20px;

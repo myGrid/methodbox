@@ -23,7 +23,7 @@ Data Extracts:<%= check_box_tag 'search_type[]', 'extracts', true -%>
 Publications:<%= check_box_tag 'search_type[]', 'publications', true -%>
 </div>
 <div style="text-align: center;">
-<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods"  -%>
+<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods", :onclick => "Element.show('spinner');"   -%>
 </div>
 <% end  -%>
 </div>
