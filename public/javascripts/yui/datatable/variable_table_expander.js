@@ -8,6 +8,7 @@
  ***********/
 (function(){
     var expanded_rows = [];
+    var expand_done = {};
     var Dom = YAHOO.util.Dom,
 
         STRING_STATENAME  = 'yui_dt_state',
@@ -362,8 +363,10 @@
                                     Element.hide('spinner');
                                     //click on it again now if you want
                                     pos = expanded_rows.indexOf(expanded_data.id);
-                                     expanded_rows.splice(pos, 1);
-
+                                    expanded_rows.splice(pos, 1);
+                                    //retrieve values and their counts - need to do it this way instead of javascript inside the partial since
+                                   //it would not run it - possible yui issue?
+                                   var json_transaction = YAHOO.util.Connect.asyncRequest('POST', variables_url + '/values_array?id='+ expanded_data.id, json_callback, null);
 		                    return true;
 
 		                } else {
@@ -423,11 +426,9 @@
                                 //stop multiple clicks of the expand button
                                 if (pos == -1) {
                                   expanded_rows.push(expanded_data.id);
+                                  expand_done[expanded_data.id] = false;
                                   //retrieve general info
 				  var transaction = YAHOO.util.Connect.asyncRequest('POST', surveys_url + '/expand_row?id='+ expanded_data.id, callback, null);
-                                  //retrieve values and their counts - need to do it this way instead of javascript inside the partial since
-                                  //it would not run it - possible yui issue?
-                                  var json_transaction = YAHOO.util.Connect.asyncRequest('POST', variables_url + '/values_array?id='+ expanded_data.id, json_callback, null);
                                   Element.show('spinner');
                                 }
 
