@@ -14,13 +14,11 @@ class SurveysController < ApplicationController
 
   before_filter :rerouted_search, :only => [:show]
   
-  before_filter :find_groups, :only => [ :new, :edit ]
+  before_filter :find_groups, :only => [ :new_nesstar_datasource, :new, :edit ]
   
   before_filter :find_comments, :only => [ :show ]
 
   before_filter :find_notes, :only => [ :show ]
-  
-  before_filter :find_groups, :only => [:new_nesstar_datasource, :new]
   
   after_filter :update_last_user_activity
 
@@ -503,7 +501,7 @@ end
 
         # update attributions
         Relationship.create_or_update_attributions(@survey, params[:attributions])
-        flash[:notice] = 'Survey was successfully uploaded and saved.'
+        flash[:notice] = 'Survey was successfully created.  You can now add datasets to it.'
         format.html { redirect_to survey_path(@survey) }
       else
         format.html {
@@ -640,7 +638,7 @@ end
         # update attributions
         Relationship.create_or_update_attributions(@survey, params[:attributions])
 
-          flash[:notice] = 'Survey file metadata was successfully updated.'
+          flash[:notice] = 'Survey details were successfully updated.'
           format.html { redirect_to survey_path(@survey) }
       else
         format.html {
