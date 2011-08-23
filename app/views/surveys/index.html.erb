@@ -44,6 +44,9 @@
 <%= button_to_function 'Select none', "selectAllSurveyCheckboxes(false);", :title=>"De-select all the surveys (from all pages)" -%>
 <%= button_to_function 'Invert selection', "invertAllSurveyCheckboxes();", :title=>"De-select currently selected surveys and vice-versa (from all pages)" -%>
 </div>
+<div style="margin-top:5px;">
+<label for="filter">Filter by survey title:</label> <input type="text" id="filter" value=""></input>
+</div>
 <div class="yui-skin-sam">
 <div id="surveys_table"></div>
 </div>

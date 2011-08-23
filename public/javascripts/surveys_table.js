@@ -64,18 +64,83 @@ YAHOO.util.Event.addListener(window, "load", function() {
                     { key: "source", label: "Source", formatter:"sourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
 
-        var surveyDataSource = new YAHOO.util.LocalDataSource(survey_results);
-        surveyDataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
-        surveyDataSource.responseSchema = {
+        //var surveyDataSource = new YAHOO.util.LocalDataSource(survey_results);
+        var surveyDataSource = new YAHOO.util.LocalDataSource(survey_results,{
+        responseType : YAHOO.util.DataSource.TYPE_JSON,
+        responseSchema : {
             resultsList : "results",
-            fields: ["id","title","description","year","type", "source"]
-        };
+            fields : ["id","title","description","year","type", "source"]
+        },
+        doBeforeCallback : function (req,raw,res,cb) {
+            // This is the filter function
+            var data     = res.results || [],
+                filtered = [],
+                i,l;
+
+            if (req) {
+                req = req.toLowerCase();
+                for (i = 0, l = data.length; i < l; ++i) {
+                    if (data[i].title.toLowerCase().indexOf(req) != -1) {
+                        filtered.push(data[i]);
+                    }
+                }
+                res.results = filtered;
+            }
+            return res;
+        }
+    });
+
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
         this.surveyDataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, surveyDataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate :
-				                    '{id}' });
+                columnDefs, surveyDataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
 		this.surveyDataTable.subscribe( 'cellClickEvent',
 				surveyDataTable.onEventToggleRowExpansion );
+    var filterTimeout = null;
+    var updateFilter  = function () {
+        // Reset timeout
+        filterTimeout = null;
+
+        // Reset sort
+        var state = surveyDataTable.getState();
+        state.sortedBy = {key:'title', dir:YAHOO.widget.DataTable.CLASS_ASC};
+
+        // Get filtered data
+        surveyDataSource.sendRequest(YAHOO.util.Dom.get('filter').value,{
+            success : surveyDataTable.onDataReturnInitializeTable,
+            failure : surveyDataTable.onDataReturnInitializeTable,
+            scope   : surveyDataTable,
+            argument: state
+        });
+       var rs = surveyDataTable.getRecordSet().getRecords();
+       var rerender = false;
+       rs.each(function(obj) {
+         var data = obj.getData();
+         var title = data.title;
+         obj.setData('Select',true);
+         var recordSet = surveyDataTable.getRecordSet();
+         len = recordSet.getLength();
+         for (var index=0; index < len; index++) {
+           var id = recordSet.getRecord(index).getData().id;
+           if (id == data.id) {
+             if (isSurveyChecked(id)) {
+               //TODO: set the dataset checkboxes
+               recordSet.getRecord(index).setData('Select',true);
+               rerender = true;
+             } else {
+               recordSet.getRecord(index).setData('Select',false);
+             }
+           }
+         }
+       });
+       if (rerender) {
+         surveyDataTable.render();
+       }
+    };
+    YAHOO.util.Event.on('filter','keyup',function (e) {
+        clearTimeout(filterTimeout);
+        setTimeout(updateFilter,600);
+    });
+
         return {
             oDS: surveyDataSource,
             oDT: surveyDataTable

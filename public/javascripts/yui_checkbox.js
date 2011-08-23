@@ -92,3 +92,9 @@ function recheckSurveys() {
       }
   });
 }
+function isSurveyChecked(id) {
+  if (surveys_checked.indexOf(id) != -1) {
+    return true;
+  }
+  return false;
+}
