@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110527095801) do
+ActiveRecord::Schema.define(:version => 20110824143001) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -416,7 +416,7 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
-    t.string   "description"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "content_type"
