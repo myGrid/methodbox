@@ -363,6 +363,7 @@
                                     Element.hide('spinner');
                                     //click on it again now if you want
                                     pos = expanded_rows.indexOf(expanded_data.id);
+                                    checkAllDatasets(expanded_data.id);
                                     expanded_rows.splice(pos, 1);
 		                    return true;
 

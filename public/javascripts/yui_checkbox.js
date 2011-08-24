@@ -56,8 +56,10 @@ function checkDatasets(id, checked) {
   if (checked == false) {
     datasets.each(function(item) {
       pos = datasets_checked.indexOf(item);
-      datasets_checked.splice(pos, 1);
-      $('selected_dataset' + '_' + item).remove()
+      if (pos != -1) {
+        datasets_checked.splice(pos, 1);
+        $('selected_dataset' + '_' + item).remove()
+      }
     });
   } else {
     datasets.each(function(item) {
@@ -67,6 +69,22 @@ function checkDatasets(id, checked) {
       $('selected_datasets').insert(hidden_input);
     });
   }
+}
+
+//check or uncheck all the datasets for
+//a particular survey
+function checkAllDatasets(id) {
+  var datasets = allDatasetsMap[id];
+  //if (surveys_checked.indexOf(id) != -1) {
+    datasets.each(function(item) {
+      try {
+        if (datasets_checked.indexOf(item) != -1) {
+          $("dataset_checkbox_" + item).checked = true;
+        }
+      } catch (error) {
+      }
+    });
+  //}
 }
 
 //set the checkbox for some datasets after
