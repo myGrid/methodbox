@@ -17,6 +17,17 @@ function selectSurvey(id) {
  }
 }
 
+//Eemove a survey from the list
+//of selected ones
+function deselectSurvey(id) {
+ pos = surveys_checked.indexOf(id);
+ if (pos != -1) {
+   surveys_checked.splice(pos, 1);
+   //uncheck all the datasets
+   checkDatasets(id, false);
+ }
+}
+
 //Add or remove a dataset from the list
 //of selected ones
 function selectDataset(id) {

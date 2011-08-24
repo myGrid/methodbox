@@ -5,7 +5,11 @@ function selectAllSurveyCheckboxes(checked){
   for (var index=0; index < len; index++) {
     rs.getRecord(index).setData('Select',checked);
     var id = rs.getRecord(index).getData().id;
-    selectSurvey(id);
+    if (checked) {
+      selectSurvey(id);
+    } else {
+      deselectSurvey(id);
+    }
   }  
   this.surveyDataTable.render();
 }
