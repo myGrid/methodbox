@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_filter :login_required, :except => [ :retrieve_details, :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
+  before_filter :login_required, :except => [ :show_all_variables, :retrieve_details, :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 
@@ -167,11 +167,15 @@ class SurveysController < ApplicationController
   def show_all_variables
     @survey = Survey.find(params[:id])
     variables = []
-    @survey.datasets.each do |dataset|
-      variables += dataset.variables
-    end
-    render :update, :status=>:created do |page|
-      page.replace_html "variables-table", :partial => "show_all_vars_for_survey", :locals=>{:sorted_variables => variables}
+    datasets = Dataset.all(:conditions => {:survey_id => @survey.id})
+    variables = Variable.paginate(:order=>"name ASC", :conditions => {:dataset_id=> datasets}, :page => params[:page] ? params[:page] : 1, :per_page => 50)
+    variables_hash = {"total_entries"=>50, "results" => variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    @selected_datasets = datasets
+    @sorted_variables = variables
+    respond_to do |format|
+      format.html
+      format.json
     end
   end
   
