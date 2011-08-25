@@ -52,7 +52,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         this.categoryURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var category = oRecord.getData().category;
             if (category != null) {
-              elLiner.innerHTML = "<a href=\"" + by_category_variables_url + "?category=" + category + "\">" + category + "</a>";
+              elLiner.innerHTML = "<a onclick=\"Element.show('spinner');\" href=\"" + by_category_variables_url + "?category=" + category + "\">" + category + "</a>";
             } else {
               elLiner.innerHTML = "N/A";
             }

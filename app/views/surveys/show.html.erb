@@ -1,3 +1,4 @@
+<%= javascript_include_tag 'variables_table.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <% truncate_length_for_boxes = 22 -%>
@@ -18,14 +19,7 @@
 		<% end -%>
 	</ul>
 <h1 class="contribution_title">Survey: <%= h(@survey.title) -%></h1>
-<div class="left" style="width: 20%;">
-	<% unless @all_categories.empty? -%>
-	<%= render :partial => "categories_list", :locals=>{:all_categories => @all_categories, :survey=>@survey}-%>
-	<% else %>
-	There are no categories listed for this survey
-	<% end %>
-</div>
-<div class="show_basic right" style="width:70%;">
+<div class="show_basic">
 	<% @survey_search_query="Enter search terms" unless @survey_search_query -%>
 	<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
 	<% @survey.datasets.each do |dataset| %>
@@ -65,15 +59,27 @@
         			</p>
       			<% end -%>
       		</p>
+<% unless @all_categories.empty? -%>
+<div class="fold">
+<div class="foldTitle">Variable Categories (click to display)</div>
+<div class="foldContent" style="display:none;">
+<%= render :partial => "categories_list", :locals=>{:all_categories => @all_categories, :survey=>@survey}-%>
+</div>
+</div>
+<% else %>
+<p>
+<b>There are no categories listed for this survey</b>
+</p>
+<% end %>
       		<p>
         		<b>Child Datasets:</b>
         		<% if !@survey.datasets.empty? -%>
 					<% @survey.datasets.each do |dataset| -%>
             			<%= link_to(h(dataset.name), dataset_path(dataset)) -%>
           			<% end -%>
-					<div class="small-padding" title="Showing all variables could take some time">
-					<%= link_to_remote "Show all variables for this survey", :url=> show_all_variables_survey_url(@survey) -%>
-					</div>
+					<!--<div class="small-padding" title="Showing all variables could take some time">-->
+					<!--<p><b>Variables: </b>--><%#= link_to_remote "Show all variables for this survey", :url=> show_all_variables_survey_url(@survey) -%></p>
+					<!--</div>-->
 					<div id='variables-table'>
 					</div>
         		<% else -%>
