@@ -1,8 +1,3 @@
-function getInitialData() {
-  //json hash of the first page
-  return initialResults;
-}
-
 function selectAllVariableCheckboxes(checked){
   var rs = this.variableDataTable.getRecordSet();
   len = rs.getLength();
@@ -40,10 +35,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var generateRequest = function(oState, oSelf) {
         // Get states or use defaults
         oState = oState || { pagination: null, sortedBy: null };
-        var page = (oState.pagination) ? oState.pagination.page : 0;
+        var page = (oState.pagination) ? oState.pagination.page : 1;
 
         // Build custom request
-        return  "page=" + page;
+        return  "?page=" + page;
          };
 	    var expansionFormatter  = function(el, oRecord, oColumn, oData) {
             var cell_element    = el.parentNode;
@@ -84,20 +79,45 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "year", label: "Year", sortable: true, maxWidth: 100, minWidth: 100 },
 		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100, minWidth: 100 }
 		];
+	var handleSuccess = function(o){
+		if(o.responseText !== undefined){
+	          return true;
+                } else {
+		  return false;
+                }
+            };
+				
+	var handleFailure = function(o){
+                 if(o.responseText !== undefined){
+                 alert('error');
+                 }
+            };
 
-        this.variableDataSource = new YAHOO.util.DataSource(surveys_url + "/" + survey_id +"/show_all_variables?type=json"); 
-        variableDataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
-        variableDataSource.responseSchema = {
-            resultsList : "initialResults",
-            fields: ["id","name","description","survey", "category","popularity", "year"]
+	var callback =
+	     {
+		success:handleSuccess,
+		failure: handleFailure
+	      };
+        YAHOO.util.Connect.initHeader('Accept', 'application/json', true);
+        //var transaction = YAHOO.util.Connect.asyncRequest('GET', surveys_url + "/" + survey_id + "/show_all_variables", callback, null);
+        this.variableDataSource = new YAHOO.util.XHRDataSource(surveys_url + "/" + survey_id + "/show_all_variables"); 
+        this.variableDataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
+        this.variableDataSource.responseSchema = {
+            resultsList : "results",
+            fields: ["id","name","description","survey", "category","popularity", "year"],
+            metaFields: {
+              page: "page",
+              totalRecords: "total_entries",
+              startIndex: "start_index"
+            }
         };
-        var tableConfigs = {//generateRequest: generateRequest,
-                            //initialRequest: getInitialData(),
-                            //dynamicData: true, 
+        var pag = new YAHOO.widget.Paginator({rowsPerPage: 50});
+        var tableConfigs = {generateRequest: generateRequest,
+                            initialRequest: "",
+                            dynamicData: true, 
                             sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC }, 
                             paginator : pag, 
                             rowExpansionTemplate :'{id}'};
-        var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: initialResults.total_entries});
         this.variableDataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
                 columnDefs, variableDataSource, tableConfigs);
 	this.variableDataTable.subscribe( 'cellClickEvent', variableDataTable.onEventToggleRowExpansion );
@@ -107,9 +127,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
         };
     }();
     this.variableDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
-        oPayload.totalRecords = oResponse.meta.totalRecords;
-        oPayload.pagination.recordOffset = oResponse.meta.startIndex;
-        return oPayload;
+      oPayload.totalRecords = oResponse.meta.totalRecords;
+      oPayload.pagination.recordOffset = oResponse.meta.startIndex;
+      return oPayload;
     };
     this.variableDataTable.subscribe("checkboxClickEvent", function(oArgs){
       var elCheckbox = oArgs.target;

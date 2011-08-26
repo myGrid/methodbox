@@ -166,16 +166,18 @@ class SurveysController < ApplicationController
   #find all the variables for a particular survey
   def show_all_variables
     @survey = Survey.find(params[:id])
+    page = params[:page] ? params[:page] : 1
+    start_index = ((page.to_i - 1) * 50) + 1
     variables = []
     datasets = Dataset.all(:conditions => {:survey_id => @survey.id})
-    variables = Variable.paginate(:order=>"name ASC", :conditions => {:dataset_id=> datasets}, :page => params[:page] ? params[:page] : 1, :per_page => 50)
-    variables_hash = {"total_entries"=>50, "results" => variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
-    @variables_json = variables_hash.to_json
+    variables = Variable.paginate(:order=>"name ASC", :conditions => {:dataset_id=> datasets}, :page => page, :per_page => 50)
+    variables_hash = {"start_index"=>start_index, "page"=>page,"total_entries"=>variables.total_entries, "results" => variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    #@variables_json = variables_hash.to_json
     @selected_datasets = datasets
     @sorted_variables = variables
     respond_to do |format|
       format.html
-      format.json
+      format.json {render :layout => false, :json=>variables_hash.to_json}
     end
   end
   
