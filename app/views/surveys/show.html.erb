@@ -78,7 +78,7 @@
             			<%= link_to(h(dataset.name), dataset_path(dataset)) -%>
           			<% end -%>
 					<div class="small-padding" title="Showing all variables could take some time">
-					<p><b>Variables: </b><%= link_to "Show all variables for this survey", show_all_variables_survey_url(@survey) -%></p>
+					<p><b>Variables: </b><%= link_to "Show all variables for this survey", show_all_variables_survey_url(@survey), :onlcik=>"Element.show('spinner');" -%></p>
 					</div>
 					<div id='variables-table'>
 					</div>

@@ -35,11 +35,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var generateRequest = function(oState, oSelf) {
         // Get states or use defaults
         oState = oState || { pagination: null, sortedBy: null };
-        var sort = (oState.sortedBy) ? oState.sortedBy.key : "id"; 
+        var sort = (oState.sortedBy) ? oState.sortedBy.key : "name"; 
         var dir = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : "asc"; 
         var page = (oState.pagination) ? oState.pagination.page : 1;
         var requestString = "?page=" + page + "&sort=" + sort + "&dir=" + dir + "&category=" + category;
-        if (!typeof survey === "undefined") {
+        if (typeof survey !== "undefined") {
           requestString += "&survey=" + survey
         }
         // Build custom request
