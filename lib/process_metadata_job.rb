@@ -60,6 +60,9 @@ module ProcessMetadataJob
           catcontent = catnode.first.content
 
           variable_category = catcontent
+          if variable_category == nil
+            variable_category = 'N/A'
+          end
 
           dernode = node.find('child::derivation')
           dercontent = dernode.first

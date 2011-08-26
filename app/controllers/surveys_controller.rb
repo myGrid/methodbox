@@ -168,10 +168,53 @@ class SurveysController < ApplicationController
     @survey = Survey.find(params[:id])
     page = params[:page] ? params[:page] : 1
     start_index = ((page.to_i - 1) * 50) + 1
+    sort = params[:sort] ? params[:sort] : "name"
+    dir = params[:dir] ? params[:dir] : 'ASC'
+    dir.upcase!
     variables = []
     datasets = Dataset.all(:conditions => {:survey_id => @survey.id})
     variables = Variable.paginate(:order=>"name ASC", :conditions => {:dataset_id=> datasets}, :page => page, :per_page => 50)
+    #sort the variables by the sort param, have to do it here since some are dynamic fields. sorted by name by default
+    case sort
+    when "name"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.name <=> b.name}
+      else 
+        variables.sort!{|a,b| b.name <=> a.name}
+      end
+    when "description"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.value <=> b.value}
+      else 
+        variables.sort!{|a,b| b.value <=> a.value}
+      end
+    when "category"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.category <=> b.category}
+      else
+        variables.sort!{|a,b| b.category <=> a.category}
+      end
+    when "popularity"
+      if dir == "ASC"
+        variables.sort!{|a,b| VariableList.all(:conditions=>"variable_id=" + a.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + b.id.to_s).size}
+      else
+        variables.sort!{|a,b| VariableList.all(:conditions=>"variable_id=" + b.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + a.id.to_s).size}
+      end
+    when "year"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.dataset.survey.year <=> b.dataset.survey.year}
+      else
+        variables.sort!{|a,b| b.dataset.survey.year <=> c.dataset.survey.year}
+      end
+    when "survey"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.dataset.survey.title <=> b.dataset.survey.title}
+      else
+        variables.sort!{|a,b| b.dataset.survey.title <=> a.dataset.survey.title}
+      end
+    end
     variables_hash = {"start_index"=>start_index, "page"=>page,"total_entries"=>variables.total_entries, "results" => variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    
     #@variables_json = variables_hash.to_json
     @selected_datasets = datasets
     @sorted_variables = variables
