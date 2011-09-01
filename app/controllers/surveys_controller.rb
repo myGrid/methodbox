@@ -831,8 +831,9 @@ end
         authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)
       end
     end
+    search_terms = params[:survey_search_query]
     result = Sunspot.search(Variable) do
-      keywords(params[:survey_search_query]) {minimum_match 1}
+      keywords(search_terms) {minimum_match 1}
       with(:dataset_id, authorized_datasets)
       paginate(:page => 1, :per_page => 1000)
     end
@@ -850,6 +851,18 @@ end
     #keep track of what  datasets have been searched
     @selected_datasets = authorized_datasets
     @sorted_variables = result.results
+
+    if logged_in?
+      #TODO There must be a way to avoid duplicating the save if the search is repeated.
+      user_search = UserSearch.new
+      user_search.user = current_user
+      user_search.terms = search_terms
+      user_search.dataset_ids = @selected_datasets
+      vars_as_ints = @sorted_variables.collect {|temp_var| temp_var.id }
+      user_search.variable_ids = vars_as_ints
+      user_search.save
+    end
+
     if @sorted_variables.empty?
       flash[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
     end
