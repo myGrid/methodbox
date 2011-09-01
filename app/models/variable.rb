@@ -1,4 +1,4 @@
-require 'acts_as_solr'
+#require 'acts_as_solr'
 
 class Variable < ActiveRecord::Base
   
