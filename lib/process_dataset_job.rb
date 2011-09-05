@@ -54,8 +54,13 @@ module ProcessDatasetJob
     ensure
       csv_file.close
     end
+    if separator == ","
+      sep = ","
+    else
+      sep ="\t"
+    end
     csv_file = File.open(csv_path, "r:" + encoding)
-    faster_csv_file = FCSV.new(csv_file, :headers=>true, :return_headers=>true)
+    faster_csv_file = FCSV.new(csv_file, :headers=>true, :return_headers=>true, :col_sep=>sep)
     header_line = faster_csv_file.shift
     all_headers = header_line.headers
     #header_line = csv_file.readline
@@ -64,15 +69,15 @@ module ProcessDatasetJob
   
     did = dataset.id
     count = all_headers.size
-    if count <= 250
+    if count <= 100
       process_part_dataset(dataset, 0, count-1)
     else
       first_column = 0
-      last_column = 249
+      last_column = 99
       while first_column < count  
         process_part_dataset(dataset, first_column, last_column)
         first_column = last_column + 1
-        last_column = last_column + 250
+        last_column = last_column + 100
         if last_column >= count
           last_column = count - 1
         end
@@ -90,9 +95,9 @@ module ProcessDatasetJob
     end 
     csv_file = File.open(csv_path, "r")
     if separator == ","
-      sep = ','
+      sep = ","
     else
-      sep ='/t'
+      sep ="\t"
     end
     faster_csv_file = FCSV.new(csv_file, :headers=>true, :return_headers=>true, :col_sep => sep)
     all_headers = faster_csv_file.shift
@@ -120,15 +125,14 @@ module ProcessDatasetJob
         name.tr!('"\'',' ')
         name.strip!
         variable = Variable.find_by_name_and_dataset_id(name, dataset.id)
-      end      	
+      end    
       if !variable
         raise "Variable not found " + name + " in dataset " + dataset.id.to_s + " file " + dataset_file
       end
-    
       path = File.join(data_directory, name + ".txt")
     #no need for the data_file path since it will be the name of the variable under File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
       file = FCSV.open(path, "w")
-      column_files[column] = file 
+      column_files[column] = file
     end   
 
     #we have already removed the headers so this is the rest of the rows containing only data

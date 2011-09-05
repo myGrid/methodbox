@@ -244,7 +244,7 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     #split by tab
     if params[:dataset_format] == "Tab Separated"
-	separator = '/t'
+	separator = "\t"
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
 	headers = all_headers.headers
@@ -256,7 +256,7 @@ class DatasetsController < ApplicationController
         headers = all_headers.headers
     #spreadsheet should already be converted
     else
-	separator = ','
+	separator = ","
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
         headers = all_headers.headers
@@ -293,19 +293,19 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     #split by tab
     if params[:dataset_format] == "Tab Separated"
-	separator = '/t'
+	separator = "\t"
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
 	headers = all_headers.headers
     #split by comma
     elsif params[:dataset_format] == "Comma Separated"
-	separator = ','
+	separator = ","
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
         headers = all_headers.headers
     #spreadsheet should already be converted
     else
-	separator = ','
+	separator = ","
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
         headers = all_headers.headers
@@ -382,7 +382,7 @@ class DatasetsController < ApplicationController
       # post to /datasets ie create
        survey = Survey.find(params[:dataset][:survey])
     end
-    if !Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && survey.survey_type.is_ukda && current_user.is_admin?
+    if !Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && survey.survey_type.is_ukda && !current_user.is_admin?
         respond_to do |format|
           flash[:error] = "You do not have permission for this action"
         format.html { redirect_to survey_url(survey) }
