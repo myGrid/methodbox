@@ -77,10 +77,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
             resultsList : "results",
             fields: ["id","name","description","survey", "category","popularity", "year"]
         };
-
+//to sort the vars add this to the table config sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC },
         var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
         this.variableDataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
-                columnDefs, variableDataSource, {sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator : pag, rowExpansionTemplate :'{id}' });
+                columnDefs, variableDataSource, { paginator : pag, rowExpansionTemplate :'{id}' });
 	this.variableDataTable.subscribe( 'cellClickEvent', variableDataTable.onEventToggleRowExpansion );
         return {
             oDS: variableDataSource,

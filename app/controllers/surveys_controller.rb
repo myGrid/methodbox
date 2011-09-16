@@ -845,7 +845,8 @@ end
     @datasets_without_results = params[:entry_ids] - with_results
     #sunspot/solr paginates everything, we use client side pagination so just search for 1000 entries and send across - anything more would be a
     #bit crazy really
-    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    # if you want to sort them then add this bit in result.results.sort{|x,y| x.name <=> y.name}.collect
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @survey_search_query = params[:survey_search_query]
     @variables_json = variables_hash.to_json
     #keep track of what  datasets have been searched
@@ -864,7 +865,7 @@ end
     end
 
     if @sorted_variables.empty?
-      flash[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
+      flash.now[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
     end
   end
 

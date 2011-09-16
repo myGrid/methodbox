@@ -22,7 +22,7 @@ function drawChart() {
 <% end -%>
 
         var chart = new google.visualization.ColumnChart($('<%= variable.id -%>_frequency_count_chart_div'));
-        chart.draw(data, {width: 500, height: 200, is3D: true});
+        chart.draw(data, {width: 500, height: <%= value_domain_hash.size*20 -%>, is3D: true});
 
 }
 </script>
@@ -30,9 +30,9 @@ function drawChart() {
 <!-- not sure the stats are always correct so don't show them -->
 <!-- <table class='listings_table'>
 <tbody>
-<tr><td>Mean</td><td><%= variable.mean ? variable.mean : 'N/A' -%></td></tr>
-<tr><td>Median</td><td><%= variable.median ? variable.median : 'N/A' -%></td></tr>
-<tr><td>Missing</td><td><%= variable.nesstar_id ? variable.invalid_entries : variable.number_of_blank_rows -%></td></tr>
+<tr><td>Mean</td><td><%#= variable.mean ? variable.mean : 'N/A' -%></td></tr>
+<tr><td>Median</td><td><%#= variable.median ? variable.median : 'N/A' -%></td></tr>
+<tr><td>Missing</td><td><%#= variable.nesstar_id ? variable.invalid_entries : variable.number_of_blank_rows -%></td></tr>
 </tbody>
 </table> -->
 <% else -%>
@@ -56,7 +56,7 @@ function drawChart() {
 							              <% end -%>
 <% end -%>
   var chart = new google.visualization.BarChart($('<%= variable.id -%>_frequency_count_chart_div'));
-  chart.draw(data, {width: 500, height: 200, is3D: true});
+  chart.draw(data, {width: 500, height: <%= value_domain_hash.size*20 -%>, is3D: true});
 
 }
 </script>
