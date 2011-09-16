@@ -75,13 +75,13 @@ class DatasetsController < ApplicationController
       uf.close
       #first check mime type
       mimetype = `file --mime -br #{filename}`.gsub(/\n/,"").split(';')[0]
-      if mimetype.index("xml") == nil && mimetype.index("XML") == nil
-        possible_mimetype = `file -b #{filename}`
-        respond_to do |format|
-          flash[:error] = "MethodBox cannot process this file.  Is it really an xml file? Checking the mime type revealed this: " + possible_mimetype
-          format.html { redirect_to dataset_path(@dataset) }
-        end
-      else  
+     # if mimetype.index("xml") == nil && mimetype.index("XML") == nil
+      #  possible_mimetype = `file -b #{filename}`
+       # respond_to do |format|
+        #  flash[:error] = "MethodBox cannot process this file.  Is it really an xml file? Checking the mime type revealed this: " + possible_mimetype
+         # format.html { redirect_to dataset_path(@dataset) }
+        #end
+     # else  
         begin 
           logger.info(Time.now.to_s + " Starting metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
           Delayed::Job.enqueue ProcessMetadataJob::StartJobTask.new(@dataset.id, current_user.id, params[:dataset_metadata_format], uf.path, params[:update][:reason], base_host)
@@ -93,7 +93,7 @@ class DatasetsController < ApplicationController
           flash[:notice] = "The metadata is being updated. You will be emailed when it is ready."  
           format.html { redirect_to dataset_path(@dataset) }
         end
-      end
+      #end
     else
       respond_to do |format|
         flash[:error] = "There are no variables in this dataset.  Please upload a dataset file."
