@@ -26,10 +26,15 @@ namespace :obesity do
       links.each do |link|
         if link.children.text == "DDI"
           filename = link.attributes["href"].value
-        end 
+        end
       end
       puts name + " : " + type + " : " + filename + " : " + year
       ddi_url = URI.parse("http://www.ccsr.ac.uk/esds/variables/xml/" + filename)
+      res = Net::HTTP.get full_uri
+      temp_file_path = "/home/ian/scratch/ccsr_ddi_temp.xml"
+      File.open(temp_file_path, 'w') {|f| f.write(res) }
+      study = parser.parse temp_file_path
+      
     end
   end
   
