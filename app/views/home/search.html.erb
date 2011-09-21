@@ -16,14 +16,14 @@
 <div style="margin-left: auto; margin-right: auto; display: block; width: 600px;">
 <table>
 <tbody>
-<tr><td>Surveys:<%= check_box_tag 'search_type[]', 'surveys', true -%>
-Variables:<%= check_box_tag 'search_type[]', 'variables', true -%>
+<tr><td><ul><li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'surveys', true -%>Surveys</li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'variables', true -%>Variables</li>
 <% if logged_in? -%>
-People:<%= check_box_tag 'search_type[]', 'people', true -%>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'people', true -%>People</li>
 <% end -%>
-Methods:<%= check_box_tag 'search_type[]', 'methods', true -%>
-Data Extracts:<%= check_box_tag 'search_type[]', 'extracts', true -%>
-Publications:<%= check_box_tag 'search_type[]', 'publications', true -%></td></tr>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'methods', true -%>Methods</li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'extracts', true -%>Data Extracts</li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'publications', true -%>Publications</li></ul></td></tr>
 <tr><td style="font-size: smaller;">Select the things you want to search.  Maybe you want to find variables from a survey, perhaps you need to find a particular survey.  Share your results with other researchers or keep them private, the choice is yours.</td></tr>
 </tbody>
 </table>
