@@ -64,7 +64,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "title", label: "Title", formatter:"surveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
 		    { key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "type", label: "Type", sortable: true, minWidth: 100, maxWidth: 100 },
+		    //{ key: "type", label: "Type", sortable: true, minWidth: 100, maxWidth: 100 },
                     { key: "source", label: "Source", formatter:"sourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
 
