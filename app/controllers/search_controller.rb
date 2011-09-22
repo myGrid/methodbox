@@ -46,7 +46,8 @@ class SearchController < ApplicationController
       @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
     if params[:search_type].include?('variables')
-      @results_hash['variable'] = find_variables(query, params[:variable_page]).results.sort!{|x,y| x.name <=> y.name}
+      #don't sort variable results but return by order of relevance
+      @results_hash['variable'] = find_variables(query, params[:variable_page]).results
     end 
 
     if @results_hash.empty?
