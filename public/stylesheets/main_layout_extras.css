@@ -686,3 +686,8 @@ body:before {
   background-color: white;
   margin: 0;
 }
+
+.add_var_button {
+	height: 25px;
+	font: 17px arial,sans-serif;
+}
