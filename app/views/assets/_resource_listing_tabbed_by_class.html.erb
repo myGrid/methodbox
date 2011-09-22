@@ -75,8 +75,8 @@
        if (tabView.getTab(value) != null){
          tabView.set("activeIndex", value);
        } else {
-          tabView.set("activeIndex", <%= tab_count -1 -%>);
-          YAHOO.util.Cookie.set("search_tab", <%= tab_count -1 -%>, {
+          tabView.set("activeIndex", <%= tab_count -2 -%>);
+          YAHOO.util.Cookie.set("search_tab", <%= tab_count -2 -%>, {
             path: "/"
           });
        }
