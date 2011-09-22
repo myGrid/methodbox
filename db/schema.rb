@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110825101344) do
+ActiveRecord::Schema.define(:version => 20110922091556) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(:version => 20110825101344) do
     t.string   "reason_for_update"
     t.string   "nesstar_id"
     t.string   "nesstar_uri"
+    t.string   "year"
   end
 
   create_table "delayed_jobs", :force => true do |t|
