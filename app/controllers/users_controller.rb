@@ -127,7 +127,7 @@ if verify_recaptcha
         format.html {redirect_to(admin_path)}
       else
         if REGISTRATION_CLOSED
-          Mailer.deliver_signup_requested(params[:message],@user,base_host)
+          Mailer.deliver_signup_requested(params[:person][:description],@user,base_host)
           flash[:notice]="An email has been sent to the administrator with your signup request."
           @user.dormant = true
           @user.person.dormant = true
@@ -142,6 +142,7 @@ if verify_recaptcha
             @user.save
             format.html {redirect_to(root_url)}
             Mailer.deliver_welcome self.current_user, base_host
+            flash[:notice]="Welcome to MethodBox, " +  @user.person.first_name + ". Why not start by trying some searches.........."
          else
               # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
               Mailer.deliver_signup(current_user,base_host)
