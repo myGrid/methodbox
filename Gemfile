@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 source 'http://localhost:8808'
 source :gemcutter
-gem "rails", "2.3.5"
+gem "rails", "2.3.8"
 #rails version depends on active support of same version
-gem "activesupport", "2.3.5"
+gem "activesupport", "2.3.8"
 gem "rmagick", "2.13.1"
 gem "RedCloth", "4.2.3"
 gem "will_paginate", "2.3.12"
@@ -26,6 +26,7 @@ gem 'sunspot_rails', '~> 1.2.1'
 gem 'addressable', '2.2.4'
 gem 'simple-spreadsheet-extractor', '0.5.0'
 gem 'ddi-parser'
+gem "recaptcha", :require => "recaptcha/rails"
 
 # linecache is not a gem we pull in directly but it is used by ruby-debug and
 # version 0.45 requires ruby 1.9. 0.43 works with 1.8 so specify it here.

@@ -112,6 +112,7 @@
       # uncomment at your own risk
       reset_session
     end
+if verify_recaptcha
     @user = User.new(params[:user])
     @person = Person.new(params[:person])
     @person.email = @user.email
@@ -127,7 +128,7 @@
       else
         if REGISTRATION_CLOSED
           Mailer.deliver_signup_requested(params[:message],@user,base_host)
-          flash[:notice]="An email has been sent to the administor with your signup request."
+          flash[:notice]="An email has been sent to the administrator with your signup request."
           @user.dormant = true
           @user.person.dormant = true
           @user.activation_code = nil
@@ -157,6 +158,12 @@
       else
         format.html {render :action => 'new'}
       end
+    end
+  end
+  else
+    respond_to do |format|
+      flash[:error] = "There was an error with the recaptcha code below. Please re-enter the code and try again."
+      format.html {render :action => 'new'}
     end
   end
   end
