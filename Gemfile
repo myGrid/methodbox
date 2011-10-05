@@ -20,7 +20,7 @@ gem "tzinfo", "0.3.24"
 gem "linkeddata", "0.3.1"
 gem "ipaddress", "0.7.0"
 gem "POpen4",  "0.1.4", :require => "popen4"
-gem "nesstar-api", "0.0.3"
+gem "nesstar-api", "0.0.4"
 gem "metric_fu"
 gem 'sunspot_rails', '~> 1.2.1'
 gem 'addressable', '2.2.4'
