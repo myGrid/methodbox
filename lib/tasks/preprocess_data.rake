@@ -9,10 +9,10 @@ namespace :obesity do
   task :preprocess_data => :environment do
     puts "Strating preprocessing of data"
     #Dataset.find(:all, :conditions => "id = 22").each do |dataset|
-    Dataset.find(:all).each do |dataset|
+    Dataset.all(:conditions=>{:nesstar_id => nil}).each do |dataset|
       variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id} and data_file = NULL and is_archived != true")
       if variables.size == 0
-         variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id} and is_archived != true")
+         variables = Variable.all(:conditions => "dataset_id =  #{dataset.id} and is_archived != true")
          if check_upto_date (dataset, variables.last)
            puts "Skipping dataset "+ dataset.id.to_s + " with name " + dataset.name
            process = false
@@ -30,7 +30,7 @@ namespace :obesity do
 
         puts "Calculating statistics"
         #Get the updated variables
-        variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id}")
+        variables = Variable.all(:conditions => "dataset_id =  #{dataset.id}")
         #variables = Variable.find(:all, :conditions => "dataset_id =  22 and name = 'INTYP01'")
         variables.each do |variable|
           process_variable (variable)
@@ -73,18 +73,18 @@ namespace :obesity do
     variables = Variable.all(:conditions => {:dataset_id => did})
     count = variables.size
     puts "count " + count.to_s
-    if count <= 250
+    if count <= 100
       process_part_dataset(dataset, 0, count-1)
     else
       first_column = 0
-      last_column = 249
+      last_column = 99
       while first_column < count  
         puts "first column " + first_column.to_s
         puts "last column " + last_column.to_s
         #uts count.to_s + " < " + count.to_s
         process_part_dataset(dataset, first_column, last_column)
         first_column = last_column + 1
-        last_column = last_column + 250
+        last_column = last_column + 100
         if last_column >= count
           last_column = count - 1
         end
