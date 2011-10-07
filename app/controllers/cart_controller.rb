@@ -97,7 +97,7 @@ class CartController < ApplicationController
         #refresh the var table with the remaining variables
         page << "updateTable('#{@variables_json}');"
         page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
-        page[:cart_button].visual_effect(:pulsate, :duration=>2.seconds)
+        page[:cart_button].visual_effect(:pulsate, :duration=>2)
       end
     end
   end
