@@ -211,10 +211,7 @@ class CsvarchivesController < ApplicationController
     @current_user.cart_items.each do |item|
       variable = Variable.find(item.variable_id)
       @sorted_variables.push(variable)
-        if variable.dataset.survey.survey_type.is_ukda
-          @ukda_only = true
-          break
-        end
+      @ukda_only = true if variable.dataset.survey.survey_type.is_ukda
     end
     @selected_scripts=[]
     @selected_archives=[]
@@ -407,7 +404,6 @@ class CsvarchivesController < ApplicationController
     save_all_links selected_surveys
     # generate the json encoding for the groups sharing permissions to go in the params
     if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-       puts "custom sharing here"
        values = "{"
           params[:groups].each do |workgroup_id|
              values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
@@ -418,8 +414,6 @@ class CsvarchivesController < ApplicationController
           params[:sharing][:permissions][:values] = values
           params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
           logger.info "custom permissions: " + values
-          puts params[:sharing][:permissions][:values]
-          puts params[:sharing][:permissions][:contributor_types]
       end
     
     respond_to do |format|
@@ -471,7 +465,6 @@ class CsvarchivesController < ApplicationController
     
     if @archive.save
       if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-        puts "custom sharing here"
         values = "{"
         params[:groups].each do |workgroup_id|
           values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
@@ -482,13 +475,10 @@ class CsvarchivesController < ApplicationController
         params[:sharing][:permissions][:values] = values
         params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
         logger.info "custom permissions: " + values
-        puts params[:sharing][:permissions][:values]
-        puts params[:sharing][:permissions][:contributor_types]
       end
       policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
       # update attributions
       Relationship.create_or_update_attributions(@archive, params[:attributions])
-      puts "policy error: " + policy_err_msg
     
     # existing_arcs = Csvarchive.find(:all, :conditions=>{:title=> params[:archive][:title], :person_id=>User.find(current_user).person_id})
     #    if existing_arcs.empty?
@@ -643,7 +633,6 @@ class CsvarchivesController < ApplicationController
 
     # obtain a policy to use
     if defined?(@archive) && @archive.asset
-      puts "archive policy exists already"
       if (policy == @archive.asset.policy)
         # Script exists and has a policy associated with it - normal case
         policy_type = "asset"
@@ -667,7 +656,6 @@ class CsvarchivesController < ApplicationController
       #        policy = proj_default
       #        policy_type = "project"
       #      else
-      puts "new archive so new default policy"
       policy = Policy.default(current_user)
       policy_type = "project"
       #      end
@@ -854,7 +842,6 @@ class CsvarchivesController < ApplicationController
         variable_hash[variable.dataset_id].push(variable.id)
       end
       stata_zip_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
-      puts stata_zip_path
       Zip::ZipFile.open(stata_zip_path) {|zipfile|
           variable_hash.each_key do |key|
             dataset = Dataset.find(key)
@@ -866,7 +853,6 @@ class CsvarchivesController < ApplicationController
       Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
         zipfile.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}
         file_hash.each_key do |key|
-          puts key
           zipfile.get_output_stream(key) { |f| f.puts file_hash[key] }
         end
       }
@@ -933,18 +919,14 @@ class CsvarchivesController < ApplicationController
       download_string = 'format=CSV&execute=true&ddiformat=html&study'
       study_uri = URI.parse(dataset.nesstar_uri)
       study_uri.merge!('/obj/fStudy/' + dataset.nesstar_id)
-      puts 'study uri: ' + study_uri.to_s
       study_uri = CGI.escape(study_uri.to_s)
-      puts 'study uri: ' + study_uri.to_s
       download_string << '=' + study_uri + '&v=2&analysismode=table&s='
-      puts 'download string: ' + download_string.to_s
       variable_hash[dataset_id].each do |variable|
         download_string << CGI.escape(variable.nesstar_id + ',')
       end
       download_string.chomp! #remove the final ,
       download_string << '&mode=download'
       download_uri = URI.join(dataset.nesstar_uri, 'webview/velocity?')
-      puts download_uri
       @download_uri_strings << download_uri.to_s + download_string
       
     end
