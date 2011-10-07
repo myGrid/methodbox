@@ -13,12 +13,16 @@ namespace :obesity do
       variables = Variable.find(:all, :conditions => "dataset_id =  #{dataset.id} and data_file = NULL and is_archived != true")
       if variables.size == 0
          variables = Variable.all(:conditions => "dataset_id =  #{dataset.id} and is_archived != true")
-         if check_upto_date (dataset, variables.last)
-           puts "Skipping dataset "+ dataset.id.to_s + " with name " + dataset.name
-           process = false
-         else
-           puts "Preprocessed data out of date for dataset " + dataset.id.to_s
-           process = true
+         begin
+           if check_upto_date (dataset, variables.last)
+             puts "Skipping dataset "+ dataset.id.to_s + " with name " + dataset.name
+             process = false
+           else
+             puts "Preprocessed data out of date for dataset " + dataset.id.to_s
+             process = true
+           end
+         rescue Exception=>e
+           puts "File has probably gone missing, ignore and skip to the next one: " + e.to_s
          end
       else     
         puts "Preprocessed data missing for " + variables.size.to_s + " variables in dataset " + dataset.id.to_s
