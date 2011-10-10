@@ -62,6 +62,8 @@ class SearchController < ApplicationController
     if @results_empty
       flash[:notice] = "There were no search results for \"" + params[:search_query] + "\""
     end
+    #tell the browser that the post request is ok to cache for the next 20 minutes
+    expires_in 20.minutes
   end
 
   private
