@@ -42,14 +42,15 @@ class Variable < ActiveRecord::Base
     return hyphened
   end
   
+  #If the variable is an MB native one then read the stats from file
   def none_values_hash
     begin
     hash = Hash.new(0)  
-    if self.none_values_distribution_file
+    if !self.nesstar_id
       #hash["path"]= self.none_values_distribution_file
-      arr = self.none_values_distribution_file.split("/")
-      index = arr.size - 2
-      file = File.open(File.join(CSV_FILE_PATH, arr[index], self.name.downcase + ".csv"), "r")
+      #arr = self.none_values_distribution_file.split("/")
+      #index = arr.size - 2
+      file = File.open(File.join(CSV_FILE_PATH, self.dataset.uuid_filename.split('.')[0], self.name.downcase + ".csv"), "r")
       #hash["file"] = file.to_s
       file.each_line do |line|
         parts = line.split(",")  
@@ -68,13 +69,14 @@ class Variable < ActiveRecord::Base
     end
   end
   
+  #If the variable is an MB native one then read the stats from file
   def values_hash
     begin
     hash = Hash.new(0)  
-    if self.values_distribution_file
-      arr = self.values_distribution_file.split("/")
-      index = arr.size - 2
-      file = File.open(File.join(CSV_FILE_PATH, arr[index], self.name.downcase + ".data"), "r")
+    if !self.nesstar_id
+      #arr = self.values_distribution_file.split("/")
+      #index = arr.size - 2
+      file = File.open(File.join(CSV_FILE_PATH, self.dataset.uuid_filename.split('.')[0], self.name.downcase + ".data"), "r")
       file.each_line do |line|
         parts = line.split(",")	      
         value = Float(parts[0])
