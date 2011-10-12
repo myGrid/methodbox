@@ -1,5 +1,5 @@
 <div class="right">
-<%= addthis_bookmark_button(variable_url(@variable), @variable.name + " from " + @variable.dataset.name, :secure => HTTPS_ON) -%>
+<%= addthis_bookmark_button(variable_url(@variable), @variable.name + " from " + @variable.dataset.name) -%>
 </div>
 <% form_tag({:url => {:action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
 <ul class="buttons">

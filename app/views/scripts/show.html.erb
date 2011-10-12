@@ -1,6 +1,6 @@
 <% truncate_length_for_boxes = 22 -%>
 <div class="right">
-<%= addthis_bookmark_button(script_url(@script), @script.title, :secure => HTTPS_ON) -%>
+<%= addthis_bookmark_button(script_url(@script), @script.title) -%>
 </div>
 <ul class="buttons">
 	<% if current_user && current_user.id != @script.contributor_id %>

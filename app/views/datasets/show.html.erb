@@ -1,5 +1,5 @@
 <div class="right">
-<%= addthis_bookmark_button(dataset_url(@dataset), @dataset.name, :secure => HTTPS_ON) -%>
+<%= addthis_bookmark_button(dataset_url(@dataset), @dataset.name) -%>
 </div>
 <ul class="buttons">
 <% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>

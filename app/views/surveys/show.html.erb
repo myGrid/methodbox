@@ -3,7 +3,7 @@
 <%= stylesheet_link_tag 'faux_table'%>
 <% truncate_length_for_boxes = 22 -%>
 <div class="right">
-<%= addthis_bookmark_button(survey_url(@survey), @survey.title, :secure => HTTPS_ON) -%>
+<%= addthis_bookmark_button(survey_url(@survey), @survey.title) -%>
 </div>
 	<ul class="buttons">
 <% if logged_in? -%>

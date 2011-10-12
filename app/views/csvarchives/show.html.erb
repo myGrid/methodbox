@@ -32,7 +32,7 @@
 }
 </style>
 <div class="right">
-<%= addthis_bookmark_button(csvarchive_url(@archive), @archive.title, :secure => HTTPS_ON) -%>
+<%= addthis_bookmark_button(csvarchive_url(@archive), @archive.title) -%>
 </div>
 <ul class="buttons">
   <%= hidden_field_tag "format_type", "csv" -%>
