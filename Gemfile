@@ -30,6 +30,9 @@ gem "recaptcha", :require => "recaptcha/rails"
 #later versions cause issues with time to words since {{variable}} is now %{variable} in later versions
 gem "i18n", "0.4.1"
 
+#delayed job
+gem 'daemons'
+
 # linecache is not a gem we pull in directly but it is used by ruby-debug and
 # version 0.45 requires ruby 1.9. 0.43 works with 1.8 so specify it here.
 gem 'linecache', '0.43'
