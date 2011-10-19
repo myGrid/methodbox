@@ -394,6 +394,8 @@
                                 //stop multiple clicks of the expand button
                                 if (pos == -1) {
                                   expanded_rows.push(expanded_data.id);
+//var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
+//YAHOO.util.Connect.initHeader('X-CSRF-Token', csrf_meta_tag.readAttribute('content'));
 				  var transaction = YAHOO.util.Connect.asyncRequest('GET', surveys_url + '/retrieve_details?survey_id='+ expanded_data.id, callback, null);
                                   Element.show('spinner');
                                 }

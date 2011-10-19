@@ -1,9 +1,9 @@
 source 'http://rubygems.org'
 source 'http://localhost:8808'
 source :gemcutter
-gem "rails", "2.3.10"
+gem "rails", "2.3.14"
 #rails version depends on active support of same version
-gem "activesupport", "2.3.10"
+gem "activesupport", "2.3.14"
 gem "rmagick", "2.13.1"
 gem "RedCloth", "4.2.3"
 gem "will_paginate", "2.3.12"

@@ -366,7 +366,9 @@
                                     expanded_rows.splice(pos, 1);
                                     //retrieve values and their counts - need to do it this way instead of javascript inside the partial since
                                    //it would not run it - possible yui issue?
-                                   var json_transaction = YAHOO.util.Connect.asyncRequest('POST', variables_url + '/values_array?id='+ expanded_data.id, json_callback, null);
+//var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
+//YAHOO.util.Connect.initHeader('X-CSRF-Token', csrf_meta_tag.readAttribute('content'));
+                                   var json_transaction = YAHOO.util.Connect.asyncRequest('GET', variables_url + '/values_array?id='+ expanded_data.id, json_callback, null);
 		                    return true;
 
 		                } else {
@@ -428,7 +430,9 @@
                                   expanded_rows.push(expanded_data.id);
                                   expand_done[expanded_data.id] = false;
                                   //retrieve general info
-				  var transaction = YAHOO.util.Connect.asyncRequest('POST', surveys_url + '/expand_row?id='+ expanded_data.id, callback, null);
+//var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
+//YAHOO.util.Connect.initHeader('X-CSRF-Token', csrf_meta_tag.readAttribute('content'));
+				  var transaction = YAHOO.util.Connect.asyncRequest('GET', surveys_url + '/expand_row?id='+ expanded_data.id, callback, null);
                                   Element.show('spinner');
                                 }
 
