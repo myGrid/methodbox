@@ -1,23 +1,22 @@
-<%#= javascript_include_tag 'https://www.google.com/jsapi' -%>
 <div class="right">
-<%= addthis_bookmark_button(variable_url(@variable), @variable.name + " from " + @variable.dataset.name, :secure => HTTPS_ON) -%>
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
 </div>
+<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
+<!-- AddThis Button END -->
+<%#= addthis_bookmark_button(variable_url(@variable), @variable.name + " from " + @variable.dataset.name) -%>
+</div>
+<% form_tag({:url => {:action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
 <ul class="buttons">
-  <%# if !Person.find(current_user.person_id).watched_variables.any?{|var| var.variable_id == @variable.id} %>
-    <!-- <li> -->
-<%#= icon('watch', watch_variable_path(@variable), nil, nil, 'Watch variable') -%>
-<!-- </li> -->
-  <%# else %>
-    <!-- <li> -->
-<%#= icon('stopwatch', watch_variable_path(@variable), nil, nil, 'Stop watching variable') -%>
-<!-- </li> -->
-
-  <%# end %>
-  <!-- <li> -->
-<%#= icon('edit', edit_variable_path(@variable), "Edit Variable", nil, 'Edit Variable') -%>
-<!-- </li> -->
 <% if logged_in? && !@variable.is_archived? -%>
-  <li><%= icon('add_to_cart', add_to_cart_variable_path(@variable), "Add Variable to Cart", {:method => :post}, 'Add Variable to Cart') -%></li>
+<%= hidden_field_tag 'variable_ids[]', @variable.id -%>
+<%= submit_to_remote '_submit', 'Add variable to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "Element.show('spinner')",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
 <% end -%>
 </ul>
 <% if @variable.is_archived? %>
@@ -152,7 +151,7 @@
       <p>
         <b>Statistics:</b>
 
-<%=  render :partial=>"statistics_table", :locals => {:variable => @variable} -%>
+<%=  render :partial=>"statistics_table", :locals => {:variable => @variable, :var_hash => @var_hash, :no_var_hash => @no_var_hash, :total_entries => @total_entries, :invalid_entries => @invalid_entries, :blank_rows => @blank_rows, :value_domain_hash => @value_domain_hash, :valid_entries => @valid_entries} -%>
 		<div style="clear:both;">
 			</div>
 
@@ -175,19 +174,19 @@
           <% end %>
         </p>
       <% end -%>
-  <p>
-    <div class="box_standout">
       <% if !@sorted_matches.empty? -%>
-        <%= "Users who downloaded this variable also selected " -%>
-        <ul>
-          <% @sorted_matches.each do |match|-%>
-            <% linked_var = Variable.find(match.target_variable_id) -%>
-            <li><%= link_to(linked_var.name + " from " + linked_var.dataset.name, variable_url(linked_var)) -%></li>
-          <% end -%>
-        </ul>
-      <% end -%>
-    </div>
-  </p>
+        <p>
+          <div class="box_standout">
+            <%= "Users who downloaded this variable also selected " -%>
+            <ul>
+              <% @sorted_matches.each do |match|-%>
+                 <% linked_var = Variable.find(match.target_variable_id) -%>
+                <li><%= link_to(linked_var.name + " from " + linked_var.dataset.name, variable_url(linked_var)) -%></li>
+              <% end -%>
+            </ul>
+        </div>
+      </p>
+    <% end -%>
 </div>
 
   <!-- </div> -->
@@ -214,3 +213,4 @@
 				<% end %>
 </div>
 </div>
+<% end -%>

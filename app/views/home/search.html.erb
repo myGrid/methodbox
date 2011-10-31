@@ -1,0 +1,36 @@
+<div style="padding-left: 30%; padding-right: 30%;padding-top: 8em;">
+<div style="text-align: center;"><%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>100),root_path -%></div>
+<% form_tag '/search/' do -%>
+<!-- search for everything from the main page -->
+<!-- initial search is for first page -->
+<%= hidden_field_tag 'person_page', 1 -%>
+<%= hidden_field_tag 'survey_page', 1 -%>
+<%= hidden_field_tag 'script_page', 1 -%>
+<%= hidden_field_tag 'csvarchive_page', 1 -%>
+<%= hidden_field_tag 'publication_page', 1 -%>
+<%= hidden_field_tag 'variable_page', 1 -%>
+<div style="text-align: center; padding-bottom:5px;">
+<%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods" -%>
+</div>
+<div id="advanced-search-options" style="text-align: center; padding-bottom: 5px; <%= @advanced_controls ? '' : 'display:none'-%>">
+<div style="display: block; width: 100%;">
+<table>
+<tbody>
+<tr><td><ul><li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'surveys', true -%>Surveys</li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'variables', true -%>Variables</li>
+<% if logged_in? -%>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'people', true -%>People</li>
+<% end -%>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'methods', true -%>Methods</li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'extracts', true -%>Data Extracts</li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'publications', true -%>Publications</li></ul></td></tr>
+<tr><td style="font-size: smaller;">Select the things you want to search.  Maybe you want to find variables from a survey, perhaps you need to find a particular survey.  Share your results with other researchers or keep them private, the choice is yours.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div style="text-align: center;">
+<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find what you are looking for......", :onclick => "Element.show('spinner');"   -%>
+</div>
+<% end  -%>
+</div>

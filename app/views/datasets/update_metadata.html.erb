@@ -28,7 +28,7 @@
 		        </p>
 
     <p style="text-align: center;">
-      <%= submit_tag "Upload metadata file", :id => "dataset_submit_btn", :onclick => "javascript: validateDatasetFields(false); return(false);"  -%> or <%= link_to "Cancel", dataset_path(@dataset) -%>
+      <%= submit_tag "Upload metadata file", :id => "dataset_submit_btn", :onclick => "javascript: validateDataFileFields(true); return(false);"  -%> or <%= link_to "Cancel", dataset_path(@dataset) -%>
     </p>
   <% end %>
   </center>

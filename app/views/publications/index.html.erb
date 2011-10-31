@@ -9,7 +9,7 @@
   <%= render :partial => "layouts/paginate_alphabetical", :locals => { :pages => @publications.pages, :page_totals=>@publications.page_totals,:current_page=>@publications.page } -%>
 <% end %>
 
-<div class="list_items_container bordered">
+<div class="list_items_container bordered asset-resource-list">
   <%= render :partial=>"assets/resource_list", :locals => {:collection=>@publications} %>
 </div>
 <% else %>

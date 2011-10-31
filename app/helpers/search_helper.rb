@@ -1,11 +1,11 @@
 module SearchHelper
   
   def non_reg_search_type_options
-    ["All", "Surveys","Methods","Data Extracts"]
+    ["All", "Variables","Surveys","Methods","Data Extracts"]
   end
   
   def search_type_options
-    ["All","People","Surveys","Methods","Data Extracts", "Publications"]
+    ["All","People","Variables","Surveys","Methods","Data Extracts", "Publications"]
   end
 
   #Classifies each result item into a hash with the class name as the key.

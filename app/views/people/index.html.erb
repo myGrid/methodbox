@@ -3,6 +3,6 @@
 	<%= page_entries_info @people %>
 </div>
 <div class="asset-resource-list">
-      	<%= render :partial => "assets/resource_list", :locals => { :collection => @people, :authorization_for_showing_already_done=>true} %>
+      	<%= render :partial => "assets/resource_list", :locals => { :collection => @people, :authorization_for_showing_already_done=>true, :paginate=> false} %>
 </div>
 <%= will_paginate @people, :param_name=>'page' %>

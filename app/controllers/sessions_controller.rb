@@ -3,10 +3,40 @@ require 'digest/md5'
 # This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
     
+  before_filter :login_required, :only => [:convert_shibboleth_login]
+
   after_filter :update_last_user_activity
   
   layout 'main'
+
+  #user already has a MethodBox internal account but wants to
+  #activate shib login
+  #find out from the SARs shibboleth service what the magic
+  #url is
+  def convert_shibboleth_login
+    url = URI.parse("http://academic.sar-data.ccsr.ac.uk/nesstar/?" + SHIB_LOGIN_URL + "/users/shib_convert_after/" + current_user.id.to_s)
+    res = Net::HTTP.get url
+    doc = Nokogiri::HTML(res)
+    links = doc.css('a').map { |link| link['href'] }
+    shib_links =  links.reject{|entry| entry.rindex('shibboleth') == nil}
+    shib_link = shib_links[0]
+    redirect_to shib_link
+  end
   
+  #find out from the SARs shibboleth service what the magic
+  #url is
+  def pre_shibboleth_login
+    url = URI.parse("http://academic.sar-data.ccsr.ac.uk/nesstar/?" + SHIB_LOGIN_URL + "/session/shibboleth")
+    res = Net::HTTP.get url
+    doc = Nokogiri::HTML(res)
+    links = doc.css('a').map { |link| link['href'] }
+    shib_links =  links.reject{|entry| entry.rindex('shibboleth') == nil}
+    shib_link = shib_links[0]
+    redirect_to shib_link
+  end
+  
+  #the return action for the shibboleth login round trip
+  #figure out what the user id is by parsing the response
   def shibboleth
     date = DateTime.now
     year = date.year
@@ -27,7 +57,7 @@ class SessionsController < ApplicationController
         user=User.find_by_shibboleth_user_id(params[:username])
         if user && user.person
           self.current_user = user
-          format.html {redirect_to index_url}
+          format.html {redirect_to surveys_url}
         else
           @user = User.new
           format.html {redirect_to :controller => 'users', :action => 'new_shib', :shib_user_id => params[:username]}
@@ -78,22 +108,22 @@ class SessionsController < ApplicationController
       else
         respond_to do |format|
 #       flash[:notice] = "Logged in successfully"
-
-          if !params[:called_from].blank? && params[:called_from][:controller] != "sessions"
-            if !params[:called_from][:id].blank?
-              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :id => params[:called_from][:id])
-            elsif !params[:called_from][:entry_ids].blank? && !params[:called_from][:survey_search_query].blank?             
-              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :entry_ids => params[:called_from][:entry_ids], :survey_search_query => params[:called_from][:survey_search_query])
-            else
-              return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action])
-            end
-          else
-            if session[:return_to] and !session[:return_to].empty?
-              return_to_url = session[:return_to]
-            else
-              return_to_url = root_url
-            end
-          end
+#decided that we should go to the person profile instead of index
+          #if !params[:called_from].blank? && params[:called_from][:controller] != "sessions"
+            #if !params[:called_from][:id].blank?
+              #return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :id => params[:called_from][:id])
+            #elsif !params[:called_from][:entry_ids].blank? && !params[:called_from][:survey_search_query].blank?             
+              #return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action], :entry_ids => params[:called_from][:entry_ids], :survey_search_query => params[:called_from][:survey_search_query])
+            #else
+              #return_to_url = url_for(:controller => params[:called_from][:controller], :action => params[:called_from][:action])
+            #end
+          #else
+            #if session[:return_to] and !session[:return_to].empty?
+              #return_to_url = session[:return_to]
+            #else
+              return_to_url = surveys_url
+            #end
+          #end
 
           format.html { return_to_url.nil? || (return_to_url && URI.parse(return_to_url).path == '/') ? redirect_to(root_url) : redirect_to(return_to_url) }
         end

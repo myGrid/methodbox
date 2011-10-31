@@ -1,116 +1,138 @@
 class SearchController < ApplicationController
 
   before_filter :login_required, :except => [ :index]
-  before_filter :local_login_required, :only => [ :index]
   after_filter :update_last_user_activity
 
   def index
-
+    #if nothing has been selected then search for all types
+    if !defined? params[:search_type] || params[:search_type].empty?
+      params[:search_type] = ['people', 'surveys', 'methods', 'extracts', 'publications', 'variables'] 
+    end
+    @search_types = params[:search_type]
+    @results_hash = Hash.new
     @search_query = params[:search_query]
     @search_query||=""
-
-    @search_type = params[:search_type]
-    type=@search_type.downcase unless @search_type.nil?
 
     #SOLR doesn't appear to support lower case "or"
     query = @search_query.upcase
 
     if (query.nil? or query.strip.empty?)
-      flash.now[:notice]="Sorry your query appeared blank. Please try again"
-      return
+      flash[:error]="Sorry your query appeared blank. Please try again"
+      redirect_to :back
     end
+    #if (query.include?(' OR ') && query.include?(' AND '))
+     # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
+      #return
+    #end
 
-    if (query.include?(' OR ') && query.include?(' AND '))
-      flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
-      return
+    #can only search for people if logged in
+    if params[:search_type].include?('people') && logged_in?
+      @results_hash['people'] = find_people(query, params[:person_page]).results
+    end  
+    if params[:search_type].include?('surveys')
+      results = find_surveys(query, params[:survey_page]).results
+      @results_hash['survey'] = results
+      surveys = results.sort!{|x,y| x.title <=> y.title}
+      surveys_hash = {"total_entries" => surveys.size, "results"=>surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
+      @surveys_json = surveys_hash.to_json
+    end 
+    if params[:search_type].include?('methods')
+      @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results
+    end  
+    if params[:search_type].include?('extracts')
+     @results_hash['csvarchive'] = select_authorised find_csvarchive(query, params[:csvarchive_page]).results
+    end   
+    if params[:search_type].include?('publications')
+      @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
+    if params[:search_type].include?('variables')
+      #don't sort variable results but return by order of relevance
+      @results_hash['variable'] = find_variables(query, params[:variable_page]).results
+    end 
 
-    @results=[]
-    case(type)
-    when("people")
-      find_people(query)
-      @results = select_authorised @results
-    when("surveys")
-      find_surveys(query)
-      @results = select_authorised @results
-    when("methods")
-      find_methods(query)
-      @results = select_authorised @results
-    when("data extracts")
-       find_csvarchive(query)
-       @results = select_authorised @results
-    when("publications")
-        find_publications(query)
-        @results = select_authorised @results
-    when("all")
-      if logged_in?
-        find_people(query)
-      end
-      find_methods(query)
-      find_csvarchive(query)
-      find_publications(query)
-      find_surveys(query)
-      @results = select_authorised @results
-    else
-      logger.info("Unexpected search_type "+@search_query)
-      flash[:error]="Unexpected search_type"
-      redirect_to root_url
-    end
-
-    #uts "SEARCH RESULTS: " + @results.to_s
-    if @results.empty?
+    if @results_hash.empty?
       flash.now[:notice]="No matches found for '<b>#{@search_query}</b>'."
-      #    else
-      #      flash[:notice]="#{@results.size} #{@results.size==1 ? 'item' : 'items'} matched '<b>#{@search_query}</b>' within their title or content."
     end
-
+    @results_empty = true
+    @results_hash.each_key do |key|
+      if !@results_hash[key].empty?
+        @results_empty = false
+      end
+    end
+    if @results_empty
+      flash[:notice] = "There were no search results for \"" + params[:search_query] + "\""
+    end
+    #tell the browser that the post request is ok to cache for the next 20 minutes
+    expires_in 20.minutes
   end
 
   private
 
-  #Note !SOLR_ENABLED is for testing purposes only and will not give as many results as SOLR_ENABLED
-  def find_surveys(query)
-    if (SOLR_ENABLED)
-      @results = @results + Survey.find_by_solr(query, :limit => 1000).results
-    else
-      @results = @results + Survey.find(:all, :conditions => ["description like ?", '%'+@search_query.downcase+'%'])
+  def find_surveys(query, page)
+    #only search authorised surveys
+    #surveys are restricted to certain types at the moment
+    surveys = get_surveys
+    surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
+    surveys.collect!{|el| el.id}
+    res = Sunspot.search(Survey) do
+      keywords(query) {minimum_match 1}
+      with(:id, surveys)
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
     find_previous_searches
+    return res
   end
 
-  def find_people(query)
-    puts "query = " + query
-    if (SOLR_ENABLED)
-      #results = Variable.find_by_solr(query, :limit => 1000)
-      #@results = @results + results.docs
-      @results = @results + Person.find_by_solr(query, :limit => 1000).results
-    else
-      @results = @results + Person.find(:all, :conditions => ["last_name like ?", '%'+@search_query.downcase+'%'])
+  def find_people(query, page)
+    res = Sunspot.search(Person) do
+      keywords(query) {minimum_match 1}
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
+    return res
   end
 
-  def find_methods(query)
-    if (SOLR_ENABLED)
-      @results = @results + Script.find_by_solr(query, :limit => 1000).results
-    #else
-      #todo
+  def find_methods(query, page)
+    res = Sunspot.search(Script) do
+      keywords(query) {minimum_match 1}
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
+    return res
   end
 
-  def find_csvarchive(query)
-    if (SOLR_ENABLED)
-      @results = @results + Csvarchive.find_by_solr(query, :limit => 1000).results
-    #else
-      #todo
+  def find_csvarchive(query, page)
+    res = Sunspot.search(Csvarchive) do
+      keywords(query) {minimum_match 1}
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
+    return res
   end
   
-  def find_publications(query)
-    if (SOLR_ENABLED)
-      @results = @results + Publication.find_by_solr(query, :limit => 1000).results
-    #else
-      #todo
+  def find_publications(query, page)
+    res = Sunspot.search(Publication) do
+      keywords(query) {minimum_match 1}
+      paginate(:page => page ? page : 1, :per_page => 1000)
     end
+    return res
+  end
+  
+  def find_variables(query, page)
+    #which datasets can the current user see
+    surveys = get_surveys
+    surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
+    datasets = []
+    surveys.each do |survey_id|
+      Survey.find(survey_id).datasets.each do |dataset|
+       datasets << dataset.id
+      end
+    end
+    result = Sunspot.search(Variable) do
+      keywords(query) {minimum_match 1}
+      paginate(:page => page ? page : 1, :per_page => 1000)
+      with(:dataset_id, datasets)
+    end
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    return result
   end
 
 
@@ -118,16 +140,10 @@ class SearchController < ApplicationController
   def select_authorised collection
     collection.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
   end
-
-  # Surveys and Data Extracts can be searched for by non logged in users
-  def local_login_required
-    @search_type = params[:search_type]
-    type=@search_type.downcase unless @search_type.nil?
-    if (type == "surveys" || "data extracts" || "methods" || "all")
-      return true
-    else
-      return login_required
-    end
+  
+  #Removes all results from the search results collection passed in that are not Authorised to show for the current_user
+  def select_authorised_variables collection
+    collection.select {|el| Authorization.is_authorized?("show", nil, el.dataset.survey, current_user)}
   end
 
   def find_previous_searches
@@ -136,7 +152,6 @@ class SearchController < ApplicationController
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
-    puts "FOUND PREVIOUS SEARCHES"
   end
 
 end

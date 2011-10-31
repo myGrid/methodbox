@@ -1,60 +1,25 @@
 <% if SANDBOX -%>
-	<div id="sandbox-header">
-		<h2>
-			<span id="warning">Warning:</span>
-			This is the <%= link_to "MethodBox", 'http://code.google.com/p/methodbox' -%> sandbox environment and is used to test out our latest features before deployment to the main <%= link_to "site", ROUTES_PROTOCOL + '://www.methodbox.org'-%>
-		</h2>
-	</div>
+<%= render :partial => "layouts/sandbox_warning_header" -%>
 <% end -%>
-<% if logged_in? -%>
-	<% if current_user.is_admin? -%>
-		<%= link_to "Admin functions", admin_url -%>
-	<% end -%>
-<div id="logged-in-hd">
-	<div class="left" style="margin-left: 1em; padding-top: 2px;">
-
-		<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65), root_url -%>
-	</div>
-
-	<div class="right" style="margin-right: 1em; padding-top: 4px;">
-		<div>
-			<div class="right" style="margin-left: 2em;">
-				<ul style="margin:0;">
-					<!-- <li style="list-style: none;"> -->
-					<%#= link_to current_user.person.name + "&nbsp;", person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
-					<!-- </li> -->
-					<li style="list-style: none; line-height: 1;">
-						<%= icon('cart', cart_url, "View Cart", {:title => current_user.cart_items.size > 0 ? "You have some variables in your cart" : "There are no variables in your cart" }, current_user.cart_items.size > 0 ? "My Variable Cart(" + current_user.cart_items.size.to_s + ")" : "My Variable Cart" ) -%>
-					<%#= link_to "My Variable Cart&nbsp;", cart_path -%>
-					</li>
-					<li style="list-style:none; line-height: 1;">
-						<%= icon("message", messages_url, "View your messages", {:title=>current_user.messages_to.size > 0 ? "You have some unread messages" : "You have no unread messages"}, "My Messages(" + current_user.messages_to.size.to_s + ")") -%>
-					<%#= link_to "My Messages", messages_path -%>
-					</li>
-					<li style="list-style: none; line-height: 1;">
-						<%= icon "logout", logout_url, nil, nil, "&nbsp;Logout" -%>
-					<%#= link_to "Logout&nbsp;", logout_url -%>
-					</li>
-				</ul>
-			</div>
-<div class="left center" id="avatar-pic">
-			<%= link_to(avatar(current_user.person, 40, true), url_for(current_user.person), :title=>(h(current_user.person.name))) -%>
-			<br/>
-			<%= link_to current_user.person.name, person_url(current_user.person), :title=>"Look at your profile&nbsp;" -%>
-			</div>
-		</div>
-	</div>
-<div id="search-bar-hd" style="padding-top: 4px;margin-top:1.5em;">
-	<%= render :partial=>"search/search_bar" %>
+<% if logged_in? && current_user.is_admin? -%>
+<%= link_to "Admin functions", admin_url -%>
+<% end -%>
+<div style="clear:both;">
 </div>
-</div>
+<% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
+<%= render :partial => "layouts/simple_logged_in_controls" -%>
+<% elsif logged_in? -%>
+<%= render :partial => "layouts/logged_in_controls" -%>
 <% else -%>
-<!-- <div id="small-hd"> -->
-	<%#= render :partial=>"layouts/login_header" %>
-<!-- </div> -->
-<div id="big-hd">
-	<%= render :partial=>"layouts/header" %>
+<%= render :partial => "layouts/logged_out_controls" -%>
+<% end -%>
+<% if controller.controller_name.downcase == "home" && controller.action_name.downcase == "search" -%>
+<%= render :partial => "layouts/welcome_message" -%>
+<% else -%>
+<div class="left" style="margin-left: 1em; padding-top: 2px;">
+<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65), root_url -%>
 </div>
+<%= render :partial => "layouts/header_search_bar" -%>
 <% end -%>
 <div style="clear:both;">
 </div>

@@ -1,12 +1,10 @@
 Hi <%= @name %>,
 
-The protential user <%= @person.name %> just signed up requesting access but the system is currently set with REGISTRATION_CLOSED = closed.
-He/She left the following message:
+The potential user <%= @person.name %>, <%= @person.user.email -%> just signed up requesting access but registration is currently closed.  An admin will need to check their account and approve or reject it.
+
+He/She has the following description:
 
 "<%= @message %>"
-
-This account will need to be approved or rejected.
-Doing this is still under development.
 
 - The MethodBox Team -
 

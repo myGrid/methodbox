@@ -30,7 +30,7 @@ class DatasetsController < ApplicationController
       #create directory and zip file for the archive
       filename = CSV_FILE_PATH + "/" + uuid + ".data"
       uf = File.open(filename,"w")
-      if params[:dataset_format] = "Excel"
+      if params[:dataset_format] == "Excel"
         uf.write(spreadsheet_to_csv(params[:file][:data],"1"))
       else
         params[:file][:data].each_line do |line|                
@@ -75,13 +75,13 @@ class DatasetsController < ApplicationController
       uf.close
       #first check mime type
       mimetype = `file --mime -br #{filename}`.gsub(/\n/,"").split(';')[0]
-      if mimetype.index("xml") == nil && mimetype.index("XML") == nil
-        possible_mimetype = `file -b #{filename}`
-        respond_to do |format|
-          flash[:error] = "MethodBox cannot process this file.  Is it really an xml file? Checking the mime type revealed this: " + possible_mimetype
-          format.html { redirect_to dataset_path(@dataset) }
-        end
-      else  
+     # if mimetype.index("xml") == nil && mimetype.index("XML") == nil
+      #  possible_mimetype = `file -b #{filename}`
+       # respond_to do |format|
+        #  flash[:error] = "MethodBox cannot process this file.  Is it really an xml file? Checking the mime type revealed this: " + possible_mimetype
+         # format.html { redirect_to dataset_path(@dataset) }
+        #end
+     # else  
         begin 
           logger.info(Time.now.to_s + " Starting metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
           Delayed::Job.enqueue ProcessMetadataJob::StartJobTask.new(@dataset.id, current_user.id, params[:dataset_metadata_format], uf.path, params[:update][:reason], base_host)
@@ -93,7 +93,7 @@ class DatasetsController < ApplicationController
           flash[:notice] = "The metadata is being updated. You will be emailed when it is ready."  
           format.html { redirect_to dataset_path(@dataset) }
         end
-      end
+      #end
     else
       respond_to do |format|
         flash[:error] = "There are no variables in this dataset.  Please upload a dataset file."
@@ -126,7 +126,7 @@ class DatasetsController < ApplicationController
     begin
       uuid = UUIDTools::UUID.random_create.to_s
       #write out the dataset into a new file
-      filename=CSV_FILE_PATH + "/" + uuid + ".data"
+      filename=File.join(CSV_FILE_PATH, uuid + ".data")
       uf = File.open(filename,"w")
       if params[:dataset_format] == "Excel"
 	#convert the file to csv before writing out
@@ -202,7 +202,7 @@ class DatasetsController < ApplicationController
   private
   
   def update_dataset
-    if params[:dataset_format] = "Excel"
+    if params[:dataset_format] == "Excel"
 
     end
     header =  params[:file][:data].readline
@@ -244,7 +244,7 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     #split by tab
     if params[:dataset_format] == "Tab Separated"
-	separator = '/t'
+	separator = "\t"
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
 	headers = all_headers.headers
@@ -256,7 +256,7 @@ class DatasetsController < ApplicationController
         headers = all_headers.headers
     #spreadsheet should already be converted
     else
-	separator = ','
+	separator = ","
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
         headers = all_headers.headers
@@ -293,19 +293,19 @@ class DatasetsController < ApplicationController
     @new_variables =[]
     #split by tab
     if params[:dataset_format] == "Tab Separated"
-	separator = '/t'
+	separator = "\t"
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
 	headers = all_headers.headers
     #split by comma
     elsif params[:dataset_format] == "Comma Separated"
-	separator = ','
+	separator = ","
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
         headers = all_headers.headers
     #spreadsheet should already be converted
     else
-	separator = ','
+	separator = ","
 	faster_csv_file = FCSV.new(datafile, :headers=>true, :return_headers=>true, :col_sep => separator)
         all_headers = faster_csv_file.shift
         headers = all_headers.headers
@@ -382,7 +382,7 @@ class DatasetsController < ApplicationController
       # post to /datasets ie create
        survey = Survey.find(params[:dataset][:survey])
     end
-    if !Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && survey.survey_type.is_ukda && current_user.is_admin?
+    if !Authorization.is_authorized?("edit", nil, survey, current_user) || current_user && survey.survey_type.is_ukda && !current_user.is_admin?
         respond_to do |format|
           flash[:error] = "You do not have permission for this action"
         format.html { redirect_to survey_url(survey) }

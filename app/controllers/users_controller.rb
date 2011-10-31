@@ -45,26 +45,38 @@
       # uncomment at your own risk
       reset_session
     end
-    @user = User.new(params[:user])
-    @person = Person.new(params[:person])
-    @person.email = @user.email
-    @user.person=@person
+    users = User.all(:conditions=>{:email=>params[:user][:email]})
+    #does a user with this email already exist
+    if users.empty?
+      @user = User.new(params[:user])
+      @person = Person.new(params[:person])
+      @person.email = @user.email
+      @user.person=@person
 
-    @user.save
-    respond_to do |format|
-    if @user.errors.empty?
-       self.current_user = @user
-        if !ACTIVATION_REQUIRED
-          @user.activate
-          @user.save
-          Mailer.deliver_welcome self.current_user, base_host
-          format.html {redirect_to(root_url)}
-       else
+      @user.save
+      respond_to do |format|
+        if @user.errors.empty?
+          self.current_user = @user
+          if !ACTIVATION_REQUIRED
+            @user.activate
+            @user.save
+            Mailer.deliver_welcome self.current_user, base_host
+            format.html {redirect_to(root_url)}
+          else
             Mailer.deliver_shibboleth_signup(current_user,base_host)
             flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
             logout_user
             format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+          end
+        else
+          flash[:notice]="There was a problem with the login process.  Please try again"
+          format.html {redirect_to login_url}
         end
+      end
+    else
+      respond_to do |format|
+        flash[:notice]="This account is already activated. To use UK Federation please login as normal and click the button on your profile page marked \"Switch to UK Federation Authentication\". If you have forgotten your password then please reset it by clicking the \"Forgotten Password?\" link on the login page"
+        format.html {redirect_to login_url}
       end
     end
   end
@@ -100,6 +112,7 @@
       # uncomment at your own risk
       reset_session
     end
+if verify_recaptcha
     @user = User.new(params[:user])
     @person = Person.new(params[:person])
     @person.email = @user.email
@@ -114,8 +127,8 @@
         format.html {redirect_to(admin_path)}
       else
         if REGISTRATION_CLOSED
-          Mailer.deliver_signup_requested(params[:message],@user,base_host)
-          flash[:notice]="An email has been sent to the administor with your signup request."
+          Mailer.deliver_signup_requested(params[:person][:description],@user,base_host)
+          flash[:notice]="An email has been sent to the administrator with your signup request."
           @user.dormant = true
           @user.person.dormant = true
           @user.activation_code = nil
@@ -129,6 +142,7 @@
             @user.save
             format.html {redirect_to(root_url)}
             Mailer.deliver_welcome self.current_user, base_host
+            flash[:notice]="Welcome to MethodBox, " +  @user.person.first_name + ". Why not start by trying some searches.........."
          else
               # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
               Mailer.deliver_signup(current_user,base_host)
@@ -145,6 +159,12 @@
       else
         format.html {render :action => 'new'}
       end
+    end
+  end
+  else
+    respond_to do |format|
+      flash[:error] = "There was an error with the recaptcha code below. Please re-enter the code and try again."
+      format.html {render :action => 'new'}
     end
   end
   end

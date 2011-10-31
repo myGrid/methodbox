@@ -1,19 +1,24 @@
 class HomeController < ApplicationController
   
-  before_filter :login_required, :except=> [ :about ]
+  before_filter :login_required, :except=> [ :about, :search ]
 
   before_filter :find_previous_searches, :only => [ :index ]
 
   layout :select_layout
   
-  def about
+  def search
+    #always show the advanced controls (?)
+    #if params[:advanced_controls]
+      @advanced_controls = true
+    #else
+      #@advanced_controls = false
+    #end
     respond_to do |format|
-        if logged_in?
-          format.html {redirect_to index_url}
-        else
         format.html # about.html.erb  
-      end    
-    end
+    end    
+  end
+
+  def about
   end
   
   def index
@@ -57,7 +62,9 @@ class HomeController < ApplicationController
   end
   
   def select_layout
-    if logged_in?
+    if action_name == 'about'
+      return 'main_without_sidebar'
+    elsif logged_in? && action_name != 'search'
       return 'main'
     else
       return 'main_without_sidebar'

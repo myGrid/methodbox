@@ -2,14 +2,48 @@
 <%= javascript_include_tag 'toggler.js' %>
 <%= javascript_include_tag "variable_table_check.js" -%>
 <%= javascript_include_tag 'checkbox_update.js' %>
+<%= javascript_include_tag 'variables_table.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <script type="text/javascript">
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
 <div class="right">
-<%= addthis_bookmark_button(csvarchive_url(@archive), @archive.title, :secure => HTTPS_ON) -%>
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
+</div>
+<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
+<!-- AddThis Button END -->
+<%#= addthis_bookmark_button(csvarchive_url(@archive), @archive.title) -%>
 </div>
 <ul class="buttons">
   <%= hidden_field_tag "format_type", "csv" -%>
@@ -51,7 +85,7 @@
 <h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @archive.recommendations.size } %></div></h1>
 
 <div class="show_basic">
-  <div class="box_about_actor">
+  <div class="box_about_actor left" style="width:70%">
     <p>
       <b>Title:</b>
       <% unless @archive.title.blank? -%>
@@ -95,21 +129,28 @@
 	<%= render :partial => "complete" %>
     <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
   </div>
-  <% form_remote_tag :url => { :action => "add_to_cart"} do -%>
-	<%= hidden_field_tag 'extract_id', @archive.id %>
-    <%= hidden_field_tag 'submit', 'add' %>
-    <br/>
-<%= render :partial => "extract_bar" -%>
-    <br/>
-    <div id="table_header" class="faux_table_header_container">
-      <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @sorted_variables} -%>
-    </div>
-    <div id="table_container" class="faux_table_container">
-      <%= render :partial => "surveys/table",:locals=>{:lineage => true, :extract_lineage => true, :extract_id => @archive.id, :sorted_variables => @sorted_variables} -%>
-    </div>
-    <br/>
-  <% end %>
+<div class="right" style="width:20%">
+  <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @archive } -%>
+  <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @archive, :attributed_to => Authorization.authorize_collection("show", @archive.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
 </div>
+<div style="clear: both;"></div>
+<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
+<div style="margin-bottom: 10px;">
+<% if logged_in? -%>
+<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+<% end -%>
+</div>
+<div id="selected_variables">
+</div>
+<div class="yui-skin-sam">
+<div id="variables_table"></div>
+</div>
+<script type="text/javascript">
+var results = <%= raw @variables_json -%>;
+createTable();
+</script>
+</div>
+<% end -%>
 <div style="clear: both;"></div>
 <% if current_user %>
 <div class="left" id="extract-note-box">

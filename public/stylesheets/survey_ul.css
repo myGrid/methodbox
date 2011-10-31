@@ -283,9 +283,9 @@ visibility:hidden
 
 li.var_number_list
 {
-	display: inline;
+/*	display: inline;*/
 	list-style-type: none;
-	padding-right: 20px;
+	margin-bottom: 5px;
 	background-color: #EEEEEE;
 }
 

@@ -24,7 +24,7 @@ class Script < ActiveRecord::Base
 
   has_many :surveys, :through => :survey_to_script_lists
 
-  acts_as_solr(:fields=>[:description,:title]) if SOLR_ENABLED
+  #acts_as_solr(:fields=>[:description,:title]) if SOLR_ENABLED
 
   validates_presence_of :title, :message => "error - you must provide a title."
 
@@ -39,10 +39,10 @@ class Script < ActiveRecord::Base
   belongs_to :person, :dependent => :destroy
   
   #sunspot solr
-  # searchable do
-  #     text :description
-  #     text :title
-  #   end
+  searchable do
+    text :description
+    text :title
+  end
 
   def to_param
     "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')

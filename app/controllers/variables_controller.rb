@@ -1,12 +1,55 @@
 class VariablesController < ApplicationController
 
-  before_filter :login_required, :except => [ :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
+  before_filter :login_required, :except => [ :values_array, :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
   after_filter :update_last_user_activity
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
 
-  caches_page :show
+  #caches_page :show
+
+  def values_array
+    variable = Variable.find(params[:id])
+    value_domain_hash = Hash.new
+    var_hash = Hash.new
+    no_var_hash = Hash.new
+    if variable.nesstar_id
+      variable.value_domains.each do |value_domain|
+        if value_domain.value_domain_statistic
+          var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency
+        end
+        value_domain_hash[value_domain.id] = value_domain.label
+      end
+    else
+      no_var_hash = variable.none_values_hash
+      var_hash = variable.values_hash
+      var_hash.each_key do |key|
+        variable.value_domains.each do |value_domain|
+	  if value_domain.value.to_i.eql?(key.to_i)
+	    value_domain_hash[key] = value_domain.label
+	    break
+	  end
+	end
+      end
+    end
+#If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets
+    if var_hash.empty?
+      variable.value_domains.each do |value_domain|
+        if value_domain.value_domain_statistic
+          var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency
+        end
+        value_domain_hash[value_domain.value] = value_domain.label
+      end
+    end
+    values_hash = var_hash.merge(no_var_hash)
+    label_to_values_hash = Hash.new
+    values_hash.each_key do |key|
+      value_domain_hash.has_key?(key) ? label_to_values_hash[value_domain_hash[key]] = values_hash[key] : label_to_values_hash[key] = values_hash[key]
+    end
+    labels_hash = value_domain_hash
+    @values = label_to_values_hash
+    render :partial=>"values_array"
+  end
   
   #a users private notes about a variable
   def add_note
@@ -70,32 +113,72 @@ class VariablesController < ApplicationController
   end
 
   def by_category
-    @sorted_variables = []
-    @category = params[:category]
-    if params[:survey]
-      survey_id = params[:survey]
-      survey = Survey.find(survey_id)
-      survey.datasets.each do |dataset|
-        @sorted_variables.concat(Variable.find(:all, :conditions=>({:category => params[:category], :dataset_id => dataset.id})))      
-      end
-      @sorted_variables.uniq!
-      @title = "Variables from " + survey.title
+    surveys = []
+    if !params[:survey] #ie we asked for a specific survey
+      surveys = get_surveys
     else
-      @sorted_variables = Variable.find(:all, :conditions=>"category='" + params[:category] + "'")
-      @title = "All variables"
+      surveys << Survey.find(params[:survey])
+    end
+    @category = params[:category]
+    page = params[:page] ? params[:page] : 1
+    start_index = ((page.to_i - 1) * 50) + 1
+    sort = params[:sort] ? params[:sort] : "name"
+    dir = params[:dir] ? params[:dir] : 'ASC'
+    dir.upcase!
+    variables = []
+    datasets = Dataset.all(:conditions => {:survey_id => surveys})
+    variables = Variable.paginate(:order=>"name ASC", :conditions => {:category=>@category, :dataset_id=> datasets}, :page => page, :per_page => 50)
+    #sort the variables by the sort param, have to do it here since some are dynamic fields. sorted by name by default
+    case sort
+    when "name"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.name <=> b.name}
+      else 
+        variables.sort!{|a,b| b.name <=> a.name}
+      end
+    when "description"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.value <=> b.value}
+      else 
+        variables.sort!{|a,b| b.value <=> a.value}
+      end
+    when "category"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.category <=> b.category}
+      else
+        variables.sort!{|a,b| b.category <=> a.category}
+      end
+    when "popularity"
+      if dir == "ASC"
+        variables.sort!{|a,b| VariableList.all(:conditions=>"variable_id=" + a.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + b.id.to_s).size}
+      else
+        variables.sort!{|a,b| VariableList.all(:conditions=>"variable_id=" + b.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + a.id.to_s).size}
+      end
+    when "year"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.dataset.survey.year <=> b.dataset.survey.year}
+      else
+        variables.sort!{|a,b| b.dataset.survey.year <=> c.dataset.survey.year}
+      end
+    when "survey"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.dataset.survey.title <=> b.dataset.survey.title}
+      else
+        variables.sort!{|a,b| b.dataset.survey.title <=> a.dataset.survey.title}
+      end
+    end
+    variables_hash = {"start_index"=>start_index, "page"=>page,"total_entries"=>variables.total_entries, "results" => variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    @survey=params[:survey]
+    @sorted_variables = variables
+    respond_to do |format|
+      format.html
+      format.json {render :layout => false, :json=>variables_hash.to_json}
     end
   end
 
-  # GET /variable
-  # GET /variable.xml
   def index
-
-    if (!params[:variable].nil?)
-      @tag = params[:variable]
-      @variables = Variable.tagged_with(@tag, :on=>:title)
-    else
-      @variables = Variable.find(:all, :page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:name)
-    end
+    @variables = Variable.all(:page=>{:size=>default_items_per_page,:current=>params[:page]}, :order=>:name)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -109,25 +192,6 @@ class VariablesController < ApplicationController
     @all_tags = @variable.title_counts
   end
 
-  def add_to_cart
-    find_variable
-
-
-    if CartItem.find_by_user_id_and_variable_id(current_user,@variable)
-    else
-      an_item = CartItem.new
-      an_item.user = current_user
-      an_item.variable = @variable
-      an_item.save
-      current_user.reload
-    end
-
-    respond_to do |format|
-      flash[:notice] = "Variable has been added to the cart"
-      format.html { redirect_to variable_path(@variable) }
-    end
-
-  end
 
   def add_multiple_to_cart
     @variable_list = Array.new(params[:variable_ids])
@@ -219,7 +283,7 @@ class VariablesController < ApplicationController
     @variable.title_list = str
     @variable.save_tags
 
-    expire_page :action=>"show", :id=>@variable.id
+    #expire_page :action=>"show", :id=>@variable.id
 
     respond_to do |format|
       format.html { redirect_to variable_path(@variable) }
@@ -249,9 +313,100 @@ class VariablesController < ApplicationController
   # which are matched in data extracts with it
   def show
     find_variable
+    if authorized_to_see @variable
+    @value_domain_hash = Hash.new
+    @var_hash = Hash.new
+    @no_var_hash = Hash.new
+    @blank_rows = nil
+    @invalid_entries = nil
+    @total_entries = nil
+    @valid_entries = nil
+    if @variable.nesstar_id
+      @variable.value_domains.each do |value_domain|
+        if value_domain.value_domain_statistic
+	  @var_hash[value_domain.id] = value_domain.value_domain_statistic.frequency
+	end
+	  @value_domain_hash[value_domain.id] = value_domain.label
+      end
+        @valid_entries = @variable.valid_entries
+        @invalid_entries = @variable.invalid_entries
+
+      if @valid_entries == nil
+        @total_entries = @invalid_entries
+      elsif @invalid_entries == nil
+        @total_entries = @valid_entries
+      else
+        @total_entries = @invalid_entries + @valid_entries
+      end
+    else
+      @no_var_hash = @variable.none_values_hash
+      @var_hash = @variable.values_hash
+      @value_domain_hash = Hash.new
+      @var_hash.each_key do |key|
+        @variable.value_domains.each do |value_domain|
+	  if value_domain.value.to_i.eql?(key.to_i)
+	    @value_domain_hash[key] = value_domain.label
+	    break
+	  end
+	end
+      end
+      @blank_rows = @variable.number_of_blank_rows
+      @invalid_entries = 0
+      @no_var_hash.each_key do |key|
+        @variable.value_domains.each do |value_domain|
+	  if value_domain.value.to_i.eql?(key.to_i)
+	    @value_domain_hash[key] = value_domain.label
+	    break
+	  else
+	    @value_domain_hash[key] = key
+	  end
+	end
+	@invalid_entries += @no_var_hash[key]
+      end
+      @valid_entries = 0
+      @var_hash.each_key do |key|
+        @valid_entries += @var_hash[key]
+      end
+      @no_var_hash.each_key do |key|
+        @valid_entries += @var_hash[key]
+      end
+       if @valid_entries == nil
+         @total_entries = @invalid_entries
+       elsif @invalid_entries == nil
+        @total_entries = @valid_entries
+       else
+         @total_entries = @invalid_entries + @valid_entries
+       end
+      if @blank_rows != nil
+        @total_entries += @blank_rows
+      end
+#If there are no values then see if the value domains have any frequency stats - relevant to vars from nesstar ddi datasets
+      if @var_hash.empty?
+        @variable.value_domains.each do |value_domain|
+	  if value_domain.value_domain_statistic
+	    if value_domain.value_domain_statistic
+	      @var_hash[value_domain.value] = value_domain.value_domain_statistic.frequency
+	    end
+	    @value_domain_hash[value_domain.value] = value_domain.label
+	  end
+	end
+      end
+    end
     @tag_array = @variable.title_counts
     #find the variables which occur in data extracts for this variable
-    @sorted_matches = MatchedVariable.all(:conditions => {:variable_id => @variable.id}, :order => "occurences DESC", :limit => 6)
+    @sorted_matches = []
+    matches = MatchedVariable.all(:conditions => {:variable_id => @variable.id}, :order => "occurences DESC", :limit => 6)
+    if !matches.empty?
+      @sorted_matches = matches
+    end
+    
+  else
+    respond_to do |format|
+      flash[:error] = "You are not authorized to view this variable"
+      format.html {redirect_to :back}
+    end
+  end
+    
   end
 
   def save_tags
@@ -280,6 +435,10 @@ class VariablesController < ApplicationController
       @variable =Variable.find(params[:id])
       @notes = Note.all(:conditions=>{:notable_type => "Variable", :user_id=>current_user.id, :notable_id => @variable.id})
     end
+  end
+  
+  def authorized_to_see variable
+    Authorization.is_authorized?("show", nil, variable.dataset.survey, current_user)
   end
 
 end

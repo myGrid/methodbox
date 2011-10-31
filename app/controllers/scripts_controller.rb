@@ -2,7 +2,6 @@ class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
   before_filter :login_required, :except => [ :download, :index, :show, :help, :help2]
   before_filter :find_scripts_by_page, :only => [ :index ]
-  before_filter :set_paramemeters_for_new_edit, :only => [ :new, :edit]
   before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :help, :help2, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment, :add_note ]
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
@@ -56,7 +55,6 @@ class ScriptsController < ApplicationController
   
   #only show 'my' links or 'all' links
   def show_links
-    puts "doing stuff"
     source_archives = []
     source_surveys = []
     source_scripts = []
@@ -242,26 +240,33 @@ class ScriptsController < ApplicationController
   #No auth check for loading new scripts, login is enough
   def new
 
-    #    @archives = Csvarchive.find(:all)
-    #    @archives=Authorization.authorize_collection("show",@archives,current_user)
+    find_scripts
+    find_archives
+    find_surveys
+    find_groups
+    find_publications
+    set_parameters_for_sharing_form
+
     respond_to do |format|
-      #if Authorization.is_member?(current_user.person_id, nil, nil)
       format.html # new.html.erb
-      #else
-      #flash[:error] = "You are not authorized to upload new Scripts. Only members of known projects, institutions or work groups are allowed to create new content."
-      #format.html { redirect_to scripts_path }
-      #end
     end
   end
 
   #When editing display all the links which have been made from this Script, only include those for which it is the 'subject'
   # GET /scripts/1/edit
   def edit
+    find_script
+    find_scripts
+    find_archives
+    find_surveys
+    find_groups
+    find_publications
+    set_parameters_for_sharing_form
+
     if @script.asset.policy.get_settings["sharing_scope"] == Policy::CUSTOM_PERMISSIONS_ONLY
       @sharing_mode = Policy::CUSTOM_PERMISSIONS_ONLY
       @script.asset.policy.permissions.each do |permission|
         if permission.contributor_type == "WorkGroup"
-          puts "Shared with group " + permission.contributor_id.to_s
           @selected_groups.push(permission.contributor_id)
         end
       end
@@ -282,7 +287,6 @@ class ScriptsController < ApplicationController
         @selected_publications.push(link.object.id)
       end
     end
-
   end
 
   # POST /scripts
@@ -321,7 +325,6 @@ class ScriptsController < ApplicationController
 
       respond_to do |format|
         if @script.save
-          puts "saved script"
           #save all the links.
           #at the moment all the links have predicates of 'link' but this could change in the future to a user defined one
           #this would mean that each Linkage could have many different reasons
@@ -369,7 +372,6 @@ class ScriptsController < ApplicationController
           end
 
            if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-             puts "custom sharing here"
              values = "{"
                 params[:groups].each do |workgroup_id|
                    values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
@@ -380,8 +382,6 @@ class ScriptsController < ApplicationController
                 params[:sharing][:permissions][:values] = values
                 params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
                 logger.info "custom permissions: " + values
-                puts params[:sharing][:permissions][:values]
-                puts params[:sharing][:permissions][:contributor_types]
             end
 
           # the Script was saved successfully, now need to apply policy / permissions settings to it
@@ -399,7 +399,7 @@ class ScriptsController < ApplicationController
           end
         else
           format.html {
-            set_paramemeters_for_new_edit()
+            set_parameters_for_new_edit()
             render :action => "new"
           }
         end
@@ -424,7 +424,7 @@ class ScriptsController < ApplicationController
       @script.content_blob.update_attributes(:data => params[:content][:data].read)
       @script.update_attributes(:original_filename => params[:content][:data].original_filename, :content_type => params[:content][:data].content_type)
     rescue Exception => e
-      puts "blob " + e
+      logger.error 'problem updating method ' + e
     end
     end
   end
@@ -492,7 +492,6 @@ class ScriptsController < ApplicationController
       end
 
       if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-        puts "custom sharing here"
         values = "{"
            params[:groups].each do |workgroup_id|
               values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
@@ -503,8 +502,6 @@ class ScriptsController < ApplicationController
            params[:sharing][:permissions][:values] = values
            params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
            logger.info "custom permissions: " + values
-           puts params[:sharing][:permissions][:values]
-           puts params[:sharing][:permissions][:contributor_types]
        end
 
     respond_to do |format|
@@ -524,7 +521,7 @@ class ScriptsController < ApplicationController
         end
       else
         format.html {
-          set_paramemeters_for_new_edit()
+          set_parameters_for_new_edit()
           render :action => "edit"
         }
       end
@@ -628,13 +625,12 @@ class ScriptsController < ApplicationController
 
     policy = nil
     policy_type = ""
-
     # obtain a policy to use
     if defined?(@script) && @script.asset
-      if (policy == @script.asset.policy)
+      if (policy = @script.asset.policy)
         # Script exists and has a policy associated with it - normal case
         policy_type = "asset"
-      elsif @script.asset.project && (policy == @script.asset.project.default_policy)
+      elsif @script.asset.project && (policy = @script.asset.project.default_policy)
         # Script exists, but policy not attached - try to use project default policy, if exists
         policy_type = "project"
       end
@@ -673,10 +669,9 @@ class ScriptsController < ApplicationController
     @favourite_groups = current_user.favourite_groups
 
     @all_people_as_json = Person.get_all_as_json
-
   end
 
-  def set_paramemeters_for_new_edit
+  def set_parameters_for_new_edit
     find_scripts
     find_archives
     find_surveys
@@ -690,7 +685,7 @@ class ScriptsController < ApplicationController
     respond_to do |format|
       flash.now[:error] = message
       format.html {
-        set_paramemeters_for_new_edit()
+        set_parameters_for_new_edit()
         render :action => "new"
       }
     end
@@ -725,4 +720,7 @@ class ScriptsController < ApplicationController
     end
   end
 
+  def find_script
+    @script = Script.find(params[:id])
+  end
 end

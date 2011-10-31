@@ -60,6 +60,9 @@ module ProcessMetadataJob
           catcontent = catnode.first.content
 
           variable_category = catcontent
+          if variable_category == nil
+            variable_category = 'N/A'
+          end
 
           dernode = node.find('child::derivation')
           dercontent = dernode.first
@@ -100,7 +103,7 @@ module ProcessMetadataJob
       def read_ccsr_metadata
 
         @missing_variables=[]
-        parser = XML::Parser.io(params[:file][:metadata], :encoding => XML::Encoding::ISO_8859_1)
+        parser = XML::Parser.io(File.open(filename, "r"), :encoding => XML::Encoding::ISO_8859_1)
         doc = parser.parse
 
           nodes = doc.find('//ccsrmetadata/variables')
@@ -125,7 +128,7 @@ module ProcessMetadataJob
                   valDom.save
                 end
             end
-              v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>update_reason)
+              v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>user_id, :update_reason=>update_reason)
 
             # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
             end
@@ -152,7 +155,7 @@ module ProcessMetadataJob
                 end
             end
 
-              v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>current_user.id, :update_reason=>update_reason)
+              v[0].update_attributes(:value=>label, :info=>value_map,:updated_by=>user_id, :update_reason=>update_reason)
 
             # don't care about 'false positives' in the metadata, all we care about is the columns from the original dataset
             end 

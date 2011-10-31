@@ -112,7 +112,10 @@ module AddNesstarSurveysJob
                   end
                   #create variables for the dataset
                   study.variables.each do |variable|
-                    var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable.group, :interval => variable.interval, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
+                    if variable.group == nil
+                      variable_category = 'N/A'
+                    end
+                    var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable_category, :interval => variable.interval, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
                     logger.info Time.now.to_s + " : saving variable " + variable.name + " from " + study.title
                     var.save
                     variable.categories.each do |category|

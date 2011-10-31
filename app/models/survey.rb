@@ -24,7 +24,7 @@ class Survey < ActiveRecord::Base
   # 
   has_many :scripts, :through => :survey_to_script_lists
   
-  acts_as_solr(:fields=>[:description,:title,:year]) if SOLR_ENABLED
+  #acts_as_solr(:fields=>[:description,:title,:year]) if SOLR_ENABLED
 
 #  belongs_to :content_blob,
 #             :dependent => :destroy
@@ -32,11 +32,13 @@ class Survey < ActiveRecord::Base
     validates_uniqueness_of :title, :scope => [ :contributor_id, :contributor_type, :survey_type_id ], :message => "error - you already have a Survey with such a title."
 
     #sunspot solr
-    # searchable do
-    #     text :description
-    #     text :title
-    #     text :year
-    #   end
+    searchable do
+      integer :id
+      text :description
+      text :title
+      text :year
+      string :title
+    end
     def to_param
       "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
     end

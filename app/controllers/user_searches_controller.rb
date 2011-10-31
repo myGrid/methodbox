@@ -5,6 +5,8 @@ class UserSearchesController < ApplicationController
     
     def show
       if current_user.id == UserSearch.find(params[:id]).user.id
+        variables_hash = {"total_entries"=>@search.variables.size, "results" => @search.variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+        @variables_json = variables_hash.to_json
         respond_to do |format|
           format.html # show.html.erb
           format.xml

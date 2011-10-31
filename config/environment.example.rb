@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.14' unless defined? RAILS_GEM_VERSION
 
 #if you are running ruby gem 1.6 or higher you need this next line
 #require 'thread'
@@ -74,7 +74,7 @@ config.gem 'RedCloth'
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-      :session_key => '_method_box_session',
+      :key => '_method_box_session',
       :secret      => '1576ebcfekhjb234hkjhefg0j98273598273598237921cccc605a5abafc299ba87747jhvv9mmlll7c66537361f77',
       :session_secure      => RAILS_ENV == 'production',
       :http_only   => true
@@ -101,7 +101,7 @@ config.gem 'RedCloth'
   
   #seems to fix the "A copy of AuthenticatedSystem has been removed from the module tree but is still active" problem - http://yanpritzker.com/2008/02/27/rails-20-dependency-system-problems/
   #also need to set config.cache_classes = false in development.rb
-  config.load_once_paths += %W( #{RAILS_ROOT}/lib )
+  config.autoload_once_paths += %W( #{RAILS_ROOT}/lib )
   
 end
 

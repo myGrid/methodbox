@@ -1,190 +1,64 @@
 <%= javascript_include_tag "sharing.js" -%>
 <%= javascript_include_tag 'survey_checkbox.js' -%>
+<%= javascript_include_tag 'yui_checkbox.js' -%>
+<%= javascript_include_tag 'surveys_table.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
-
-<% if !@survey_hash.empty? %>
-  <% if !Survey.all.empty? && !Dataset.all.empty? -%>
-    <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
-    <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
-    <div class="show_basic" style="padding-right: 2em;">
-      <div id="survey_selector">
-        <% form_tag(:action => "search_variables") do -%>
-          <%= hidden_field_tag "page", 1 -%>
-          <%= hidden_field_tag "per_page", 10 -%>
-          <br/>
-          <% if !logged_in? -%>
-            <h2>Welcome, guest.  Please select some surveys and search for variables of interest to your research.  You can browse the metadata and see what is inside the MethodBox but only <%= link_to "registered users", signup_url -%> can add variables to their cart and download them.</h2><br/>
-          <% else -%>
-            <h2>Select some surveys, enter a search term and click the button to find some variables</h2><br/>
-          <% end -%>
-          <div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
-            <div style="position: absolute; ;top:1em;left:1em"><%= text_field_tag :survey_search_query, @survey_search_query %>
-              <%= image_tag(method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
-              <%= submit_tag 'Search selected surveys',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else if (!areAnyDatasetsSelected()) {alert('Please select some datasets.');return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();return true;}" %>
-            </div>
-            <% if logged_in? && !@recent_searches.empty? -%>
-              <div style="position: absolute; top:1em;left:30em">
-                Recent searches:
-                <%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>
-              </div>
-            <% end -%>
-            <% if logged_in? -%>
-              <div id="cart_button" style="position: absolute; top:1em; right:1em;">
-	        <ul class="vbuttons">
-                  <li><%= render :partial => "cart/button" -%></li>
-	        </ul>
-              </div>
-            <% end -%>
-            <div style="position: absolute; bottom:0.9em; left:1em;">
-              <div id="help_box" style="display: none; z-index: 100; position: absolute;">
-                <%= render :partial=>"term_help_popup" %>
-              </div>
-              Select:
-              <%= link_to_function 'All', "$$('input.survey_checkbox').each(function(checkbox){selectDatasets(checkbox, true);})" %>
-          ,&nbsp
-              <%= link_to_function 'None', "$$('input.survey_checkbox').each(function(checkbox) { selectDatasets(checkbox, false);})" %>
-          ,&nbsp
-              <%= link_to_function 'Invert selection', "$$('input.survey_checkbox').each(function(checkbox) { selectDatasets(checkbox, !checkbox.checked);})" %>
-            </div>
-          </div>
-          <br/>
-          <br/>
-          <div id="currently_selected_datasets" style="display:none;">Currently selected datasets:</div>
-          <div id="datasets_list"> 
-            <%= render :partial => "dataset_list", :locals => { :survey_hash => @survey_hash } -%>
-          </div>
-          <% cache ["surveys_index_", current_user_or_none].join do -%>
-            <div class="yui-skin-sam">
-              <div id="surveys" class="yui-navset">
-                <ul class="yui-nav">
-                  <% tab_count = 1 %>
-                  <% @survey_hash.each_key do |key| -%>
-                    <% if tab_count == 1 %>
-                      <li class="selected"><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
-                    <% else %>
-                      <li><a href="#survey_tab_<%= tab_count.to_s -%>" title="<%= @survey_hash[key][0].survey_type.name -%>"><em><%= h truncate(@survey_hash[key][0].survey_type.name, :length=> 20, :omission => '...') %></em></a></li>
-                    <% end %>
-	            <% tab_count += 1 %>
-                  <% end %>
-                </ul>            
-                <div class="yui-content">
-                  <% tab_id = 1 -%>
-                  <% @survey_hash.each_key do |key| -%>
-                    <div id="<%= 'survey_tab_' + tab_id.to_s -%>"><%= render :partial => "single_survey_check", :locals => { :tab_id => tab_id, :key => key, :collection => @survey_hash, :selected => Array.new, :authorization_for_showing_already_done=>true }  %></div>
-	            <% tab_id += 1 -%>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          <% end -%>
-        <% end -%>
-      </div>
-    </div>
-  <% else %>
-    <% if logged_in? %>
-      <% if Survey.all.empty? %>
-        <h1>There are no surveys loaded into the methodbox at the moment.</h1>
-          <p class="center"> Why not <%= link_to "upload a new survey", new_survey_path -%></p>
-      <% else %>
-        <h1>There are no surveys with datasets in the methodbox at the moment. </h1>
-        <p class="center">Select a survey from the list and add a dataset to it.</p>
-        <%= render :partial => "survey_list" -%>
-      <% end -%>
-    <% else %>
-      <h1>There are no surveys loaded into the methodbox at the moment.</h1>
-    <% end -%>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
+<% if !@surveys.empty? -%>
+<% @surveys.each do |survey| -%>
+  <% survey.datasets.each do |dataset| -%>
+      <%= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
   <% end -%>
-  <% if !@empty_surveys.empty? %>
-    <h3>Surveys without any datasets</h3>
-      <% @empty_surveys.each do |survey| %>
-        <%= link_to survey.title, survey_url(survey) -%>
-      <% end -%>
-  <% end -%>
-<% else %>
-  <h1>There are no surveys available to view.</h1>
-<% end %>
+<% end -%>
+<% form_tag(search_variables_surveys_url, {:onSubmit=>"$('spinner').show();"}) do -%>
+<div id="selected_datasets">
+</div>
+<div style="padding: 20px; font-size:larger;">Select one or more surveys to search by clicking on the appropriate check box next to the survey, then enter a search term and click the 'Search for variables' button. To view all the available datasets for a survey click the arrow next to the checkbox.</div>
+<div style="text-align: center; padding-bottom:10px;">
+<%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+</div>
+<div>
+<%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the surveys (from all pages)" -%>
+<%= button_to_function 'Select none', "selectAllSurveyCheckboxes(false);", :title=>"De-select all the surveys (from all pages)" -%>
+<%= button_to_function 'Invert selection', "invertAllSurveyCheckboxes();", :title=>"De-select currently selected surveys and vice-versa (from all pages)" -%>
+</div>
+<div style="margin-top:5px;">
+<label for="filter">Filter by survey title:</label> <input type="text" id="filter" value="" title="Only show surveys with titles containing a particular piece of text"></input>
+</div>
+<div class="yui-skin-sam">
+<div id="surveys_table"></div>
+</div>
+<% end  -%>
+<% end -%>
+<script type= "text/javascript">
+var survey_results = <%= raw @surveys_json -%>;
+createSurveyTable();
+</script>
 <script type="text/javascript">
-(function () {
-
-    // The initially selected tab will be chosen in the following order:
-    //
-    // URL fragment identifier (it will be there if the user previously
-    // bookmarked the application in a specific state)
-    //
-    //         or
-    //
-    // "tab0" (default)
-
-    var bookmarkedTabViewState = YAHOO.util.History.getBookmarkedState("tabview");
-    var initialTabViewState = bookmarkedTabViewState || "survey_tab_1";
-
-    var tabView;
-
-    // Register our TabView module. Module registration MUST
-    // take place before calling YAHOO.util.History.initialize.
-    YAHOO.util.History.register("tabview", initialTabViewState, function (state) {
-        // This is called after calling YAHOO.util.History.navigate, or after the user
-        // has trigerred the back/forward button. We cannot discrminate between
-        // these two situations.
-
-        // "state" can be "survey_tab_1", "survey_tab_2" etc.
-        // Select the right tab:
-        tabView.set("activeIndex", state);
-    });
-
-    function handleTabViewActiveTabChange (e) {
-        var newState, currentState;
-
-        newState = "survey_tab_" + this.getTabIndex(e.newValue);
-
-        try {
-            currentState = YAHOO.util.History.getCurrentState("tabview");
-            // The following test is crucial. Otherwise, we end up circling forever.
-            // Indeed, YAHOO.util.History.navigate will call the module onStateChange
-            // callback, which will call tabView.set, which will call this handler
-            // and it keeps going from here...
-            if (newState != currentState) {
-		splitState = newState.split("_");
-                YAHOO.util.History.navigate("tabview", splitState.pop());
-            }
-        } catch (e) {
-		splitState = newState.split("_");
-            	tabView.set("activeIndex", splitState.pop());
-        }
-    }
-
-    function initTabView () {
-        // Instantiate the TabView control...
-        tabView = new YAHOO.widget.TabView("surveys");
-        tabView.addListener("activeTabChange", handleTabViewActiveTabChange);
-    }
-
-    // Use the Browser History Manager onReady method to instantiate the TabView widget.
-    YAHOO.util.History.onReady(function () {
-        var currentState;
-
-        initTabView();
-
-        // This is the tricky part... The onLoad event is fired when the user
-        // comes back to the page using the back button. In this case, the
-        // actual tab that needs to be selected corresponds to the last tab
-        // selected before leaving the page, and not the initially selected tab.
-        // This can be retrieved using getCurrentState:
-        currentState = YAHOO.util.History.getCurrentState("tabview");
-	splitState = currentState.split("_");
-        tabView.set("activeIndex", splitState.pop());
-    });
-
-    // Initialize the browser history management library.
-    try {
-        YAHOO.util.History.initialize("yui-history-field", "yui-history-iframe");
-    } catch (e) {
-        // The only exception that gets thrown here is when the browser is
-        // not supported (Opera, or not A-grade) Degrade gracefully.
-        initTabView();
-    }
-
-})();
-
+  document.observe('dom:loaded', function() {
+    uncheckAll();
+  });
 </script>

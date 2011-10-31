@@ -1,6 +1,6 @@
 <p>Variable Categories</p>
 <ul>
 <% all_categories.each do |category| -%>
-<li><%= link_to(category, by_category_variables_url(:category=>h(category), :survey=>survey.id),:title=>"Show all variables with this category for this survey") -%></li>
+<li style="display:inline;"><%= link_to(category, by_category_variables_url(:category=>h(category), :survey=>survey.id),:title=>"Show all variables with this category for this survey", :onclick=>"Element.show('spinner');") -%></li>
 <% end -%>
 </ul>

@@ -8,7 +8,7 @@ class CsvarchivesController < ApplicationController
   
   include DataExtractJob
   
-  before_filter :login_required, :except => [ :index, :show, :download, :help, :help2, :download_stats_script]
+  before_filter :login_required, :except => [ :check_for_complete, :index, :show, :download, :help, :help2, :download_stats_script]
   before_filter :find_archives_by_page, :only => [ :index]
   before_filter :find_scripts, :find_surveys, :find_archives, :find_groups, :find_publications, :only => [ :new, :edit ]
   before_filter :find_archive, :only => [ :edit, :update, :show, :download, :download_stats_script ]
@@ -18,8 +18,42 @@ class CsvarchivesController < ApplicationController
   before_filter :find_comments, :only => [ :show ]
   before_filter :find_notes, :only => [ :show ]
 
-  caches_action :show
+  #caches_action :show
   
+  #ajax action that gets called when you remove vars from your cart
+  #on the new data extract page
+  def remove_from_cart
+    @var_list = params[:variable_ids]
+    unless @var_list.empty?
+      @var_list.each do |var|
+        item = CartItem.find_by_user_id_and_variable_id(current_user,var)
+        if item
+          item.destroy
+        end  
+      end
+      current_user.reload
+    end
+    @sorted_variables = Array.new
+    current_user.cart_items.each do |item|
+      var = Variable.find(item.variable_id)
+      @sorted_variables.push(var)
+    end
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    if current_user.cart_items.empty?
+      render :update do |page|
+        page.redirect_to(:controller => "surveys", :action => "index")
+        page << "alert('You have no variables left in your cart.  To create a new Data Extract you need to search for some and add to your cart.');"    
+      end
+    else
+      render :update do |page|
+        #refresh the var table with the remaining variables
+        page << "updateTable('#{@variables_json}');"
+        page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
+        page[:cart_button].visual_effect(:pulsate, :duration=>2)
+      end
+    end
+  end
   #a users notes about a resource
   def add_note
     @extract = Csvarchive.find(params[:resource_id])
@@ -173,12 +207,11 @@ class CsvarchivesController < ApplicationController
   def new
     set_parameters_for_sharing_form
     # code that allows 'world' access to extracts or not
+    @sorted_variables = Array.new
     @current_user.cart_items.each do |item|
       variable = Variable.find(item.variable_id)
-        if variable.dataset.survey.survey_type.is_ukda
-          @ukda_only = true
-          break
-        end
+      @sorted_variables.push(variable)
+      @ukda_only = true if variable.dataset.survey.survey_type.is_ukda
     end
     @selected_scripts=[]
     @selected_archives=[]
@@ -186,6 +219,8 @@ class CsvarchivesController < ApplicationController
     @scripts = Script.find(:all)
     @scripts=Authorization.authorize_collection("show",@scripts,current_user)
     @surveys = Survey.find(:all)
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
     #    @surveys=Authorization.authorize_collection("show",@surveys,current_user)
   end
 
@@ -248,6 +283,8 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     #    check_available
     @sorted_variables = @archive.variables
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
     # @surveys = @archive.surveys
     # @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
     
@@ -342,8 +379,7 @@ class CsvarchivesController < ApplicationController
 
     params[:csvarchive][:last_used_at] = Time.now
       
-    links = Link.find(:all, 
-                                 :conditions => { :subject_type => "Csvarchive", 
+    links = Link.all(:conditions => { :subject_type => "Csvarchive", 
                                                   :subject_id => @archive.id,
                                                   :predicate => "link" })
 
@@ -368,7 +404,6 @@ class CsvarchivesController < ApplicationController
     save_all_links selected_surveys
     # generate the json encoding for the groups sharing permissions to go in the params
     if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-       puts "custom sharing here"
        values = "{"
           params[:groups].each do |workgroup_id|
              values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
@@ -379,13 +414,11 @@ class CsvarchivesController < ApplicationController
           params[:sharing][:permissions][:values] = values
           params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
           logger.info "custom permissions: " + values
-          puts params[:sharing][:permissions][:values]
-          puts params[:sharing][:permissions][:contributor_types]
       end
     
     respond_to do |format|
       if @archive.update_attributes(params[:csvarchive])
-	expire_action :action=>"show", :id=>@archive.id
+	#expire_action :action=>"show", :id=>@archive.id
         # the Script was updated successfully, now need to apply updated policy / permissions settings to it
         policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
 
@@ -432,7 +465,6 @@ class CsvarchivesController < ApplicationController
     
     if @archive.save
       if params[:groups] != nil && params[:sharing][:sharing_scope] == Policy::CUSTOM_PERMISSIONS_ONLY.to_s
-        puts "custom sharing here"
         values = "{"
         params[:groups].each do |workgroup_id|
           values = values + workgroup_id.to_s + ": {\"access_type\": 2}" + ","
@@ -443,13 +475,10 @@ class CsvarchivesController < ApplicationController
         params[:sharing][:permissions][:values] = values
         params[:sharing][:permissions][:contributor_types] = "[\"WorkGroup\"]"
         logger.info "custom permissions: " + values
-        puts params[:sharing][:permissions][:values]
-        puts params[:sharing][:permissions][:contributor_types]
       end
       policy_err_msg = Policy.create_or_update_policy(@archive, current_user, params)
       # update attributions
       Relationship.create_or_update_attributions(@archive, params[:attributions])
-      puts "policy error: " + policy_err_msg
     
     # existing_arcs = Csvarchive.find(:all, :conditions=>{:title=> params[:archive][:title], :person_id=>User.find(current_user).person_id})
     #    if existing_arcs.empty?
@@ -604,7 +633,6 @@ class CsvarchivesController < ApplicationController
 
     # obtain a policy to use
     if defined?(@archive) && @archive.asset
-      puts "archive policy exists already"
       if (policy == @archive.asset.policy)
         # Script exists and has a policy associated with it - normal case
         policy_type = "asset"
@@ -628,7 +656,6 @@ class CsvarchivesController < ApplicationController
       #        policy = proj_default
       #        policy_type = "project"
       #      else
-      puts "new archive so new default policy"
       policy = Policy.default(current_user)
       policy_type = "project"
       #      end
@@ -815,7 +842,6 @@ class CsvarchivesController < ApplicationController
         variable_hash[variable.dataset_id].push(variable.id)
       end
       stata_zip_path = File.join(CSV_OUTPUT_DIRECTORY, @archive.filename, @archive.filename + "_stata.zip")
-      puts stata_zip_path
       Zip::ZipFile.open(stata_zip_path) {|zipfile|
           variable_hash.each_key do |key|
             dataset = Dataset.find(key)
@@ -827,7 +853,6 @@ class CsvarchivesController < ApplicationController
       Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
         zipfile.get_output_stream("metadata.txt") { |f| f.puts @archive.content_blob.data}
         file_hash.each_key do |key|
-          puts key
           zipfile.get_output_stream(key) { |f| f.puts file_hash[key] }
         end
       }
@@ -894,18 +919,14 @@ class CsvarchivesController < ApplicationController
       download_string = 'format=CSV&execute=true&ddiformat=html&study'
       study_uri = URI.parse(dataset.nesstar_uri)
       study_uri.merge!('/obj/fStudy/' + dataset.nesstar_id)
-      puts 'study uri: ' + study_uri.to_s
       study_uri = CGI.escape(study_uri.to_s)
-      puts 'study uri: ' + study_uri.to_s
       download_string << '=' + study_uri + '&v=2&analysismode=table&s='
-      puts 'download string: ' + download_string.to_s
       variable_hash[dataset_id].each do |variable|
         download_string << CGI.escape(variable.nesstar_id + ',')
       end
       download_string.chomp! #remove the final ,
       download_string << '&mode=download'
       download_uri = URI.join(dataset.nesstar_uri, 'webview/velocity?')
-      puts download_uri
       @download_uri_strings << download_uri.to_s + download_string
       
     end

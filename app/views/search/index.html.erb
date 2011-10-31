@@ -1,8 +1,9 @@
 
-<% if !@results.blank? %>
-  <% resource_hash = classify_for_tabs @results -%>
-<div class="asset-resource-list">
-  <%= render :partial => "assets/resource_listing_tabbed_by_class", :locals => { :asset_hash => resource_hash,
+<% if !@results_empty %>
+<!-- the results_hash is already split by class-->
+  <%# resource_hash = classify_for_tabs @results -%>
+<div>
+  <%= render :partial => "assets/resource_listing_tabbed_by_class", :locals => { :asset_hash => @results_hash,
     :narrow_view => true,
     :authorization_already_done => true } -%>
 </div>

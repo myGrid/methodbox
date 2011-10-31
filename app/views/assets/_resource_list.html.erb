@@ -1,13 +1,18 @@
 <% authorization_for_showing_already_done ||= false -%>
 <% unless collection.empty? -%>
+<% if collection.methods.include?('total_pages') && paginate-%>
+  <%= will_paginate collection, :param_name => collection.first.class.name.downcase + '_page', :params=>{:search_query => @search_query, :search_type => @search_types} %>
+<% end -%>
 <ul>
 <% collection.each do |item| -%>
-		<%# tableize collection, :cols => 3, :header => nil, :name => "listings", :id => "listings_table", :class => "listings_table", :generate_css => 'false' do |item| %>
+
 			<% if authorization_for_showing_already_done || Authorization.is_authorized?("show", nil, item, current_user) -%>
-				<% if item.class.name == "Publication" %>
-					<li>
-						<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
-					</li>
+				<% if item.class.name == "Variable" %>
+				  <% if Authorization.is_authorized?("show", nil, item.dataset.survey, current_user) %>
+				    <li>
+					  <%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
+				    </li>
+				  <% end %>	
 				<% else -%>
 					<li>
 						<%= render :partial => "#{item.class.name.pluralize.underscore}/resource_list_item", :locals => {:item=>item} -%>
@@ -16,5 +21,8 @@
 			<% end %>
 	<% end %>
 </ul>
+<% if collection.methods.include?('total_pages') && paginate -%>
+  <%= will_paginate collection, :param_name => collection.first.class.name.downcase + '_page', :params=>{:search_query => @search_query, :search_type => @search_types} %>
+<% end -%>
 <% end -%>
 

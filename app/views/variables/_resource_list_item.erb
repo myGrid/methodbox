@@ -1,5 +1,4 @@
-<% variable=resource_list_item -%>
-
+<% variable=item -%>
 <% truncate_projects_institutions_length = 25 -%>
 
 <div class="list_items_container">
@@ -8,7 +7,7 @@
 
       <td class="item_details">
         <p class="name">
-          <%= link_to(variable.name, variable_path(variable)) -%>
+          <%= link_to(variable.name, variable_url(variable)) -%>
         </p>
 
         <div class="box_standout">
@@ -17,12 +16,12 @@
 
           <p class="email">
             <label>Survey: </label>
-            <%= Dataset.find(variable.dataset_id).survey.title %>
+            <%= link_to(variable.dataset.survey.title, survey_url(variable.dataset.survey)) %>
           </p>
 
           <p class="web_page">
             <label>Year:</label>
-            <%= Dataset.find(variable.dataset_id).survey.year  %>
+            <%= variable.dataset.survey.year  %>
           </p>
 
       </td>

@@ -13,7 +13,7 @@
             <%= hidden_field_tag "called_from[survey_search_query]", params[:survey_search_query] -%>
           <% end -%>
 		  <div style="margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px;  background-color: #FFFFFF;">
-			<p><%= link_to "Login using UK Federation", "http://academic.sar-data.ccsr.ac.uk/nesstar/?" + SHIB_LOGIN_URL + "/session/shibboleth" -%></p>
+			<p><%= link_to "Login using UK Federation", pre_shibboleth_login_session_url -%></p>
 		  </div>
 		<div style="text-align:center; padding: 5px; font-weight: bold; ">OR</div>
           <div class="email_login_box">

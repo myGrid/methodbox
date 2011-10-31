@@ -1,10 +1,6 @@
 <p>
-  <%#*<label for="expertise_list">%>
-  <b>A comma seperated list of keywords that describe your expertise.<br/>Please let the suggestions guide you, but feel free to add your own if necessary.</b>
-  <%#= help_icon("A comma seperated list of keywords that describe your expertise.<br/>Please let the suggestions guide you, but feel free to add your own if necessary.") -%>
-  <%#*</label>%>
-
-  <br/>
+  <b>A comma separated list of keywords that describe your expertise.<br/>Please let the suggestions guide you, but feel free to add your own if necessary.</b>
+<br/>
   <br/>
   <div id="facebook" class="clearfix">
     <div tabindex="-1" id="expertise_ids" class="clearfix tokenizer" onclick="$('expertise_autocomplete_input').focus();">
@@ -19,11 +15,6 @@
       <div class="typeahead_message">Type the areas you have expertise in</div>
     </div>
   </div>
-
-
-  <%#*<p style="font-size: 93%; margin-bottom: 0.2em; padding: 0 inherit; text-align: right; vertical-align: middle;">%>
-    <%#= link_to_function "View suggestions" + expand_image("0.3em"), visual_effect(:toggle_blind, "expertise_tag_suggestions", :duration => 0.4) %>
-  <%#*</p>%>
   <br/>
   <div class="fold">
   <div class="foldTitle">Suggestions</div>
@@ -33,10 +24,8 @@
     <div id="expertise_select_tags" class="hTagcloud">
       <div class="popularity">
         <% unless @tags_expertise.blank? -%>
-          <%#*<b>|</b>%>
           <% tag_cloud @tags_expertise, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
             <%= link_to tag.name, "javascript:addExpertiseListTag(#{tag.id});", :class => css_class -%>
-            <%#*<b>|</b>%>
             <% unless tag==@tags_expertise.last %>
             |
           <% end %>

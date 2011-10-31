@@ -1,18 +1,29 @@
-<div class="sidebar">
-	<ul class="vbuttons">
-<% if logged_in? -%>
-	  <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
-	  <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", nil, "Add a new datasource" %></li>
-	<% if controller.action_name == "show" %>
-		<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-	<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-	<% end %>
-	<% end %>
-		<% end -%>
-			<li><%= icon "show", surveys_url, "Browse by surveys", nil, "Browse by surveys" %></li>
-	<li><%= icon "show", category_browse_surveys_url, "Browse by categories", nil, "Browse by categories" %></li>
-		<li><%= icon "show", facets_surveys_url, "Browse by facets", nil, "Browse by facets" %></li>
-	</ul>
+<div id="cart-buttons">
+<%= render :partial => "cart/all_buttons" -%>
 </div>
+<% if logged_in? -%>
+  <div class="sidebar-bg">
+    <div class="sidebar">
+      <ul class="vbuttons">
+        <li><%= icon "new", new_survey_url, "Create a new survey", {:title=>"Add a new survey to MethodBox"}, "Create a new survey" %></li>
+        <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a new datasource" %></li>
+        <% if controller.action_name == "show" %>
+          <% if current_user.is_admin? && @survey.survey_type.is_ukda %>
+            <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", {:title=>"Upload a new dataset from file for this survey"}, "Add a dataset to this survey" -%></li>
+          <% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
+            <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", {:title=>"Upload a new dataset from file for this survey"}, "Add a dataset to this survey" -%></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end -%>
+<div class="sidebar-bg">
+  <div class="sidebar">
+    <ul class="vbuttons">
+      <li><%= icon "show", surveys_url, "Search surveys", {:title=>"Look at the surveys using the tabular view and search them for variables"}, "Search surveys" %></li>
+    </ul>
+  </div>
+</div>
+<%= render :partial => 'help_sidebar' -%>
+
