@@ -1,14 +1,10 @@
-<div class="sidebar">
-  <ul class="vbuttons">
-    <% if defined? @atom_feed and !@atom_feed.blank? %>
-      <li><%= icon "feed", @atom_feed, "Updates", nil, "Updates" %></li>
-    <% end %>
-  </ul>
-</div>
 <% unless controller.controller_name =="help" %>
   <div class="sidebar-bg">
     <div class="sidebar">
       <ul class="vbuttons">
+        <% if defined? @atom_feed and !@atom_feed.blank? %>
+          <li><%= icon "feed", @atom_feed, "Updates", nil, "Updates" %></li>
+            <% end %>
           <li><%= icon "help", help_index_url, "General help", {:title=>"Help on using MethodBox"}, "General help" %></li>
       </ul>
     </div>

@@ -4,7 +4,7 @@ class PeopleController < ApplicationController
 
   before_filter :login_required,:except=>[:select,:userless_project_selected_ajax,:create,:new]
   before_filter :current_user_exists,:only=>[:select,:userless_project_selected_ajax,:create,:new]
-  before_filter :current_user_dormant,:except=>[:index,:new,:create,:select,:feed]
+  before_filter :current_user_dormant,:except=>[:index,:new,:create,:select]
   before_filter :profile_belongs_to_current_or_is_admin, :only=>[:edit, :update,:destroy]
   before_filter :profile_is_not_another_admin_except_me, :only=>[:edit,:update,:destroy]
   before_filter :find_previous_searches, :only=>[ :show ]
@@ -12,7 +12,6 @@ class PeopleController < ApplicationController
   before_filter :is_user_admin_or_personless, :only=>[:new]
   before_filter :auth_params,:only=>[:update,:create]
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
-  before_filter :init_atom_feed, :only => [:index]
   after_filter :update_last_user_activity
 
 
@@ -43,11 +42,6 @@ class PeopleController < ApplicationController
       format.html # index.html.erb
       format.xml  { render :xml => @people.to_xml}
     end
-  end
-
-  def feed
-    @people = Person.all
-    super
   end
 
   # GET /people/1
