@@ -12,8 +12,8 @@ require 'fastercsv'
 namespace :obesity do
   desc "load data from csv"
   task :load_single_datafile  => :environment do
-    dataset_id = 38
-    f = FCSV.open("/Users/Ian/obesity_data/csv/hse08ah.tab", :headers => true,  :return_headers => true,:col_sep => "\t")
+    dataset_id = 480
+    f = FCSV.open("/home/ian/Documents/UKDA-6066-tab/tab/bcs_apr07mar08_to_esrc.tab", :headers => true,  :return_headers => true,:col_sep => "\t")
     h = f.readline
    
     h.each do |variable_name|

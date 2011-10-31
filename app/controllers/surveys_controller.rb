@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_filter :login_required, :except => [ :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
+  before_filter :login_required, :except => [ :show_all_variables, :retrieve_details, :help, :help2, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 
@@ -14,18 +14,20 @@ class SurveysController < ApplicationController
 
   before_filter :rerouted_search, :only => [:show]
   
-  before_filter :find_groups, :only => [ :new, :edit ]
+  before_filter :find_groups, :only => [ :new_nesstar_datasource, :new, :edit ]
   
   before_filter :find_comments, :only => [ :show ]
 
   before_filter :find_notes, :only => [ :show ]
   
-  before_filter :find_groups, :only => [:new_nesstar_datasource, :new]
-  
   after_filter :update_last_user_activity
 
   caches_action :collapse_row, :expand_row
   
+  def retrieve_details
+    @survey = Survey.find(params[:survey_id])
+    render :partial => 'survey_table_row'
+  end
   #After the user clicks on the 'collapse' for a row in the variable table
   def collapse_row
     variable = Variable.find(params[:id])
@@ -39,7 +41,7 @@ class SurveysController < ApplicationController
     variable = Variable.find(params[:id])
     item = variable
     row_name = item.id.to_s
-    dataset = Dataset.find(params[:dataset])
+    dataset = variable.dataset
     value_domain_hash = Hash.new
     var_hash = Hash.new
     no_var_hash = Hash.new
@@ -56,7 +58,13 @@ class SurveysController < ApplicationController
 	end
 	valid_entries = variable.valid_entries
 	invalid_entries = variable.invalid_entries
-	total_entries = invalid_entries + valid_entries
+        if valid_entries == nil
+          total_entries = invalid_entries
+        elsif invalid_entries == nil
+         total_entries = valid_entries
+        else
+          total_entries = invalid_entries + valid_entries
+        end
     else
       no_var_hash = variable.none_values_hash
       var_hash = variable.values_hash
@@ -89,7 +97,13 @@ class SurveysController < ApplicationController
       no_var_hash.each_key do |key|
         valid_entries += var_hash[key]
       end
-      total_entries = invalid_entries + valid_entries
+        if valid_entries == nil
+          total_entries = invalid_entries
+        elsif invalid_entries == nil
+         total_entries = valid_entries
+        else
+          total_entries = invalid_entries + valid_entries
+        end
       if blank_rows != nil
         total_entries += blank_rows
       end
@@ -110,7 +124,7 @@ class SurveysController < ApplicationController
   
   #list of surveys to add to the db
   def add_nesstar_surveys
-    expire_action :action=>"index"
+    #expire_action :action=>"index"
     respond_to do |format|
       begin
         Delayed::Job.enqueue AddNesstarSurveysJob::StartJobTask.new(params[:datasets], params[:nesstar_url], params[:nesstar_catalog], params[:groups], params[:sharing_scope], current_user.id, base_host)
@@ -152,12 +166,61 @@ class SurveysController < ApplicationController
   #find all the variables for a particular survey
   def show_all_variables
     @survey = Survey.find(params[:id])
+    page = params[:page] ? params[:page] : 1
+    start_index = ((page.to_i - 1) * 50) + 1
+    sort = params[:sort] ? params[:sort] : "name"
+    dir = params[:dir] ? params[:dir] : 'ASC'
+    dir.upcase!
     variables = []
-    @survey.datasets.each do |dataset|
-      variables += dataset.variables
+    datasets = Dataset.all(:conditions => {:survey_id => @survey.id})
+    variables = Variable.paginate(:order=>"name ASC", :conditions => {:dataset_id=> datasets}, :page => page, :per_page => 50)
+    #sort the variables by the sort param, have to do it here since some are dynamic fields. sorted by name by default
+    case sort
+    when "name"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.name <=> b.name}
+      else 
+        variables.sort!{|a,b| b.name <=> a.name}
+      end
+    when "description"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.value <=> b.value}
+      else 
+        variables.sort!{|a,b| b.value <=> a.value}
+      end
+    when "category"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.category <=> b.category}
+      else
+        variables.sort!{|a,b| b.category <=> a.category}
+      end
+    when "popularity"
+      if dir == "ASC"
+        variables.sort!{|a,b| VariableList.all(:conditions=>"variable_id=" + a.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + b.id.to_s).size}
+      else
+        variables.sort!{|a,b| VariableList.all(:conditions=>"variable_id=" + b.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + a.id.to_s).size}
+      end
+    when "year"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.dataset.survey.year <=> b.dataset.survey.year}
+      else
+        variables.sort!{|a,b| b.dataset.survey.year <=> c.dataset.survey.year}
+      end
+    when "survey"
+      if dir == "ASC"
+        variables.sort!{|a,b| a.dataset.survey.title <=> b.dataset.survey.title}
+      else
+        variables.sort!{|a,b| b.dataset.survey.title <=> a.dataset.survey.title}
+      end
     end
-    render :update, :status=>:created do |page|
-      page.replace_html "variables-table", :partial => "show_all_vars_for_survey", :locals=>{:sorted_variables => variables}
+    variables_hash = {"start_index"=>start_index, "page"=>page,"total_entries"=>variables.total_entries, "results" => variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year"=>variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    
+    #@variables_json = variables_hash.to_json
+    @selected_datasets = datasets
+    @sorted_variables = variables
+    respond_to do |format|
+      format.html
+      format.json {render :layout => false, :json=>variables_hash.to_json}
     end
   end
   
@@ -192,36 +255,81 @@ class SurveysController < ApplicationController
   #display all the different survey types
   def category_browse
     @sorted_variables = []
-    @survey_types = SurveyType.all
+    #@survey_types = SurveyType.all
+    @survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = []
+    @survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
+    @survey_types = non_empty_survey_types
     var = nil
-    Dataset.all.each do |dataset|
-      var = Variable.first(:all, :conditions => ["dataset_id =? and category is not ?", dataset.id, nil])
+    @survey_types.each do |survey_type|
+      survey_type.surveys.each do |survey|
+        survey.datasets.each do |dataset|
+          var = Variable.first(:all, :conditions => ["dataset_id =? and category is not ?", dataset.id, nil])
+          if var != nil
+            break
+          end
+        end
+        if var != nil
+          break
+        end
+      end
       if var != nil
         break
       end
     end
+    #TODO this assumes that there will be a category somewhere for a variable
     if var != nil
       @selected_survey = var.dataset.survey
     end
     if var != nil
       @categories = find_all_categories @selected_survey.survey_type.id
     end
+
     @surveys = Survey.all(:conditions=>({:survey_type_id=>@selected_survey.survey_type.id}))
     @surveys.reject! {|survey| !Authorization.is_authorized?("show", nil, survey, current_user)}
   end
   
   # browse surveys using exhibit
   def facets
+    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    non_empty_survey_types = get_surveys
+    survey_types.each do |survey_type|
+      any_datasets = false
+      survey_type.surveys.each do |survey|
+        any_datasets = true unless survey.datasets.empty?
+      end
+      if any_datasets 
+        non_empty_survey_types << survey_type
+      end
+    end
     @surveys_json = "{types:{\"Dataset\":{pluralLabel:\"Datasets\"}},"
     @surveys_json << "\"items\":["
-    Survey.all.each do |survey|
+    non_empty_survey_types.each do |survey_type|
+    survey_type.surveys.each do |survey|
       unless !Authorization.is_authorized?("show", nil, survey, current_user)
         survey.datasets.each do |dataset|
-          @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":" + dataset.name.to_json + ",\"survey-type\":" + survey.survey_type.name.to_json + ",\"year\":" +  survey.year.to_json + ",\"type\" : \"Dataset\",\"dataset-description\" :" + dataset.description.to_json
-          @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey.description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
+          dataset.description ? dataset_description = dataset.description : dataset_description = 'N/A'
+          survey.description ? survey_description = survey.description : survey_description = 'N/A'
+          if dataset_description == ''
+            dataset_description = 'N/A'
+          end
+          if survey_description == ''
+            survey_description = 'N/A'
+          end
+          @surveys_json << "{\"label\":\"" + dataset.id.to_s + "\",\"name\":" + dataset.name.to_json + ",\"survey-type\":" + survey.survey_type.name.to_json + ",\"year\":" +  survey.year.to_json + ",\"type\" : \"Dataset\",\"dataset-description\" :" + dataset_description.to_json
+          @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey_description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
         end
       end
     end
+end
     @surveys_json.chop!
     @surveys_json << "]}"
   end
@@ -280,25 +388,16 @@ class SurveysController < ApplicationController
   end
 
   def search_variables
-    do_search_variables
+    sunspot_search_variables
+    #do_search_variables
   end
 
 # list all the surveys that the current user can see.
   def index
-    @survey_hash = Hash.new
-    @empty_surveys = []
-    @surveys.each do |survey|
-      unless survey.datasets.empty? 
-        unless !Authorization.is_authorized?("show", nil, survey, current_user)
-          if (!@survey_hash.has_key?(survey.survey_type.name))
-            @survey_hash[survey.survey_type.name] = Array.new
-          end
-          @survey_hash[survey.survey_type.name].push(survey)
-        end
-      else
-        @empty_surveys.push(survey) unless !Authorization.is_authorized?("show", nil, survey, current_user)
-      end
-    end
+    @surveys = get_surveys
+    @surveys.sort!{|x,y| x.title <=> y.title}
+    surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
+    @surveys_json = surveys_hash.to_json
 
     @variables = Array.new
 
@@ -451,7 +550,7 @@ class SurveysController < ApplicationController
 
         # update attributions
         Relationship.create_or_update_attributions(@survey, params[:attributions])
-        flash[:notice] = 'Survey was successfully uploaded and saved.'
+        flash[:notice] = 'Survey was successfully created.  You can now add datasets to it.'
         format.html { redirect_to survey_path(@survey) }
       else
         format.html {
@@ -588,7 +687,7 @@ class SurveysController < ApplicationController
         # update attributions
         Relationship.create_or_update_attributions(@survey, params[:attributions])
 
-          flash[:notice] = 'Survey file metadata was successfully updated.'
+          flash[:notice] = 'Survey details were successfully updated.'
           format.html { redirect_to survey_path(@survey) }
       else
         format.html {
@@ -705,27 +804,70 @@ class SurveysController < ApplicationController
   end
 
   def check_search_parameters
-    search_query = params[:survey_search_query]
     if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
-      error = "Searching requires a term to be entered in the survey search box."
-    elsif !params[:entry_ids] or params[:entry_ids].size == 0
-      error = "Searching requires at least one survey/dataset selected."
-    else
-      dataset = Dataset.find_all_by_id(params[:entry_ids])
-      if dataset.length == params[:entry_ids].length
-        return true
-      else
-        error = "Incorrect dataset included. Please contact an admin if this reoccurs."
-      end
-    end
     respond_to do |format|
-      flash[:error] = error
+      flash[:error] = "Searching requires a term to be entered in the survey search box."
       format.html { redirect_to :back, :survey_search_query => search_query }
     end
     return false
   end
+  end
 
  private 
+
+  def sunspot_search_variables
+    #figure out what datasets the current user is allowed to see
+    authorized_datasets=[]
+    #if there are no datasets selected then just search everything
+    if params[:entry_ids] == nil || params[:entry_ids].empty?
+      get_surveys.each do |survey|
+        survey.datasets.each do |dataset|
+          authorized_datasets.push(dataset.id) unless !Authorization.is_authorized?("show", nil, survey, current_user)
+        end
+      end
+      params[:entry_ids] = authorized_datasets.collect{|dataset_id| dataset_id.to_s}
+    else
+      params[:entry_ids].each do |dataset_id| 
+        authorized_datasets.push(dataset_id) unless !Authorization.is_authorized?("show", nil, Dataset.find(dataset_id).survey, current_user)
+      end
+    end
+    search_terms = params[:survey_search_query]
+    result = Sunspot.search(Variable) do
+      keywords(search_terms) {minimum_match 1}
+      with(:dataset_id, authorized_datasets)
+      paginate(:page => 1, :per_page => 1000)
+    end
+    @datasets_with_results = []
+    result.results.each do |var|
+      @datasets_with_results.push(var.dataset) if !@datasets_with_results.include?(var.dataset)
+    end
+    with_results = @datasets_with_results.collect{|dataset| dataset.id.to_s}
+    @datasets_without_results = params[:entry_ids] - with_results
+    #sunspot/solr paginates everything, we use client side pagination so just search for 1000 entries and send across - anything more would be a
+    #bit crazy really
+    # if you want to sort them then add this bit in result.results.sort{|x,y| x.name <=> y.name}.collect
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.name, "year"=>variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @survey_search_query = params[:survey_search_query]
+    @variables_json = variables_hash.to_json
+    #keep track of what  datasets have been searched
+    @selected_datasets = authorized_datasets
+    @sorted_variables = result.results
+
+    if logged_in?
+      #TODO There must be a way to avoid duplicating the save if the search is repeated.
+      user_search = UserSearch.new
+      user_search.user = current_user
+      user_search.terms = search_terms
+      user_search.dataset_ids = @selected_datasets
+      vars_as_ints = @sorted_variables.collect {|temp_var| temp_var.id }
+      user_search.variable_ids = vars_as_ints
+      user_search.save
+    end
+
+    if @sorted_variables.empty?
+      flash.now[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
+    end
+  end
 
     def do_search_variables
         @survey_search_query = params[:survey_search_query]

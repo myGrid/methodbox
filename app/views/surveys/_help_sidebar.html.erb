@@ -1,0 +1,15 @@
+<div class="sidebar-bg">
+<div class="sidebar">
+  <ul class="vbuttons">
+    <% if logged_in? -%>
+      <% if controller.action_name == "show" %>
+        <li><%= icon "help", 'http://wiki.methodbox.org/index.php/UserGuides:Surveys:CreatingNewSurveys', "Help on adding new surveys and datasets", nil, "Help on adding new surveys and datasets" -%></li>
+      <% end %>
+      <% if controller.action_name == "new" %>
+        <li><%= icon "help", 'http://wiki.methodbox.org/index.php/UserGuides:Surveys:CreatingNewSurveys', "Help on adding new surveys and datasets", nil, "Help on adding new surveys and datasets" -%></li>
+      <% end -%>
+    <% end -%>
+        <li><%= icon "help", 'http://wiki.methodbox.org/index.php/UserGuides:Surveys', "Help on searching for variables", {:title=>"How to find surveys and datasets and search for variables"}, "Help on surveys" -%></li>
+  </ul>
+</div>
+</div>

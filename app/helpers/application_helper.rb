@@ -555,26 +555,9 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
     tag_array = Array.new
     person.owned_taggings.each do |tagging|
       if tagging.taggable_type== "Variable" && tagging.taggable_id == variable.id
-        puts "pushing " + tagging.tag_id.to_s
         tag_array.push(tagging.tag_id)
       end
     end
-
-
-
-    #  logger.info(person.to_s)
-    #  obj = variable.annotations_with_attribute_and_by_source("tag",person)
-    #  logger.info(obj.to_json)
-    #    all_annotation_array = Array.new
-    #    obj.each do |item|
-    #      logger.info("id: " + item.id.to_s)
-    #      all_annotation_array.push(Hash["name",item.value, "id",item.id])
-    #    end
-    #    new_array = all_annotation_array.collect{|x| x["id"]}
-    #    logger.info(new_array.to_json)
-    #    return new_array.to_json
-    puts tag_array
-    #    return tag_array.to_json
     return Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id,'name'=>t.name}}.to_json
 
   end
@@ -585,30 +568,15 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
 
   def get_all_annotations_for_variables
     variables = Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id}}
-    puts "tags: " + variables.to_json
     return variables.to_json
 
   end
 
 
   def get_all_annotations_for_variable(variable)
-    #      obj = variable.annotations_with_attribute("tag")
-    #    #    obj = Variable.find_annotations_for(variable.id)
-    #    logger.info(obj.to_s)
-    #    all_annotation_array = Array.new
-    #    obj.each do |item|
-    #      all_annotation_array.push(Hash["name",item.value, "id",item.id])
-    #    end
-    #    logger.info("All annotations " + all_annotation_array.to_json)
-    #    return all_annotation_array.to_json
-    puts "variable " + variable.to_s
-    puts variable.title_counts.to_json
     var_tags = variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id,'name'=>t.name}}
-    puts "var tags " + var_tags.to_s
     every_tag = Variable.title_counts.sort{|a,b| a.id<=>b.id}.collect{|t|{'id'=>t.id,'name'=>t.name}}
-    puts "every tag " + every_tag.to_s
     @all_tags = every_tag - var_tags
-    puts "all tags " + @all_tags.to_s
     return @all_tags.to_json
   end
   
@@ -694,15 +662,12 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
     image_tag(method_to_icon_filename(method),options)
   end
   def icon(method, url=nil, alt=nil, url_options={}, label=method.humanize, remote=false)
-
     if (label == 'Destroy')
       label = 'Delete';
     end
-
     return nil unless (filename = method_to_icon_filename(method.downcase))
     image_options = alt ? { :alt => alt } : { :alt => method.humanize }
     img_tag = image_tag(filename, image_options)
-    
     inner = img_tag;
     inner = "#{img_tag} #{label}" unless label == nil
     if (url)
@@ -837,7 +802,7 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
       return "famfamfam_silk/calculator.png"
     when "models"
       return "famfamfam_silk/calculator.png"
-    when "data_file","data_files"
+    when "data_file","data_files", "csvarchive"
       return "famfamfam_silk/database.png"
     when "study"
       return "famfamfam_silk/page.png"
@@ -895,7 +860,6 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
   # if "caption" is nil, item.name will be used by default
   def list_item_with_icon(icon_type, item, caption, truncate_to, custom_tooltip=nil)
     list_item = "<li>"
-    
     unless icon_type.downcase == "flag"
       list_item += icon(icon_type.downcase, nil, icon_type.camelize, nil, "")
     else
@@ -904,7 +868,6 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
     item_caption = h(caption.blank? ? item.name : caption)
     list_item += link_to truncate(item_caption, :length=>truncate_to), url_for(item), :title => custom_tooltip.blank? ? item_caption : custom_tooltip
     list_item += "</li>"
-    
     return list_item
   end
   

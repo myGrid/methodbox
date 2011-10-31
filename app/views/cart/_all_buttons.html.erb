@@ -1,0 +1,12 @@
+<% if logged_in? -%>
+<% unless current_user.cart_items.empty? -%>
+<div class="sidebar-bg">
+  <div class="sidebar">
+    <ul class="vbuttons">
+      <li id="cart_button"><%= render :partial => "cart/button" -%></li>
+      <li id="create-data-extract-button"><%= render :partial => "surveys/create_extract_button"-%></li>
+    </ul>
+  </div>
+</div>
+<% end -%>
+<% end -%>

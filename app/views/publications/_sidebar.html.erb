@@ -1,0 +1,18 @@
+<div class="sidebar-bg">
+  <div class="sidebar">
+    <%= render :partial=>controller.controller_name.downcase + "/search_bar" %>
+    <ul class="vbuttons">
+      <% if logged_in? -%>
+        <li><%= icon "new", new_publication_url, "Add a new publication", {:title=>"Fetch publication details from PubMed"}, "Add a new publication" %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+<div class="sidebar-bg">
+  <div class="sidebar">
+    <ul class="vbuttons">
+      <li><%= icon "show", surveys_url, "Search surveys", {:title=>"Look at the surveys using the tabular view and search them for variables"}, "Search surveys" %></li>
+    </ul>
+  </div>
+</div>
+<%= render :partial=>"help_sidebar" -%>

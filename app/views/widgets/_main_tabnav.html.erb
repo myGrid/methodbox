@@ -26,20 +26,12 @@ render_tabnav :main,
   #   end
   # end 
          
- 
-	add_tab do |t|
-   t.named 'People'
-   t.titled "Who's who in the MethodBox"
-   t.links_to :controller => 'people'
-  end unless !logged_in?
 
-
-	add_tab do |t|
-   t.named 'Methods and Scripts'
-   t.titled "Advice and scripts for data cleaning and statistical analysis"
-   t.links_to :controller => 'scripts'
-  end
-
+  #add_tab do |t|
+   #t.named 'New Additions'
+   #t.titled "The latest Surveys, Methods and Data Extracts added to MethodBox"
+   #t.links_to :controller => 'home'
+  #end unless !logged_in?
 
   add_tab do |t|
    t.named 'Data Sources'
@@ -53,12 +45,29 @@ render_tabnav :main,
    t.links_to :controller => 'csvarchives'
   end #unless !logged_in?
 
+	add_tab do |t|
+   t.named 'Methods and Scripts'
+   t.titled "Advice and scripts for data cleaning and statistical analysis"
+   t.links_to :controller => 'scripts'
+  end
+
   add_tab do |t|
    t.named 'Publications'
    t.titled "Publications added from PubMed"
    t.links_to :controller => 'publications'
   end unless !logged_in?
 
+  add_tab do |t|
+   t.named 'My MethodBox'
+   t.titled "Your profile"
+   t.links_to :controller => 'people', :action => 'show', :id => current_user.id
+  end unless !logged_in? 
+
+	add_tab do |t|
+   t.named 'People'
+   t.titled "Who's who in the MethodBox"
+   t.links_to :controller => 'people', :action => 'index'
+  end unless !logged_in?
 
   add_tab do |t|
    t.named 'Groups'
@@ -67,16 +76,17 @@ render_tabnav :main,
   end unless !logged_in?
 
   add_tab do |t|
+   t.named 'Forums'
+   t.titled "Ask questions, help others"
+   t.links_to :controller => 'forums'
+  end unless !logged_in?
+
+  add_tab do |t|
    t.named 'Help'
    t.titled "How to use MethodBox to find variables, share methods and browse surveys"
    t.links_to :controller => 'help'
   end
 
-  add_tab do |t|
-   t.named 'Forums'
-   t.titled "Ask questions, help others"
-   t.links_to :controller => 'forums'
-  end unless !logged_in?
 if current_user && current_user.is_admin?
   add_tab do |t|
    t.named 'Statistics'

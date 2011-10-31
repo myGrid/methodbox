@@ -1,14 +1,10 @@
-<% if @tag -%>
-  <h2><%= "Variables tagged with '"+h(@tag)+"' ... " -%></h2>
-<% end %>
-
 <% if @variables.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @variables } -%>
 <% end %>
-
-<%= render :partial => "resource_list_item", :collection=>@variables %>
-
+<div class="asset-resource-list">
+  <%= render :partial => "assets/resource_list", :locals => { :collection => @variables, :authorization_for_showing_already_done=>true } %>
+</div>
 <% if @variables.public_methods.include?("page_count") %>
   <!-- only do the page links if the collection supports it -->
   <%= render :partial => "layouts/paginate", :locals => { :collection => @variables } -%>

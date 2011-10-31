@@ -176,3 +176,10 @@ function areAnyDatasetsSelected() {
 	}
 	return selected;
 }
+
+//handle back, forward browser controls and uncheck all the boxes
+function uncheckAll() {
+    $$('input.survey_checkbox').each(function(checkbox) {
+            checkbox.checked = false;
+    });
+}

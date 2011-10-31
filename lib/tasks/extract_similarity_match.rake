@@ -13,8 +13,8 @@ namespace :obesity do
     #keep all extracts in a map with only their var ids
     all_extracts_hash = Hash.new
     # previous_checks = Hash.new
-    #extract is the source
-    Csvarchive.all.each do |extract|
+    #extract is the source, only check extracts which haven't been done before
+    Csvarchive.all(:conditions=>{:similarity_checked=>false}).each do |extract|
       #the number of extracts in which the match has been seen
       match_hash = Hash.new
       puts "Matching patterns for extract " + extract.id.to_s
@@ -68,13 +68,15 @@ namespace :obesity do
           matched_var.target_variable_id = inner_key
           matched_var.occurences = match_hash[key][inner_key]
           matched_var.save
-          puts key.to_s + " has " + match_hash[key][inner_key].to_s + " matches to " + inner_key.to_s
+          #puts key.to_s + " has " + match_hash[key][inner_key].to_s + " matches to " + inner_key.to_s
         else
-          puts "Already a match for " + key.to_s + " and " + inner_key.to_s + ". Add " + match_hash[key][inner_key].to_s + " to it."
+          #puts "Already a match for " + key.to_s + " and " + inner_key.to_s + ". Add " + match_hash[key][inner_key].to_s + " to it."
           mvs[0].update_attributes(:occurences=>mvs[0].occurences += match_hash[key][inner_key])
         end
       end
       end
+      #this extract has been checked so make sure we don't do it again in the future
+      extract.update_attributes(:similarity_checked => true)
     end
   end
 end

@@ -1,0 +1,9 @@
+<% if !target_matches.empty? -%>
+<%= "Users who downloaded these variables also selected " -%>
+<ol class="variable-suggestions">
+<% target_matches.each_key do |key|-%>
+<% linked_var = Variable.find(key) -%>
+<li><%= link_to(linked_var.name + " from " + linked_var.dataset.name, variable_url(linked_var)) -%></li>
+<% end -%>
+</ol>
+<% end -%>

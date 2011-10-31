@@ -13,7 +13,7 @@
 <%= text_field_tag :survey_search_query, @survey_search_query %>
 <%= submit_tag 'Search for variables',:id => "search_button",:onclick => "if(!checkNotEmpty('survey_search_query')) {return false;} else {return true;}", :title=>"Select some surveys (click on the checkboxes), enter a term and click this button" %>
 </div>
-<div ex:role="viewPanel" class="view-content left">
+<div ex:role="viewPanel" class="view-content right">
 	<div ex:role="lens" class="content" style="margin-bottom: 0.5em; border-bottom: 1px dotted; padding-bottom: 0.5em; padding-top: 0.5em;" ex:onshow="prepareLens(this);">
 		<div class="exhibit-checkbox-div" style="float:left;" style="width: 10%;">
 		</div>
@@ -47,7 +47,7 @@
         ex:sortAscending="false">
     </div> -->
 </div>
-<div class="facet-view-content right">
+<div class="facet-view-content left">
 	<div class="facet-wrapper" style="margin-bottom: 1em;">
 		<div class="exhibit-facet-header center" style="font-size: larger;
 		    font-weight: bold; margin-bottom: 0.5em;">Find surveys</div>

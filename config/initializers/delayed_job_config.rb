@@ -1,6 +1,4 @@
-Delayed::Job.destroy_failed_jobs = true
-silence_warnings do
-  Delayed::Job.const_set("MAX_ATTEMPTS", 0)
-#    Delayed::Job.const_set("MAX_RUN_TIME", 5.minutes)
-  Delayed::Job.destroy_failed_jobs = false
-end
+Delayed::Worker.destroy_failed_jobs = false
+Delayed::Worker.sleep_delay = 60
+Delayed::Worker.max_attempts = 1
+Delayed::Worker.max_run_time = 24.hours

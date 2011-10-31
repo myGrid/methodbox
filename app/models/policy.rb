@@ -211,7 +211,7 @@ class Policy < ActiveRecord::Base
     policy = Policy.new(:name => "system default",
                         :contributor => contributor,
                         :sharing_scope => 3,
-                        :access_type => 0,
+                        :access_type => 2,
                         :use_custom_sharing => false,
                         :use_whitelist => false,
                         :use_blacklist => false)

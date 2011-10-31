@@ -1,0 +1,7 @@
+<div style="border: 1px dashed black;">
+<div style="font-style: italic; padding-bottom: 2px;">Datasets for <%= @survey.title -%></div>
+<% @survey.datasets.each do |dataset| %>
+  <%= check_box_tag 'entry_ids[]', dataset.id, false, :onclick=>"selectDataset(#{dataset.id})", :id=>"dataset_checkbox_" + dataset.id.to_s -%><%= dataset.name -%>
+<% end %>
+<%= javascript_tag "setCheckedStatus('#{@survey.id}')" -%>
+</div>

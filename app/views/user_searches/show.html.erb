@@ -1,64 +1,59 @@
-<%= stylesheet_link_tag 'survey_ul'%>
-<%= stylesheet_link_tag 'faux_table'%>
 <%= javascript_include_tag "variable_table_check.js" -%>
 <%= javascript_include_tag 'checkbox_update.js' %>
+<%= javascript_include_tag 'variables_table.js' -%>
+<%= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
 <script type="text/javascript">
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
-<div class="show_basic" style="padding-right: 2em;">
-	
-	<p>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
+<p>
         <b>Term(s):</b> <%= h @search.terms -%>
       </p>
-	<p>
+<p>
         <b>Date of search:</b> <%= h @search.created_at -%>
       </p>
 
-	<p>
+<p>
         <b>Number of variables:</b> <%= h @search.variables.size -%>
       </p>
 
 
-<% form_remote_tag :url => { :action => "add_to_cart"} do -%>
-  <%= hidden_field_tag 'submit', 'add' %>
-  <%= hidden_field_tag 'from_a_previous_search', @search.id %>
-  <br/>
-<div style="background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%; height: 6em;">
-	<% if logged_in? -%>
-		<div style="float:right; padding-right: 1em;">
-			<ul class="vbuttons" style="padding-top: 5px; padding-bottom: 5px;">
-				<li id="cart_button"><%= render :partial => "cart/button" -%></li>
-				<li><%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart"}, :before => "if (!isAnythingChecked()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Form.getInputs(this.form, null,'submit')[0].value = 'add';Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%></li>
-			</ul>
-		</div>
-	<% end -%>
-	<div style="float: left;" class="small-margin-bottom">
-		<div class="small-margin-bottom">
-			<%= image_tag method_to_icon_filename("large-spinner"), :id => "doing_stuff_spinner", :alt=>"working...", :title=>"working...", :style => "display: none; vertical-align: middle;",:height => '64', :width => '64' -%>
-		</div>
-		<div class="small-margin-bottom">
-		Select:
-        	<%= link_to_function 'All', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = true; setTrueOrFalse();});" %>
-        	,&nbsp
-        	<%= link_to_function 'None', "$$('input.variable_checkbox').each(function(checkbox) { checkbox.checked = false; setTrueOrFalse();});" %>
-        	,&nbsp
-        	<%= link_to_function 'Invert selection', "$$('input.variable_checkbox').each(function(checkbox) { if (checkbox.checked == true) {checkbox.checked = false; setTrueOrFalse();} else {checkbox.checked = true; } setTrueOrFalse();});" %>
-		</div>
-	</div>
+<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
+<div style="margin-bottom: 10px;">
+<% if logged_in? -%>
+<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+<% end -%>
 </div>
-	<p>
-    <b>Variables found:</b>
-  </p>
-  <br/>
-  <div id="table_header" class="faux_table_header_container">
-    <%= render :partial => "surveys/table_header",:locals=>{:sorted_variables => @search.variables} -%>
-  </div>
-  <div id="table_container" class="faux_table_container">
-    <%= render :partial => "surveys/table",:locals=>{:sorted_variables => @search.variables, :lineage => false, :extract_lineage => false, :extract_id => nil} -%>
-
-  </div>
-  <br/>
-
-<% end %>
+<div id="selected_variables">
 </div>
+<div class="yui-skin-sam">
+<div id="variables_table"></div>
+</div>
+<% end -%>
+<script type="text/javascript">
+var results = <%= raw @variables_json -%>;
+createTable();
+</script>

@@ -1,0 +1,59 @@
+<%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'variable_table_check.js' -%>
+<%= javascript_include_tag 'variables_table.js' -%>
+<%= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
+<script type="text/javascript">
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1', {'packages':['corechart']});
+</script>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
+<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('search_variables_button').disable();"}) do -%>
+<% if !variables.empty? -%>
+<div id="selected_variables">
+</div>
+<% if logged_in? -%>
+<div>
+<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+</div>
+<% end -%>
+<div style= "margin-top: 5px;">
+<%= button_to_function 'Select all', "selectAllVariableCheckboxes(true);", :title=>"Select all the variables (from all pages)" -%>
+<%= button_to_function 'Select none', "selectAllVariableCheckboxes(false);", :title=>"De-select all the variables (from all pages)" -%>
+<%= button_to_function 'Invert selection', "invertAllVariableCheckboxes();", :title=>"De-select currently selected variables and vice-versa (from all pages)" -%>
+</div>
+<div class="yui-skin-sam">
+<div id="variables_table"></div>
+</div>
+<% end  -%>
+<% end -%>
+<script type="text/javascript">
+var results = <%= raw @variables_json -%>;
+createTable();
+</script>
+<script type="text/javascript">
+  document.observe('dom:loaded', function() {
+    //uncheckAll();
+  });
+</script>

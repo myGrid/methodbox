@@ -22,7 +22,7 @@
 						<% if @person.user.shibboleth %>
 							<p style="padding-top: 1px;">Authentication method: <b>UK federation</b></p>
 						<% else %>
-							<li><%= icon('lock', "http://academic.sar-data.ccsr.ac.uk/nesstar/?" + SHIB_LOGIN_URL + "/users/shib_convert_after/" + @person.user.id.to_s, "Switch to UK Federation Authentication", {:confirm => "This enables login using UK Federation and shibboleth. You must have a valid account at a UK institution or affiliate for this to work." }, "Switch to UK Federation Authentication") -%></li>
+							<li><%= icon('lock', convert_shibboleth_login_session_url, "Switch to UK Federation Authentication", {:confirm => "This enables login using UK Federation and shibboleth. You must have a valid account at a UK institution or affiliate for this to work." }, "Switch to UK Federation Authentication") -%></li>
 						<% end %>
               				<% end -%>
             			</ul>

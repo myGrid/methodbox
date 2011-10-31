@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110527095801) do
+ActiveRecord::Schema.define(:version => 20111003141408) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -144,6 +144,7 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
     t.integer  "contributor_id"
     t.boolean  "contains_nesstar_variables"
     t.boolean  "nesstar_only"
+    t.boolean  "similarity_checked",         :default => false
   end
 
   create_table "dataset_lists", :force => true do |t|
@@ -170,6 +171,7 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
     t.string   "reason_for_update"
     t.string   "nesstar_id"
     t.string   "nesstar_uri"
+    t.string   "year"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -416,7 +418,7 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
   create_table "scripts", :force => true do |t|
     t.string   "title"
     t.text     "body"
-    t.string   "description"
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "content_type"
@@ -574,7 +576,7 @@ ActiveRecord::Schema.define(:version => 20110527095801) do
   end
 
   create_table "value_domain_statistics", :force => true do |t|
-    t.string   "value_domain_id"
+    t.integer  "value_domain_id"
     t.string   "frequency"
     t.datetime "created_at"
     t.datetime "updated_at"

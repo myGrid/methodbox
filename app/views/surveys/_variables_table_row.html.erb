@@ -47,7 +47,7 @@
         <% end -%>
       </div>
        <div class="col6" title="<%= dataset.survey.survey_type.name -%>">
-        <%= dataset.survey.survey_type.shortname ? dataset.survey.survey_type.shortname : truncate(dataset.survey.survey_type.name, 10, "...")-%>
+        <%= dataset.survey.survey_type.shortname ? dataset.survey.survey_type.shortname : truncate(dataset.survey.survey_type.name, :length=>10, :omission=>"...")-%>
       </div>
       <div class="col7">
         <%= link_to dataset.name, dataset_url(dataset) -%>
