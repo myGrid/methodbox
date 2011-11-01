@@ -15,11 +15,13 @@ class SearchController < ApplicationController
 
     #SOLR doesn't appear to support lower case "or"
     query = @search_query.upcase
-
+    
+    #only ask solr to fetch results if query is not blank
     if (query.nil? or query.strip.empty?)
-      flash[:error]="Sorry your query appeared blank. Please try again"
-      redirect_to :back
-    end
+      flash.now[:error]="Sorry your query appeared blank. Please try again"
+      #possible 301 too many redirects error here
+      #redirect_to :back
+    else
     #if (query.include?(' OR ') && query.include?(' AND '))
      # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
       #return
@@ -64,6 +66,7 @@ class SearchController < ApplicationController
     end
     #tell the browser that the post request is ok to cache for the next 20 minutes
     expires_in 20.minutes
+    end
   end
 
   private
