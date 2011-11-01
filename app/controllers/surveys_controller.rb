@@ -299,21 +299,21 @@ class SurveysController < ApplicationController
   
   # browse surveys using exhibit
   def facets
-    survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
-    non_empty_survey_types = get_surveys
-    survey_types.each do |survey_type|
-      any_datasets = false
-      survey_type.surveys.each do |survey|
-        any_datasets = true unless survey.datasets.empty?
-      end
-      if any_datasets 
-        non_empty_survey_types << survey_type
-      end
-    end
+    #survey_types = SurveyType.all(:conditions=>{:name=>["Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey"]})
+    #non_empty_survey_types = get_surveys
+    #survey_types.each do |survey_type|
+    #  any_datasets = false
+    #  survey_type.surveys.each do |survey|
+    #    any_datasets = true unless survey.datasets.empty?
+    #  end
+    #  if any_datasets 
+    #    non_empty_survey_types << survey_type
+    #  end
+    #end
     @surveys_json = "{types:{\"Dataset\":{pluralLabel:\"Datasets\"}},"
     @surveys_json << "\"items\":["
-    non_empty_survey_types.each do |survey_type|
-    survey_type.surveys.each do |survey|
+    #non_empty_survey_types.each do |survey_type|
+    get_surveys.each do |survey|
       unless !Authorization.is_authorized?("show", nil, survey, current_user)
         survey.datasets.each do |dataset|
           dataset.description ? dataset_description = dataset.description : dataset_description = 'N/A'
@@ -328,7 +328,7 @@ class SurveysController < ApplicationController
           @surveys_json << ",\"Survey\":" + survey.title.to_json + ",\"survey-description\" :" + survey_description.to_json + ",\"url\":" + url_for(survey).to_json + "},"
         end
       end
-    end
+    #end
 end
     @surveys_json.chop!
     @surveys_json << "]}"
