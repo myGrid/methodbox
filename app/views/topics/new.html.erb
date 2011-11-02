@@ -11,6 +11,8 @@
   <%= error_messages_for :post %>
   <%= error_messages_for :topic %>
   <% form_for :topic, :url  => forum_topics_path(@forum) do |f| -%>
+<%= hidden_field_tag "topic[topicable_id]", @topicable_id -%>
+<%= hidden_field_tag "topic[topicable_type]", @topicable_type -%>
     <%= render :partial => "form", :object => f %>
     <br/>
     <%= submit_tag 'Post Topic'[], :or => link_to('Cancel'[], forum_path(@forum)) %>

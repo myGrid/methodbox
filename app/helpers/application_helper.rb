@@ -682,6 +682,8 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
   
   def method_to_icon_filename(method)
     case (method.to_s)
+    when "topic"
+      return "speech_bubble_small.png"
     when "thumbs_up"
       return "famfamfam_silk/thumb_up.png"
     when "left_arrow_single"

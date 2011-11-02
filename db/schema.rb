@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111003141408) do
+ActiveRecord::Schema.define(:version => 20111102140404) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -528,13 +528,15 @@ ActiveRecord::Schema.define(:version => 20111003141408) do
     t.string   "title"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "hits",         :default => 0
-    t.integer  "sticky",       :default => 0
-    t.integer  "posts_count",  :default => 0
+    t.integer  "hits",           :default => 0
+    t.integer  "sticky",         :default => 0
+    t.integer  "posts_count",    :default => 0
     t.datetime "replied_at"
-    t.boolean  "locked",       :default => false
+    t.boolean  "locked",         :default => false
     t.integer  "replied_by"
     t.integer  "last_post_id"
+    t.integer  "topicable_id"
+    t.string   "topicable_type"
   end
 
   add_index "topics", ["forum_id", "replied_at"], :name => "index_topics_on_forum_id_and_replied_at"

@@ -3,6 +3,8 @@ require 'acts_as_resource'
 class Survey < ActiveRecord::Base
 
   acts_as_resource
+
+  has_many :topics, :as => :topicable
   
   belongs_to :survey_type
   
