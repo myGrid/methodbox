@@ -193,7 +193,15 @@
 		<div id="new_comment">
 		</div>
         </div>
-        <div>Forum posts about this survey</div>
+        <div>
+          <% @survey.topics.each do |topic| -%>
+            <%= link_to(topic.title, forum_topic_path(:forum_id => topic.forum, :id => topic.id, :page => topic.last_page), :title=>"View all the posts for this topic") %>
+            <%= '{count} post(s)'[(count=topic.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %>
+            <% if topic.posts.size >1 -%>
+,Latest post: <%= time_ago_in_words(topic.replied_at) %> ago
+           <% end %>
+          <% end -%>
+        </div>
     </div>
 </div>
 </div>
