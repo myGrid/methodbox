@@ -131,9 +131,7 @@ class ScriptsController < ApplicationController
   end
   # GET /scripts
   def index
-    #if the user only wants recommended items then throw the rest away
     params[:recommended_only]? @recommended_only = true : @recommended_only = false
-    @scripts.reject!{|script| script.recommendations.empty?} if params[:recommended_only]
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@scripts}
@@ -539,6 +537,8 @@ class ScriptsController < ApplicationController
 #find all scripts, authorize them for view by the user, paginate them 
   def find_scripts_by_page
     scripts = Script.all(:order => "created_at DESC")
+    #if the user only wants recommended items then throw the rest away
+    scripts.reject!{|script| script.recommendations.empty?} if params[:recommended_only]
     authorized_scripts = Authorization.authorize_collection("view", scripts, current_user, keep_nil_records=false)
     @scripts = authorized_scripts.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
   end
