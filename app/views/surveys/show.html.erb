@@ -194,13 +194,29 @@
 		</div>
         </div>
         <div>
+	      <% if !@survey.topics.empty? %>
+	<table>
+		<thead>
+			<tr><th>Topic Title</th><th>Number of posts</th><th>Time of last post</th><th>Post</th></tr>
+		</thead>
+		<tbody>
           <% @survey.topics.each do |topic| -%>
-            <%= link_to(topic.title, forum_topic_path(:forum_id => topic.forum, :id => topic.id, :page => topic.last_page), :title=>"View all the posts for this topic") %>
-            <%= '{count} post(s)'[(count=topic.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %>
+<tr>            
+<td><%= link_to(topic.title, forum_topic_path(:forum_id => topic.forum, :id => topic.id, :page => topic.last_page), :title=>"View all the posts for this topic") %></td>
+<td>            <%= '{count}'[(count=topic.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %></td>
             <% if topic.posts.size >1 -%>
-,Latest post: <%= time_ago_in_words(topic.replied_at) %> ago
+<td><%= time_ago_in_words(topic.replied_at) %> ago</td>
+<td><%= topic.posts.last.body %></td>
+<% else %>
+<td rowspan="2">No posts yet</td>
            <% end %>
+</tr>
           <% end -%>
+</tbody>
+</table>
+          <% else %>
+		There are no forum questions linked to this survey, why not <%= link_to("start a new topic.", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey")) -%>
+          <% end %>
         </div>
     </div>
 </div>
