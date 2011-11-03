@@ -237,6 +237,7 @@ class CsvarchivesController < ApplicationController
   # GET /csvarchives/
   # Generate array for current_user archives and all archives
   def index
+    params[:recommended_only]? @recommended_only = true : @recommended_only = false
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@my_archives, :xml=>@all_archives}
@@ -563,17 +564,20 @@ class CsvarchivesController < ApplicationController
   protected
   
   def find_archives_by_page
+    #if the user only wants recommended data extracts then throw the rest away
     @my_page = params[:my_page]
     @all_page = params[:all_page]
     if current_user
-      my_archives = Csvarchive.find(:all,
-      :order => "created_at DESC",:conditions=>{:user_id => current_user.id})
+      my_archives = Csvarchive.all(:order => "created_at DESC",:conditions=>{:user_id => current_user.id})
+      #if the user only wants recommended data extracts then throw the rest away
+      my_archives.reject!{|extract| extract.recommendations.empty?} if params[:recommended_only]
       @my_archives = my_archives.paginate(:page=>params[:my_page] ? params[:my_page] : 1, :per_page=>default_items_per_page)
     else
       @my_archives = []
     end
-    all_archives = Csvarchive.find(:all,
-      :order => "created_at DESC")     
+    all_archives = Csvarchive.all(:order => "created_at DESC")
+    #if the user only wants recommended data extracts then throw the rest away
+    all_archives.reject!{|extract| extract.recommendations.empty?} if params[:recommended_only]    
     all_authorized_archives = Authorization.authorize_collection("view", all_archives, current_user, keep_nil_records=false)
     @all_archives = all_authorized_archives.paginate(:page=>params[:all_page] ? params[:all_page] : 1, :per_page=>default_items_per_page)
   end

@@ -1,3 +1,12 @@
+<div class="normal-margin-bottom">
+<ul class="buttons">
+	<% if @recommended_only %>
+  <li><%= icon('view-all', csvarchives_url, 'Show all data extracts', nil, 'Show all data extracts')  -%></li>
+<% else %>
+<li><%= icon('medal', csvarchives_url(:recommended_only=>true), 'Show recommended only', nil, 'Show recommended only')  -%></li>
+<% end %>
+</ul>
+</div>
 <div class="yui-skin-sam">
 	<div id="extracts" class="yui-navset">
 		<ul class="yui-nav">

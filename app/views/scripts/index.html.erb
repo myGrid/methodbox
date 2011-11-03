@@ -6,6 +6,15 @@
     <p class="center">Why not <%= link_to "add one", new_script_url -%></p>
   <% end %>
 <% else -%>
+<div class="normal-margin-bottom">
+<ul class="buttons">
+	<% if @recommended_only %>
+  <li><%= icon('view-all', scripts_url, 'Show all methods & scripts', nil, 'Show all methods & scripts')  -%></li>
+<% else %>
+<li><%= icon('medal', scripts_url(:recommended_only=>true), 'Show recommended only', nil, 'Show recommended only')  -%></li>
+<% end %>
+</ul>
+</div>
   <%= will_paginate(@scripts) %>
   <div style="text-align: center; margin: 0.5em;">
     <%= page_entries_info @scripts,:entry_name => 'Methods and Scripts' %>

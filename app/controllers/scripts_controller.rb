@@ -129,24 +129,10 @@ class ScriptsController < ApplicationController
     end
     
   end
-  # GET /script
+  # GET /scripts
   def index
-    # found = Script.find(:all,
-    #   :order => "title",:page=>{:size=>default_items_per_page,:current=>params[:page]})
-    # #    found = Script.find(:all,
-    # #      :order => "title")
-    #
-    # # this is only to make sure that actual binary data isn't sent if download is not
-    # # allowed - this is to increase security & speed of page rendering;
-    # # further authorization will be done for each item when collection is rendered
-    # found.each do |script|
-    #   script.content_blob.data = nil unless Authorization.is_authorized?("download", nil, script, current_user)
-    # end
-    # puts "before authorize" + found.results.size.to_s
-    # scripts = found
-    # scripts.results=Authorization.authorize_collection("show",scripts.results,current_user)
-    #  puts "after authorize" + scripts.results.size.to_s
-    # @scripts = scripts
+    #if the user only wants recommended items then throw the rest away
+    @scripts.reject!{|script| script.recommendations.empty?} if params[:recommended_only]
     respond_to do |format|
       format.html # index.html.erb
       format.xml { render :xml=>@scripts}
@@ -531,11 +517,11 @@ class ScriptsController < ApplicationController
   # DELETE /scripts/1
   def destroy
     #destroy any links to or from this script
-    links = Link.find(:all, :conditions => { :object_type => "Script", :object_id => @script.id, :predicate => "link" })
+    links = Link.all(:conditions => { :object_type => "Script", :object_id => @script.id, :predicate => "link" })
     links.each do |link|
       link.destroy
     end
-    links = Link.find(:all, :conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
+    links = Link.all(:conditions => { :subject_type => "Script", :subject_id => @script.id, :predicate => "link" })
     links.each do |link|
       link.destroy
     end
@@ -551,18 +537,14 @@ class ScriptsController < ApplicationController
 
 #find all scripts, authorize them for view by the user, paginate them 
   def find_scripts_by_page
-    scripts = Script.find(:all,:order => "created_at DESC")
+    scripts = Script.all(:order => "created_at DESC")
     authorized_scripts = Authorization.authorize_collection("view", scripts, current_user, keep_nil_records=false)
     @scripts = authorized_scripts.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
   end
 
   def find_scripts
     @selected_scripts=[] unless @selected_scripts
-
-    found = Script.find(:all)
-    #    found = Script.find(:all,
-    #      :order => "title")
-
+    found = Script.all
     # this is only to make sure that actual binary data isn't sent if download is not
     # allowed - this is to increase security & speed of page rendering;
     # further authorization will be done for each item when collection is rendered
