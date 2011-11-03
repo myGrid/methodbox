@@ -806,8 +806,8 @@ end
   def check_search_parameters
     if !params[:survey_search_query] or params[:survey_search_query].length == 0 or params[:survey_search_query] == "Enter search terms"
     respond_to do |format|
-      flash[:error] = "Searching requires a term to be entered in the survey search box."
-      format.html { redirect_to :back, :survey_search_query => search_query }
+      flash[:error] = "Please enter terms to search for before clicking the button."
+      format.html { redirect_to :back, :survey_search_query => params[:survey_search_query] }
     end
     return false
   end
