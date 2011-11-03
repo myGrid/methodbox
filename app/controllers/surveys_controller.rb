@@ -865,7 +865,10 @@ end
     end
 
     if @sorted_variables.empty?
-      flash.now[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
+      flash[:notice] = "There are no variables which match the search \"" + @survey_search_query + "\". Please try again with different search terms."
+      respond_to do |format|
+        format.html {redirect_to :back}
+      end
     end
   end
 

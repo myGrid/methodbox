@@ -1,6 +1,6 @@
 <div style="padding-left: 30%; padding-right: 30%;padding-top: 8em;">
 <div style="text-align: center;"><%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>100),root_path -%></div>
-<% form_tag '/search/' do -%>
+<% form_tag('/search/', :method=>"get") do -%>
 <!-- search for everything from the main page -->
 <!-- initial search is for first page -->
 <%= hidden_field_tag 'person_page', 1 -%>

@@ -29,7 +29,7 @@
 	padding-right: 10px;
 }
 </style>
-<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
+<% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <% if !@selected_datasets.empty? %>
   <% @selected_datasets.each do |val| -%>
     <%= hidden_field_tag "entry_ids[]", val -%>
