@@ -37,7 +37,7 @@
 </div>
 <div style="text-align: center; padding-bottom:10px;">
 <%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected", :onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('search_variables_button').form.submit();return true;}" -%>
 </div>
 <div style="margin-top:5px;">
 <%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the surveys (from all pages)" -%>

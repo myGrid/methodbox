@@ -16,7 +16,7 @@
 <%= hidden_field_tag 'search_type[]', 'methods' -%>
 <div style="padding-bottom:5px;">
 <div class="right" style="width: 20%;">
-<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and more", :onclick => "Element.show('spinner');"  -%>
+<%= submit_tag "Search", :id=> "search_button", :style=>"width: 100px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and more", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"  -%>
 <%= link_to 'Advanced search', root_url(:advanced_controls=>true), :style=>"display:block; font-size: xx-small;", :title=>"Fine tune your search by including or excluding search types" -%>
 </div>
 <div class="right" style="width: 40%; padding-right: 10px;">

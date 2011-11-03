@@ -30,7 +30,7 @@
 </div>
 </div>
 <div style="text-align: center;">
-<%= submit_tag "Search", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find what you are looking for......", :onclick => "Element.show('spinner');"   -%>
+<%= submit_tag "Search", :id=>"search_button", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find what you are looking for......", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"   -%>
 </div>
 <% end  -%>
 </div>
