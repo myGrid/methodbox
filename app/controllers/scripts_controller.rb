@@ -132,6 +132,7 @@ class ScriptsController < ApplicationController
   # GET /scripts
   def index
     #if the user only wants recommended items then throw the rest away
+    params[:recommended_only]? @recommended_only = true : @recommended_only = false
     @scripts.reject!{|script| script.recommendations.empty?} if params[:recommended_only]
     respond_to do |format|
       format.html # index.html.erb
