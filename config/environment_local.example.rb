@@ -1,3 +1,5 @@
+#the forum used to answer questions about surveys and variables
+SURVEYS_FORUM_ID=22
 #Stat Transfer location - not used yet, only prototype
 STAT_TRANSFER="path to command line st app"
 #the secret used to when calculating shib login hash

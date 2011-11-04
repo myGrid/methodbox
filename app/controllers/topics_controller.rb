@@ -21,7 +21,6 @@ class TopicsController < ApplicationController
     @topic = Topic.new
     @topicable_id = params[:topicable_id] if params[:topicable_id]
     @topicable_type = params[:topicable_type] if params[:topicable_type]
-puts "topics are " + params[:topicable_type] 
   end
   
   def show
