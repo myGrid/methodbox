@@ -3,6 +3,8 @@ require 'acts_as_resource'
 class Survey < ActiveRecord::Base
 
   acts_as_resource
+  
+  belongs_to :data_provider
 
   has_many :topics, :as => :topicable
   
