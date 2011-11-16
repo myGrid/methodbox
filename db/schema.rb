@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111102140404) do
+ActiveRecord::Schema.define(:version => 20111116121024) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -145,6 +145,12 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.boolean  "contains_nesstar_variables"
     t.boolean  "nesstar_only"
     t.boolean  "similarity_checked",         :default => false
+  end
+
+  create_table "data_providers", :force => true do |t|
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "dataset_lists", :force => true do |t|
@@ -503,6 +509,7 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.string   "source"
     t.string   "nesstar_id"
     t.string   "nesstar_uri"
+    t.integer  "data_provider_id"
   end
 
   create_table "taggings", :force => true do |t|

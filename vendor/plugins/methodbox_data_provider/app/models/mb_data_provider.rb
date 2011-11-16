@@ -1,0 +1,3 @@
+class MBDataProvider < DataProvider
+  
+end

@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.resources :data_providers, :member=>{:download => :get}, :requirements=>{:protocol=>ROUTES_PROTOCOL}
 
   map.about '/about', :controller => 'home', :action=>'about', :requirements => {:protocol => ROUTES_PROTOCOL}
 
