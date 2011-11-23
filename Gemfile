@@ -9,10 +9,8 @@ gem "RedCloth", "4.2.3"
 gem "will_paginate", "2.3.12"
 gem "fastercsv", "1.5.3"
 gem "libxml-ruby", "2.2.0"
-gem "mysql", "2.8.1"
 gem "ruby-debug", "0.10.3"
 gem "rubyzip", "0.9.1"
-gem "sqlite3-ruby", :require => "sqlite3"
 gem "uuidtools", "2.1.1"
 gem "mime-types", "1.16"
 gem "rchardet", "1.3"
@@ -31,6 +29,11 @@ gem 'ddi-parser'
 gem "recaptcha", :require => "recaptcha/rails"
 #later versions cause issues with time to words since {{variable}} is now %{variable} in later versions
 gem "i18n", "0.4.1"
+
+#database adaptors
+gem "activerecord-sqlserver-adapter", "~> 2.3.24"
+gem "mysql", "2.8.1"
+gem "sqlite3-ruby", :require => "sqlite3"
 
 #delayed job, any later version can cause issues with pids and script/delayed_job start ie. no workers get started
 gem "daemons", "1.0.10"
