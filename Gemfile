@@ -25,6 +25,8 @@ gem "metric_fu"
 gem 'sunspot_rails', '~> 1.2.1'
 gem 'addressable', '2.2.4'
 gem 'simple-spreadsheet-extractor', '0.5.0'
+#popen 4 and windows need the win32-open3 gem
+gem 'win32-open3', :platforms=>[:mingw]
 gem 'ddi-parser'
 gem "recaptcha", :require => "recaptcha/rails"
 #later versions cause issues with time to words since {{variable}} is now %{variable} in later versions
