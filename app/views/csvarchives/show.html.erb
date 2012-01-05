@@ -6,178 +6,197 @@
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <script type="text/javascript">
-  // Load the Visualization API and the piechart package.
-  google.load('visualization', '1', {'packages':['corechart']});
+	// Load the Visualization API and the piechart package.
+	google.load('visualization', '1', {
+		'packages' : ['corechart']
+	});
+
 </script>
 <style type="text/css">
-/** 
-*
-* Style the yui-dt-expandablerow-trigger column 
-*
-**/
-.yui-dt-expandablerow-trigger a {
-	display:block;
-	padding:20px 5px 0;
-	cursor:pointer;
-}
-.yui-dt-expanded .yui-dt-expandablerow-trigger a{
-	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
-}
-.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
-	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
-}
-.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
-	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
-	padding-right: 10px;
-}
+	/**
+	 *
+	 * Style the yui-dt-expandablerow-trigger column
+	 *
+	 **/
+	.yui-dt-expandablerow-trigger a {
+		display: block;
+		padding: 20px 5px 0;
+		cursor: pointer;
+	}
+	.yui-dt-expanded .yui-dt-expandablerow-trigger a {
+		background: url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+	}
+	.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+		background: url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+	}
+	.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+		background: url('/images/yui/spinner.gif') 0 4px no-repeat;
+		padding-right: 10px;
+	}
 </style>
 <div class="right">
-<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style ">
-<a class="addthis_button_preferred_1"></a>
-<a class="addthis_button_preferred_2"></a>
-<a class="addthis_button_preferred_3"></a>
-<a class="addthis_button_preferred_4"></a>
-<a class="addthis_button_compact"></a>
-<a class="addthis_counter addthis_bubble_style"></a>
-</div>
-<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
-<!-- AddThis Button END -->
-<%#= addthis_bookmark_button(csvarchive_url(@archive), @archive.title) -%>
+	<!-- AddThis Button BEGIN -->
+	<div class="addthis_toolbox addthis_default_style ">
+		<a class="addthis_button_preferred_1"></a>
+		<a class="addthis_button_preferred_2"></a>
+		<a class="addthis_button_preferred_3"></a>
+		<a class="addthis_button_preferred_4"></a>
+		<a class="addthis_button_compact"></a>
+		<a class="addthis_counter addthis_bubble_style"></a>
+	</div>
+	<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
+	<!-- AddThis Button END -->
+	<%#= addthis_bookmark_button(csvarchive_url(@archive), @archive.title) -%>
 </div>
 <ul class="buttons">
-  <%= hidden_field_tag "format_type", "csv" -%>
+	<%= hidden_field_tag "format_type", "csv" -%>
 	<% if current_user && current_user.id != @archive.contributor_id %>
 	<div id="recommended" style="display: inline;">
 		<% if @recommended == true %>
-			<%= render :partial => "recommendations/thumbs_down", :locals => {:item => @archive} -%>
-	<% else %>
+		<%= render :partial => "recommendations/thumbs_down", :locals => {:item => @archive} -%>
+		<% else %>
 		<%= render :partial => "recommendations/thumbs_up", :locals => {:item => @archive} -%>
-	<% end %>
+		<% end %>
 	</div>
 	<% end %>
-	<% if !@archive.nesstar_only %>
-	    <li><%= icon('download', download_stats_script_csvarchive_url + "?type=spss", nil, {:title => "Download all the scripts to load the data into your stats package.  You will need to supply the data yourself."}, "Download spss files") -%></li>
-	    <li><%= icon('download', download_stats_script_csvarchive_url + "?type=stata", nil, {:title => "Download all the scripts to load the data into your stats package.  You will need to supply the data yourself."}, "Download stata files") -%></li>
-	<% else %>
-	<div class="normal-margin-bottom">This extract only contains variables from an external Nesstar catalogue</div>
+	<% @data_providers.each do |data_provider| %>
+	<li>
+		<%= icon('download', download_data_provider_url(DataProvider.all(:conditions=>{:type=> data_provider.type}).first, :archive=>@archive), nil, {:title => "Download the stuff."}, "Download the stuff.") -%>
+	</li>
 	<% end %>
-  <% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
-<% if @archive.contains_nesstar_variables %>
-<li><%= link_to_function 'Download datasets from Nesstar', "var answer = confirm('The Nesstar downloads will open in a new window. You are downloading from a third party, MethodBox is not responsible for the content.');if (answer){downloadFromNesstar(#{array_or_string_for_javascript(@download_uri_strings)})}" -%></li>
-<% end %>
+	<li>
+		<%= icon('download', download_data_providers_url(:archive=>@archive), nil, {:title => "Download the stuff."}, "Download the stuff.") -%>
+	</li>
 	<% if !@archive.nesstar_only %>
-    <li><%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button", :title => "Download the data, metadata and any stats package scripts."}, "Download extract as:") -%></li>
-  <%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
-<% end %>
-  <% end -%>
+	<li>
+		<%= icon('download', download_stats_script_csvarchive_url + "?type=spss", nil, {:title => "Download all the scripts to load the data into your stats package.  You will need to supply the data yourself."}, "Download spss files") -%>
+	</li>
+	<li>
+		<%= icon('download', download_stats_script_csvarchive_url + "?type=stata", nil, {:title => "Download all the scripts to load the data into your stats package.  You will need to supply the data yourself."}, "Download stata files") -%>
+	</li>
+	<% else %>
+	<div class="normal-margin-bottom">
+		This extract only contains variables from an external Nesstar catalogue
+	</div>
+	<% end %>
+	<% if Authorization.is_authorized?("download", nil, @archive, current_user) -%>
+	<% if @archive.contains_nesstar_variables %>
+	<li>
+		<%= link_to_function 'Download datasets from Nesstar', "var answer = confirm('The Nesstar downloads will open in a new window. You are downloading from a third party, MethodBox is not responsible for the content.');if (answer){downloadFromNesstar(#{array_or_string_for_javascript(@download_uri_strings)})}" -%>
+	</li>
+	<% end %>
+	<% if !@archive.nesstar_only %>
+	<li>
+		<%= icon('download', download_csvarchive_url + "?type=CSV", "Download file", {:id=>"download_button", :title => "Download the data, metadata and any stats package scripts."}, "Download extract as:") -%>
+	</li>
+	<%= select_tag :download_type, options_for_select(download_type_options,"CSV"), {:onchange=>"changeURL(this.value)"} -%>
+	<% end %>
+	<% end -%>
 </ul>
 <div class="normal-margin-top">
-<ul class="buttons">  <% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>
-    <li><%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%></li>
-  <% end %>
-  <% if Authorization.is_authorized?("destroy", nil, @archive, current_user) -%>
-    <li><%= icon('destroy', csvarchive_path(@archive), nil, { :confirm => 'This deletes the Data Extract and links to any methods/scripts and surveys. Are you sure?', :method => :delete }, 'Delete Data Extract') -%></li>
-  <% end -%>
-</ul>
+	<ul class="buttons">
+		<% if Authorization.is_authorized?("edit", nil, @archive, current_user) -%>
+		<li>
+			<%= icon "edit", edit_csvarchive_path(@archive), nil, nil, "Edit" -%>
+		</li>
+		<% end %>
+		<% if Authorization.is_authorized?("destroy", nil, @archive, current_user) -%>
+		<li>
+			<%= icon('destroy', csvarchive_path(@archive), nil, { :confirm => 'This deletes the Data Extract and links to any methods/scripts and surveys. Are you sure?', :method => :delete }, 'Delete Data Extract') -%>
+		</li>
+		<% end -%>
+	</ul>
 </div>
-
-<h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @archive.recommendations.size } %></div></h1>
-
+<h1 class="contribution_title">Data Extract: <%= link_to(h(@archive.title), csvarchive_path(@archive)) -%>
+<div class="inline" id="award">
+	<%= render :partial => "recommendations/awards", :locals => { :count => @archive.recommendations.size } %>
+</div></h1>
 <div class="show_basic">
-  <div class="box_about_actor left" style="width:70%">
-    <p>
-      <b>Title:</b>
-      <% unless @archive.title.blank? -%>
-        <span class="title"><%=h @archive.title -%></span>
-      <% else -%>
-      <p class="none_text">
-        No title
-      </p>
-    <% end -%>
-    </p>
-    <p>
-      <b>Description</b>
-      <% unless @archive.description.blank? -%>
-      <div class="box_standout" style="background-color:#FFFFFF;">
-        <%= simple_format(white_list(@archive.description)) -%>
-      </div>
-    <% else -%>
-      <p class="none_text">
-        No description
-      </p>
-    <% end -%>
-	<div>
-		<%= render :partial => "total_vars" %>
+	<div class="box_about_actor left" style="width:70%">
+		<p>
+			<b>Title:</b>
+			<% unless @archive.title.blank? -%> <span class="title"><%= h @archive.title -%></span>
+			<% else -%>
+		<p class="none_text">
+			No title
+		</p>
+		<% end -%>
+		</p>
+		<p>
+			<b>Description</b>
+			<% unless @archive.description.blank? -%>
+			<div class="box_standout" style="background-color:#FFFFFF;">
+				<%= simple_format(white_list(@archive.description)) -%>
+			</div>
+			<% else -%>
+		<p class="none_text">
+			No description
+		</p>
+		<% end -%>
+		<div>
+			<%= render :partial => "total_vars" %>
+		</div>
+		<br/>
+		<% if current_user %>
+		<div class="link_box">
+			Show:
+			<%= link_to_remote "Only my links", :url=> show_links_csvarchives_path, :with=> "'link_state=mine&extract_id=#{@archive.id}'" %>,
+			<%= link_to_remote "All links", :url=> show_links_csvarchives_path, :with=> "'link_state=all&extract_id=#{@archive.id}'" %>
+		</div>
+		<% end %>
+		<div class="actual_link_box">
+			<div id="links">
+				<%= render :partial => "links" %>
+			</div>
+		</div>
+		<br/>
+		<br/>
+		<%= render :partial => "complete" %>
+		<%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
 	</div>
-	<br/>
-	<% if current_user %>
-	<div class="link_box">
-	Show: 
-	<%= link_to_remote "Only my links", :url=> show_links_csvarchives_path, :with=> "'link_state=mine&extract_id=#{@archive.id}'" %>, 
-	<%= link_to_remote "All links", :url=> show_links_csvarchives_path, :with=> "'link_state=all&extract_id=#{@archive.id}'" %>
+	<div class="right" style="width:20%">
+		<%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @archive } -%>
+		<%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @archive, :attributed_to => Authorization.authorize_collection("show", @archive.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
 	</div>
-	<% end %>
-	<div class="actual_link_box">
+	<div style="clear: both;"></div>
+	<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
+	<div style="margin-bottom: 10px;">
+		<% if logged_in? -%>
+		<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+		<% end -%>
+	</div>
+	<div id="selected_variables"></div>
+	<div class="yui-skin-sam">
+		<div id="variables_table"></div>
+	</div>
+	<script type="text/javascript">var results =<%= raw @variables_json -%>
+		;
+		createTable();
 
-<div id="links">
-		<%= render :partial => "links" %>
+	</script>
 </div>
-</div>
-<br/>
-<br/>
-	<%= render :partial => "complete" %>
-    <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
-  </div>
-<div class="right" style="width:20%">
-  <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @archive } -%>
-  <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @archive, :attributed_to => Authorization.authorize_collection("show", @archive.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
-</div>
-<div style="clear: both;"></div>
-<% form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
-<div style="margin-bottom: 10px;">
-<% if logged_in? -%>
-<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
-<% end -%>
-</div>
-<div id="selected_variables">
-</div>
-<div class="yui-skin-sam">
-<div id="variables_table"></div>
-</div>
-<script type="text/javascript">
-var results = <%= raw @variables_json -%>;
-createTable();
-</script>
-</div>
-<% end -%>
-<div style="clear: both;"></div>
+<% end -%> <div style="clear: both;"></div>
 <% if current_user %>
 <div class="left" id="extract-note-box">
-	<% if current_user %>
-	<h3>Notes</h3>
-	  <%= render :partial => "notes/add_note", :locals=>{:resource_id => @archive.id} -%>
-			<% @notes.each do |note| %>
-			<%= render :partial => "notes/note", :locals=>{:note=>note} %>
-			<% end %>
-			<div id="new_note">
-				</div>
-				<% end %>
+	<% if current_user %> <h3>Notes</h3>
+	<%= render :partial => "notes/add_note", :locals=>{:resource_id => @archive.id} -%>
+	<% @notes.each do |note| %>
+	<%= render :partial => "notes/note", :locals=>{:note=>note} %>
+	<% end %> <div id="new_note"></div>
+	<% end %>
 </div>
 <div class="resource-comments right" id="extract-comment-box">
-<h3>Comments</h3>
-  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @archive.id, :controller => "Csvarchives", :comment_div_id => 'comment', :update_div_id => 'new_comment'} -%>
-		<% @comments.each do |comment| %>
-		<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
-		<% end %>
-		<div id="new_comment">
-		</div>
+	<h3>Comments</h3>
+	<%= render :partial => "comments/add_comment", :locals=>{:resource_id => @archive.id, :controller => "Csvarchives", :comment_div_id => 'comment', :update_div_id => 'new_comment'} -%>
+	<% @comments.each do |comment| %>
+	<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
+	<% end %> <div id="new_comment"></div>
 </div>
 <% end %>
 <script type="text/javascript">
-  function changeURL(value) {
-    URL = document.getElementById("download_button").href;
-    URL = "<%= download_csvarchive_url -%>" + "?type=" + value;
-    document.getElementById("download_button").href = URL;
-  }
+	function changeURL(value) {
+URL = document.getElementById("download_button").href;
+URL = "<%= download_csvarchive_url -%>" + "?type=" + value;
+document.getElementById("download_button").href = URL;
+}
 </script>

@@ -335,6 +335,10 @@ class CsvarchivesController < ApplicationController
     if @archive.contains_nesstar_variables
       create_nesstar_variables_download_urls
     end
+    @data_providers = []
+    @archive.variables.each do |variable|
+      @data_providers << variable.dataset.survey.data_provider.type unless @data_providers.include?(variable.dataset.survey.data_provider.type)  
+    end
     
     respond_to do |format|
       format.html # show.html.erb
