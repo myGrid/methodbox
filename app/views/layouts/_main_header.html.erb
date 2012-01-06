@@ -6,6 +6,16 @@
 <% end -%>
 <div style="clear:both;">
 </div>
+<% if controller.controller_name.downcase == "home" && controller.action_name.downcase == "search" -%>
+<% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
+<%= render :partial => "layouts/simple_logged_in_controls" -%>
+<% else -%>
+<%= render :partial => "layouts/logged_out_controls" -%>
+<% end -%>
+<%= render :partial => "layouts/welcome_message" -%>
+<% else -%>
+<div class="left" style="margin-left: 1em; padding-top: 2px;">
+<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65), root_url -%>
 <% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
 <%= render :partial => "layouts/simple_logged_in_controls" -%>
 <% elsif logged_in? -%>
@@ -13,11 +23,6 @@
 <% else -%>
 <%= render :partial => "layouts/logged_out_controls" -%>
 <% end -%>
-<% if controller.controller_name.downcase == "home" && controller.action_name.downcase == "search" -%>
-<%= render :partial => "layouts/welcome_message" -%>
-<% else -%>
-<div class="left" style="margin-left: 1em; padding-top: 2px;">
-<%= link_to image_tag("box_transparent.png",:alt=>"www.methodbox.org",:title=>"Methodbox",:height=>65), root_url -%>
 </div>
 <%= render :partial => "layouts/header_search_bar" -%>
 <% end -%>

@@ -352,14 +352,14 @@ ul.vbuttons .category-browse.li {
 }
 /* header styles*/
 #small-hd {
-	margin-right: 1em;
+	margin-left: 1em;
 	margin-top: 1em;
 	padding: 3px;
 	-webkit-border-radius: 6px;
 	border-radius:6px;
 	-moz-border-radius:6px;
 	border: none;
-	background-color: #ACCCE0;
+	background-color: wheat;
 }
 #big-hd {
 	margin-top:0;
@@ -690,4 +690,9 @@ body:before {
 .add_var_button {
 	height: 25px;
 	font: 17px arial,sans-serif;
+}
+/* centre the welcome text to align with the search box */
+.middle-padding {
+	padding-left: 30%;
+	padding-right: 30%;
 }
