@@ -290,24 +290,24 @@ class VariablesController < ApplicationController
     end
   end
 
-  def watch
-    find_variable
-    if !Person.find(current_user.id).watched_variables.any?{|var| var.variable_id == @variable.id}
-      #      user wants to watch a variable
-      puts "watching " + @variable.id.to_s
-      person = Person.find(current_user.person_id)
-      person.watched_variables.create(:variable_id => @variable.id)
-    else
-      #      stop watching variable
-      puts "stop watching " + @variable.id.to_s
-      person = Person.find(current_user.person_id)
-      watched = person.watched_variables.find(:all, :conditions => "variable_id=" + @variable.id.to_s)
-      WatchedVariable.delete(watched)
-    end
-    respond_to do |format|
-      format.html { redirect_to variable_path(@variable) }
-    end
-  end
+#  def watch
+#    find_variable
+#    if !Person.find(current_user.id).watched_variables.any?{|var| var.variable_id == @variable.id}
+#      #      user wants to watch a variable
+#      puts "watching " + @variable.id.to_s
+#      person = Person.find(current_user.person_id)
+#      person.watched_variables.create(:variable_id => @variable.id)
+#    else
+#      #      stop watching variable
+#      puts "stop watching " + @variable.id.to_s
+#      person = Person.find(current_user.person_id)
+#      watched = person.watched_variables.find(:all, :conditions => "variable_id=" + @variable.id.to_s)
+#      WatchedVariable.delete(watched)
+#    end
+#    respond_to do |format|
+#      format.html { redirect_to variable_path(@variable) }
+#    end
+#  end
 
   # Find the correct variable, any tags associated with it and variables
   # which are matched in data extracts with it

@@ -2,10 +2,14 @@
 #
 # To ban all spiders from the entire site uncomment the next two lines:
 User-Agent: *
-Disallow: /surveys
-Disallow: /scripts
+Disallow: /surveys/*/show_all_variables
+Disallow: /surveys/retrieve_details
+Disallow: /surveys/show_links
+Disallow: /surveys/hide_info
+Disallow: /surveys/more_info
+Disallow: /csvarchives/*/download
+Disallow: /csvarchives/*/download_stats_script
 Disallow: /people
-Disallow: /csvarchives
 Disallow: /work_groups
 Disallow: /publications
 Disallow: /forums

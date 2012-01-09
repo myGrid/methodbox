@@ -4,7 +4,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.statistics STATISTICS_ROUTE, :controller=>'statistics',:action=>'index', :requirements => {:protocol => ROUTES_PROTOCOL}
       
-  map.resources :cart_items, :requirements => {:protocol => ROUTES_PROTOCOL}
+  #no need for controller actions for this, handled through cart controller
+  #map.resources :cart_items, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :work_groups, :member=>{:request_access=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
@@ -14,43 +15,46 @@ ActionController::Routing::Routes.draw do |map|
 
   # map.resources :home
 
-  map.resources :help, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :help, :only => :index, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.cart '/cart/', :controller=>'cart',:action=>'show', :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :cart, :collection => {:remove_from_cart => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :cart, :collection => {:remove_from_cart => :post}, :only=> :none, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :datasets, :member => {:update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :variable_links, :requirements => {:protocol => ROUTES_PROTOCOL}
+  #not currently used
+  #map.resources :variable_links, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :messages, :collection => { :autocomplete_message_to => :post, :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
 
-  map.resources :surveys, :member => { :show_all_variables => :get, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :get, :expand_row => :get, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :get, :category_browse => :get, :facets => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get, :help => :get, :help2 => :get, :show_links=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :surveys, :member => { :show_all_variables => :get, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :get, :expand_row => :get, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :get, :category_browse => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get, :show_links=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :help => :get, :help2 => :get,:show_links=>:post, :check_for_complete => :post, :feed => :get }, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :show_links=>:post, :check_for_complete => :post, :feed => :get }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :watch => :get, :open_pdf => :get, :deprecate => :post}, :collection =>{:values_array=>:get, :values => :post, :find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post, :help => :get, :grid_view => :get}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:values_array=>:get, :find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :assets,:member=>{:request_resource=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :assets,:member=>{:request_resource=>:post}, :only => :none, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :expertise, :requirements => {:protocol => ROUTES_PROTOCOL}
+  #this expertise is not used, is done through taggings
+  #map.resources :expertise, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :people, :collection=>{:select=>:get, :feed => :get}, :requirements => {:protocol => ROUTES_PROTOCOL} do |person|
+  map.resources :people, :collection=>{:feed => :get}, :requirements => {:protocol => ROUTES_PROTOCOL} do |person|
     # avatars / pictures 'owned by' person
     person.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
   end
 
-  map.resources :scripts, :member => { :add_note => :post, :download => :get, :add_comment => :post, :thumbs_up => :post, :thumbs_down => :post }, :collection => {:help => :get, :help2 => :get,:show_links=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :scripts, :member => { :add_note => :post, :download => :get, :add_comment => :post, :thumbs_up => :post, :thumbs_down => :post }, :collection => {:show_links=>:post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :projects,
-    :collection => { :request_institutions => :get }, :requirements => {:protocol => ROUTES_PROTOCOL} do |project|
+  #projects not currently used
+  #map.resources :projects, 
+      #:collection => { :request_institutions => :get }, :requirements => {:protocol => ROUTES_PROTOCOL} do |project|
     # avatars / pictures 'owned by' project
-    project.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
-  end
+    #project.resources :avatars, :member => { :select => :post }, :collection => { :new => :post }, :requirements => {:protocol => ROUTES_PROTOCOL}
+  #end
 
-  map.resources :users, :member => { :shib_convert_after => :get }, :collection=>{ :new_shib => :get, :create_shib => :post, :activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get], :resend_activation_code =>[:get]}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :users, :except => :index, :member => { :shib_convert_after => :get }, :collection=>{ :new_shib => :get, :create_shib => :post, :activation_required=>:get,:forgot_password=>[:get,:post],:reset_password=>:get, :unsuspend =>[:get], :resend_activation_code =>[:get]}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resource :session, :collection => { :convert_shibboleth_login => :get, :pre_shibboleth_login => :get, :shibboleth => :get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
