@@ -31,7 +31,7 @@
   <% end -%>
 
   <% if Authorization.is_authorized?("destroy", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
-    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Script') -%></li>
+    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Method') -%></li>
   <% end -%>
 
   <% if Authorization.is_authorized?("download", nil, @script, current_user) -%>
@@ -45,7 +45,7 @@
 <% end -%>
 </ul>
 
-<h1 class="contribution_title">Script: <%= h (@script.title) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size } %></div></h1>
+<h1 class="contribution_title">Method/Script: <%= h (@script.title) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size } %></div></h1>
 
 <%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
 

@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :surveys, :member => { :show_all_variables => :get, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :get, :expand_row => :get, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :get, :category_browse => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get, :show_links=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :csvarchives, :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :show_links=>:post, :check_for_complete => :post, :feed => :get }, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :csvarchives, :as => "data_extracts", :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :show_links=>:post, :check_for_complete => :post, :feed => :get }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:values_array=>:get, :find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
