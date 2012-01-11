@@ -361,6 +361,16 @@ ul.vbuttons .category-browse.li {
 	border: none;
 	background-color: wheat;
 }
+/* small header without top margin */
+#smaller-hd {
+	margin-left: 1em;
+	padding: 3px;
+	-webkit-border-radius: 6px;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	border: none;
+	background-color: wheat;
+}
 #big-hd {
 	margin-top:0;
 	color: #000000;
