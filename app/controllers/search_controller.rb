@@ -26,11 +26,7 @@ class SearchController < ApplicationController
      # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
       #return
     #end
-
-    #can only search for people if logged in
-    if params[:search_type].include?('people') && logged_in?
-      @results_hash['people'] = find_people(query, params[:person_page]).results
-    end  
+ 
     if params[:search_type].include?('surveys')
       results = find_surveys(query, params[:survey_page]).results
       @results_hash['survey'] = results
@@ -38,6 +34,10 @@ class SearchController < ApplicationController
       surveys_hash = {"total_entries" => surveys.size, "results"=>surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
       @surveys_json = surveys_hash.to_json
     end 
+    if params[:search_type].include?('variables')
+      #don't sort variable results but return by order of relevance
+      @results_hash['variable'] = find_variables(query, params[:variable_page]).results
+    end
     if params[:search_type].include?('methods')
       @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results
     end  
@@ -47,10 +47,10 @@ class SearchController < ApplicationController
     if params[:search_type].include?('publications')
       @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
-    if params[:search_type].include?('variables')
-      #don't sort variable results but return by order of relevance
-      @results_hash['variable'] = find_variables(query, params[:variable_page]).results
-    end 
+    #can only search for people if logged in
+    if params[:search_type].include?('people') && logged_in?
+      @results_hash['people'] = find_people(query, params[:person_page]).results
+    end
 
     if @results_hash.empty?
       flash.now[:notice]="No matches found for '<b>#{@search_query}</b>'."
