@@ -29,6 +29,9 @@ class Variable < ActiveRecord::Base
     text :name
     text :value
     integer :dataset_id
+    text :values do
+      value_domains.map { |value_domain|  value_domain.label }
+    end
   end
   
   def to_param
