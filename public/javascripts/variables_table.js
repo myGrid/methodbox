@@ -63,12 +63,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.VariableRowExpansionDataTable.formatRowExpansion},
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "name", label: "Title", formatter:"variablesFormatter", sortable: true, maxWidth: 100, minWidth: 100 },
-		    { key: "description", label: "Description", sortable: true, width: 500, minWidth: 500 },
-                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, maxWidth: 200, minWidth: 200 },
-		    { key: "survey", label: "Survey", sortable: true, maxWidth: 200, minWidth: 200 },
-		    { key: "year", label: "Year", sortable: true, maxWidth: 100, minWidth: 100 },
-		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100, minWidth: 100 }
+		    { key: "name", label: "Title", formatter:"variablesFormatter", sortable: true, maxWidth: 100 },
+		    { key: "description", label: "Description", sortable: true, width: 300 },
+                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, maxWidth: 200 },
+		    { key: "survey", label: "Survey", sortable: true, maxWidth: 200 },
+		    { key: "year", label: "Year", sortable: true, maxWidth: 100 },
+		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100 }
 		];
 
         this.variableDataSource = new YAHOO.util.LocalDataSource(results);
