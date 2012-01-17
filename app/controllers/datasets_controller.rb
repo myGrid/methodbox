@@ -74,6 +74,8 @@ class DatasetsController < ApplicationController
       end
       uf.close
       #first check mime type
+#TODO This will not work on windows since it depends on the unix tool file need to use a different way. Possible begin/rescue it so that
+#failure does not matter
       mimetype = `file --mime -br #{filename}`.gsub(/\n/,"").split(';')[0]
      # if mimetype.index("xml") == nil && mimetype.index("XML") == nil
       #  possible_mimetype = `file -b #{filename}`
@@ -397,9 +399,13 @@ class DatasetsController < ApplicationController
     @new_variables =[]
 
     #first check mime type
+#TODO This will not work on windows since it depends on the unix tool file need to use a different way. Possible begin/rescue it so that
+#failure does not matter
     mimetype = `file --mime -br #{datafile.path}`.gsub(/\n/,"").split(';')[0]
     #TODO not sure if this is really an exhaustive check, should get possible mimes from a list
     if mimetype.index("text") == nil && mimetype.index("csv") == nil && mimetype.index("office") == nil && mimetype.index("excel") == nil
+#TODO This will not work on windows since it depends on the unix tool file need to use a different way. Possible begin/rescue it so that
+#failure does not matter
       possible_mimetype = `file --mime -br #{datafile.path}`
       @datafile_error = "MethodBox cannot process this file.  Is it really a tab, csv or excel file? Checking the mime type revealed this: " + possible_mimetype
       return false

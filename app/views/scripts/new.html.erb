@@ -29,6 +29,9 @@
           <b>Type:</b>
           <%= select_tag :method_type, options_for_select(method_type_options,@method_type)  %>
         </p>
+		  <div class="fold">
+    <div class="foldTitle">Link this script to other things (optional - click to open)</div>
+    <div class="foldContent" style="display: none;">
         <div>
           <p>
             <b>Link with Data Extracts:</b>
@@ -56,6 +59,7 @@
            :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
           </p>
         </div>
+		
 		<br/>
         <div style="clear:both;">
         </div>
@@ -67,11 +71,10 @@
           </p>
         </div>
 
-
         <br/>
         <div style="clear:both;">
         </div>
-
+</div>
         <%= render :partial => "assets/project_selector", :locals => { :resource_type => "Method",   # this is only for presentation, not for any processing
           :project_hash => current_user.generate_own_project_id_name_hash } -%>
       </div>

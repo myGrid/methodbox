@@ -1,128 +1,135 @@
 <%= javascript_include_tag "sharing.js" -%>
-<%= javascript_include_tag 'link_adder.js'-%>
+<%= javascript_include_tag 'link_adder.js' -%>
 <%= javascript_include_tag 'variables_table.js' -%>
 <%= javascript_include_tag 'variable_table_check.js' -%>
 <script type="text/javascript">
-  // Load the Visualization API and the piechart package.
-  google.load('visualization', '1', {'packages':['corechart']});
+    // Load the Visualization API and the piechart package.
+    google.load('visualization', '1', {
+        'packages': ['corechart']
+    });
 </script>
 <style type="text/css">
-/** 
-*
-* Style the yui-dt-expandablerow-trigger column 
-*
-**/
-.yui-dt-expandablerow-trigger a {
-	display:block;
-	padding:20px 5px 0;
-	cursor:pointer;
-}
-.yui-dt-expanded .yui-dt-expandablerow-trigger a{
-	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
-}
-.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
-	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
-}
-.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
-	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
-	padding-right: 10px;
-}
+    /**
+     *
+     * Style the yui-dt-expandablerow-trigger column
+     *
+     **/
+    .yui-dt-expandablerow-trigger a {
+        display: block;
+        padding: 20px 5px 0;
+        cursor: pointer;
+    }
+    
+    .yui-dt-expanded .yui-dt-expandablerow-trigger a {
+        background: url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+    }
+    
+    .yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+        background: url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+    }
+    
+    .yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+        background: url('/images/yui/spinner.gif') 0 4px no-repeat;
+        padding-right: 10px;
+    }
 </style>
 <h1>New Data Extract<%= render :partial=>"layouts/sandbox_warning" %></h1>
-
 <div class="show_basic">
-<div class="fold">
-<div class="foldTitle">Currently selected variables (click to display)</div>
-<div class="foldContent" style="display:none;">
-<% form_tag remove_from_cart_csvarchives_url, {:onSubmit=>"$('spinner').show();"} do -%>
-<%= submit_to_remote '_submit', 'Remove selected variables from cart', {:url=>{:action=> "remove_from_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to remove from your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
-<div id="selected_variables">
-</div>
-<div class="yui-skin-sam">
-<div id="variables_table"></div>
-<script type="text/javascript">
-var results = <%= raw @variables_json -%>;
-createTable();
-</script>
-</div>
-</div>
-<% end -%>
-</div>
-  <% form_tag({:action => :create}, :multipart => true) do -%>
-    <%= error_messages_for :archive -%>
-
-    <center>
-      <div style="width: 90%;">
-
-        <p style="margin-top: 1.5em;">
-          <b>Title:</b><font style="color: #FF0000;">*</font><br/>
-          <% archive_title_value = (params[:archive].blank? || params[:archive][:title].blank?) ? nil : params[:archive][:title]-%>
-          <%= text_field_tag 'archive[title]', archive_title_value, :style => "width: 100%;" -%>
-        </p>
-
-        <p style="margin-top: 0.5em;">
-          <b>Description:</b><br/>
-          <% archive_description_value = (params[:description].blank?) ? nil : params[:description] -%>
-          <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
-        </p>
-		<h2>Data Extract will be automatically linked with the surveys that its variables are from</h2>
-		<div>
-			<p>          
-				<b>Link with Data Extracts:</b>
-			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
-		      :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
-		</p>
-		</div>
-		<br/>
-		<div style="clear:both;">
-			</div>
-		<div>
-			<p>          
-				<b>Link with Scripts:</b>
-			<%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
-		      :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
-		</p>
-		</div>
-		<br/>
-        <div style="clear:both;">
+    <div class="fold">
+        <div class="foldTitle">
+            Currently selected variables (click to display)
         </div>
-        <div>
-          <p>
-            <b>Link with Publications:</b>
-            <%= render :partial => "assets/link_selector", :locals => { :resource_id => "publications", :resource_type => "Publications",   # this is only for presentation, not for any processing
-           :collection=>@publications,:selected=>@selected_publications,:authorization_for_showing_already_done => true } -%>
-          </p>
+        <div class="foldContent" style="display:none;">
+            <% form_tag remove_from_cart_csvarchives_url, {:onSubmit=>"$('spinner').show();"} do -%>
+            <%= submit_to_remote '_submit', 'Remove selected variables from cart', {:url=>{:action=> "remove_from_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to remove from your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+            <div id="selected_variables">
+            </div>
+            <div class="yui-skin-sam">
+                <div id="variables_table">
+                </div>
+                <script type="text/javascript">
+                    var results = <%= raw @variables_json -%>;
+                    createTable();
+                </script>
+            </div>
         </div>
-		<br/>
-		<div style="clear:both;">
-			</div>
-        <!-- <p style="margin: 0;"> -->
-         <%#= render :partial => "linked_scripts_form", :locals => {:person => current_user, :existing_script_links => [],
-         :script_suggestions => Script.get_all_as_json(current_user) } -%>
-        <!-- </p> -->
-      </div>
-    </center>
-
-    <center>
-      <div style="width: 90%;">
-
-        <p style="margin: 2.5em 0 0 0;">
-	        <p style="margin: 2.5em 0 0 0;">
-	          <%= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
-	        </p>
-        </p>
-
-        <p style="margin: 0;">
-          <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Data Extract",  # this is only for presentation, not for any processing
-            :existing_attributions => [],
-            :attribution_suggestions => Csvarchive.get_all_as_json(current_user) } -%>
-        </p>
-
-        <p style="text-align: center; margin-top: 1.5em;">
-          <%= submit_tag "Save and create data extract", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(true); return(false);" -%> or <%= link_to 'Cancel', csvarchives_path -%>
-        </p>
-      <% end -%>
-
+        <% end -%>
     </div>
-  </center>
+    <% form_tag({:action => :create}, :multipart => true) do -%>
+    <%= error_messages_for :archive -%>
+    <center>
+        <div style="width: 90%;">
+        <p style="margin-top: 1.5em;">
+            <b>Title:</b>
+            <font style="color: #FF0000;">
+                *
+            </font>
+            <br/>
+            <% archive_title_value = (params[:archive].blank? || params[:archive][:title].blank?) ? nil : params[:archive][:title] -%>
+            <%= text_field_tag 'archive[title]', archive_title_value, :style => "width: 100%;" -%>
+        </p>
+        <p style="margin-top: 0.5em;">
+            <b>Description:</b>
+            <br/>
+            <% archive_description_value = (params[:description].blank?) ? nil : params[:description] -%>
+            <%= text_area_tag 'archive[description]', archive_description_value, :style => "width: 100%;", :rows => 5 -%>
+        </p>
+        <h2>Data Extract will be automatically linked with the surveys that its variables are from</h2>
+        <br/>
+        <div class="fold">
+            <div class="foldTitle">
+                Link this Data Extract to other things (optional - click to open)
+            </div>
+            <div class="foldContent" style="display: none;">
+                <div>
+                    <p>
+                        <b>Link with Data Extracts:</b>
+                        <%= render :partial => "assets/link_selector", :locals => { :resource_id => "data_extracts", :resource_type => "Data Extracts",   # this is only for presentation, not for any processing
+                        :collection=>@archives,:selected=>@selected_archives,:authorization_for_showing_already_done => false } -%>
+                    </p>
+                </div>
+                <br/>
+                <div style="clear:both;">
+                </div>
+                <div>
+                    <p>
+                        <b>Link with Scripts:</b>
+                        <%= render :partial => "assets/link_selector", :locals => { :resource_id => "scripts", :resource_type => "Scripts",   # this is only for presentation, not for any processing
+                        :collection=>@scripts,:selected=>@selected_scripts,:authorization_for_showing_already_done => false } -%>
+                    </p>
+                </div>
+                <br/>
+                <div style="clear:both;">
+                </div>
+                <div>
+                    <p>
+                        <b>Link with Publications:</b>
+                        <%= render :partial => "assets/link_selector", :locals => { :resource_id => "publications", :resource_type => "Publications",   # this is only for presentation, not for any processing
+                        :collection=>@publications,:selected=>@selected_publications,:authorization_for_showing_already_done => true } -%>
+                    </p>
+                </div>
+                <br/>
+                <div style="clear:both;">
+                </div>
+            </div>
+        </div>
+    </center>
+    <center>
+        <div style="width: 90%;">
+            <p style="margin: 2.5em 0 0 0;">
+                <p style="margin: 2.5em 0 0 0;">
+                    <%= render :partial => "assets/sharing_form", :locals => { :groups => @groups, :selected_groups => [] } -%>
+                </p>
+            </p>
+            <p style="margin: 0;">
+                <%= render :partial => "assets/attribution_form", :locals => { :resource_type => "Data Extract",  # this is only for presentation, not for any processing
+                :existing_attributions => [],
+                :attribution_suggestions => Csvarchive.get_all_as_json(current_user) } -%>
+            </p>
+            <p style="text-align: center; margin-top: 1.5em;">
+                <%= submit_tag "Save and create data extract", :id => "archive_submit_btn", :onclick => "javascript: validateArchiveFields(true); return(false);" -%>or <%= link_to 'Cancel', csvarchives_path -%>
+            </p>
+            <% end -%>
+        </div>
+    </center>
 </div>

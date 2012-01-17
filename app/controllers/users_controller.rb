@@ -1,7 +1,7 @@
- class UsersController < ApplicationController
-
+class UsersController < ApplicationController
+  
   layout "main", :except=>[:edit]
-
+  
   before_filter :is_current_user_auth, :only=>[:edit, :update]
   before_filter :logged_out_or_admin, :only=>[:new, :create, :activate, :create_shib, :new_shib]
   before_filter :is_user_admin_auth, :only=>[:resend_activation_code, :approve, :reject]
@@ -52,7 +52,7 @@
       @person = Person.new(params[:person])
       @person.email = @user.email
       @user.person=@person
-
+      
       @user.save
       respond_to do |format|
         if @user.errors.empty?
@@ -86,8 +86,8 @@
     @shib_user_id = params[:shib_user_id]
     @user=User.new
     @user.person=Person.new
-   end
-   
+  end
+  
   # render new.rhtml
   def new
     @user=User.new
@@ -103,7 +103,7 @@
       end
     end
   end
-
+  
   def create
     if !current_user
       cookies.delete :auth_token
@@ -112,63 +112,63 @@
       # uncomment at your own risk
       reset_session
     end
-if verify_recaptcha
-    @user = User.new(params[:user])
-    @person = Person.new(params[:person])
-    @person.email = @user.email
-    @user.person=@person
-
-    @user.save
-    respond_to do |format|
-    if @user.errors.empty?
-      if current_user #and therefor by before_filter :logged_out_or_admin an admin
-        do_approval(@user)
-        Mailer.deliver_admin_created_account(current_user, @user, base_host)
-        format.html {redirect_to(admin_path)}
-      else
-        if REGISTRATION_CLOSED
-          Mailer.deliver_signup_requested(params[:person][:description],@user,base_host)
-          flash[:notice]="An email has been sent to the administrator with your signup request."
-          @user.dormant = true
-          @user.person.dormant = true
-          @user.activation_code = nil
-          @user.save
-          @user.person.save
-          format.html {redirect_to(root_url)}
+    if verify_recaptcha
+      @user = User.new(params[:user])
+      @person = Person.new(params[:person])
+      @person.email = @user.email
+      @user.person=@person
+      
+      @user.save
+      respond_to do |format|
+        if @user.errors.empty?
+          if current_user #and therefor by before_filter :logged_out_or_admin an admin
+            do_approval(@user)
+            Mailer.deliver_admin_created_account(current_user, @user, base_host)
+            format.html {redirect_to(admin_path)}
+          else
+            if REGISTRATION_CLOSED
+              Mailer.deliver_signup_requested(params[:person][:description],@user,base_host)
+              flash[:notice]="An email has been sent to the administrator with your signup request."
+              @user.dormant = true
+              @user.person.dormant = true
+              @user.activation_code = nil
+              @user.save
+              @user.person.save
+              format.html {redirect_to(root_url)}
+            else
+              self.current_user = @user
+              if !ACTIVATION_REQUIRED
+                @user.activate
+                @user.save
+                format.html {redirect_to(root_url)}
+                Mailer.deliver_welcome self.current_user, base_host
+                flash[:notice]="Welcome to MethodBox, " +  @user.person.first_name + ". Why not start by trying some searches.........."
+              else
+                # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
+                Mailer.deliver_signup(current_user,base_host)
+                flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
+                logout_user
+                format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+              end
+            end
+          end
         else
-          self.current_user = @user
-          if !ACTIVATION_REQUIRED
-            @user.activate
-            @user.save
-            format.html {redirect_to(root_url)}
-            Mailer.deliver_welcome self.current_user, base_host
-            flash[:notice]="Welcome to MethodBox, " +  @user.person.first_name + ". Why not start by trying some searches.........."
-         else
-              # Mailer.deliver_contact_admin_new_user_no_profile(member_details,current_user,base_host)
-              Mailer.deliver_signup(current_user,base_host)
-              flash[:notice]="An email has been sent to you to confirm your email address. You need to respond to this email before you can login"
-              logout_user
-              format.html {redirect_to(:controller=>"users",:action=>"activation_required")}
+          #flash[:error] = "Something has gone wrong please check everything an try again"
+          if REGISTRATION_CLOSED
+            format.html {render :action => 'request_access'}
+          else
+            format.html {render :action => 'new'}
           end
         end
       end
     else
-      #flash[:error] = "Something has gone wrong please check everything an try again"
-      if REGISTRATION_CLOSED
-        format.html {render :action => 'request_access'}
-      else
+      respond_to do |format|
+        flash[:error] = "There was an error with the recaptcha code below. Please re-enter the code and try again."
         format.html {render :action => 'new'}
       end
     end
   end
-  else
-    respond_to do |format|
-      flash[:error] = "There was an error with the recaptcha code below. Please re-enter the code and try again."
-      format.html {render :action => 'new'}
-    end
-  end
-  end
-
+  
   def activate
     user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
     if !user
@@ -184,8 +184,8 @@ if verify_recaptcha
       logger.info("New user activated: " + user.person_id.to_s)
       Mailer.deliver_welcome user, base_host
       if current_user #and therefor by before_filter :logged_out_or_admin an admin
-         flash[:notice] = user.person.name.to_s+" has been activated"
-         redirect_to admin_url
+        flash[:notice] = user.person.name.to_s+" has been activated"
+        redirect_to admin_url
       else
         self.current_user = user
         if logged_in?
@@ -200,10 +200,10 @@ if verify_recaptcha
       end #!current_user
     end # user  &&  user.person
   end #def
-
+  
   def reset_password
     user = User.find_by_reset_password_code(params[:reset_code])
-
+    
     respond_to do |format|
       if user
         if user.reset_password_code_until && Time.now < user.reset_password_code_until
@@ -229,13 +229,13 @@ if verify_recaptcha
       end
     end
   end
-
+  
   def forgot_password
     if request.get?
       # forgot_password.rhtml
     elsif request.post?
       user = User.find_by_email(params[:email])
-
+      
       respond_to do |format|
         if user && user.person && !user.dormant?
           user.reset_password_code_until = 1.day.from_now
@@ -252,28 +252,28 @@ if verify_recaptcha
       end
     end
   end
-
+  
   def edit
     @user = User.find(params[:id])
     render :action=>:edit, :layout=>"main"
   end
-
+  
   def update
     @user = User.find(params[:id])
-
+    
     person=Person.find(params[:user][:person_id]) unless (params[:user][:person_id]).nil?
-
+    
     @user.person=person if !person.nil?
-
+    
     @user.attributes=params[:user]
-
+    
     if (!person.nil? && person.is_pal?)
       @user.can_edit_projects=true
       @user.can_edit_institutions=true
     end
-
+    
     respond_to do |format|
-
+      
       if @user.save
         #user has associated himself with a person, so activation email can now be sent
         if !current_user.active?
@@ -289,13 +289,13 @@ if verify_recaptcha
         format.html { render :action => 'edit' }
       end
     end
-
+    
   end
-
+  
   def activation_required
-
+    
   end
-
+  
   def resend_activation_code
     user = User.find(params[:id])
     if user.activation_code
@@ -306,12 +306,12 @@ if verify_recaptcha
     end
     redirect_to admin_url
   end
-
+  
   def approve
     do_approval(User.find(params[:id]))
     redirect_to admin_url
   end
-
+  
   def reject
     user = User.find(params[:id])
     name =  user.person.name.to_s
@@ -321,8 +321,8 @@ if verify_recaptcha
     user.destroy
     redirect_to admin_url
   end
-
-protected
+  
+  protected
   def request_for_unactive_user
     user = User.find(params[:id])
     if !user
@@ -335,7 +335,7 @@ protected
       return true
     end
   end
-
+  
   def validate_create
     if !params[:user] || !params[:person]
       flash[:error] = "Please use the signup form"
@@ -344,12 +344,12 @@ protected
       return true
     end
   end
-
+  
   def logged_out_or_admin
     return true if !current_user
     is_user_admin_auth
   end
-
+  
   def do_approval(user)
     if params[:activate]
       user.activate
@@ -365,5 +365,5 @@ protected
       Mailer.deliver_signup(user,base_host)
     end
   end
-
+  
 end

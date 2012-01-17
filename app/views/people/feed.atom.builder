@@ -7,7 +7,6 @@ atom_feed :language => "en-GB", :root_url => "/people",
 
   @people.each do |item|
     feed.entry item, :id => "urn:methodbox:people:#{item.id}" do |entry|
-
     end
   end
 end

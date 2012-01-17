@@ -4,7 +4,7 @@ class PeopleController < ApplicationController
 
   before_filter :login_required,:except=>[:select,:userless_project_selected_ajax,:create,:new]
   before_filter :current_user_exists,:only=>[:select,:userless_project_selected_ajax,:create,:new]
-  before_filter :current_user_dormant,:except=>[:index,:new,:create,:select]
+  before_filter :current_user_dormant,:except=>[:feed, :index,:new,:create,:select]
   before_filter :profile_belongs_to_current_or_is_admin, :only=>[:edit, :update,:destroy]
   before_filter :profile_is_not_another_admin_except_me, :only=>[:edit,:update,:destroy]
   before_filter :find_previous_searches, :only=>[ :show ]
@@ -12,8 +12,8 @@ class PeopleController < ApplicationController
   before_filter :is_user_admin_or_personless, :only=>[:new]
   before_filter :auth_params,:only=>[:update,:create]
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
+  before_filter :find_people, :init_atom_feed, :only => [:feed]
   after_filter :update_last_user_activity
-
 
   def auto_complete_for_tools_name
     render :json => Person.tool_counts.map(&:name).to_json
@@ -99,20 +99,20 @@ class PeopleController < ApplicationController
   #
   #Page for after registration that allows you to select yourself from a list of
   #people yet to be assigned, or create a new one if you don't exist
-  def select
-    @userless_projects=Project.with_userless_people
-
-    #strip out project with no people with email addresses
-    #TODO: can be made more efficient by putting into a direct query in Project.with_userless_people - but not critical as this is only used during registration
-    @userless_projects = @userless_projects.select do |proj|
-      !proj.people.find{|person| !person.email.nil? && person.user.nil?}.nil?
-    end
-
-    @userless_projects.sort!{|a,b|a.name<=>b.name}
-    @person = Person.new
-
-    render :action=>"select",:layout=>"logged_out"
-  end
+#  def select
+#    @userless_projects=Project.with_userless_people
+#
+#    #strip out project with no people with email addresses
+#    #TODO: can be made more efficient by putting into a direct query in Project.with_userless_people - but not critical as this is only used during registration
+#    @userless_projects = @userless_projects.select do |proj|
+#      !proj.people.find{|person| !person.email.nil? && person.user.nil?}.nil?
+#    end
+#
+#    @userless_projects.sort!{|a,b|a.name<=>b.name}
+#    @person = Person.new
+#
+#    render :action=>"select",:layout=>"logged_out"
+#  end
 
 
   #def create Use User.create
@@ -220,6 +220,10 @@ class PeopleController < ApplicationController
   end
 
   private
+  
+  def find_people
+    @people = Person.all(:conditions=>{:dormant=>false})
+  end
 
   def set_tools_and_expertise person,params
 
