@@ -1,0 +1,20 @@
+.Tooltip {
+    background-image: url('/images/dark-pointer.png');
+    background: transparent;
+    font-size: 10px;
+    line-height: 12px;
+    margin-left: -5px;
+    padding: 0 5px;
+    position: absolute;
+    z-index: 100;
+    left: 0;
+}
+
+.Tooltip span {
+    background-color:#525252;
+    color:#FFFFFF;
+    display:block;
+    margin-bottom:4px;
+    padding:4px 5px;
+    white-space:nowrap;
+}

@@ -1,0 +1,268 @@
+div.faux_table_container {
+    border:1px solid #996633;
+/*    max-height:550px;*/
+/*    overflow:auto;*/
+    /* Stop the horizontal bar from appearing*/
+/*    overflow-x:hidden;*/
+    /*width:700px;*/
+    /*width:900px;*/
+	width:100%;
+    text-align:left;
+    margin:auto;
+    float:left;
+	/* stop the vertical scroll from appearing */
+/*	min-height: 150px;*/
+}
+div.faux_table_header_container {
+    border:1px solid #996633;
+    /*width:700px;*/
+/*    width:900px;*/
+	width:100%;
+    margin:auto;
+    background-color: #ACCBE0;
+    float:left;
+}
+ul.faux_table_header_container {
+    float: left;
+/*    width: 900px;*/
+	width:100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
+}
+
+ul.faux_table_odd {
+    float: left;
+/*    width: 885px;*/
+	width:100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
+    background-color: #EEEEEE;
+}
+ul.faux_table_even {
+    float: left;
+/*    width: 885px;*/
+	width:100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
+}
+ul.faux_table_archived {
+	float: left;
+/*    width: 885px;*/
+	width:100%;
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0px;
+    margin: 0;
+    background-color: red;
+}
+
+* html ul.faux_table_odd {
+    display: inline;
+}
+* html ul.faux_table_even {
+    display: inline;
+}
+* html ul.faux_table_archived {
+    display: inline;
+}
+
+ul.faux_table_odd li {
+/*    width:880px;*/
+	width:100%;
+    float: left;
+	padding: 0;
+}
+ul.faux_table_even li {
+/*    width:880px;*/
+	width:100%;
+    float: left;
+	padding: 0;
+}
+ul.faux_table_archived li {
+/*    width:880px;*/
+	width:100%;
+    float: left;
+	padding: 0;
+}
+li#faux_table_header {
+	padding: 0;
+}
+
+* html ul.faux_table_odd li {
+    display: inline;
+}
+* html ul.faux_table_even li {
+    display: inline;
+}
+* html ul.faux_table_archived li {
+    display: inline;
+}
+
+li div {
+    float: left;
+}
+
+* html li div {
+    display: inline;
+}
+
+.col1 {
+    /*min-width: 25px;*/
+/*    width:25px;*/
+	width:3%;
+}
+.col2 {
+    /*min-width: 25px;*/
+/*    width:25px;*/
+	width:5%;
+}
+.col3 {
+    /*min-width: 150px;*/
+	white-space:normal;
+/*    width:165px;*/
+	width:15%;
+}
+.col4 {
+    white-space:normal;
+    /*min-width: 340px;*/
+/*    width:360px;*/
+	width:30%;
+}
+.col5 {
+    white-space:normal;
+/*    width:90px;*/
+	width:10%;
+}
+.col6 {
+    /*min-width: 65px;*/
+	white-space:normal;
+/*    width:55px;*/
+	width:10%;
+}
+.col7 {
+    /*min-width: 65px;*/
+	white-space:normal;
+/*    width:60px;*/
+	width:10%;
+}
+.col8 {
+    /*min-width: 50px;*/
+	white-space:normal;
+/*    width:40px;*/
+	width:10%;
+}
+.col9 {
+    /*min-width: 50px;*/
+    /* Remember the scroll bar needs space*/
+	white-space:normal;
+/*    width:30px;*/
+	width:7%;
+}
+
+.head1 {
+    /*min-width: 25px;*/
+/*    width:25px;*/
+	width:3%;
+}
+.head2 {
+    /*min-width: 25px;*/
+/*    width:25px;*/
+	width:5%;
+}
+.head3 {
+    /*min-width: 150px;*/
+/*    width:165px;*/
+	width:15%;
+}
+.head4 {
+    /*min-width: 340px;*/
+/*    width:360px;*/
+	width:30%;
+}
+.head5 {
+/*    width:90px;*/
+	width:10%;
+}
+.head6 {
+    /*min-width: 65px;*/
+/*    width:55px;*/
+	width:10%;
+}
+.head7 {
+    /*min-width: 65px;*/
+/*    width:60px;*/
+	width:10%;
+}
+.head8 {
+    /*min-width: 75px;*/
+/*    width:40px;*/
+	width:10%;
+}
+.head9 {
+    /*min-width: 75px;*/
+/*    width:30px;*/
+	width:7%;
+}
+* html div.faux_table_container {
+    /*width:700px;*/
+    float:none;
+}
+* html div.faux_table_header_container {
+    /*width:700px;*/
+    float:none;
+}
+
+div .dataset_check_box {
+    border: none;
+/*    padding:0.25em;*/
+/*    width: 60px;*/
+}
+
+/** html .col1 {
+    width: 25px;
+}
+* html .col2 {
+    width: 25px;
+}
+* html .col3 {
+    width: 150px;
+}
+* html .col4 {
+    width: 300px;
+}
+* html .col5 {
+    width: 40px;
+}
+* html .col6 {
+    width: 65px;
+}
+* html .col8 {
+    width: 50px;
+}
+* html .head1 {
+    width: 25px;
+}
+* html .head2 {
+    width: 25px;
+}
+* html .head3 {
+    width: 150px;
+}
+* html .head4 {
+    width: 300px;
+}
+* html .head5 {
+    width: 40px;
+}
+* html .head6 {
+    width: 65px;
+}
+* html .head8 {
+    width: 75px;
+}*/

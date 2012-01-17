@@ -1,0 +1,300 @@
+/* 
+Document   : survey_ul
+Created on : Nov 18, 2009, 4:20:21 PM
+Author     : Ian
+Description:
+Flowing layout for ul & li tags
+*/
+
+/* 
+TODO customize this sample style
+Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+/*div.click_box_div:hover {
+background-color: yellow;
+}
+
+li.click_box a:hover {
+background-color:#FF0066;
+}
+
+.click_box span.click_box_title {
+    display: block;
+}*/
+
+.hlist {
+ width: 100%;
+ margin: 0;
+ padding: 1em;
+}
+
+div.hlist ul{
+ margin: 0;
+}
+
+div.hlist li{
+ list-style: none;
+ margin: 0.2em;
+ display: -moz-inline-box; /* firefox pre v3 */
+ display: inline-block;
+ vertical-align: top;
+ margin: 0.5em 0.2em;
+ #display: inline; /* ie7 */
+/* _display: inline; */
+/* ie4 ie5 ie6 */
+}
+
+/*.hlist li {
+ #display: inline;  ie7 
+ _display: inline;  ie4 ie5 ie6 
+}*/
+
+ul.survey {
+    margin-left: 0px;
+    padding-left: 0px;
+    float:left;
+    list-style: none;
+    width: 100%;
+    border: 1px solid #CCC;
+    overflow: auto;
+}
+* html ul.survey {
+	overflow:visible;
+	height:1px;
+}
+ul.survey li {
+    float: left;
+    /*padding-left: 0em;*/
+    /*margin: 5px;*/
+    padding: 1em;
+    /*width: 8em;*/
+    margin: 0;
+}
+
+/*div .survey_type_box {
+    border: 1px solid black;
+}*/
+
+/*div .survey_box {
+    border: none;
+    width: 125px;
+}*/
+.survey_table th, td {
+	vertical-align:top;
+}
+
+.survey_box{
+	white-space: normal;
+    border: none;
+    width: 120px;
+	padding-left:5px;
+	background-color:#CCC;
+}
+
+.hidden_para {
+	white-space: normal;
+	border: none;
+    width: 120px;
+	padding-left:5px;
+	background-color:#CCC;
+}
+
+.survey_box ul {
+    margin-left: 0px;
+    padding-left: 0px;
+    /*float:left;*/
+    list-style: none;
+    width: 150px;
+    /*border-bottom: 1px dashed #000;*/
+}
+
+/*ul.survey_box li {
+    padding: 0px;
+}*/
+
+
+.survey_box li {
+    float: left;
+    padding: 0px;
+    /*padding-right: 1em;*/
+    /*width: 12em;*/
+    margin: 0px;
+}
+
+.clear {clear:both;}
+
+.cssnav
+{
+    position: relative;
+    font-family: arial, helvetica, sans-serif;
+    /*background: url('/images/overbtn.jpg') no-repeat;*/
+    background-color: gray;
+    border: 2px outset;
+    white-space: nowrap;
+    display: block;
+    width: 150px;
+    height: 35px;
+    margin: 0;
+    padding: 0;
+}
+
+.cssnav a
+{
+    display: block;
+    color: #000000;
+    font-size: 11px;
+    width: 150px;
+    height: 35px;
+    display: block;
+    float: left;
+    color: black;
+    text-decoration: none;
+}
+
+.cssnav img
+{
+    /*width: 211px;*/
+    /*height: 44px;*/
+    /*border: 0*/
+}
+
+* html a:hover
+{
+    visibility:visible
+}
+
+/*.cssnav a:hover img
+{
+visibility:hidden
+}*/
+.cssnav a:hover
+{
+    background-color: silver;
+    /*border: 2px inset;*/
+}
+
+.cssnav span
+{
+    font-size: 1.5em;
+    font-weight: bold;
+    position: absolute;
+    left: 50px;
+    top: 7px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+}
+
+.spiffy{
+    display:block;
+    width: 125px;
+}
+.spiffy *{
+    display:block;
+    height:1px;
+    font-size:.01em;
+    overflow:hidden;
+    background:#CCC;
+}
+.spiffy1{
+    margin-left:3px;
+    margin-right:3px;
+    padding-left:1px;
+    padding-right:1px;
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+    background:#CCC;
+}
+.spiffy2{
+    margin-left:1px;
+    margin-right:1px;
+    padding-right:1px;
+    padding-left:1px;
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+    background:#CCC;
+}
+.spiffy3{
+    margin-left:1px;
+    margin-right:1px;
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+}
+.spiffy4{
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+}
+.spiffy5{
+    border-left:1px solid #CCC;
+    border-right:1px solid #CCC;
+}
+.spiffyfg{
+    background:#E2DDB5;
+}
+
+.spiffygreen{
+    display:block;
+    width: 125px;
+}
+
+.spiffygreen *{
+    display:block;
+    height:1px;
+    font-size:.01em;
+    overflow:hidden;
+    background:#E2DDB5;
+}
+.spiffy1green{
+    margin-left:3px;
+    margin-right:3px;
+    padding-left:1px;
+    padding-right:1px;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+    background:#E2DDB5;
+}
+.spiffy2green{
+    margin-left:1px;
+    margin-right:1px;
+    padding-right:1px;
+    padding-left:1px;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+    background:#E2DDB5;
+}
+.spiffy3green{
+    margin-left:1px;
+    margin-right:1px;
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+}
+.spiffy4green{
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+}
+.spiffy5green{
+    border-left:1px solid #E2DDB5;
+    border-right:1px solid #E2DDB5;
+}
+.spiffyfggreen{
+    background:#E2DDB5;
+}
+
+li.var_number_list
+{
+/*	display: inline;*/
+	list-style-type: none;
+	margin-bottom: 5px;
+	background-color: #EEEEEE;
+}
+
+ul.search_terms_switcher
+{
+	padding-bottom: 5px;
+}
+ul.search_terms_switcher li {
+	background-color: #E2DDB5;
+}
+
+
