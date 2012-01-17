@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'net/http'
 require 'xml'
 
@@ -7,7 +8,7 @@ class ApplicationController < ActionController::Base
   #email exceptions to nominated users
   include ExceptionNotification::Notifiable
   #https/ssl
-  include SslRequirement
+  #include SslRequirement
   include SysMODB::SpreadsheetExtractor
 
   helper :all # include all helpers, all the time
@@ -216,9 +217,9 @@ class ApplicationController < ActionController::Base
   #To make it easier in dev mode using webrick etc this checks if you want
   #https.  Although the routes will be defined as https in the routes by default
   #you can override it by setting HTTPS_ON to false
-  def ssl_required?
-    HTTPS_ON
-  end
+#  def ssl_required?
+#    HTTPS_ON
+#  end
   
   #had to override this to test the exception notifier plugin
   #when running production locally.  Articles on web seem to say
@@ -380,6 +381,6 @@ class ApplicationController < ActionController::Base
   # See ActionController::Base for details
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password").
-  filter_parameter_logging :password
+  #filter_parameter_logging :password
 
 end

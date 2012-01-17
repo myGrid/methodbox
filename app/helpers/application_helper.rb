@@ -1,6 +1,6 @@
 module ApplicationHelper
   
-  include TagsHelper
+  #include TagsHelper
   
   def flatten_hash(hash = params, ancestor_names = [])
     flat_hash = {}
@@ -514,12 +514,6 @@ module ApplicationHelper
     else
       return 'style="display:inline;"'
     end
-  end
-  
-  def all_variables_in_extracts(survey)
-    varList = VariableList.all(:include=> :variable)
-    v = Array.new
-if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.push(var.variable) end
   end
   
   #Check if someone is registered with the UKDA using their
@@ -1062,7 +1056,7 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
   def page_title controller_name, action_name
     name=PAGE_TITLES[controller_name]
     name ||=""
-    name += " (Development)" if RAILS_ENV=="development"
+    name += " (Development)" if ENV["RAILS_ENV"]=="development"
     return "MethodBox&nbsp;"+name
   end
 
