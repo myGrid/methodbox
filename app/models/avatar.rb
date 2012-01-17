@@ -8,15 +8,16 @@ LARGE_SIZE = "1000x1000"
 
 class Avatar < ActiveRecord::Base
   
-  acts_as_fleximage do
-    image_directory AVATAR_STORAGE_PATH
-    use_creation_date_based_directories false
-    image_storage_format      :jpg
-    output_image_jpg_quality  85
-    require_image             true
-    missing_image_message     'is required'
-    invalid_image_message     'was not a readable image'
-  end
+#TODO use paperclip or similar since fleximage does not work with rails 3.1
+#  acts_as_fleximage do
+#    image_directory AVATAR_STORAGE_PATH
+#    use_creation_date_based_directories false
+#    image_storage_format      :jpg
+#    output_image_jpg_quality  85
+#    require_image             true
+#    missing_image_message     'is required'
+#    invalid_image_message     'was not a readable image'
+#  end
   
   # UNCOMMENTING NEXT LINE CAUSES STACK OVERFLOW - NEEDS FURTHER INVESTIGATION
   #validates_associated :owner

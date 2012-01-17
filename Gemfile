@@ -14,7 +14,8 @@ gem "libxml-ruby", "~> 2.2.0"
 gem "rubyzip", "~> 0.9.5"
 gem "uuidtools", "~> 2.1.2"
 #gem "mime-types", "1.16"
-gem "rchardet", "~> 1.3"
+#rchardet is not ruby 1.9 compatible so use a plugin instead
+#gem "rchardet", "~> 1.3"
 gem "tzinfo", "~> 0.3.31"
 gem "linkeddata", "~> 0.3.4"
 gem "ipaddress", "~> 0.8.0"
@@ -30,6 +31,12 @@ gem 'ddi-parser', '~> 0.0.4'
 gem "recaptcha", :require => "recaptcha/rails"
 gem "i18n", "~> 0.6.0"
 gem "delayed_job", "~> 3.0.0"
+#prototype removed in favour of jquery in rails 3.1
+gem "prototype-rails", "~> 3.1.0"
+gem "acts-as-taggable-on", "~> 2.2.2"
+#fleximage not compatible with rails 3.1
+gem "paperclip", "~> 2.0"
+
 
 #database adaptors
 gem "activerecord-sqlserver-adapter", "~> 3.1.5"
