@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-ruby_string="ruby-1.8.7"
-gemset_name="methodbox"
+ruby_string="ruby-1.9.3-head"
+gemset_name="mb_rails_3"
 
 if rvm list strings | grep -q "${ruby_string}" ; then
 
