@@ -47,7 +47,8 @@ class Publication < ActiveRecord::Base
     self.title = doi_record.title
     self.published_date = doi_record.date_published
     self.journal = doi_record.journal
-    self.doi = doi_record.doi    
+    self.doi = doi_record.doi 
+    puts "doi is " + doi_record.doi 
   end
   
   private

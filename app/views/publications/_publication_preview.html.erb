@@ -10,7 +10,9 @@
 
 <%= list_item_optional_attribute "Journal", h(publication.journal) %>
 
-<%= list_item_attribute "Date Published", publication.published_date.strftime('%d/%m/%Y') %>    
+<% unless !publication.published_date -%>
+  <%= list_item_attribute "Date Published", publication.published_date.strftime('%d/%m/%Y') %>  
+<% end -%>  
 
 <% form_for @publication do |f| %>
   <%= f.hidden_field :pubmed_id %>
