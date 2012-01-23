@@ -37,11 +37,11 @@
 <% end -%>
 <% if !@sorted_variables.empty? -%>
 <div style="margin-bottom: 10px;">
+<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;margin-left: 2em;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" , :onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('search_variables_button').form.submit();return true;}"-%>
 <% if logged_in? -%>
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :html => {:class => 'add_var_button'}} -%>
 <% end -%>
-<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;margin-left: 2em;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" , :onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('search_variables_button').form.submit();return true;}"-%>
 </div>
 <div class="fold">
   <div class="foldTitle">Currently selected datasets (click to display)</div>

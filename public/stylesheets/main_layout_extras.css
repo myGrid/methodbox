@@ -700,6 +700,7 @@ body:before {
 .add_var_button {
 	height: 25px;
 	font: 17px arial,sans-serif;
+	margin-left: 1em;
 }
 /* centre the welcome text to align with the search box */
 .middle-padding {
