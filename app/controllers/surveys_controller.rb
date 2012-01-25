@@ -21,8 +21,8 @@ class SurveysController < ApplicationController
   before_filter :find_notes, :only => [ :show ]
   
   after_filter :update_last_user_activity
-
-  caches_action :collapse_row, :expand_row
+#TODO this caching no longer seems to work as before
+#  caches_action :collapse_row, :expand_row
   
   def retrieve_details
     @survey = Survey.find(params[:survey_id])
