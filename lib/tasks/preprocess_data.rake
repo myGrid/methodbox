@@ -98,7 +98,7 @@ namespace :obesity do
 
   def process_part_dataset(dataset, first_column, last_column)
     dataset_file = dataset.uuid_filename
-    data_directory = CSV_FILE_PATH + "/" + dataset_file.split('.')[0] + "/"
+    data_directory = File.join(CSV_FILE_PATH, dataset_file.split('.')[0])
     FileUtils.mkdir_p  data_directory
     csv_path = File.join(CSV_FILE_PATH, dataset_file)
     puts "Reading " + first_column.to_s + " to " + last_column.to_s + " from " + csv_path
