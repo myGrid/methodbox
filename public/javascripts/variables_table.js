@@ -1,3 +1,13 @@
+function selectVisibleVariableCheckboxes(checked) {
+  var visible_records = this.pag.getPageRecords();
+  var rs = this.variableDataTable.getRecordSet();
+  for (var index=visible_records[0]; index < visible_records[1] + 1; index++) {
+    rs.getRecord(index).setData('Select',checked);
+    var id = rs.getRecord(index).getData().id;
+      selectVariable(id);
+  }  
+  this.variableDataTable.render();
+}
 function selectAllVariableCheckboxes(checked){
   var rs = this.variableDataTable.getRecordSet();
   len = rs.getLength();
@@ -78,7 +88,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             fields: ["id","name","description","survey", "category","popularity", "year"]
         };
 //to sort the vars add this to the table config sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC },
-        var pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
+        this.pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
         this.variableDataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
                 columnDefs, variableDataSource, { paginator : pag, rowExpansionTemplate :'{id}' });
 	this.variableDataTable.subscribe( 'cellClickEvent', variableDataTable.onEventToggleRowExpansion );

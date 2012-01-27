@@ -1,3 +1,17 @@
+function selectVisibleSurveyCheckboxes(checked) {
+  var visible_records = this.pag.getPageRecords();
+  var rs = this.surveyDataTable.getRecordSet();
+  for (var index=visible_records[0]; index < visible_records[1] + 1; index++) {
+    rs.getRecord(index).setData('Select',checked);
+    var id = rs.getRecord(index).getData().id;
+    if (checked) {
+      selectSurvey(id);
+    } else {
+      deselectSurvey(id);
+    }
+  }  
+  this.surveyDataTable.render();
+}
 function selectAllSurveyCheckboxes(checked){
   var rs = this.surveyDataTable.getRecordSet();
   len = rs.getLength();
@@ -96,7 +110,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         }
     });
 
-        var pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
+        this.pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
         this.surveyDataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
                 columnDefs, surveyDataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
 		this.surveyDataTable.subscribe( 'cellClickEvent',

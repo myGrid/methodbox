@@ -174,3 +174,5 @@ Sam Smith
 
 =Licence
 The MethodBox software developed by the University of Manchester uses the New BSD License.  Other software (eg plugins) developed by other authors but used by MethodBox may use different but compatible licences, please see the individual bits of software for further information.
+
+Copyright 2008-2012 University of Manchester

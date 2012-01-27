@@ -41,6 +41,7 @@
 <%= submit_tag "Search for variables", :id=>"survey_search_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('survey_search_button').form.submit();return true;}" -%>
 </div>
 <div>
+<%= button_to_function 'Select visible', "selectVisibleSurveyCheckboxes(true);", :title=>"Select all the surveys on the current page" -%>	
 <%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the surveys (from all pages)" -%>
 <%= button_to_function 'Select none', "selectAllSurveyCheckboxes(false);", :title=>"De-select all the surveys (from all pages)" -%>
 <%= button_to_function 'Invert selection', "invertAllSurveyCheckboxes();", :title=>"De-select currently selected surveys and vice-versa (from all pages)" -%>

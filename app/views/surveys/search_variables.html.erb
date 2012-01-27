@@ -73,6 +73,7 @@ All datasets returned at least one search result
 <div id="selected_variables">
 </div>
 <div>
+<%= button_to_function 'Select visible', "selectVisibleVariableCheckboxes(true);", :title=>"Select all the variables on the current page" -%>
 <%= button_to_function 'Select all', "selectAllVariableCheckboxes(true);", :title=>"Select all the variables (from all pages)" -%>
 <%= button_to_function 'Select none', "selectAllVariableCheckboxes(false);", :title=>"De-select all the variables (from all pages)" -%>
 <%= button_to_function 'Invert selection', "invertAllVariableCheckboxes();", :title=>"De-select currently selected variables and vice-versa (from all pages)" -%>
