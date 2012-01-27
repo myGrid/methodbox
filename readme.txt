@@ -20,7 +20,7 @@ Delayed Job (https://github.com/collectiveidea/delayed_job/tree/v2.0) is used to
 
 = Rails setup
 
-config/initializers/environment_local.example.rb contains various constants which are used eg. to point the delayed job tasks to the correct folder for data storage.  Copy file to environment_local.rb and then make the changes.  There are a few redundant contstants in this file and we are in the process of removing them.
+config/environment_local.example.rb contains various constants which are used eg. to point the delayed job tasks to the correct folder for data storage.  Copy file to config/initializers/environment_local.rb and then make the changes.  There are a few redundant contstants in this file and we are in the process of removing them.
 config/environment.example.rb includes set up for the exception handler and needs your email address so it can send any bug reports to the correct address.  Copy file to environment.rb and then make the changes
 config/environments/RAILS_ENV.example.rb (eg production.rb) need email details that MethodBox uses to send out notifications.  It also has a STATISTICS_ROUTE which is an obfuscated url that you can use to give to someone interested in the download stats.  In these file there is a constant called ROUTES_PROTOCOL which can be set to 'http' or 'https' and is used by the config/routes.rb file to make certain routes over 'https' if you require (don't forget certificates for apache etc, hard to test in development).  Copy file to eg. development.rb and then make the changes.
 
