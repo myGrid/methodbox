@@ -2,8 +2,13 @@
 <div>
 <%= render :partial => "variable_row_info", :locals => {:item => item, :extract_lineage => extract_lineage, :extract_id => extract_id, :lineage => lineage} %>
 </div>
-
-<%=  render :partial=>"variables/statistics_table", :locals => {:variable => item, :var_hash => var_hash, :no_var_hash => no_var_hash, :total_entries => total_entries, :invalid_entries => invalid_entries, :blank_rows => blank_rows, :value_domain_hash => value_domain_hash, :valid_entries => valid_entries} -%>
+<div class="left" style="width:40%;">
+<%= render :partial => "variables/statistics_chart", :locals => {:variable => item, :var_hash => var_hash, :no_var_hash => no_var_hash, :total_entries => total_entries, :invalid_entries => invalid_entries, :blank_rows => blank_rows, :value_domain_hash => value_domain_hash, :valid_entries => valid_entries} -%>
+</div>
+<div class="right" style="width:40%">
+<%= render :partial => "variables/values_table", :locals => {:variable => item, :var_hash => var_hash, :no_var_hash => no_var_hash, :total_entries => total_entries, :invalid_entries => invalid_entries, :blank_rows => blank_rows, :value_domain_hash => value_domain_hash, :valid_entries => valid_entries} -%>
+</div>
+<%#=  render :partial=>"variables/statistics_table", :locals => {:variable => item, :var_hash => var_hash, :no_var_hash => no_var_hash, :total_entries => total_entries, :invalid_entries => invalid_entries, :blank_rows => blank_rows, :value_domain_hash => value_domain_hash, :valid_entries => valid_entries} -%>
 <div style="clear:both">
 </div>
 
