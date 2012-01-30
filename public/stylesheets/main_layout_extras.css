@@ -691,6 +691,7 @@ body:before {
 
 /* remove 10px border from yui grid */
 #doc3 {margin:auto;}
+body {margin:auto;}
 #ft {
   border-top: 1px solid black;
   background-color: white;
