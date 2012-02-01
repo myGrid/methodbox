@@ -28,20 +28,20 @@ var loader = new YAHOO.util.YUILoader({
     // The function to call when all script/css resources have been loaded
     onSuccess: function() {
         //once yui is loaded we can load the datatable extensions
-        loadDynamically('/javascripts/yui/datatable/datatable_expander.js', 'js');
-        loadDynamically('/javascripts/yui/datatable/variable_table_expander.js', 'js');
-        loadDynamically('/stylesheets/alphabetical_pagination.css', 'css');
-        loadDynamically('/stylesheets/my_exp.css', 'css');
-        loadDynamically('/stylesheets/gadgets.css', 'css');
-        loadDynamically('/stylesheets/acts_as_taggable_stylesheet.css', 'css');
-        loadDynamically('/stylesheets/styles.css', 'css');
-        loadDynamically('/stylesheets/fast_auto_complete.css', 'css');
-        loadDynamically('/stylesheets/redbox.css', 'css');
-        loadDynamically('/stylesheets/autocompleter_advanced.css', 'css');
-        loadDynamically('/stylesheets/savage_beast/forums.css', 'css');
-        loadDynamically('/stylesheets/spiffy_corners.css', 'css');
-        loadDynamically('/stylesheets/widget_tab_nav.css', 'css');
-        loadDynamically('/stylesheets/main_layout_extras.css', 'css');
+        dynamicLoad('/javascripts/yui/datatable/datatable_expander.js');
+        dynamicLoad('/javascripts/yui/datatable/variable_table_expander.js');
+        dynamicLoad('/stylesheets/alphabetical_pagination.css');
+        dynamicLoad('/stylesheets/my_exp.css');
+        dynamicLoad('/stylesheets/gadgets.css');
+        dynamicLoad('/stylesheets/acts_as_taggable_stylesheet.css');
+        dynamicLoad('/stylesheets/styles.css');
+        dynamicLoad('/stylesheets/fast_auto_complete.css');
+        dynamicLoad('/stylesheets/redbox.css');
+        dynamicLoad('/stylesheets/autocompleter_advanced.css');
+        dynamicLoad('/stylesheets/savage_beast/forums.css');
+        dynamicLoad('/stylesheets/spiffy_corners.css');
+        dynamicLoad('/stylesheets/widget_tab_nav.css');
+        dynamicLoad('/stylesheets/main_layout_extras.css');
     },
 
     // Configure the Get utility to timeout after 10 seconds for any given node insert

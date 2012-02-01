@@ -170,18 +170,18 @@ Ajax.Responders.register({
 });
 
 /* Load JS or CSS files dynamically */
-function loadDynamically(filename, filetype){
-  if (filetype=="js"){
-    var fileref=document.createElement('script');
-    fileref.setAttribute("type","text/javascript");
-    fileref.setAttribute("src", filename);
-    document.getElementsByTagName("head")[0].appendChild(fileref);
-  } else if (filetype=="css"){
-    var fileref=document.createElement("link");
-    fileref.setAttribute("rel", "stylesheet");
-    fileref.setAttribute("type", "text/css");
-    fileref.setAttribute("href", filename);
-    document.getElementsByTagName("head")[0].appendChild(fileref);
+function dynamicLoad(filename){
+  var head;
+  var script;
+  var filetype = filename.split('.').pop();
+
+  head = $$('head')[0];
+  if (filetype == 'js'){
+    script = new Element('script', { type: 'text/javascript', src: filename });
+    head.appendChild(script);
+  } else if (filetype == 'css') {
+    script = new Element('link', { rel: 'stylesheet', type: 'text/css', href: filename });
+    head.appendChild(script);
   }
 }
 
