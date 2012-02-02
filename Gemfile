@@ -31,6 +31,8 @@ gem "recaptcha", :require => "recaptcha/rails"
 gem "i18n", "0.4.1"
 
 #database adaptors
+#need the odbc gem for sqlserver
+gem "ruby-odbc"
 gem "activerecord-sqlserver-adapter", "~> 2.3.24"
 gem "mysql", "2.8.1"
 gem "sqlite3-ruby", :require => "sqlite3"
