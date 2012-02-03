@@ -6,7 +6,7 @@ The team is developing an eLab - a unique, secure environment for producing, sha
 
 The project has developed and deployed the data sharing platform methodbox. MethodBox aims to provide a simple, easy to use environment for browsing and sharing surveys, methods and data. Variables (ie columns in spreadsheet/csv data) can be searched for using keywords. Metadata for the variables can be viewed and the variables themselves can be added to your cart and downloaded. MethodBox is a generic Ruby on Rails based web application that can be seeded with any type of csv style datasets. It's original intention was to support health researchers involved in obesity data investigations with emphasis on datasets from the UK Data Archive.
 
-The project is developed by the myGrid team at the University of Manchester, funded by the Economic & Social Research Council and comes under the Digital Social Research umbrella. 
+The project is developed by the myGrid team at the University of Manchester, funded by the Economic & Social Research Council and comes under the Digital Social Research umbrella with additonal help and advice from the Economic and Social Data Service and Cathy Marsh Centre for Social Research. 
 
 = Overview
 
@@ -35,6 +35,7 @@ libmagick9-dev
 sqlite
 libsqlite3-dev
 openssl-devel
+unixodbc-dev (required for ruby-odbc)
 
 You may also have to build the ruby openssl support.  If you built from source then go to RUBY_SOURCE_DIR/ext/openssl, or try the RUBY_INSTALL_DIR/ext/openssl and run
 ruby extconf.rb
@@ -49,7 +50,8 @@ to set up the tables for the savage beasts forum plugin.
 
 = SOLR setup
 
-MethodBox uses the Sunspot plugin to drive SOLR (http://outoftime.github.com/sunspot/).  By default the config and index will be saved in the rails root in a directory called 'solr'. If you want it to store things in a different place then copy the config/sunspot_example.yml to config/sunspot.yml and change the file paths inside it to the correct places.  Start solr with rake sunspot:solr:start, for production add "RAILS_ENV=production" to the end.  To stop use rake sunspot:solr:stop and to reindex use rake sunspot:reindex.
+MethodBox uses the Sunspot plugin to drive SOLR (http://outoftime.github.com/sunspot/).  By default the config and index will be saved in the rails root in a directory called 'solr'. If you want it to store things in a different place then copy the config/sunspot_example.yml to config/sunspot.yml and change the file paths inside it to the correct places.  Start solr with rake sunspot:solr:start, for production add "RAILS_ENV=production" to the end.  To stop use rake sunspot:solr:stop and to reindex use rake sunspot:reindex. You could also install it in tomcat, see http://wiki.apache.org/solr/SolrTomcat. It seems to work better adding the solr-home parameter to the appropriate place in the tomcat/webapps/solr/WEB-INF/web.xml . You will also need to copy the conf files from the sunspot gems conf directory and add to the solr conf directory.
+Note that on windows the rake sunspot:solr:start task does not work since windows does not support the fork() directive, use rake sunspot:solr:run instead or install in a servlet container like tomcat
 
 = Delayed job setup
 
@@ -61,6 +63,7 @@ Production
 the number after n is the amount of workers you want to start.  You can also start it in dev mode this way with script/delayed_job start instead of the rake task. Note that the environment info comes at the start and is not quoted.
 To stop it use RAILS_ENV=production script/delayed_job stop
 We found that using the delayed_job gem with daemons gem higher than 1.0.10 caused unpredictable behaviour when starting workers so we lock that in the bundle Gemfile. 
+On windows the script/delayed_job does not work so use rake jobs:work instead with one command terminal for each worker.
 
 = To HTTPS or not HTTPS
 
