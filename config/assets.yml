@@ -1,0 +1,56 @@
+package_path: packages
+
+javascripts:
+  common:
+    - public/javascripts/prototype.js
+    - public/javascripts/controls.js
+    - public/javascripts/dragdrop.js
+    - public/javascripts/effects.js
+    - public/javascripts/builder.js
+    - public/javascripts/slider.js
+    - public/javascripts/sound.js
+    - public/javascripts/scriptaculous.js
+    - public/javascripts/application.js
+    - public/javascripts/autocompleter_advanced.js
+    - public/javascripts/yui.js
+    - public/javascripts/scriptaculous.js
+    - public/javascripts/redbox.js
+    - public/javascripts/tooltips.js
+    - public/javascripts/scriptaculous.js
+
+  variables:
+    - public/javascripts/categories_variable_table.js
+    - public/javascripts/checkbox_update.js
+    - public/javascripts/variables_table.js
+    - public/javascripts/dynamic_variables_table.js
+    - public/javascripts/variable_table_expander.js
+    - public/javascripts/variable_table_check.js
+
+  surveys:
+    - public/javascripts/survey_checkbox.js
+    - public/javascripts/surveys_table.js
+    - public/javascripts/datatable_expander.js
+    - public/javascripts/yui_checkbox.js
+
+  sharing:
+    - public/javascripts/link_adder.js
+    - public/javascripts/sharing.js
+
+  people:
+    - public/javascripts/people.js
+
+  toggler:
+    - public/javascripts/toggler.js
+
+  folds:
+    - public/javascripts/folds.js
+
+  forum:
+    - public/javascripts/savage_beast/application.js
+
+stylesheets:
+  common:
+    - public/stylesheets/*.css
+
+  forum:
+    - public/stylesheets/savage_beast/*.css

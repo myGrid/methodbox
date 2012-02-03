@@ -29,6 +29,8 @@ gem 'ddi-parser'
 gem "recaptcha", :require => "recaptcha/rails"
 #later versions cause issues with time to words since {{variable}} is now %{variable} in later versions
 gem "i18n", "0.4.1"
+#minimize & cache js/css
+gem "jammit"
 
 #database adaptors
 #need the odbc gem for sqlserver
