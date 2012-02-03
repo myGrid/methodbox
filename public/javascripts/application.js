@@ -169,6 +169,22 @@ Ajax.Responders.register({
   }
 });
 
+/* Load JS or CSS files dynamically */
+function dynamicLoad(filename){
+  var head;
+  var script;
+  var filetype = filename.split('.').pop();
+
+  head = $$('head')[0];
+  if (filetype == 'js'){
+    script = new Element('script', { type: 'text/javascript', src: filename });
+    head.appendChild(script);
+  } else if (filetype == 'css') {
+    script = new Element('link', { rel: 'stylesheet', type: 'text/css', href: filename });
+    head.appendChild(script);
+  }
+}
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  
