@@ -10,7 +10,7 @@
 <%= hidden_field_tag 'publication_page', 1 -%>
 <%= hidden_field_tag 'variable_page', 1 -%>
 <div style="text-align: center; padding-bottom:5px;">
-<%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and methods" -%>
+<%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif;", :title=>'Find variables, surveys, people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
 </div>
 <div id="advanced-search-options" style="text-align: center; padding-bottom: 5px; <%= @advanced_controls ? '' : 'display:none'-%>">
 <div style="display: block; width: 100%;">
@@ -24,7 +24,8 @@
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'methods', true -%>Methods</li>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'extracts', true -%>Data Extracts</li>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'publications', true -%>Publications</li></ul></td></tr>
-<tr><td style="font-size: smaller;">Select the things you want to search.  Maybe you want to find variables from a survey, perhaps you need to find a particular survey.  Share your results with other researchers or keep them private, the choice is yours.</td></tr>
+<tr><td style="font-size: smaller; font-color: gray;">Select the things you want to search.  Maybe you want to find variables from a survey, perhaps you need to find a particular survey.  Share your results with other researchers or keep them private, the choice is yours.</td></tr>
+<tr><td style="font-size: smaller;">Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered</td></tr>
 </tbody>
 </table>
 </div>
