@@ -1,8 +1,4 @@
-<%= stylesheet_link_tag 'survey_ul'%>
-<%= stylesheet_link_tag 'faux_table'%>
-<%= javascript_include_tag 'variable_table_check.js' %>
-<%= javascript_include_tag 'checkbox_update.js' %>
-<%= javascript_include_tag 'variables_table.js' -%>
+<%= include_javascripts :variables -%>
 <%= hidden_field_tag 'tag_button', 'tag' %>
 <%= hidden_field_tag 'year_of_survey', 'survey_year' %>
 <%= hidden_field_tag 'variable_name', 'variable_name' %>

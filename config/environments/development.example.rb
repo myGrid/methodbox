@@ -35,5 +35,3 @@ ActionMailer::Base.smtp_settings = {
 #whether to use ssl or not. The routes.rb uses this
 ROUTES_PROTOCOL = "http"
 STATISTICS_ROUTE = '/12345/'
-#if you want to load a local copy of yui in development mode then add this constant, otherwise remove it
-YUI_LOADER="path/to/yui/build"

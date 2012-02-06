@@ -1,5 +1,4 @@
-<%= javascript_include_tag "sharing.js" %>
-<%= javascript_include_tag 'link_adder.js'-%>
+<%= include_javascripts :sharing -%>
 
 <% current_user_authorized_to_manage = Authorization.is_authorized?("manage", nil, @archive, current_user) -%>
 

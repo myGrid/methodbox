@@ -1,8 +1,4 @@
-<%= javascript_include_tag "sharing.js" -%>
-<%= javascript_include_tag 'variable_table_check.js' -%>
-<%= javascript_include_tag 'variables_table.js' -%>
-<%= stylesheet_link_tag 'survey_ul'%>
-<%= stylesheet_link_tag 'faux_table'%>
+<%= include_javascripts :sharing, :variables -%>
 <script type="text/javascript">
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});

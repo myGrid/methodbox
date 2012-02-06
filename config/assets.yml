@@ -50,7 +50,16 @@ javascripts:
 
 stylesheets:
   common:
-    - public/stylesheets/*.css
-
-  forum:
-    - public/stylesheets/savage_beast/*.css
+    - public/stylesheets/yui.css
+    - public/stylesheets/alphabetical_pagination.css
+    - public/stylesheets/my_exp.css
+    - public/stylesheets/gadgets.css
+    - public/stylesheets/acts_as_taggable_stylesheet.css
+    - public/stylesheets/styles.css
+    - public/stylesheets/fast_auto_complete.css
+    - public/stylesheets/redbox.css
+    - public/stylesheets/autocompleter_advanced.css
+    - public/stylesheets/savage_beast/forums.css
+    - public/stylesheets/spiffy_corners.css
+    - public/stylesheets/widget_tab_nav.css
+    - public/stylesheets/main_layout_extras.css

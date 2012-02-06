@@ -1,4 +1,4 @@
-<%= javascript_include_tag 'survey_checkbox.js' -%>
+<%= include_javascripts :surveys -%>
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
 <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
 <% if !logged_in? -%>

@@ -1,5 +1,4 @@
-<%= javascript_include_tag "sharing.js" -%>
-<%= javascript_include_tag 'link_adder.js'-%>
+<%= include_javascripts :sharing -%>
 <h1>Editing Survey: <%= @survey.title -%></h1><div class="show_basic">
   <% form_for(@survey) do |f| -%>
     <%= error_messages_for :survey -%>

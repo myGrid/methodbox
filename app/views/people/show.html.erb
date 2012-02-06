@@ -1,7 +1,7 @@
+<%= include_javascripts :surveys -%>
 <% drag_id=model_to_drag_id @person %>
 <% persons_asset_hash = (@person.user ? Asset.classify_and_authorize(@person.user.assets, true, current_user) : {}) -%>
 <% persons_asset_hash.each_key {|key| persons_asset_hash[key].sort!{|x,y| y.created_at <=> x.created_at}}%>
-<%= javascript_include_tag 'survey_checkbox.js' -%>
 <div class="yui-skin-sam">
 	<div id="person" class="yui-navset">
 		<ul class="yui-nav">

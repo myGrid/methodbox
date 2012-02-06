@@ -1,7 +1,4 @@
-<%= javascript_include_tag "sharing.js" -%>
-<%= javascript_include_tag 'link_adder.js' -%>
-<%= javascript_include_tag 'variables_table.js' -%>
-<%= javascript_include_tag 'variable_table_check.js' -%>
+<%= include_javascripts :variables, :sharing -%>
 <script type="text/javascript">
     // Load the Visualization API and the piechart package.
     google.load('visualization', '1', {
