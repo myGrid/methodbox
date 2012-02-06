@@ -1119,7 +1119,7 @@ if(Survey.find(Dataset.find(var.variable.dataset_id).survey_id).id == 16) :v.pus
     if (options[:type]==:variable)
       link=variables_url(:variable=>tag.name)
     end
-    link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>tag.name
+    link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>"Click to show all people who have expertise/knowledge in: " + tag.name
   end
 
   def list_item_tags_list tags,options={}
