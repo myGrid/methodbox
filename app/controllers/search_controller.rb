@@ -64,7 +64,7 @@ class SearchController < ApplicationController
     if @results_empty
       flash[:notice] = "There were no search results for \"" + params[:search_query] + "\""
       respond_to do |format|
-        format.html {redirect_to :back}
+        format.html {redirect_to(:back || root_path)}
       end
     end
     #tell the browser that the post request is ok to cache for the next 20 minutes - NO LONGER NEEDED, action is
