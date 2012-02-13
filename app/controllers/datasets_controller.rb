@@ -9,12 +9,13 @@ class DatasetsController < ApplicationController
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new, :create ]
-  before_filter :login_required, :except => [ :show ]
+  before_filter :login_required, :except => [ :show, :index ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter  :update_last_user_activity
   before_filter :find_previous_searches, :only => [ :show ]
+  before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
   
   #update the datafile for this dataset
   def load_new_data
@@ -114,6 +115,20 @@ class DatasetsController < ApplicationController
 
   def index
 
+    if (!params[:subject].nil?)
+      @subject=params[:subject]
+      datasets=Dataset.tagged_with(@subject, :on=>:subjects)
+      @datasets = datasets.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
+    else
+      datasets = Dataset.all(:order=> "name")
+      @datasets = datasets.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @datasets.to_xml}
+    end
+
   end
 
   def show
@@ -175,10 +190,14 @@ class DatasetsController < ApplicationController
   
   def edit
 
+    @tags_subjects = Dataset.subject_counts.sort{|a,b| a.name<=>b.name}
+
   end
   
   def update
     
+    set_subject_tags(@dataset,params)
+
     if @dataset.update_attributes(params[:dataset])
       respond_to do |format|
         format.html { redirect_to dataset_path(@dataset) }
@@ -449,6 +468,25 @@ class DatasetsController < ApplicationController
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
+  end
+
+  def set_subject_tags dataset,params
+
+    tags=""
+    params[:dataset_tags_autocompleter_selected_ids].each do |selected_id|
+      tag=Tag.find(selected_id)
+      tags << tag.name << ","
+    end unless params[:dataset_tags_autocompleter_selected_ids].nil?
+    params[:dataset_tags_autocompleter_unrecognized_items].each do |item|
+      tags << item << ","
+    end unless params[:dataset_tags_autocompleter_unrecognized_items].nil?
+    dataset.subject_list=tags
+
+  end
+
+  def set_tagging_parameters
+    subjects=Dataset.subject_counts.sort{|a,b| a.id<=>b.id}.collect{|t| {'id'=>t.id,'name'=>t.name}}
+    @all_dataset_tags_as_json= subjects.to_json
   end
   
 end

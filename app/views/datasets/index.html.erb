@@ -1,6 +1,8 @@
-<%#
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
-%>
-
-<%= "index.html" %>
+<div class="asset-resource-list">
+<%= will_paginate @datasets %>
+<div style="text-align: center; margin: 0.5em;">
+<%= page_entries_info @datasets %>
+</div>
+<%= render :partial => "assets/resource_list", :locals => { :collection => @datasets, :authorization_for_showing_already_done=>false, :paginate => true } %>
+<%= will_paginate @datasets %>
+</div>

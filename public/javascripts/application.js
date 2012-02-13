@@ -185,6 +185,15 @@ function dynamicLoad(filename){
   }
 }
 
+function addDatasetListTag(tag_id) {
+    expertise_autocompleter=autocompleters['dataset_tags_autocompleter']
+    var index=dataset_tags_autocompleter.itemIDsToJsonArrayIDs([tag_id])[0];
+    var item = new Element('a', {
+        'value': index
+    });
+    dataset_tags_autocompleter.addContactToList(item);
+}
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  

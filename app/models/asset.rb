@@ -30,7 +30,6 @@ class Asset < ActiveRecord::Base
       
       res = asset.resource
       if res != nil
-        puts res.class.name + " id: " + res.id.to_s + " asset: " + asset.id.to_s
         results[res.class.name] = [] unless results[res.class.name]
         results[res.class.name] << res
       end

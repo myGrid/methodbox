@@ -7,6 +7,8 @@ class Dataset < ActiveRecord::Base
   has_many :dataset_lists
 
   has_many :user_searches, :through => :dataset_lists
+
+  acts_as_taggable_on :subjects
   
   def to_param
     "#{id}-#{name.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')

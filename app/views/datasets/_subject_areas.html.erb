@@ -1,0 +1,19 @@
+<% subject_list=dataset.subjects -%>
+
+<div id="expertise">
+        <%  if subject_list.blank? -%>
+      <% else %>
+    <p>
+      <label>Users have tagged this survey with:</label>
+<div class="box_standout">
+        <% for subject in subject_list  -%>
+
+          <%= link_for_tag subject, :type=>:dataset, :truncate_length=>150 -%>
+          <% unless subject==subject_list.last %>
+            |
+          <% end %>
+        <% end %>
+</div>
+    </p>
+       <% end %>
+  </div>
