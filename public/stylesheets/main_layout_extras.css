@@ -354,12 +354,6 @@ ul.vbuttons .category-browse.li {
 #small-hd {
 	margin-left: 1em;
 	margin-top: 1em;
-	padding: 3px;
-	-webkit-border-radius: 6px;
-	border-radius:6px;
-	-moz-border-radius:6px;
-	border: none;
-	background-color: wheat;
 }
 /* small header without top margin */
 #smaller-hd {
@@ -707,4 +701,39 @@ body {margin:auto;}
 .middle-padding {
 	padding-left: 30%;
 	padding-right: 30%;
+}
+
+#login-list {
+  	padding: 3px;
+	-webkit-border-radius: 6px;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	border: none;
+	background-color: wheat;
+}
+#login-tooltip-question {
+    color: sienna;
+    font-weight: bold;
+    padding-top: 0.5em;
+    text-align: center;
+    text-decoration: underline;
+}
+#login-tooltip-answer {
+  background-color: yellow;
+  padding: 0.5em;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  -moz-border-radius:10px;
+  -moz-box-shadow: #777 2px 3px 5px;
+  -webkit-box-shadow: 2px 3px 5px #777777;
+  box-shadow: 2px 3px 5px #777;
+}
+#login-tooltip-answer-inner {
+  padding-left: 1em;
+}
+#login-tooltip-answer-footnote {
+    color: gray;
+    font-size: smaller;
+    font-style: italic;
+    margin-top: 1em;
 }
