@@ -61,8 +61,9 @@ loader.insert();
 
 <%= stylesheet_link_tag 'yui', 'alphabetical_pagination', 'main_layout_extras', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', 'main_layout_extras', :cache=>'css_cached' -%>
 <% end -%>
-		<%= stylesheet_link_tag 'ie6_hacks'-%>
-		<![endif]-->
+<!--[if lte IE 6]>
+<%= stylesheet_link_tag 'ie6_hacks'-%>
+<![endif]-->
 		<script type="text/javascript">
 //<![CDATA[
 			function show_ajax_loader(element) {
