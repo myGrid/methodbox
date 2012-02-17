@@ -718,7 +718,7 @@ body {margin:auto;}
     text-align: center;
     text-decoration: underline;
 }
-#login-tooltip-answer {
+#login-tooltip-answer, #register-benefits {
   background-color: yellow;
   padding: 0.5em;
   -webkit-border-radius: 10px;
@@ -736,4 +736,16 @@ body {margin:auto;}
     font-size: smaller;
     font-style: italic;
     margin-top: 1em;
+}
+.register-notice {
+	background-color: yellow;
+  padding: 0.5em;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  -moz-border-radius:10px;
+  -moz-box-shadow: #777 2px 3px 5px;
+  -webkit-box-shadow: 2px 3px 5px #777777;
+  box-shadow: 2px 3px 5px #777;
+  font-style: italic;
+/*  font-size: large;*/
 }

@@ -83,6 +83,26 @@ All datasets returned at least one search result
 </div>
 <% end -%>
 <% end -%>
+<div id="please-register">
+<div id="register-benefits">
+  <ul>
+    <li>If you registered you could:</li>
+    <div id="login-tooltip-answer-inner">
+    <li>Add these variables to your cart</li>
+    <li>Download them as csv/stata/spss files</li>
+    <li>Review your search history</li>
+    </div>
+    <li id="login-tooltip-answer-footnote">To download some of the survey data you may need to register with <a href="http://www.esds.ac.uk" title="The Economic and Social Data Service" target="_blank"">ESDS</a></li>
+  </ul>
+</div>
+</div>
+
+<script type="text/javascript">
+YAHOO.namespace("example.container")
+YAHOO.example.container.panel1 = new YAHOO.widget.Panel("please-register", { context:["variables_table","tl","br", ["beforeShow", "windowResize"]], width:"320px", visible:true, constraintoviewport:true } );
+YAHOO.example.container.panel1.render();
+//YAHOO.util.Event.addListener("login-tooltip-question", "click", YAHOO.example.container.panel1.show, //YAHOO.example.container.panel1, true);
+</script>
 <script type="text/javascript">
 var results = <%= raw @variables_json -%>;
 createTable();

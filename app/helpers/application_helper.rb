@@ -8,6 +8,57 @@ module ApplicationHelper
   
   include TagsHelper
   
+  # Are there any surveys in this data extract which the 
+  # current user does not have permission to download
+  def check_survey_auth_for_vars variables
+    auth = true
+    ukda = false
+    #get a list of all the surveys
+    variable_hash = Hash.new
+    variables.each do |variable|
+      if (!variable_hash.has_key?(variable.dataset_id))
+        variable_hash[variable.dataset_id] = Array.new
+      end
+    end
+    #first thing is see whether the basic auth checks are ok
+    #we check for view since the basic premise is that if you can see a survey you can download it
+    variable_hash.each_key do |key|
+      survey = Dataset.find(key).survey
+      if !Authorization.is_authorized?("view", nil, survey, current_user)
+        auth = false
+        break
+      end
+    end
+    #then we see if there are any ukda surveys lurking in the extract
+    variable_hash.each_key do |key|
+      survey = Dataset.find(key).survey
+      if survey.survey_type.is_ukda
+        ukda = true
+        break
+      end
+    end
+    #if its a ukda survey then we better see if they are registered
+    ukda_registered = false
+    if ukda
+      if current_user != nil
+        ukda_registered = ukda_registration_check(current_user)
+      else
+        ukda_registered = false
+      end
+    end
+    
+    if ukda && ukda_registered
+      #download ok
+      return true
+    elsif !ukda && auth
+      #download ok
+      return true
+    else
+      #download barred
+      return false
+    end
+  end
+  
   def flatten_hash(hash = params, ancestor_names = [])
     flat_hash = {}
     hash.each do |k, v|
