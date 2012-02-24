@@ -1,8 +1,60 @@
-<div class="asset-resource-list">
-<%= will_paginate @datasets %>
-<div style="text-align: center; margin: 0.5em;">
-<%= page_entries_info @datasets %>
+<%= javascript_include_tag "sharing.js" -%>
+<%= javascript_include_tag 'survey_checkbox.js' -%>
+<%= javascript_include_tag 'yui_checkbox.js' -%>
+<%= javascript_include_tag 'datasets_table.js' -%>
+<%= stylesheet_link_tag 'survey_ul'%>
+<%= stylesheet_link_tag 'faux_table'%>
+<style type="text/css">
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+</style>
+<% if !@datasets.empty? -%>
+<% form_tag(search_variables_surveys_url, :method=>"get") do -%>
+<div id="selected_datasets">
 </div>
-<%= render :partial => "assets/resource_list", :locals => { :collection => @datasets, :authorization_for_showing_already_done=>false, :paginate => true } %>
-<%= will_paginate @datasets %>
+<div style="padding: 20px; font-size:larger;">Select one or more <%= DATASET.pluralize -%> to search by clicking on the appropriate check box next to the <%= DATASET -%>, then enter a search term and click the 'Search for variables' button.</div>
+<div style="text-align: center; padding-bottom:10px;">
+<%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the " + DATASET.pluralize + " you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"survey_search_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the " +  DATASET.pluralize + " you have selected",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('survey_search_button').form.submit();return true;}" -%>
 </div>
+<div>
+<%= button_to_function 'Select visible', "selectVisibleDatasetCheckboxes(true);", :title=>"Select all the " + DATASET.pluralize+ " on the current page" -%>	
+<%= button_to_function 'Select all', "selectAllDatasetCheckboxes(true);", :title=>"Select all the " + DATASET.pluralize + " (from all pages)" -%>
+<%= button_to_function 'Select none', "selectAllDatasetCheckboxes(false);", :title=>"De-select all the " + DATASET.pluralize + " (from all pages)" -%>
+<%= button_to_function 'Invert selection', "invertAllDatasetCheckboxes();", :title=>"De-select currently selected " + DATASET.pluralize + " and vice-versa (from all pages)" -%>
+</div>
+<div style="margin-top:5px;">
+<label for="filter">Filter by <%= DATASET -%> title and description:</label> <input type="text" id="filter" value="" title="Only show <%= DATASET.pluralize -%> with titles containing a particular piece of text"></input>
+</div>
+<div class="yui-skin-sam">
+<div id="surveys_table"></div>
+</div>
+<% end  -%>
+<% end -%>
+<script type= "text/javascript">
+var dataset_results = <%= raw @datasets_json -%>;
+createSurveyTable();
+</script>
+<script type="text/javascript">
+  document.observe('dom:loaded', function() {
+    uncheckAll();
+  });
+</script>

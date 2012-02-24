@@ -392,27 +392,18 @@ end
     #do_search_variables
   end
 
-# list all the surveys that the current user can see. Since Datasets are really the most interesting thing we show them.
+# list all the surveys that the current user can see.
   def index
     @surveys = get_surveys
     @surveys.sort!{|x,y| x.title <=> y.title}
-    #surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
-    #@surveys_json = surveys_hash.to_json
-    @datasets = []
-    puts "surveys " + @surveys.size.to_s
-    @surveys.each do |survey|
-      survey.datasets.each {|dataset| @datasets << dataset }
-    end
-
-    datasets_hash = {"total_entries" => @datasets.size, "results"=>@datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50), "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
-    @datasets_json = datasets_hash.to_json
+    surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
+    @surveys_json = surveys_hash.to_json
 
     @variables = Array.new
 
     respond_to do |format|
       format.html # index.html.erb
-      #format.xml { render :xml=>@surveys}
-      format.xml { render :xml=>@datasets}
+      format.xml { render :xml=>@surveys}
       #FIXME some sort of bug causes the first character in the xml type declaration to be
       #stripped off before the rdf+xml transfer, this <?xml version="1.0" encoding="UTF-8"?>
       #becomes ?xml version="1.0" encoding="UTF-8"?>

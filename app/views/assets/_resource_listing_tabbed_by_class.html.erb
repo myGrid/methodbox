@@ -20,7 +20,6 @@
 				<% visible_resource_type = "Data Extracts" if visible_resource_type=="Csvarchives" %>
 				<% visible_resource_type = "Methods and Scripts" if visible_resource_type=="Scripts" %>
                                 <% visible_resource_type = "People" if visible_resource_type=="Peoples" %>
-                                 <% visible_resource_type = DATASET.pluralize if visible_resource_type=="Surveys" %>
 				<% unless (resources = asset_hash[resource_type]).nil? || resources.empty? -%>
 				<% if tab_count == 1 %>
 					<li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= visible_resource_type.downcase + ' with ' + resources.length.to_s + ' results' -%>"><em><%= h truncate(visible_resource_type + '(' + resources.length.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
@@ -83,3 +82,4 @@
        }
    }
 </script>
+

@@ -115,18 +115,22 @@ class DatasetsController < ApplicationController
 
   def index
 
-    if (!params[:subject].nil?)
-      @subject=params[:subject]
-      datasets=Dataset.tagged_with(@subject, :on=>:subjects)
-      @datasets = datasets.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
-    else
-      datasets = Dataset.all(:order=> "name")
-      @datasets = datasets.paginate(:page=>params[:page] ? params[:page] : 1, :per_page=>default_items_per_page)
+    @surveys = get_surveys
+    @surveys.sort!{|x,y| x.title <=> y.title}
+    @datasets = []
+    puts "surveys " + @surveys.size.to_s
+    @surveys.each do |survey|
+      survey.datasets.each {|dataset| @datasets << dataset }
     end
+
+    datasets_hash = {"total_entries" => @datasets.size, "results"=>@datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50), "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+    @datasets_json = datasets_hash.to_json
+
+    @variables = Array.new
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @datasets.to_xml}
+      format.xml { render :xml=>@datasets}
     end
 
   end
