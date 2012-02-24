@@ -1,23 +1,23 @@
 <%= javascript_include_tag "sharing.js" -%>
 <%= javascript_include_tag 'link_adder.js'-%>
-<h1>New Survey</h1>
+<h1>New <%= SURVEY -%></h1>
 <div class="show_basic">
   <% form_for(:survey, :url => {:action => :create}, :multipart => true) do |form| -%>
     <%= error_messages_for 'survey' -%>
 <div class="right" style="width: 50%;">
 				<div id="new-survey-step-2">
 				<fieldset style="background-color: #FFFFCC;">
-					<legend style="font-size:150%;">2: Details for the new Survey</legend>
+					<legend style="font-size:150%;">2: Details for the new <%= SURVEY -%></legend>
 			        <p style="margin-top: 0.5em;">
-			          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
+			          <b>Title:</b> (Enter the name of the <%= SURVEY -%> here eg HSE 2005)<br/>
 			          <%= form.text_field :title, :style => "width: 100%;" -%>
 			        </p>
 	        <p style="margin-top: 0.5em;">
-	          <b>Description:</b> (Enter a description of the survey here)<br/>
+	          <b>Description:</b> (Enter a description of the <%= SURVEY -%> here)<br/>
 	          <%= form.text_area :description, :style => "width: 100%;", :rows => 5 -%>
 	        </p>
 	        <p style="margin-top: 0.5em;">
-	          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
+	          <b>Year:</b> (Enter the year of the <%= SURVEY -%> here eg 2005)<br/>
 	          <%= form.text_field :year, :style => "width: 40%;" -%>
 	        </p>
 	</fieldset>
@@ -34,10 +34,10 @@
 	</div>
       <div id="new-survey-step-1" class="left" style="width: 45%;">
 	<fieldset style="background-color: #FFFFCC;">
-		<legend style="font-size:150%;">1: Choose the Survey type</legend>
+		<legend style="font-size:150%;">1: Choose the <%= SURVEY_TYPE -%></legend>
 		<% if SurveyType.all.size >=1 %>
 <p>
-	<b>Select an existing Survey type</b><br/>
+	<b>Select an existing <%= SURVEY_TYPE -%></b><br/>
 			<%= form.select :survey_type ,options_from_collection_for_select(@survey_types, :id, :truncated_value) -%>
 			</p>
 
@@ -46,20 +46,20 @@
 			</p>
 			<% else -%>
 			<br/>
-<b style="font-style: italic; background-color: red;">There are no existing survey types, please enter the details for a new one when loading your new survey.</b><br/><br/>
+<b style="font-style: italic; background-color: red;">There are no existing <%= SURVEY_TYPE.pluralize -%>, please enter the details for a new one when loading your new <%= SURVEY -%>.</b><br/><br/>
 						<% end %>
 						<p>
-<b>Create a new Survey type</b><br/>
+<b>Create a new <%= SURVEY_TYPE -%></b><br/>
 
 
-				<b>Name:</b> (Enter full survey name here eg Health Survey for England)<br/>
+				<b>Name:</b> (Enter full <%= SURVEY -%> name here eg Health Survey for England)<br/>
 			<%= text_field_tag 'survey_type_name', nil, :style => "width: 100%;margin-bottom:0.5em;" -%><br/>
-			<b>Description:</b> (Enter a description of the new survey type here)<br/>
+			<b>Description:</b> (Enter a description of the new <%= SURVEY -%> type here)<br/>
 			<%= text_area_tag 'survey_type_description', nil, :style => "width: 100%;margin-bottom:0.5em;", :rows => 5 -%>
 				</p>
 				<p>
 				<% if current_user.is_admin? %>
-				<b>UKDA Survey?</b>
+				<b>UKDA <%= SURVEY -%>?</b>
 				Yes
 				<%= radio_button_tag :ukda_survey, 'yes', {:checked=>false, :onclick=>"$('world_sharing_div').hide();$('sharing_scope_4').disabled = true;$('sharing_scope_4').selected = false;if (this.checked) { this.checked == false; $('sharing_scope_3').checked = true;};"} -%>
 				No

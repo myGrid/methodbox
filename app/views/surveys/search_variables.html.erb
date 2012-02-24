@@ -44,10 +44,10 @@
 <% end -%>
 </div>
 <div class="fold">
-  <div class="foldTitle">Currently selected datasets (click to display)</div>
+  <div class="foldTitle">Currently selected <%= DATASET.pluralize.downcase -%> (click to display)</div>
   <div class="foldContent" style="display:none;">
 <% if !@datasets_with_results.empty? -%>
-  <div>Datasets with search results (<%= @datasets_with_results.size -%>)
+  <div><%= DATASET.pluralize.downcase -%> with search results (<%= @datasets_with_results.size -%>)
     <ol class="variable-suggestions">
       <% @datasets_with_results.each do |dataset| -%>
         <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
@@ -58,7 +58,7 @@
 There were no search results
 <% end -%>
 <% if !@datasets_without_results.empty? -%>
-  <div>Datasets with no search results (<%= @datasets_without_results.size -%>)
+  <div><%= DATASET.pluralize.downcase -%> with no search results (<%= @datasets_without_results.size -%>)
     <ol class="variable-suggestions">
       <% @datasets_without_results.each do |dataset| -%>
         <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
@@ -66,7 +66,7 @@ There were no search results
     </ol>
    </div>
 <% else -%>
-All datasets returned at least one search result
+All <%= DATASET.pluralize.downcase -%> returned at least one search result
 <% end -%>
   </div>
 </div>

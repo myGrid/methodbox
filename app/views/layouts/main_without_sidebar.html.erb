@@ -11,6 +11,9 @@
   var surveys_url = "<%= surveys_url -%>";
   var variables_url = "<%= variables_url -%>";
   var by_category_variables_url = "<%= by_category_variables_url -%>";
+  var survey_type = "<%= SURVEY_TYPE -%>";
+  var survey = "<%= SURVEY -%>";
+  var dataset = "<%= DATASET -%>";
 </script>
 <%= csrf_meta_tag %>
 <% if defined? YUI_LOADER -%>
@@ -121,7 +124,7 @@ loader.insert();
 <ol class="variable-suggestions" style="margin: 1em 0 0 0;">
 <li title="Find out more about MethodBox, it's motivations and the people behind it"><%= link_to 'About MethodBox', about_url -%></li>
 <li>|</li>
-<li title="Enter the MethodBox. See what people are sharing. Search and view surveys, scripts, data extracts and more"><%= link_to 'View the data catalogue', surveys_url -%></li>
+<li title="Enter the MethodBox. See what people are sharing. Search and view <%= SURVEY.pluralize.downcase -%>, scripts, data extracts and more"><%= link_to 'View the data catalogue', surveys_url -%></li>
 <ol>
 </div>
 <% end -%>

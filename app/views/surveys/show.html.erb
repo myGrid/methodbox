@@ -18,19 +18,19 @@
 </div>
 	<ul class="buttons">
 <% if logged_in? -%>
-	  <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
+	  <li><%= icon "new", new_survey_url, "Create a new " +  SURVEY , nil, "Create a new " + SURVEY %></li>
 	<% if controller.action_name == "show" %>
 		<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
+	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET + " to this " + SURVEY, nil, "Add a " + DATASET + " to this " + SURVEY  -%></li>
 	<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-		<li><%= icon "edit", edit_survey_url(@survey), "Edit this survey", nil, "Edit this survey" -%></li>
+		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET + " to this " + SURVEY , nil, "Add a " + DATASET + " to this " + SURVEY -%></li>
+		<li><%= icon "edit", edit_survey_url(@survey), "Edit this " + SURVEY , nil, "Edit this " + SURVEY -%></li>
 	<% end %>
 	<% end %>
-<li><%= icon "topic", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey"), "Start forum topic", {:title=> "Create a new forum topic about this survey"}, "Start forum topic" -%></li>
+<li><%= icon "topic", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey"), "Start forum topic", {:title=> "Create a new forum topic about this " + SURVEY}, "Start forum topic" -%></li>
 		<% end -%>
 	</ul>
-<h1 class="contribution_title">Survey: <%= h(@survey.title) -%></h1>
+<h1 class="contribution_title"><%= SURVEY -%>: <%= h(@survey.title) -%></h1>
 <div class="show_basic">
 	<%# @survey_search_query="Enter search terms" unless @survey_search_query -%>
 	<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
@@ -56,7 +56,7 @@
         		<span class="title"><%=h @survey.title -%></span>
       		</p>
       		<p>
-        		<b>Type:</b>
+        		<b><%= SURVEY_TYPE -%>:</b>
         		<%=h @survey.survey_type.name -%>
       		</p>
       		<p>
@@ -80,11 +80,11 @@
 </div>
 <% else %>
 <p>
-<b>There are no categories listed for this survey</b>
+<b>There are no categories listed for this <%= SURVEY -%></b>
 </p>
 <% end %>
       		<p>
-        		<b>Child Datasets:</b>
+        		<b>Child <%= DATASET.pluralize -%>:</b>
         		<% if !@survey.datasets.empty? -%>
 					<% @survey.datasets.each do |dataset| -%>
             			<%= link_to(h(dataset.name), dataset_path(dataset)) -%>
@@ -215,7 +215,7 @@
 </tbody>
 </table>
           <% else %>
-		There are no forum questions linked to this survey, why not <%= link_to("start a new topic.", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey")) -%>
+		There are no forum questions linked to this <%= SURVEY -%>, why not <%= link_to("start a new topic.", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey")) -%>
           <% end %>
         </div>
     </div>

@@ -18,7 +18,7 @@
         <% end -%>
       </div>
       <p>
-        <b>Parent Survey:</b>
+        <b>Parent <%= SURVEY -%>:</b>
         <%= link_to(h(Survey.find(item.survey_id).title), survey_path(Survey.find(item.survey_id))) -%>
       </p>
     </td>

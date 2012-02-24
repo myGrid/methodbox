@@ -15,7 +15,7 @@
 <ul class="buttons">
 <% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
 <li>
-<%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit Dataset details') -%>
+<%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit ' + DATASET + ' details') -%>
 </li>
 <li>
 <%= icon('manage', update_data_dataset_path(@dataset), nil, nil, 'Upload variable data') -%>
@@ -27,7 +27,7 @@
 </ul>
 
 <div class="left"><% if @dataset.nesstar_id && @dataset.nesstar_uri.include?("esds") -%>
-<%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this dataset on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
+<%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this " + DATASET + " on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
 <% end -%></div><div><h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1></div>
 
 <div class="show_basic">
@@ -38,7 +38,7 @@
 	<div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
 	  <div style="position: absolute; ;top:1em;left:1em"><%= text_field_tag :survey_search_query, @survey_search_query %>
 				<%= image_tag(method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
-	    <%= submit_tag 'Search this dataset',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
+	    <%= submit_tag 'Search this ' + DATASET,:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
 	  </div>
 		  <% if logged_in? && !@recent_searches.empty? -%>
 		  <div style="position: absolute; top:1em;left:30em">
@@ -59,7 +59,7 @@
       </p>
       <p>
       <p>
-        <b>Parent Survey:</b>
+        <b>Parent <%= SURVEY -%>:</b>
         <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
       </p>
 <% if @dataset.current_version -%>

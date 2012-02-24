@@ -63,7 +63,7 @@ Production
 the number after n is the amount of workers you want to start.  You can also start it in dev mode this way with script/delayed_job start instead of the rake task. Note that the environment info comes at the start and is not quoted.
 To stop it use RAILS_ENV=production script/delayed_job stop
 We found that using the delayed_job gem with daemons gem higher than 1.0.10 caused unpredictable behaviour when starting workers so we lock that in the bundle Gemfile. 
-On windows the script/delayed_job does not work so use rake jobs:work instead with one command terminal for each worker.
+On windows script/delayed_job does not work so use rake jobs:work instead with one command terminal for each worker.
 
 = To HTTPS or not HTTPS
 
@@ -82,6 +82,10 @@ The following models are indexed by SOLR:
 When a dataset (CSV or tab delimitted with headers) is uploaded by a user the process_dataset_job.rb delayed job (in lib) gives it a unique id and then splits it up into one file for each column and does some basic stats on the columns.
 When a user adds variables (ie columns) to their cart and creates a data extract the data_extract_job.rb delayed job adds the columns together, creates any scripts needed for stata or SPSS stats package (the user chooses this at download time), generates a text file with the metadata about the variables and zips them all up.
 MethodBox was designed to be used with UK Data Archive data run by the Economic and Social Data Service.  As such it checks user email addresses against their registered user list when users try to download UKDA data, if they are not registered with them then it does not allow them to download.  Users can also login using Shibboleth and the UK Federation authorisation service.
+
+= Configuring survey names for UI display
+
+The names for survey type, survey and dataset are configurable within the views by defining the constants SURVEY_TYPE, SURVEY and DATASET.  There is an example in config/initializers/survey_names.rb_example.  Move this to survey_names.rb and change the names to be whatever you want.
 
 = Metadata
 

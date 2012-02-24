@@ -116,7 +116,7 @@
       </div>
       </p>
       <p>
-        <b>Survey:</b>
+        <b><%= SURVEY -%>:</b>
       <div class="box_standout">
         <%= link_to(Dataset.find(@variable.dataset_id).survey.title, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>

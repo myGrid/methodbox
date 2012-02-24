@@ -44,7 +44,7 @@
         </div>
         <div>
           <p>
-            <b>Link with Surveys:</b>
+            <b>Link with <%= SURVEY.pluralize -%>:</b>
             <%= render :partial => "assets/link_selector", :locals => { :resource_id => "surveys", :resource_type => "Surveys",   # this is only for presentation, not for any processing
            :collection=>@surveys,:selected=>@selected_surveys,:authorization_for_showing_already_done => true } -%>
           </p>

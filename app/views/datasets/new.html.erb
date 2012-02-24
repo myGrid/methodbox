@@ -1,8 +1,8 @@
 <%= javascript_include_tag "sharing.js" -%>
 
-        <h2>Create a new dataset by uploading a CSV/tabbed dataset file or an excel spreadsheet which has the column/variable names.  Once it has loaded you can add metadata for the columns/variables.</h2><br/>
+        <h2>Create a new <%= DATASET -%> by uploading a CSV/tabbed <%= DATASET -%> file or an excel spreadsheet which has the column/variable names.  Once it has loaded you can add metadata for the columns/variables.</h2><br/>
 
-<h1>New Dataset</h1>
+<h1>New <%= DATASET -%></h1>
 
 <div class="show_basic">
   <% form_tag({:action => :create}, :multipart => true) do -%>
@@ -23,12 +23,12 @@
 
 
         <p style="margin-top: 1.5em;">
-          <b>Title:</b> (Enter dataset title here)<br/>
+          <b>Title:</b> (Enter <%= DATASET -%> title here)<br/>
           <%= text_field_tag 'dataset[title]', '', :style => "width: 100%;" -%>
         </p>
 
         <p style="margin-top: 0.5em;">
-          <b>Description:</b> (Enter a description of the dataset here)<br/>
+          <b>Description:</b> (Enter a description of the <%= DATASET -%> here)<br/>
           <%= text_area_tag 'dataset[description]', '', :style => "width: 100%;", :rows => 5 -%>
         </p>
 

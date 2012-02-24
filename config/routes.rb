@@ -21,7 +21,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :cart, :collection => {:remove_from_cart => :post}, :only=> :none, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :datasets, :member => {:update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :datasets, :as => DATASET.gsub(" ", "_"), :member => {:update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   #not currently used
   #map.resources :variable_links, :requirements => {:protocol => ROUTES_PROTOCOL}
@@ -29,7 +29,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :messages, :collection => { :autocomplete_message_to => :post, :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
 
-  map.resources :surveys, :member => { :show_all_variables => :get, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :get, :expand_row => :get, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :get, :category_browse => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get, :show_links=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :surveys, :as => SURVEY.gsub(" ", "_"), :member => { :show_all_variables => :get, :add_note => :post, :download => :get}, :collection => {:retrieve_details => :get, :collapse_row => :get, :expand_row => :get, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :get, :category_browse => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get, :show_links=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :csvarchives, :as => "data_extracts", :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :show_links=>:post, :check_for_complete => :post, :feed => :get }, :requirements => {:protocol => ROUTES_PROTOCOL}
 

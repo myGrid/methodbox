@@ -1,6 +1,6 @@
 <%= javascript_include_tag "sharing.js" -%>
 <%= javascript_include_tag 'link_adder.js'-%>
-<h1>Editing Survey: <%= @survey.title -%></h1><div class="show_basic">
+<h1>Editing <%= SURVEY -%>: <%= @survey.title -%></h1><div class="show_basic">
   <% form_for(@survey) do |f| -%>
     <%= error_messages_for :survey -%>
 	<div class="right" style="width: 50%" id="new-survey-step-3">
@@ -14,17 +14,17 @@
 	      </div>
 				<div class="left" style="width: 40%" id="new-survey-step-2">
 				<fieldset style="background-color: #FFFFCC;">
-					<legend style="font-size:150%;">1: Edit Survey Details</legend>
+					<legend style="font-size:150%;">1: Edit <%= SURVEY -%> Details</legend>
 			        <p style="margin-top: 0.5em;">
-			          <b>Title:</b> (Enter the name of the survey here eg HSE 2005)<br/>
+			          <b>Title:</b> (Enter the name of the <%= SURVEY -%> here eg HSE 2005)<br/>
 			          <%= text_field_tag 'survey[title]',@survey.title, :style => "width: 100%;" -%>
 			        </p>
 	        <p style="margin-top: 0.5em;">
-	          <b>Description:</b> (Enter a description of the survey here)<br/>
+	          <b>Description:</b> (Enter a description of the <%= SURVEY -%> here)<br/>
 	          <%= text_area_tag 'survey[description]', @survey.description, :style => "width: 100%;", :rows => 5 -%>
 	        </p>
 	        <p style="margin-top: 0.5em;">
-	          <b>Year:</b> (Enter the year of the survey here eg 2005)<br/>
+	          <b>Year:</b> (Enter the year of the <%= SURVEY -%> here eg 2005)<br/>
 	          <%= text_field_tag 'survey[year]', @survey.year, :style => "width: 40%;" -%>
 	        </p>
 	</fieldset>

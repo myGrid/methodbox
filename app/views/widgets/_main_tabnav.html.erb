@@ -35,7 +35,7 @@ render_tabnav :main,
 
   add_tab do |t|
    t.named 'Data Sources'
-   t.titled "Archived surveys and other sources of data for research"
+   t.titled SURVEY.pluralize + " and other sources of data for research"
    t.links_to :controller => 'surveys'
   end
 
