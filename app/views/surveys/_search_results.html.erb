@@ -27,11 +27,11 @@
 }
 </style>
 <% if !surveys.empty? -%>
-<% surveys.each do |survey| -%>
-  <% survey.datasets.each do |dataset| -%>
-      <%= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
-  <% end -%>
-<% end -%>
+<%# surveys.each do |survey| -%>
+  <%# survey.datasets.each do |dataset| -%>
+      <%#= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
+  <%# end -%>
+<%# end -%>
 <% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <div id="selected_datasets">
 </div>

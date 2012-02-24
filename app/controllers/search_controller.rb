@@ -29,10 +29,16 @@ class SearchController < ApplicationController
  
     if params[:search_type].include?('surveys')
       results = find_surveys(query, params[:survey_page]).results
-      @results_hash['survey'] = results
       surveys = results.sort!{|x,y| x.title <=> y.title}
-      surveys_hash = {"total_entries" => surveys.size, "results"=>surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
-      @surveys_json = surveys_hash.to_json
+      #surveys_hash = {"total_entries" => surveys.size, "results"=>surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
+
+      @datasets = []
+      surveys.each do |survey|
+        survey.datasets.each {|dataset| @datasets << dataset }
+      end
+      @results_hash['survey'] = @datasets
+      datasets_hash = {"total_entries" => @datasets.size, "results"=>@datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50), "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+      @surveys_json = datasets_hash.to_json
     end 
     if params[:search_type].include?('variables')
       #don't sort variable results but return by order of relevance

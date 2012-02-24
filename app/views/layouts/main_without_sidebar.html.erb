@@ -10,10 +10,12 @@
 <script type="text/javascript">
   var surveys_url = "<%= surveys_url -%>";
   var variables_url = "<%= variables_url -%>";
+  var datasets_url = "<%= datasets_url -%>";
   var by_category_variables_url = "<%= by_category_variables_url -%>";
   var survey_type = "<%= SURVEY_TYPE -%>";
   var survey = "<%= SURVEY -%>";
   var dataset = "<%= DATASET -%>";
+  var datasets_title = "<%= DATASET.pluralize.downcase -%>";
 </script>
 <%= csrf_meta_tag %>
 <% if defined? YUI_LOADER -%>

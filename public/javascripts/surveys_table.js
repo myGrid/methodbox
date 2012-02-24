@@ -5,9 +5,9 @@ function selectVisibleSurveyCheckboxes(checked) {
     rs.getRecord(index).setData('Select',checked);
     var id = rs.getRecord(index).getData().id;
     if (checked) {
-      selectSurvey(id);
+      selectDataset(id);
     } else {
-      deselectSurvey(id);
+      deselectDataset(id);
     }
   }  
   this.surveyDataTable.render();
@@ -20,9 +20,9 @@ function selectAllSurveyCheckboxes(checked){
     rs.getRecord(index).setData('Select',checked);
     var id = rs.getRecord(index).getData().id;
     if (checked) {
-      selectSurvey(id);
+      selectDataset(id);
     } else {
-      deselectSurvey(id);
+      deselectDataset(id);
     }
   }  
   this.surveyDataTable.render();
@@ -34,7 +34,7 @@ function invertAllSurveyCheckboxes(){
   for (var index=0; index < len; index++) {
     rs.getRecord(index).setData('Select',!rs.getRecord(index).getData('Select'));
     var id = rs.getRecord(index).getData().id;
-    selectSurvey(id);
+    selectDataset(id);
   }  
   this.surveyDataTable.render();
 }
@@ -53,12 +53,18 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         };
 
-        this.surveysURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+        this.datasetsURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var id = oRecord.getData().id;
             var title = oRecord.getData().title;
+            elLiner.innerHTML = "<a href=\"" + datasets_url + "/" + id + "\">" + title + "</a>";
+        };
+        this.surveysURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var id = oRecord.getData().survey_id;
+            var title = oRecord.getData().survey;
             elLiner.innerHTML = "<a href=\"" + surveys_url + "/" + id + "\">" + title + "</a>";
         };
         // Add the custom formatter to the shortcuts
+        YAHOO.widget.DataTable.Formatter.datasetsFormatter = this.datasetsURLFormatter;
         YAHOO.widget.DataTable.Formatter.surveysFormatter = this.surveysURLFormatter;
 
         this.sourceURLFormatter = function(elLiner, oRecord, oColumn, oData) {
@@ -73,11 +79,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
         YAHOO.widget.DataTable.Formatter.sourceFormatter = this.sourceURLFormatter;
 
         var columnDefs = [
-            { label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
+            //{ label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "title", label: "Title", formatter:"surveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
+		    { key: "title", label: "Title", formatter:"datasetsFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
 		    { key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
+		    { key: "survey", label: survey, formatter:"surveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
 		    //{ key: "type", label: "Type", sortable: true, minWidth: 100, maxWidth: 100 },
                     { key: "source", label: "Source", formatter:"sourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
@@ -87,7 +94,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         responseType : YAHOO.util.DataSource.TYPE_JSON,
         responseSchema : {
             resultsList : "results",
-            fields : ["id","title","description","year","type", "source"]
+            fields : ["id","title","description", "survey","survey_id","year","type", "source"]
         },
         doBeforeCallback : function (req,raw,res,cb) {
             // This is the filter function
@@ -100,7 +107,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 for (i = 0, l = data.length; i < l; ++i) {
                     if (data[i].title.toLowerCase().indexOf(req) != -1) {
                         filtered.push(data[i]);
-                    } else if (data[i].description.toLowerCase().indexOf(req) != -1) {
+                    } else if (data[i].description != null && data[i].description.toLowerCase().indexOf(req) != -1) {
 						filtered.push(data[i]);
 					}
                 }
@@ -112,7 +119,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         this.pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
         this.surveyDataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, surveyDataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
+                columnDefs, surveyDataSource, {caption: "List of all " + datasets_title, sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
 		this.surveyDataTable.subscribe( 'cellClickEvent',
 				surveyDataTable.onEventToggleRowExpansion );
     var filterTimeout = null;
@@ -173,7 +180,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
       var column = this.getColumn(elCheckbox);
       record.setData(column.key,newValue); 
       var id = record.getData().id;
-      selectSurvey(id);
+      selectDataset(id);
     });
 });
 }

@@ -56,8 +56,20 @@ YAHOO.util.Event.addListener(window, "load", function() {
             var name = oRecord.getData().name;
             elLiner.innerHTML = "<a href=\"" + variables_url + "/" + id + "\">" + name + "</a>";
         };
+        this.datasetsURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var id = oRecord.getData().dataset_id;
+            var name = oRecord.getData().dataset;
+            elLiner.innerHTML = "<a href=\"" + datasets_url + "/" + id + "\">" + name + "</a>";
+        };
+        this.surveysURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+            var id = oRecord.getData().survey_id;
+            var name = oRecord.getData().survey;
+            elLiner.innerHTML = "<a href=\"" + surveys_url + "/" + id + "\">" + name + "</a>";
+        };
         // Add the custom formatter to the shortcuts
         YAHOO.widget.DataTable.Formatter.variablesFormatter = this.variablesURLFormatter;
+        YAHOO.widget.DataTable.Formatter.datasetsFormatter = this.datasetsURLFormatter;
+        YAHOO.widget.DataTable.Formatter.surveysFormatter = this.surveysURLFormatter;
 
         this.categoryURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var category = oRecord.getData().category;
@@ -76,7 +88,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "name", label: "Title", formatter:"variablesFormatter", sortable: true, maxWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, width: 300 },
                     { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, maxWidth: 200 },
-		    { key: "survey", label: "Survey", sortable: true, maxWidth: 200 },
+		    { key: "dataset", label: dataset, formatter:"datasetsFormatter", sortable: true, maxWidth: 200 },
+                    { key: "survey", label: survey, formatter:"surveysFormatter", sortable: true, maxWidth: 200 },
 		    { key: "year", label: "Year", sortable: true, maxWidth: 100 },
 		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100 }
 		];
@@ -85,7 +98,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         variableDataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         variableDataSource.responseSchema = {
             resultsList : "results",
-            fields: ["id","name","description","survey", "category","popularity", "year"]
+            fields: ["id","name","description","survey", "dataset","survey_id","dataset_id","category","popularity", "year"]
         };
 //to sort the vars add this to the table config sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC },
         this.pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});

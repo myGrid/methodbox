@@ -392,18 +392,27 @@ end
     #do_search_variables
   end
 
-# list all the surveys that the current user can see.
+# list all the surveys that the current user can see. Since Datasets are really the most interesting thing we show them.
   def index
     @surveys = get_surveys
     @surveys.sort!{|x,y| x.title <=> y.title}
-    surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
-    @surveys_json = surveys_hash.to_json
+    #surveys_hash = {"total_entries" => @surveys.size, "results"=>@surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
+    #@surveys_json = surveys_hash.to_json
+    @datasets = []
+    puts "surveys " + @surveys.size.to_s
+    @surveys.each do |survey|
+      survey.datasets.each {|dataset| @datasets << dataset }
+    end
+
+    datasets_hash = {"total_entries" => @datasets.size, "results"=>@datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50), "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+    @datasets_json = datasets_hash.to_json
 
     @variables = Array.new
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml { render :xml=>@surveys}
+      #format.xml { render :xml=>@surveys}
+      format.xml { render :xml=>@datasets}
       #FIXME some sort of bug causes the first character in the xml type declaration to be
       #stripped off before the rdf+xml transfer, this <?xml version="1.0" encoding="UTF-8"?>
       #becomes ?xml version="1.0" encoding="UTF-8"?>
@@ -846,7 +855,7 @@ end
     #sunspot/solr paginates everything, we use client side pagination so just search for 1000 entries and send across - anything more would be a
     #bit crazy really
     # if you want to sort them then add this bit in result.results.sort{|x,y| x.name <=> y.name}.collect
-    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.name, "year"=>variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year"=>variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @survey_search_query = params[:survey_search_query]
     @variables_json = variables_hash.to_json
     #keep track of what  datasets have been searched

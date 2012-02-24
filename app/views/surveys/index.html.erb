@@ -26,28 +26,28 @@
 	padding-right: 10px;
 }
 </style>
-<% if !@surveys.empty? -%>
-<% @surveys.each do |survey| -%>
-  <% survey.datasets.each do |dataset| -%>
-      <%= javascript_tag "addDatasetForSurvey(#{survey.id}, #{dataset.id})"-%>
-  <% end -%>
-<% end -%>
+<% if !@datasets.empty? -%>
+<%# @surveys.each do |survey| -%>
+  <%# @datasets.each do |dataset| -%>
+      <%#= javascript_tag "addDatasetForSurvey(#{dataset.survey.id}, #{dataset.id})"-%>
+  <%# end -%>
+<%# end -%>
 <% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <div id="selected_datasets">
 </div>
-<div style="padding: 20px; font-size:larger;">Select one or more <%= SURVEY.pluralize -%> to search by clicking on the appropriate check box next to the <%= SURVEY -%>, then enter a search term and click the 'Search for variables' button. To view all the available <%= DATASET.pluralize -%> for a <%= SURVEY -%> click the arrow next to the checkbox.</div>
+<div style="padding: 20px; font-size:larger;">Select one or more <%= DATASET.pluralize -%> to search by clicking on the appropriate check box next to the <%= DATASET -%>, then enter a search term and click the 'Search for variables' button.</div>
 <div style="text-align: center; padding-bottom:10px;">
-<%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the " + SURVEY.pluralize + " and " + DATASET.pluralize + " you have selected" -%>
-<%= submit_tag "Search for variables", :id=>"survey_search_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the " + SURVEY.pluralize + " and " + DATASET.pluralize + " you have selected",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('survey_search_button').form.submit();return true;}" -%>
+<%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the " + DATASET.pluralize + " you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"survey_search_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the " +  DATASET.pluralize + " you have selected",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('survey_search_button').form.submit();return true;}" -%>
 </div>
 <div>
-<%= button_to_function 'Select visible', "selectVisibleSurveyCheckboxes(true);", :title=>"Select all the " + SURVEY.pluralize+ " on the current page" -%>	
-<%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the " + SURVEY.pluralize + " (from all pages)" -%>
-<%= button_to_function 'Select none', "selectAllSurveyCheckboxes(false);", :title=>"De-select all the " + SURVEY.pluralize + " (from all pages)" -%>
-<%= button_to_function 'Invert selection', "invertAllSurveyCheckboxes();", :title=>"De-select currently selected " + SURVEY.pluralize + " and vice-versa (from all pages)" -%>
+<%= button_to_function 'Select visible', "selectVisibleSurveyCheckboxes(true);", :title=>"Select all the " + DATASET.pluralize+ " on the current page" -%>	
+<%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the " + DATASET.pluralize + " (from all pages)" -%>
+<%= button_to_function 'Select none', "selectAllSurveyCheckboxes(false);", :title=>"De-select all the " + DATASET.pluralize + " (from all pages)" -%>
+<%= button_to_function 'Invert selection', "invertAllSurveyCheckboxes();", :title=>"De-select currently selected " + DATASET.pluralize + " and vice-versa (from all pages)" -%>
 </div>
 <div style="margin-top:5px;">
-<label for="filter">Filter by <%= SURVEY -%> title and description:</label> <input type="text" id="filter" value="" title="Only show <%= SURVEY.pluralize -%> with titles containing a particular piece of text"></input>
+<label for="filter">Filter by <%= DATASET -%> title and description:</label> <input type="text" id="filter" value="" title="Only show <%= DATASET.pluralize -%> with titles containing a particular piece of text"></input>
 </div>
 <div class="yui-skin-sam">
 <div id="surveys_table"></div>
@@ -55,7 +55,7 @@
 <% end  -%>
 <% end -%>
 <script type= "text/javascript">
-var survey_results = <%= raw @surveys_json -%>;
+var survey_results = <%= raw @datasets_json -%>;
 createSurveyTable();
 </script>
 <script type="text/javascript">
