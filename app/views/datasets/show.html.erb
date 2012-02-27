@@ -1,4 +1,9 @@
 <div class="right">
+<div class="normal-margin-bottom">
+<% if @dataset.nesstar_id && @dataset.nesstar_uri.include?("esds") -%>
+<%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this " + DATASET + " on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
+<% end -%>
+</div>
 <!-- AddThis Button BEGIN -->
 <div class="addthis_toolbox addthis_default_style ">
 <a class="addthis_button_preferred_1"></a>
@@ -30,10 +35,8 @@
 <% end -%>
 <% end -%>
 </ul>
-
-<div class="left"><% if @dataset.nesstar_id && @dataset.nesstar_uri.include?("esds") -%>
-<%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this " + DATASET + " on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
-<% end -%></div><div><h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1></div>
+<ul>
+<h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1>
 
 <div class="show_basic">
   <div class="main_content_left_box">
