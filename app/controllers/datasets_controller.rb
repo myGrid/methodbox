@@ -1,5 +1,7 @@
 require 'rest_client'
 require 'uuidtools'
+require 'zip/zip'
+require 'zip/zipfilesystem'
 #require 'simple-spreadsheet-extractor'
 
 class DatasetsController < ApplicationController
@@ -9,13 +11,38 @@ class DatasetsController < ApplicationController
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new, :create ]
-  before_filter :login_required, :except => [ :show, :index ]
+  before_filter :login_required, :except => [ :download, :show, :index ]
   before_filter :find_datasets, :only => [ :index ]
-  before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
+  before_filter :find_dataset, :only => [ :download, :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter  :update_last_user_activity
   before_filter :find_previous_searches, :only => [ :show ]
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
+
+  def download
+    if !@dataset.nesstar_id
+    if check_auth_for_dataset
+      zip_file_path = File.join(CSV_FILE_PATH, 'zip', @dataset.uuid_filename.split('.')[0] + '.zip')
+      if !File.exists?(zip_file_path)
+        dataset_file_path = File.join(CSV_FILE_PATH, @dataset.uuid_filename)
+        Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
+         zipfile.add(@dataset.filename, dataset_file_path)
+        }
+      end
+        send_file zip_file_path, :filename => @dataset.filename.split('.')[0] + '.zip', :content_type => "application/zip", :disposition => 'attachment', :stream => false
+    else
+      respond_to do |format|
+        flash[:error] = "You do not have permission to download this " + DATASET.downcase
+        format.html { redirect_to dataset_url(@dataset) }
+      end
+    end
+    else
+      respond_to do |format|
+        flash[:error] = "This is a nesstar " + DATASET.downcase + ", you cannot download it via this route."
+        format.html { redirect_to dataset_url(@dataset) }
+      end
+   end
+  end
   
   #update the datafile for this dataset
   def load_new_data
@@ -490,6 +517,44 @@ class DatasetsController < ApplicationController
   def set_tagging_parameters
     subjects=Dataset.subject_counts.sort{|a,b| a.id<=>b.id}.collect{|t| {'id'=>t.id,'name'=>t.name}}
     @all_dataset_tags_as_json= subjects.to_json
+  end
+
+  # Are there any surveys in this data extract which the 
+  # current user does not have permission to download
+  def check_auth_for_dataset
+    auth = true
+    ukda = false
+
+    #first thing is see whether the basic auth checks are ok
+    #we check for view since the basic premise is that if you can see a survey you can download it
+      survey = Dataset.find(params[:id]).survey
+      if !Authorization.is_authorized?("view", nil, survey, current_user)
+        auth = false
+      end
+    #then we see if there are any ukda surveys lurking in the extract
+
+      if survey.survey_type.is_ukda
+        ukda = true
+      end
+    #if its a ukda survey then we better see if they are registered
+    if ukda
+      if current_user != nil
+        @ukda_registered = ukda_registration_check(current_user)
+      else
+        @ukda_registered = false
+      end
+    end
+    
+    if ukda && @ukda_registered
+      #download ok
+      return true
+    elsif !ukda && auth
+      #download ok
+      return true
+    else
+      #download barred
+      return false
+    end
   end
   
 end

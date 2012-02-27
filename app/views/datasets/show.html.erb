@@ -15,14 +15,19 @@
 <ul class="buttons">
 <% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
 <li>
-<%= icon('manage', edit_dataset_path(@dataset), nil, nil, 'Edit ' + DATASET + ' details') -%>
+<%= icon('manage', edit_dataset_url(@dataset), nil, nil, 'Edit ' + DATASET + ' details') -%>
 </li>
 <li>
-<%= icon('manage', update_data_dataset_path(@dataset), nil, nil, 'Upload variable data') -%>
+<%= icon('manage', update_data_dataset_url(@dataset), nil, nil, 'Upload variable data') -%>
 </li>
 <li>
-<%= icon('manage', update_metadata_dataset_path(@dataset), nil, nil, 'Upload variable metadata') -%>
+<%= icon('manage', update_metadata_dataset_url(@dataset), nil, nil, 'Upload variable metadata') -%>
 </li>
+<% if !@dataset.nesstar_id -%>
+<li>
+<%= icon('download', download_dataset_url(@dataset), 'Download the complete ' + DATASET.downcase + ' with all variables', {:title => 'Download the complete ' + DATASET.downcase + ' with all variables'}, 'Download') -%>
+</li>
+<% end -%>
 <% end -%>
 </ul>
 
