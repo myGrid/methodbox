@@ -1,34 +1,29 @@
+var pag;
+var datasetDataTable;
+
 function selectVisibleDatasetCheckboxes(checked) {
-  var visible_records = this.pag.getPageRecords();
-  var rs = this.datasetDataTable.getRecordSet();
+  var visible_records = pag.getPageRecords();
+  var rs = datasetDataTable.getRecordSet();
   for (var index=visible_records[0]; index < visible_records[1] + 1; index++) {
     rs.getRecord(index).setData('Select',checked);
     var id = rs.getRecord(index).getData().id;
-    //if (checked) {
-      selectDataset(id);
-    //} else {
-    //  deselectDataset(id);
-    //}
+    selectDataset(id);
   }  
-  this.datasetDataTable.render();
+  datasetDataTable.render();
 }
 function selectAllDatasetCheckboxes(checked){
-  var rs = this.datasetDataTable.getRecordSet();
+  var rs = datasetDataTable.getRecordSet();
   len = rs.getLength();
 
   for (var index=0; index < len; index++) {
     rs.getRecord(index).setData('Select',checked);
     var id = rs.getRecord(index).getData().id;
-    //if (checked) {
-      selectDataset(id);
-    //} else {
-    //  deselectDataset(id);
-    //}
+    selectDataset(id);
   }  
-  this.datasetDataTable.render();
+  datasetDataTable.render();
 }
 function invertAllDatasetCheckboxes(){
-  var rs = this.datasetDataTable.getRecordSet();
+  var rs = datasetDataTable.getRecordSet();
   len = rs.getLength();
 
   for (var index=0; index < len; index++) {
@@ -36,10 +31,10 @@ function invertAllDatasetCheckboxes(){
     var id = rs.getRecord(index).getData().id;
     selectDataset(id);
   }  
-  this.datasetDataTable.render();
+  datasetDataTable.render();
 }
 
-function createSurveyTable(){
+function createDatasetTable(){
 YAHOO.util.Event.addListener(window, "load", function() {
     YAHOO.example.Basic = function() {
 	    var expansionFormatter  = function(el, oRecord, oColumn, oData) {
@@ -53,21 +48,21 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         };
 
-        this.datasetsURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+        var datasetsURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var id = oRecord.getData().id;
             var title = oRecord.getData().title;
             elLiner.innerHTML = "<a href=\"" + datasets_url + "/" + id + "\">" + title + "</a>";
         };
-        this.surveysURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+        var surveysURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var id = oRecord.getData().survey_id;
             var title = oRecord.getData().survey;
             elLiner.innerHTML = "<a href=\"" + surveys_url + "/" + id + "\">" + title + "</a>";
         };
         // Add the custom formatter to the shortcuts
-        YAHOO.widget.DataTable.Formatter.datasetsFormatter = this.datasetsURLFormatter;
-        YAHOO.widget.DataTable.Formatter.surveysFormatter = this.surveysURLFormatter;
+        YAHOO.widget.DataTable.Formatter.datasetDatasetsFormatter = datasetsURLFormatter;
+        YAHOO.widget.DataTable.Formatter.datasetSurveysFormatter = surveysURLFormatter;
 
-        this.sourceURLFormatter = function(elLiner, oRecord, oColumn, oData) {
+        var sourceURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var source = oRecord.getData().source;
             if (source != "methodbox") {
               elLiner.innerHTML = "<a href=\"" + source + "\">" + source + "</a>";
@@ -76,17 +71,16 @@ YAHOO.util.Event.addListener(window, "load", function() {
             }
         };
         // Add the custom formatter to the shortcuts
-        YAHOO.widget.DataTable.Formatter.sourceFormatter = this.sourceURLFormatter;
+        YAHOO.widget.DataTable.Formatter.datasetSourceFormatter = sourceURLFormatter;
 
         var columnDefs = [
-            //{ label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "title", label: "Title", formatter:"datasetsFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
+		    { key: "title", label: "Title", formatter:"datasetDatasetsFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
 		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
 		    { key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "survey", label: survey, formatter:"surveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "type", label: "Type", sortable: true, minWidth: 100, maxWidth: 100 },
-                    { key: "source", label: "Source", formatter:"sourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
+		    { key: "survey", label: survey, formatter:"datasetSurveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
+		    { key: "type", label: survey_type, sortable: true, minWidth: 100, maxWidth: 100 },
+                    { key: "source", label: "Source", formatter:"datasetSourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
 		];
 
         var datasetDataSource = new YAHOO.util.LocalDataSource(dataset_results,{
@@ -116,10 +110,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
         }
     });
 
-        this.pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: dataset_results.total_entries});
-        this.datasetDataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
+        pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: dataset_results.total_entries});
+        datasetDataTable = new YAHOO.widget.RowExpansionDataTable("datasets_table",
                 columnDefs, datasetDataSource, {caption: "List of all " + datasets_title, sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
-		this.datasetDataTable.subscribe( 'cellClickEvent',
+		datasetDataTable.subscribe( 'cellClickEvent',
 				datasetDataTable.onEventToggleRowExpansion );
     var filterTimeout = null;
     var updateFilter  = function () {
@@ -149,7 +143,6 @@ YAHOO.util.Event.addListener(window, "load", function() {
            var id = recordSet.getRecord(index).getData().id;
            if (id == data.id) {
              if (isSurveyChecked(id)) {
-               //TODO: set the dataset checkboxes
                recordSet.getRecord(index).setData('Select',true);
                rerender = true;
              } else {
@@ -175,8 +168,8 @@ YAHOO.util.Event.addListener(window, "load", function() {
     this.datasetDataTable.subscribe("checkboxClickEvent", function(oArgs){
       var elCheckbox = oArgs.target;
       var newValue = elCheckbox.checked;
-      var record = this.getRecord(elCheckbox);
-      var column = this.getColumn(elCheckbox);
+      var record = datasetDataTable.getRecord(elCheckbox);
+      var column = datasetDataTable.getColumn(elCheckbox);
       record.setData(column.key,newValue); 
       var id = record.getData().id;
       selectDataset(id);

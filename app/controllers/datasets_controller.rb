@@ -118,7 +118,6 @@ class DatasetsController < ApplicationController
     @surveys = get_surveys
     @surveys.sort!{|x,y| x.title <=> y.title}
     @datasets = []
-    puts "surveys " + @surveys.size.to_s
     @surveys.each do |survey|
       survey.datasets.each {|dataset| @datasets << dataset }
     end

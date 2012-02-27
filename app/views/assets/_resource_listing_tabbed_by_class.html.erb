@@ -41,7 +41,11 @@
 					<% if resource_type.downcase == "survey" -%>
                                           <div id="<%= 'assets_tab_' + tab_id.to_s -%>">
                                             <%= render :partial => "surveys/search_results", :locals=> {:surveys => resources, :surveys_json => @surveys_json} -%>
-	                                  </div>				
+	                                  </div>	
+					<% elsif resource_type.downcase == "dataset" -%>
+                                          <div id="<%= 'assets_tab_' + tab_id.to_s -%>">
+                                            <%= render :partial => "datasets/search_results", :locals=> {:datasets => resources, :datasets_json => @datasets_json} -%>
+	                                  </div>			
 					<% elsif resource_type.downcase == "variable" %>
                                           <div id="<%= 'assets_tab_' + tab_id.to_s -%>">
                                             <%= render :partial => "variables/search_results", :locals=> {:variables => resources} -%>

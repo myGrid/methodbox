@@ -17,6 +17,7 @@
 <table>
 <tbody>
 <tr><td><ul><li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'surveys', true -%><%= SURVEY.pluralize -%></li>
+<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'datasets', true -%><%= DATASET.pluralize -%></li>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'variables', true -%>Variables</li>
 <% if logged_in? -%>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'people', true -%>People</li>
@@ -24,7 +25,7 @@
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'methods', true -%>Methods</li>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'extracts', true -%>Data Extracts</li>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'publications', true -%>Publications</li></ul></td></tr>
-<tr><td style="font-size: smaller; font-color: gray;">Select the things you want to search.  Maybe you want to find variables from a survey, perhaps you need to find a particular <%= SURVEY -%>.  Share your results with other researchers or keep them private, the choice is yours.</td></tr>
+<tr><td style="font-size: smaller; font-color: gray;">Select the things you want to search.  Maybe you want to find variables from a <%= SURVEY.downcase -%>, perhaps you need to find a particular <%= DATASET.downcase -%>.  Share your results with other researchers or keep them private, the choice is yours.</td></tr>
 <tr><td style="font-size: smaller;">Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered</td></tr>
 </tbody>
 </table>

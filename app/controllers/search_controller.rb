@@ -26,7 +26,13 @@ class SearchController < ApplicationController
      # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
       #return
     #end
- 
+     if params[:search_type].include?('datasets')
+      results = find_datasets(query, params[:survey_page]).results
+      @results_hash['dataset'] = results
+      datasets = results.sort!{|x,y| x.name <=> y.name}
+      datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+      @datasets_json = datasets_hash.to_json
+    end 
     if params[:search_type].include?('surveys')
       results = find_surveys(query, params[:survey_page]).results
       @results_hash['survey'] = results
@@ -74,6 +80,24 @@ class SearchController < ApplicationController
   end
 
   private
+
+  def find_datasets(query, page)
+    #dataset access is based on the parent survey
+    #only search authorised surveys
+    #surveys are restricted to certain types at the moment
+    surveys = get_surveys
+    surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
+    datasets = []
+    surveys.each do |survey|
+      survey.datasets.each {|dataset| datasets << dataset}
+    end
+    datasets.collect!{|el| el.id}
+    res = Sunspot.search(Dataset) do
+      keywords(query) {minimum_match 1}
+      with(:id, datasets)
+      paginate(:page => page ? page : 1, :per_page => 1000)
+    end
+  end
 
   def find_surveys(query, page)
     #only search authorised surveys
@@ -137,7 +161,7 @@ class SearchController < ApplicationController
       paginate(:page => page ? page : 1, :per_page => 1000)
       with(:dataset_id, datasets)
     end
-    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    variables_hash = {"total_entries"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
     return result
   end
