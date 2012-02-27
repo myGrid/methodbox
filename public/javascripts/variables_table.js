@@ -1,5 +1,6 @@
 var pag;
 var variableDataTable;
+var variableDataSource;
 
 function selectVisibleVariableCheckboxes(checked) {
   var visible_records = pag.getPageRecords();
@@ -97,7 +98,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100 }
 		];
 
-        var variableDataSource = new YAHOO.util.LocalDataSource(results);
+        variableDataSource = new YAHOO.util.LocalDataSource(results);
         variableDataSource.responseType = YAHOO.util.LocalDataSource.TYPE_JSON;
         variableDataSource.responseSchema = {
             resultsList : "results",
