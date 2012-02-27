@@ -285,7 +285,7 @@ class CsvarchivesController < ApplicationController
     set_parameters_for_sharing_form
     #    check_available
     @sorted_variables = @archive.variables
-    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "survey"=>variable.dataset.survey.title, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    variables_hash = {"total_entries"=>@sorted_variables.size, "results" => @sorted_variables.sort{|x,y| x.name <=> y.name}.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.survey.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
     # @surveys = @archive.surveys
     # @scripts = Authorization.authorize_collection("show",@archive.scripts,current_user)
