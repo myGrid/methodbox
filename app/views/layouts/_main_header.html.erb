@@ -1,9 +1,6 @@
 <% if SANDBOX -%>
 <%= render :partial => "layouts/sandbox_warning_header" -%>
 <% end -%>
-<% if logged_in? && current_user.is_admin? -%>
-<%= link_to "Admin functions", admin_url -%>
-<% end -%>
 <div style="clear:both;">
 </div>
 <% if controller.controller_name.downcase == "home" && controller.action_name.downcase == "search" -%>

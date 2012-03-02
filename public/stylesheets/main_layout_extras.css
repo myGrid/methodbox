@@ -737,3 +737,10 @@ body {margin:auto;}
     font-style: italic;
     margin-top: 1em;
 }
+/* main menu */
+#methodboxmenu {
+  position: static;
+}
+.centered-controls {
+  text-align: center;
+}

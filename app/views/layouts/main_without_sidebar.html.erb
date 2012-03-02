@@ -62,13 +62,14 @@ var loader = new YAHOO.util.YUILoader({
 loader.insert();
 </script>
 <% else -%>
-<!-- Combo-handled YUI CSS files: --> 
-<!--<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?2.9.0/build/reset-fonts-grids/reset-fonts-grids.css&2.9.0/build/base/base-min.css&2.9.0/build/assets/skins/sam/skin.css">-->
+<!-- load yui over the web for the moment -->
+<!-- Combo-handled YUI CSS files: -->
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?2.9.0/build/reset-fonts-grids/reset-fonts-grids.css&2.9.0/build/base/base-min.css&2.9.0/build/assets/skins/sam/skin.css">
 <!-- Combo-handled YUI JS files: -->
-<!--<script type="text/javascript" src="http://yui.yahooapis.com/combo?2.9.0/build/yahoo-dom-event/yahoo-dom-event.js&2.9.0/build/element/element-min.js&2.9.0/build/button/button-min.js&2.9.0/build/connection/connection_core-min.js&2.9.0/build/container/container-min.js&2.9.0/build/cookie/cookie-min.js&2.9.0/build/datasource/datasource-min.js&2.9.0/build/paginator/paginator-min.js&2.9.0/build/datatable/datatable-min.js&2.9.0/build/json/json-min.js&2.9.0/build/tabview/tabview-min.js"></script>-->
-<%= javascript_include_tag :defaults, 'yui.js', 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','datatable_expander.js', 'variable_table_expander.js' -%>
+<script type="text/javascript" src="http://yui.yahooapis.com/combo?2.9.0/build/yahoo-dom-event/yahoo-dom-event.js&2.9.0/build/element/element-min.js&2.9.0/build/container/container-min.js&2.9.0/build/menu/menu-min.js&2.9.0/build/button/button-min.js&2.9.0/build/connection/connection_core-min.js&2.9.0/build/cookie/cookie-min.js&2.9.0/build/datasource/datasource-min.js&2.9.0/build/paginator/paginator-min.js&2.9.0/build/datatable/datatable-min.js&2.9.0/build/json/json-min.js&2.9.0/build/tabview/tabview-min.js"></script>
+<%= javascript_include_tag :defaults, 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','datatable_expander.js', 'variable_table_expander.js' -%>
 
-<%= stylesheet_link_tag 'yui', 'alphabetical_pagination', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', 'main_layout_extras', :cache=>'css_cached' -%>
+<%= stylesheet_link_tag 'alphabetical_pagination', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', 'main_layout_extras', :cache=>'css_cached' -%>
 
 <% end -%>
 
