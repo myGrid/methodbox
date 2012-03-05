@@ -7,7 +7,9 @@
 <% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
 <%= render :partial => "layouts/simple_logged_in_controls" -%>
 <% else -%>
+<div class="left normal-margin-top">
 <%= render :partial => "layouts/logged_out_controls" -%>
+</div>
 <% end -%>
 <%= render :partial => "layouts/welcome_message" -%>
 <% else -%>
@@ -20,8 +22,10 @@
 <% elsif controller.controller_name.downcase!= "home" -%>
 <%= render :partial => "layouts/simple_logged_out_controls" -%>
 <% else -%>
+<div class="small-margin-bottom">
 <%= render :partial => "layouts/logged_out_controls" -%>
 <% end -%>
+</div>
 </div>
 <%= render :partial => "layouts/header_search_bar" -%>
 <% end -%>

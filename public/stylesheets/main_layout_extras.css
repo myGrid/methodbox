@@ -353,7 +353,6 @@ ul.vbuttons .category-browse.li {
 /* header styles*/
 #small-hd {
 	margin-left: 1em;
-	margin-top: 1em;
 }
 /* small header without top margin */
 #smaller-hd {
@@ -573,6 +572,9 @@ div.exhibit-collectionView-group h2 {
 }
 
 /* some extra margin and padding settings */
+.no-margin {
+  margin: 0;
+}
 .normal-margin-bottom {
 	margin-bottom: 1em;
 }
@@ -710,6 +712,7 @@ body {margin:auto;}
 	-moz-border-radius:6px;
 	border: none;
 	background-color: wheat;
+        text-align: center;
 }
 #login-tooltip-question {
     color: sienna;
@@ -746,4 +749,8 @@ body {margin:auto;}
 }
 .smaller-font {
   font-size: 93%;
+}
+.header-search-div {
+  width: 80%; 
+  padding-right: 10px;
 }
