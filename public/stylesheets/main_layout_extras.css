@@ -751,6 +751,8 @@ body {margin:auto;}
   font-size: 93%;
 }
 .header-search-div {
-  width: 80%; 
-  padding-right: 10px;
+  width: 75%; 
+}
+.header-submit-div {
+  width: 20%; 
 }
