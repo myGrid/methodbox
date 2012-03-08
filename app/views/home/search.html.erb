@@ -16,8 +16,7 @@
 <div style="display: block; width: 100%;">
 <table>
 <tbody>
-<tr><td><ul><li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'surveys', true -%><%= SURVEY.pluralize -%></li>
-<li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'datasets', true -%><%= DATASET.pluralize -%></li>
+<tr><td><ul><li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'surveys', true -%><%= SURVEY.pluralize -%> and <%= DATASET.pluralize -%></li>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'variables', true -%>Variables</li>
 <% if logged_in? -%>
 <li style="display: inline;list-style-type: none;"><%= check_box_tag 'search_type[]', 'people', true -%>People</li>

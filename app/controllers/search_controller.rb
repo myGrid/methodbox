@@ -26,19 +26,29 @@ class SearchController < ApplicationController
      # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
       #return
     #end
-     if params[:search_type].include?('datasets')
-      results = find_datasets(query, params[:survey_page]).results
+     #if params[:search_type].include?('datasets')
+      #results = find_datasets(query, params[:survey_page]).results
+      #@results_hash['dataset'] = results
+      #datasets = results.sort!{|x,y| x.name <=> y.name}
+      #datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+      #@datasets_json = datasets_hash.to_json
+    #end 
+    #only show dataset results
+    if params[:search_type].include?('surveys')
+      dataset_results = find_datasets(query, params[:survey_page]).results
+      survey_results = find_surveys(query, params[:survey_page]).results
+      survey_datasets = []
+      survey_results.each do |survey|
+        survey.datasets.each do |dataset|
+          survey_datasets << dataset
+        end
+      end
+      results = dataset_results + survey_datasets
+      results.uniq!
       @results_hash['dataset'] = results
       datasets = results.sort!{|x,y| x.name <=> y.name}
       datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
       @datasets_json = datasets_hash.to_json
-    end 
-    if params[:search_type].include?('surveys')
-      results = find_surveys(query, params[:survey_page]).results
-      @results_hash['survey'] = results
-      surveys = results.sort!{|x,y| x.title <=> y.title}
-      surveys_hash = {"total_entries" => surveys.size, "results"=>surveys.collect{ |s| {"id" => s.id, "title" => s.title, "description" => truncate_words(s.description, 50),  "type" => SurveyType.find(s.survey_type).name, "year" => s.year ? s.year : 'N/A', "source" => s.nesstar_id ? s.nesstar_uri : "methodbox"}}}
-      @surveys_json = surveys_hash.to_json
     end 
     if params[:search_type].include?('variables')
       #don't sort variable results but return by order of relevance

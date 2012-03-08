@@ -56,7 +56,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var surveysURLFormatter = function(elLiner, oRecord, oColumn, oData) {
             var id = oRecord.getData().survey_id;
             var title = oRecord.getData().survey;
-            elLiner.innerHTML = "<a href=\"" + surveys_url + "/" + id + "\">" + title + "</a>";
+            elLiner.innerHTML = "<a title=\"Click to view more information on this " + survey + " and its " + dataset + "s\" href=\"" + surveys_url + "/" + id + "\">" + title + "</a>";
         };
         // Add the custom formatter to the shortcuts
         YAHOO.widget.DataTable.Formatter.datasetDatasetsFormatter = datasetsURLFormatter;
