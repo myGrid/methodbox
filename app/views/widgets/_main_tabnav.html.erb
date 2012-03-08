@@ -32,8 +32,20 @@
             <li class="yuimenubaritem">
             
                 <a class="yuimenubaritemlabel" href="<%= scripts_url-%>" title="Advice and scripts for data cleaning, statistical analysis and more">
-                    Methods & Scripts
-                </a>                                     
+                    <%= SCRIPT_HEADER -%>
+                </a>  
+                <!-- A submenu -->
+
+                <div id="scripts" class="yuimenu">
+                    <div class="bd">
+                        <ul>
+
+                        <li><a class="yuimenuitemlabel" href="<%= scripts_url -%>" title="Advice and scripts for data cleaning, statistical analysis and more">View all <%= SCRIPT_HEADER.downcase -%></a></li>
+                        <li><a class="yuimenuitemlabel" href="<%= new_script_url -%>" title="Add a new <%= SCRIPT-%>">New <%= SCRIPT -%></a></li>
+
+                        </ul>
+                    </div>
+                </div>                                         
             
             </li>
 <% if logged_in? -%>
@@ -152,8 +164,10 @@ YAHOO.util.Event.onContentReady("methodboxmenu", function () {
 	//	constructor is the id of the element in the DOM that represents 
 	//	the root Menu instance.
  
-    var oMenu = new YAHOO.widget.Menu("methodboxmenu", {
-      position: "static"
+    var oMenu = new YAHOO.widget.MenuBar("methodboxmenu", {
+      autosubmenudisplay: true,
+      hidedelay: 750,
+      lazyload: true
     });
 
  

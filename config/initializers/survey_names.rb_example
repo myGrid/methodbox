@@ -1,3 +1,7 @@
 SURVEY_TYPE="Data Series"
 SURVEY="Data Set"
 DATASET="Data File"
+#eg download this Method
+SCRIPT="Method"
+#eg in the menu bar
+SCRIPT_HEADER="Methods, Scripts & Syntax"
