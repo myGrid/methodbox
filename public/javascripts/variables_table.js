@@ -89,13 +89,13 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.VariableRowExpansionDataTable.formatRowExpansion},
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "name", label: "Title", formatter:"variableVariablesFormatter", sortable: true, maxWidth: 100 },
-		    { key: "description", label: "Description", sortable: true, width: 300 },
-                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, maxWidth: 200 },
-		    { key: "dataset", label: dataset, formatter:"variableDatasetsFormatter", sortable: true, maxWidth: 200 },
-                    { key: "survey", label: survey, formatter:"variableSurveysFormatter", sortable: true, maxWidth: 200 },
-		    { key: "year", label: "Year", sortable: true, maxWidth: 100 },
-		    { key: "popularity", label: "Popularity", sortable: true, maxWidth: 100 }
+		    { key: "name", label: "Title", formatter:"variableVariablesFormatter", sortable: true, resizeable: true },
+		    { key: "description", label: "Description", sortable: true, width: 300, resizeable: true },
+                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, resizeable: true },
+		    { key: "dataset", label: dataset, formatter:"variableDatasetsFormatter", sortable: true, resizeable: true },
+                    { key: "survey", label: survey, formatter:"variableSurveysFormatter", sortable: true, resizeable: true },
+		    { key: "year", label: "Year", sortable: true, resizeable: true },
+		    { key: "popularity", label: "Popularity", sortable: true, resizeable: true }
 		];
 
         variableDataSource = new YAHOO.util.LocalDataSource(results);
@@ -107,7 +107,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 //to sort the vars add this to the table config sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC },
         pag = new YAHOO.widget.Paginator({rowsPerPage: 50, totalRecords: results.total_entries});
         variableDataTable = new YAHOO.widget.VariableRowExpansionDataTable("variables_table",
-                columnDefs, variableDataSource, { paginator : pag, rowExpansionTemplate :'{id}' });
+                columnDefs, variableDataSource, { draggableColumns:true, paginator : pag, rowExpansionTemplate :'{id}' });
 	variableDataTable.subscribe( 'cellClickEvent', variableDataTable.onEventToggleRowExpansion );
         return {
             oDS: variableDataSource,

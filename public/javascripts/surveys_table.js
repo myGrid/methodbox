@@ -78,11 +78,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
         var columnDefs = [
             { label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "title", label: "Title", formatter:"surveySurveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
+		    { key: "title", label: "Title", formatter:"surveySurveysFormatter", sortable: true, width: 100, resizeable: true },
+		    { key: "description", label: "Description", sortable: true, width: 500, resizeable: true },
 		    //{ key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "type", label: survey_type, sortable: true, minWidth: 100, maxWidth: 100 },
-                    { key: "source", label: "Source", formatter:"surveySourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
+		    { key: "type", label: survey_type, sortable: true, width: 100, resizeable: true },
+                    { key: "source", label: "Source", formatter:"surveySourceFormatter", sortable: true, width: 100, resizeable: true }
 		];
 
         //var surveyDataSource = new YAHOO.util.LocalDataSource(survey_results);
@@ -115,7 +115,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: survey_results.total_entries});
         surveyDataTable = new YAHOO.widget.RowExpansionDataTable("surveys_table",
-                columnDefs, surveyDataSource, {caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
+                columnDefs, surveyDataSource, {draggableColumns:true, caption: "List of all surveys", sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
 		surveyDataTable.subscribe( 'cellClickEvent',
 				surveyDataTable.onEventToggleRowExpansion );
     var filterTimeout = null;

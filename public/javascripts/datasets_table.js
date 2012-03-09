@@ -75,12 +75,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         var columnDefs = [
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "title", label: "Title", formatter:"datasetDatasetsFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "description", label: "Description", sortable: true, minWidth: 500, maxWidth: 500 },
-		    { key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "survey", label: survey, formatter:"datasetSurveysFormatter", sortable: true, minWidth: 100, maxWidth: 100 },
-		    { key: "type", label: survey_type, sortable: true, minWidth: 100, maxWidth: 100 },
-                    { key: "source", label: "Source", formatter:"datasetSourceFormatter", sortable: true, minWidth: 100, maxWidth: 100 }
+		    { key: "title", label: "Title", formatter:"datasetDatasetsFormatter", sortable: true, width: 100, resizeable: true },
+		    { key: "description", label: "Description", sortable: true, width: 500, resizeable: true },
+		    { key: "year", label: "Year", sortable: true, width: 100, resizeable: true },
+		    { key: "survey", label: survey, formatter:"datasetSurveysFormatter", sortable: true, width: 100, resizeable: true },
+		    { key: "type", label: survey_type, sortable: true, width: 100, resizeable: true },
+                    { key: "source", label: "Source", formatter:"datasetSourceFormatter", sortable: true, width: 100, resizeable: true }
 		];
 
         var datasetDataSource = new YAHOO.util.LocalDataSource(dataset_results,{
@@ -112,7 +112,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: dataset_results.total_entries});
         datasetDataTable = new YAHOO.widget.RowExpansionDataTable("datasets_table",
-                columnDefs, datasetDataSource, {caption: "List of all " + datasets_title, sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
+                columnDefs, datasetDataSource, {draggableColumns:true, caption: "List of all " + datasets_title, sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
 		datasetDataTable.subscribe( 'cellClickEvent',
 				datasetDataTable.onEventToggleRowExpansion );
     var filterTimeout = null;
