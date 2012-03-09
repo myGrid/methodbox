@@ -33,13 +33,14 @@ class Mailer < ActionMailer::Base
          :host=>base_host
   end
   
-  def metadata_processed(dataset_id, user_id, base_host)
+  def metadata_processed(dataset_id, user_id, missing_variables, base_host)
     recipients User.find(user_id).person.email
     from NOREPLY_SENDER
     subject "Metadta processed for dataset " + Dataset.find(dataset_id).name
     sent_on    Time.now
     body :name => User.find(user_id).person.name,
          :dataset => Dataset.find(dataset_id),
+         :missing_variables => missing_variables
          :host=>base_host
   end
   

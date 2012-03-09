@@ -1,5 +1,7 @@
 # Use delayed job. Process metadata for a dataset
 
+require 'ddi-parser'
+
 module ProcessMetadataJob
   
   class StartJobTask < Struct.new(:dataset_id, :user_id, :file_type, :filename, :update_reason, :base_host)
@@ -7,7 +9,7 @@ module ProcessMetadataJob
     
     cattr_accessor :logger
     self.logger = RAILS_DEFAULT_LOGGER
-    
+    @missing_variables=[]
     def perform
       begin
       dataset = Dataset.find(dataset_id)
@@ -17,6 +19,8 @@ module ProcessMetadataJob
         read_ccsr_metadata
       when "Methodbox"
         read_methodbox_metadata
+      when "DDI"
+        read_ddi_metadata
       end
       dataset.update_attributes(:has_metadata => true)
       email_user
@@ -32,7 +36,7 @@ module ProcessMetadataJob
     # can different people add datasets to a survey - permissions issue?
     # tell the user that the dataset has been processed. 
     def email_user
-      Mailer.deliver_metadata_processed(dataset_id, user_id, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
+      Mailer.deliver_metadata_processed(dataset_id, user_id, @missing_variables, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
     end
     
     #split the dataset into columns
@@ -102,7 +106,6 @@ module ProcessMetadataJob
       #Read the metadata from a ccsr type xml file for a particular survey
       def read_ccsr_metadata
 
-        @missing_variables=[]
         parser = XML::Parser.io(File.open(filename, "r"), :encoding => XML::Encoding::ISO_8859_1)
         doc = parser.parse
 
@@ -163,5 +166,76 @@ module ProcessMetadataJob
     end
     end
 
-end
+    #import ddi metadata for an existing dataset
+    def read_ddi_metadata
+      dataset = Dataset.find(dataset_id)
+      ddi_parser = DDI::Parser.new
+      all_variables = Variable.all(:dataset => dataset)
+      all_variable_ids = all_variables.collect{|var| var.id}
+      parsed_variable_ids
+      new_variables = []
+      #the encoding may be a bit of a fudge but all these nesstar ddi files seem to have this encoding and without it nothing works
+      parser = XML::Parser.io(File.open(filename, "r"), :encoding => XML::Encoding::ISO_8859_1)
+      doc = parser.parse
+      study = ddi_parser.parse doc
+      #create variables for the dataset
+      study.variables.each do |variable|
+        #TODO find the variable from the dataset and if nil then add new var since this is from nesstar and we don't use the dataset to find the vars
+        existing_variable = Variable.all(:conditions=>{:name=>variable.name, :dataset => dataset}).first
+        if variable.group == nil
+          variable_category = 'N/A'
+        end
+        parsed_variable_ids << existing_variable.id
+        if existing_variable == nil
+          var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable_category, :interval => variable.interval, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
+          logger.info Time.now.to_s + " : creating new variable " + variable.name + " from " + study.title
+          var.save
+          new_variables << var.id
+        end          
+        variable.categories.each do |category|
+          valDom = ValueDomain.all(:conditions=>{:variable => var, :value => category.value, :label => category.label}).first   
+          if valDom == nil 
+            valDom = ValueDomain.new(:variable => var, :value => category.value, :label => category.label)
+            valDom.save
+          end     
+          category.category_statistics.each do |statistic|
+          #the frequency statistics for the value domain
+          #guessing that 'freq' is consistent, however......
+            if statistic.type == 'freq'
+              val_dom_stat = ValueDomainStatistic.all(:conditions=>{:frequency => statistic.value, :value_domain => valDom}).first
+              if val_dom_stat == nil
+                val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain => valDom)
+                val_dom_stat.save
+              else
+                val_dom_stat.update_attributes(:frequency => statistic.value) if val_dom_stat.frequency != statistic.value
+              end
+              break
+            end
+          end
+        end
+        variable.summary_stats.each do |summary_stat|
+          begin
+            if summary_stat.type == 'mean'
+              var.update_attributes(:mean => summary_stat.value) if var.mean != summary_stat.value
+            elsif summary_stat.type == 'stdev'
+              var.update_attributes(:standard_deviation => summary_stat.value) if var.standard_deviation != summary_stat.value
+            elsif summary_stat.type == 'invd'
+              var.update_attributes(:invalid_entries => summary_stat.value) if var.invalid_entries != summary_stat.value
+            elsif summary_stat.type == 'vald'
+              var.update_attributes(:valid_entries => summary_stat.value) if var.valid_entries != summary_stat.value
+            end
+          rescue
+            logger.warn Time.now.to_s + 'One of the summary stats failed for variable ' +  var.id.to_s
+          end
+        end
+        question = variable.question != nil ? variable.question : ""
+        interview = variable.interview_instruction != nil ? variable.interview_instruction : ""
+        derivation = question + interview
+        if variable.question != nil && variable.interview_instruction != nil
+          var.update_attributes(:dermethod => derivation) if var.dermethod != derivation
+        end
+      end
+      @missing_variables = all_variable_ids - parsed_variable_ids
+    end
+  end
 end
