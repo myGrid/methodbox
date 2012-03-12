@@ -11,7 +11,7 @@
           <% if current_user.is_admin? && @survey.survey_type.is_ukda %>
             <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET.downcase+ " to this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase}, "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase -%></li>
           <% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-            <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase } -%></li>
+            <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase },"Upload a new " +  DATASET.downcase -%></li>
           <% end %>
         <% end %>
       </ul>
