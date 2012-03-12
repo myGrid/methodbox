@@ -584,6 +584,12 @@ div.exhibit-collectionView-group h2 {
 .medium-padding {
 	padding: 5px;
 }
+.big-padding-top {
+	padding-top: 8em;
+}
+.medium-padding-bottom {
+	padding-bottom: 5px;
+}
 /* extra marging and padding settings over */
 
 /* extra font settings */
@@ -701,8 +707,8 @@ body {margin:auto;}
 }
 /* centre the welcome text to align with the search box */
 .middle-padding {
-	padding-left: 30%;
-	padding-right: 30%;
+	padding-left: 25%;
+	padding-right: 25%;
 }
 
 #login-list {
@@ -755,4 +761,13 @@ body {margin:auto;}
 }
 .header-submit-div {
   width: 20%; 
+}
+.addthis-toolbox {
+	border: 1px solid black;
+	padding: 5px;
+	border-radius: 5px;
+	box-shadow: -5px 5px #888;
+	background: white;
+	margin-top: 1em;
+	margin-right: 0.5em;
 }

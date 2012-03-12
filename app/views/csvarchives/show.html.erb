@@ -31,20 +31,6 @@
 	padding-right: 10px;
 }
 </style>
-<div class="right">
-<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style ">
-<a class="addthis_button_preferred_1"></a>
-<a class="addthis_button_preferred_2"></a>
-<a class="addthis_button_preferred_3"></a>
-<a class="addthis_button_preferred_4"></a>
-<a class="addthis_button_compact"></a>
-<a class="addthis_counter addthis_bubble_style"></a>
-</div>
-<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
-<!-- AddThis Button END -->
-<%#= addthis_bookmark_button(csvarchive_url(@archive), @archive.title) -%>
-</div>
 <ul class="buttons">
   <%= hidden_field_tag "format_type", "csv" -%>
 	<% if current_user && current_user.id != @archive.contributor_id %>

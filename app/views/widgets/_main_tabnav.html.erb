@@ -26,7 +26,19 @@
             
                 <a class="yuimenubaritemlabel" href="<%= csvarchives_url -%>" title="Data sources created by MethodBox users">
                     Data Extracts
-                </a>                  
+                </a>       
+                <div id="dataextracts" class="yuimenu">
+                    <div class="bd">
+                        <ul>
+
+                        <li><a class="yuimenuitemlabel" href="<%= csvarchives_url -%>" title="Data sources created by MethodBox users">View all Data Extracts</a></li>
+<% if logged_in? %>
+                        <li><a class="yuimenuitemlabel" href="<%= new_csvarchive_url -%>" title="Create a new Data Extract from the variables in your cart">Create a new Data Extract</a></li>
+<% end -%>
+
+                        </ul>
+                    </div>
+                </div>           
             
             </li>
             <li class="yuimenubaritem">
@@ -41,8 +53,9 @@
                         <ul>
 
                         <li><a class="yuimenuitemlabel" href="<%= scripts_url -%>" title="Advice and scripts for data cleaning, statistical analysis and more">View all <%= SCRIPT_HEADER.downcase -%></a></li>
-                        <li><a class="yuimenuitemlabel" href="<%= new_script_url -%>" title="Add a new <%= SCRIPT-%>">New <%= SCRIPT -%></a></li>
-
+<% if logged_in? %>
+                        <li><a class="yuimenuitemlabel" href="<%= new_script_url -%>" title="Create a new <%= SCRIPT-%> by uploading a file containing information/syntax/help">Add a new <%= SCRIPT -%></a></li>
+<% end -%>
                         </ul>
                     </div>
                 </div>                                         
