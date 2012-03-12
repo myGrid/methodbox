@@ -21,7 +21,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :cart, :collection => {:remove_from_cart => :post}, :only=> :none, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :datasets, :as => DATASET.gsub(" ", "_"), :member => {:download => :get, :update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :datasets, :as => DATASET.gsub(" ", "_"), :member => {:update_metadata_nesstar => :get, :download => :get, :update_metadata=> :get, :update_data=>:get, :load_new_metadata => :post, :load_new_data => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   #not currently used
   #map.resources :variable_links, :requirements => {:protocol => ROUTES_PROTOCOL}
