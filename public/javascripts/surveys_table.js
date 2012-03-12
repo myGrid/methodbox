@@ -103,7 +103,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
                 for (i = 0, l = data.length; i < l; ++i) {
                     if (data[i].title.toLowerCase().indexOf(req) != -1) {
                         filtered.push(data[i]);
-                    } else if (data[i].description.toLowerCase().indexOf(req) != -1) {
+                    } else if (data[i].description != null && data[i].description.toLowerCase().indexOf(req) != -1) {
 						filtered.push(data[i]);
 					}
                 }
