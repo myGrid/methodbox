@@ -2,6 +2,7 @@ require 'rest_client'
 require 'uuidtools'
 require 'zip/zip'
 require 'zip/zipfilesystem'
+require 'nesstar-api'
 #require 'simple-spreadsheet-extractor'
 
 class DatasetsController < ApplicationController
@@ -13,12 +14,32 @@ class DatasetsController < ApplicationController
   before_filter :authorize_new, :only => [ :new, :create ]
   before_filter :login_required, :except => [ :download, :show, :index ]
   before_filter :find_datasets, :only => [ :index ]
-  before_filter :find_dataset, :only => [ :download, :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
+  before_filter :find_dataset, :only => [ :update_metadata_nesstar, :download, :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter  :update_last_user_activity
   before_filter :find_previous_searches, :only => [ :show ]
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
 
+  #download ddi file from nesstar server and process using delayed job
+  def update_metadata_nesstar
+    parser = Nesstar::Api::CatalogApi.new
+    ddi_file = parser.get_ddi @dataset.nesstar_uri, @dataset.nesstar_id
+    uuid = UUIDTools::UUID.random_create.to_s
+    filename = File.join(METADATA_PATH, uuid + ".xml")
+    uf = File.open(filename,"w")
+    ddi_file.each_line do |line|                
+      uf.write(line)
+    end
+    uf.close
+    begin 
+       logger.info(Time.now.to_s + " Starting nesstar metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
+       Delayed::Job.enqueue ProcessMetadataJob::StartJobTask.new(@dataset.id, current_user.id, 'DDI', uf.path, params[:update][:reason], base_host)
+     rescue Exception => e
+       logger.error(Time.now.to_s + " " + e)
+       raise e
+     end    
+  end
+  
   def download
     if !@dataset.nesstar_id
     if check_auth_for_dataset
