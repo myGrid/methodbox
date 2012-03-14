@@ -16,6 +16,7 @@
   var survey = "<%= SURVEY -%>";
   var dataset = "<%= DATASET -%>";
   var datasets_title = "<%= DATASET.pluralize.downcase -%>";
+  var dataset_variables_url = "<%= retrieve_variables_datasets_url -%>";
 </script>
 <%= csrf_meta_tag %>
 <% if defined? YUI_LOADER -%>
