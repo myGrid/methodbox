@@ -1,51 +1,5 @@
 <%= javascript_include_tag 'variable_table_check.js' -%>
 <%= javascript_include_tag 'server_paginated_variables_table.js' -%>
-<div class="left center" style="width:20%;">
-<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
-	<%= hidden_field_tag "entry_ids[]", @dataset.id.to_s -%>
-<div>
-  <div><%= text_field_tag :survey_search_query, @survey_search_query %>
-    <%= submit_tag 'Search this ' + DATASET,:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
-  </div>
-</div>
-<% end -%>
-</div>
-<div class="right" style="width: 20%;">
-<div class="normal-margin-bottom">
-<% if @dataset.nesstar_id && @dataset.nesstar_uri.include?("esds") -%>
-<%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this " + DATASET + " on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
-<% end -%>
-</div>
-</div>
-<div>
-<ul class="buttons">
-<% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
-<li>
-<%= icon('manage', edit_dataset_url(@dataset), nil, nil, 'Edit ' + DATASET + ' details') -%>
-</li>
-<% if !@dataset.nesstar_id %>
-<li>
-<%= icon('manage', update_data_dataset_url(@dataset), nil, nil, 'Upload variable data') -%>
-</li>
-<li>
-<%= icon('manage', update_metadata_dataset_url(@dataset), nil, nil, 'Upload variable metadata') -%>
-</li>
-<li>
-<%= icon('download', download_dataset_url(@dataset), 'Download the complete ' + DATASET.downcase + ' with all variables', {:title => 'Download the complete ' + DATASET.downcase + ' with all variables'}, 'Download') -%>
-</li>
-<% end -%>
-<% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
-<% if @dataset.nesstar_id %>
-<li>
-<%= icon('manage', update_metadata_nesstar_dataset_url(@dataset), nil, nil, 'Update metadata from nesstar') -%>
-</li>
-<% end -%>
-<% end -%>
-<% end -%>
-</ul>
-</div>
-<div style="clear:both">
-</div>
 <h1 class="contribution_title"><%= DATASET -%>: <%= h(@dataset.name) -%></h1>
 <div class="yui-skin-sam">
   <div id="datasets_tabview" class="yui-navset">
@@ -56,9 +10,55 @@
 	<div class="yui-content">
 	  <div id="dataset_tab_details">
 		<div class="show_basic">
-		  <div class="main_content_left_box">
-			<%# @survey_search_query="Enter search terms" unless @survey_search_query -%>
-		    <div class="box_about_actor">
+		  <div>
+			<div class="medium-padding">
+			<div class="left center" style="width:20%;">
+			<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
+				<%= hidden_field_tag "entry_ids[]", @dataset.id.to_s -%>
+			<div>
+			  <div><%= text_field_tag :survey_search_query, @survey_search_query %>
+			    <%= submit_tag 'Search this ' + DATASET,:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
+			  </div>
+			</div>
+			<% end -%>
+			</div>
+			<div class="right" style="width: 20%;">
+			<div class="normal-margin-bottom">
+			<% if @dataset.nesstar_id && @dataset.nesstar_uri.include?("esds") -%>
+			<%= link_to(image_tag('esdslogo.gif', :size=>"100x50", :alt=>"View information about this " + DATASET + " on the Economic and Social Data Service website", :style=>"vertical-align: top;"), 'http://www.esds.ac.uk/findingData/snDescription.asp?sn=' + @dataset.nesstar_id.split('-')[0], {:confirm=> "This is a third party resource and has not been verified by MethodBox.", :title=>"View information about this dataset on the Economic and Social Data Service website"})-%>
+			<% end -%>
+			</div>
+			</div>
+			<div>
+			<ul class="buttons">
+			<% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
+			<li>
+			<%= icon('manage', edit_dataset_url(@dataset), nil, nil, 'Edit ' + DATASET + ' details') -%>
+			</li>
+			<% if !@dataset.nesstar_id %>
+			<li>
+			<%= icon('manage', update_data_dataset_url(@dataset), nil, nil, 'Upload variable data') -%>
+			</li>
+			<li>
+			<%= icon('manage', update_metadata_dataset_url(@dataset), nil, nil, 'Upload variable metadata') -%>
+			</li>
+			<li>
+			<%= icon('download', download_dataset_url(@dataset), 'Download the complete ' + DATASET.downcase + ' with all variables', {:title => 'Download the complete ' + DATASET.downcase + ' with all variables'}, 'Download') -%>
+			</li>
+			<% end -%>
+			<% if Authorization.is_authorized?("edit", nil, @dataset.survey, current_user) || current_user && @dataset.survey.survey_type.is_ukda && current_user.is_admin? -%>
+			<% if @dataset.nesstar_id %>
+			<li>
+			<%= icon('manage', update_metadata_nesstar_dataset_url(@dataset), nil, nil, 'Update metadata from nesstar') -%>
+			</li>
+			<% end -%>
+			<% end -%>
+			<% end -%>
+			</ul>
+			</div>
+			</div>
+			<div style="clear:both">
+			</div>		    <div class="box_about_actor">
 		      <p>
 		        <b>Title:</b>
 		        <span class="title"><%=h @dataset.name -%></span>
