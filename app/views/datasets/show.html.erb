@@ -78,18 +78,18 @@
 			        <b><%= SURVEY -%>:</b>
 			        <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
 			      </p>
-			<% if @dataset.current_version -%>
+			<!-- <%# if @dataset.current_version -%>
 			      <p>
 			        <b>Revision:</b>
-			        <span class="title"><%=h @dataset.current_version -%></span>
+			        <span class="title"><%#=h @dataset.current_version -%></span>
 			      </p>
-			<% end -%>
-			<% if @dataset.current_version > 1 -%>
+			<%# end -%> -->
+			<!-- <%# if @dataset.current_version > 1 -%>
 			<p>
 			<b>Reason for update:</b>
-			        <span class="title"><%=h @dataset.reason_for_update -%></span>
+			        <span class="title"><%#=h @dataset.reason_for_update -%></span>
 			</p>
-			<% end -%>
+			<%# end -%> -->
 		      </p>
 
 		    </div>

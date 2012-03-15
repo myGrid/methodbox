@@ -91,11 +91,12 @@ YAHOO.util.Event.addListener(window, "load", function() {
             { key:"Select", label: "", formatter: "checkbox"},
 		    { key: "name", label: "Title", formatter:"variableVariablesFormatter", sortable: true, resizeable: true },
 		    { key: "description", label: "Description", sortable: true, width: 300, resizeable: true },
-                    { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, resizeable: true },
-		    { key: "dataset", label: dataset, formatter:"variableDatasetsFormatter", sortable: true, resizeable: true },
-                    { key: "survey", label: survey, formatter:"variableSurveysFormatter", sortable: true, resizeable: true },
-		    { key: "year", label: "Year", sortable: true, resizeable: true },
-		    { key: "popularity", label: "Popularity", sortable: true, resizeable: true }
+            { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, resizeable: true },
+            //no point sorting for a single survey or showing the dataset
+		    //{ key: "dataset", label: dataset, formatter:"variableDatasetsFormatter", sortable: false, resizeable: true },
+            { key: "survey", label: survey, formatter:"variableSurveysFormatter", sortable: false, resizeable: true },
+		    { key: "year", label: "Year", sortable: true, resizeable: true }//,
+		    //{ key: "popularity", label: "Popularity", sortable: true, resizeable: true }
 		];
 		//request which is sent to the server
 		var generateRequest = function(oState, oSelf) {

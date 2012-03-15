@@ -21,7 +21,101 @@ class DatasetsController < ApplicationController
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
 
   def retrieve_variables
-    @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order=>"#{params[:sort]} #{params[:dir]}", :limit=>20, :offset=>params[:startIndex].to_i) 
+    case params[:sort]
+      when "name"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "description"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "value asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "value desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "category"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "category asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "category desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "dataset"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>:dataset, :order => "datasets.name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>:dataset, :order => "datasets.name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "survey"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "popularity"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+    end
+    # case params[:sort]
+    #   when "name"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| x.name <=> y.name}
+    #       when "desc"
+    #         @variables.sort!{|x,y| y.name <=> x.name}       
+    #     end
+    #   when "description"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| x.value <=> y.value}
+    #       when "desc"
+    #         @variables.sort!{|x,y| y.value <=> x.value}
+    #     end
+    #   when "survey"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| x.dataset.survey.title <=> y.dataset.survey.title}
+    #       when "desc"
+    #         @variables.sort!{|x,y| y.dataset.survey.title <=> x.dataset.survey.title}
+    #     end
+    #   when "dataset"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| x.dataset.name <=> y.dataset.name}
+    #       when "desc"
+    #         @variables.sort!{|x,y| y.dataset.name <=> x.dataset.name}
+    #     end
+    #   when "year"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| x.dataset.year <=> y.dataset.year}
+    #       when "desc"
+    #         @variables.sort!{|x,y| y.dataset.year <=> x.dataset.year}
+    #     end
+    #   when "popularity"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| VariableList.all(:conditions=>"variable_id=" + x.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + y.id.to_s).size}
+    #       when "desc"
+    #         @variables.sort!{|x,y| VariableList.all(:conditions=>"variable_id=" + y.id.to_s).size <=> VariableList.all(:conditions=>"variable_id=" + x.id.to_s).size}
+    #     end
+    #   when "category"
+    #     case params[:dir]
+    #       when "asc"
+    #         @variables.sort!{|x,y| x.category <=> y.category}
+    #       when "desc"
+    #         @variables.sort!{|x,y| y.category <=> x.category}
+    #     end
+    # end
     variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "startIndex" => params[:startIndex].to_i, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
     puts @variables_json.to_s
