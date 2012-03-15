@@ -590,6 +590,9 @@ div.exhibit-collectionView-group h2 {
 .medium-padding-bottom {
 	padding-bottom: 5px;
 }
+.medium-padding-top {
+	padding-top: 3em;
+}
 /* extra marging and padding settings over */
 
 /* extra font settings */
@@ -770,4 +773,32 @@ body {margin:auto;}
 	background: white;
 	margin-top: 1em;
 	margin-right: 0.5em;
+}
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+#comments_comments {
+  width: 50%;
+  border-right: 2px solid black;
+  padding-right: 10px;
+}
+#comments_forum_posts {
+	width: 40%;
 }

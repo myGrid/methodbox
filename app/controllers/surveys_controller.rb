@@ -1,12 +1,12 @@
 class SurveysController < ApplicationController
   
-  before_filter :login_required, :except => [ :show_all_variables, :retrieve_details, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
+  before_filter :login_required, :except => [ :retrieve_variables, :show_all_variables, :retrieve_details, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 
   before_filter :find_surveys, :only => [ :index, :search_variables ]
   
-  before_filter :find_survey, :only => [:show, :edit, :update]
+  before_filter :find_survey, :only => [:retrieve_variables, :show, :edit, :update]
 
   before_filter :set_parameters_for_sharing_form, :only => [ :new, :edit ]
 
@@ -23,7 +23,57 @@ class SurveysController < ApplicationController
   after_filter :update_last_user_activity
 #TODO this caching no longer seems to work as before
 #  caches_action :collapse_row, :expand_row
-  
+
+  def retrieve_variables
+    case params[:sort]
+      when "name"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :order => "name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :order => "name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "description"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :order => "value asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :order => "value desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "category"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :order => "category asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :order => "category desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "dataset"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :joins=>:dataset, :order => "datasets.name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :joins=>:dataset, :order => "datasets.name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "survey"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "popularity"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@survey.datasets}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+    end
+    variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "startIndex" => params[:startIndex].to_i, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@survey.datasets}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    puts @variables_json.to_s
+    render :partial=>"retrieve_variables"
+  end
   def retrieve_details
     @survey = Survey.find(params[:survey_id])
     render :partial => 'survey_table_row'
