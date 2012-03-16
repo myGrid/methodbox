@@ -17,7 +17,7 @@
 <%= hidden_field_tag 'search_type[]', 'extracts' -%>
 <%= hidden_field_tag 'search_type[]', 'methods' -%>
 <div class="left header-search-div">
-<%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>'Find variables, ' + SURVEY.pluralize + ', people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
+<%= text_field_tag :search_query, @search_query, :style=>"border-radius: 2px; width: 100%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>'Find variables, ' + SURVEY.pluralize + ', people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
 </div>
 <div class="right center header-submit-div">
 <%= submit_tag "Search", :id=> "search_button", :style=>"width: 100px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and more", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"  -%>

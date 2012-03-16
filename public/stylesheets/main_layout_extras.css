@@ -608,6 +608,9 @@ div.exhibit-collectionView-group h2 {
 .larger-font {
   font-size: larger;
 }
+.large-font {
+  font-size: large;
+}
 /* end of extra font settings*/
 
 .warning-message {
@@ -669,34 +672,6 @@ font-weight: bold;
 margin: 0.8em 0.8em; 
 line-height: 1.4;
 }
-/* sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html */
-/*html, body {height: 100%;}*/
-
-/*#wrap {
-  min-height: 100%;
-  background-color: gray;
-}*/
-
-/*#main {overflow:auto;
-	padding-bottom: 150px;}*/  /* must be same height as the footer */
-
-/*#footer {
-	position: relative;
-	margin-top: -150px; */ /* negative value of footer height */
-/*	height: 150px;
-	clear:both;
-    background-color: gray;
-} */
-
-/*Opera Fix*/
-/*body:before {
-	content:"";
-	height:100%;
-	float:left;
-	width:0;
-	margin-top:-32767px;/
-}*/
-/* end sticky footer */
 
 /* remove 10px border from yui grid */
 /*#doc3 {margin:auto;}*/
