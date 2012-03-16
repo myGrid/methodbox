@@ -40,7 +40,7 @@ class Mailer < ActionMailer::Base
     sent_on    Time.now
     body :name => User.find(user_id).person.name,
          :dataset => Dataset.find(dataset_id),
-         :missing_variables => missing_variables
+         :missing_variables => missing_variables,
          :host=>base_host
   end
   
