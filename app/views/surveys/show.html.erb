@@ -8,7 +8,7 @@
   <div id="survey_tabview" class="yui-navset">
     <ul class="yui-nav">
       <li class="selected"><a href="#survey_tab_details" title="Details about <%= SURVEY -%> <%=@survey.title -%>"><em>Details</em></a></li>
-      <li><a href="#survey_tab_variables" title="Variables from <%= SURVEY -%> <%=@survey.title -%>"><em>Variables</em></a></li>
+      <li><a href="#survey_tab_variables" title="Variables and <%= DATASET.pluralize -%> belonging to <%= SURVEY -%> <%=@survey.title -%>"><em>Variables and <%= DATASET.pluralize -%></em></a></li>
       <li><a href="#survey_tab_links" title="Links to other methodbox assets"><em>Links</em></a></li>
       <% if logged_in? %>
         <li><a href="#survey_tab_notes" title="Your private notes"><em>Your notes</em></a></li>
