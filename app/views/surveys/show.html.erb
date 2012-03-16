@@ -12,8 +12,8 @@
       <li><a href="#survey_tab_links" title="Links to other methodbox assets"><em>Links</em></a></li>
       <% if logged_in? %>
         <li><a href="#survey_tab_notes" title="Your private notes"><em>Your notes</em></a></li>
+        <li><a href="#survey_tab_comments" title="Public comments and forum posts"><em>Comments and Questions</em></a></li>
       <% end %>
-      <li><a href="#survey_tab_comments" title="Public comments and forum posts"><em>Comments and Questions</em></a></li>
 	</ul>
 	<div class="yui-content">
 	  <div id="survey_tab_details">
@@ -123,6 +123,7 @@
 				</div>
 				</div>
 	  </div>
+	  <% if logged_in? %>
 	  <div id="survey_tab_notes">
 		<%= render :partial => "notes/add_note", :locals=>{:resource_id => @survey.id} -%>
 		<% @notes.each do |note| %>
@@ -131,6 +132,7 @@
 		<div id="new_note">
 		</div>
 	  </div>
+	  <% end %>
 	  <div id="survey_tab_comments">
 		<div class="left" id="comments_comments">
 		  <% if logged_in? %>
