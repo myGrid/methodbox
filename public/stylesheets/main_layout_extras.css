@@ -670,37 +670,57 @@ margin: 0.8em 0.8em;
 line-height: 1.4;
 }
 /* sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html */
-html, body {height: 100%;}
+/*html, body {height: 100%;}*/
 
-#wrap {min-height: 100%;}
+/*#wrap {
+  min-height: 100%;
+  background-color: gray;
+}*/
 
-#main {overflow:auto;
-	padding-bottom: 150px;}  /* must be same height as the footer */
+/*#main {overflow:auto;
+	padding-bottom: 150px;}*/  /* must be same height as the footer */
 
-#footer {position: relative;
-	margin-top: -150px; /* negative value of footer height */
-	height: 150px;
+/*#footer {
+	position: relative;
+	margin-top: -150px; */ /* negative value of footer height */
+/*	height: 150px;
 	clear:both;
-        background-color: white;
-} 
+    background-color: gray;
+} */
 
 /*Opera Fix*/
-body:before {
+/*body:before {
 	content:"";
 	height:100%;
 	float:left;
 	width:0;
 	margin-top:-32767px;/
-}
+}*/
 /* end sticky footer */
 
 /* remove 10px border from yui grid */
-#doc3 {margin:auto;}
-body {margin:auto;}
+/*#doc3 {margin:auto;}*/
+html {
+	background: none;
+}
+body {
+  margin:0;
+  background-color: gray;
+  min-width:1000px;
+}
+#footer {
+	background-color: gray;
+	padding-left: 10px;
+	padding-right: 10px;
+}
 #ft {
   border-top: 1px solid black;
   background-color: white;
   margin: 0;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .add_var_button {
@@ -801,4 +821,12 @@ body {margin:auto;}
 }
 #comments_forum_posts {
 	width: 40%;
+}
+.generic-search-bar-div {
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+	padding-top: 20px;
+	background-color: #ACCBE0;
+	padding-left: 30%;
+	padding-right: 30%;
 }

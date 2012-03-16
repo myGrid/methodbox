@@ -94,7 +94,7 @@ loader.insert();
 
 </script>
 	</head>
-<body style="background-color: white; min-width:1050px;">
+<body>
 <!-- sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html -->
 <div id="wrap">
 <div id="main">
@@ -105,7 +105,7 @@ loader.insert();
         <%= render :partial => "widgets/main_tabnav" %>
         <div id="bd">
           <div id="yui-main">
-            <div class="yui-b">
+            <!-- <div class="yui-b"> -->
 <div id="spinner" style='display:none;'>
 <%= image_tag("ajax-loader2.gif", :alt=>"working...", :title=>"working...", :height => '100', :width => '100') -%>
 </div>
@@ -120,13 +120,13 @@ loader.insert();
                     <%= link_to_function image_tag("close.gif", :style => "float: right;"), visual_effect(:toggle_slide, "notice_flash", :duration => 0.3) %><%= white_list flash[:notice] %>
                   </div>
                 <% end %>
-                <div class="yield-area">
+                <div class="yield-area" style="margin-left: 10%; margin-right: 10%;">
                   <%= yield :layout %>
                 </div>
               </div>	
             </div>
-          </div>
-          <div class="yui-b"><%= render_sidebar -%><%= render :partial=>"layouts/sidebar" %></div>
+          <!-- </div> -->
+          <!-- <div class="yui-b"></div> -->
         </div>
       </div>
 </div>

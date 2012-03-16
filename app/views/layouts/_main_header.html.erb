@@ -3,24 +3,10 @@
 <% end -%>
 <div style="clear:both;">
 </div>
-<% if controller.controller_name.downcase == "home" && controller.action_name.downcase == "search" -%>
-<% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
-<%= render :partial => "layouts/simple_logged_in_controls" -%>
-<% else -%>
-<div class="left normal-margin-top">
-<%= render :partial => "layouts/logged_out_controls" -%>
-</div>
-<% end -%>
-<%= render :partial => "layouts/welcome_message" -%>
-<% else -%>
 <div class="left" style="margin-left: 1em; padding-top: 2px;">
 <%= link_to image_tag("box_transparent_small.png",:alt=>"www.methodbox.org",:title=>"Methodbox"), root_url -%>
-<% if logged_in? && controller.controller_name.downcase == "home" && controller.action_name.downcase == "search"-%>
-<%= render :partial => "layouts/simple_logged_in_controls" -%>
-<% elsif logged_in? -%>
+<% if logged_in? -%>
 <%= render :partial => "layouts/logged_in_controls" -%>
-<% elsif controller.controller_name.downcase!= "home" -%>
-<%= render :partial => "layouts/simple_logged_out_controls" -%>
 <% else -%>
 <div class="small-margin-bottom">
 <%= render :partial => "layouts/logged_out_controls" -%>
@@ -41,6 +27,5 @@
 <script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
 <!-- AddThis Button END -->
 <%= render :partial => "layouts/header_search_bar" -%>
-<% end -%>
 <div style="clear:both;">
 </div>

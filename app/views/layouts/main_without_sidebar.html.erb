@@ -100,9 +100,9 @@ loader.insert();
 
 </script>
 </head>
-<body style="background-color: white; min-width:1300px;">
+<body>
 <!-- sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html -->
-<div id="wrap">
+<!-- <div id="wrap"> -->
 <div id="main">
       <div id="doc3" class="yui-t2">
         <div>
@@ -134,15 +134,17 @@ loader.insert();
 </div>
 <% end -%>
           </div>
+<div class="yui-b"><%= render :partial=>"widgets/nav" %></div>
         </div>
+	    <div id="ft">
+	      <%= render :partial=>"layouts/footer" %>
+	    </div>
 </div>
 </div>
-</div>
-<div id="footer">
-    <div id="ft">
-      <%= render :partial=>"layouts/footer" %>
-    </div>
-</div>
+<!-- </div> -->
+<!-- <div id="footer"> -->
+
+<!-- </div> -->
 <%# NB! These javascript include should be here - otherwise folds will not be displayed on any pages. -%>
 <%= javascript_include_tag "folds.js" %>
 </body>
