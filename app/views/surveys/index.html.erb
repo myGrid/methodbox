@@ -35,16 +35,18 @@
 <% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <div id="selected_datasets">
 </div>
-<div>
+<div class="left">
+Filter by title and description: <input type="text" id="filter" value="" title="Only show <%= SURVEY.pluralize.downcase -%> with titles containing a particular piece of text"></input>
+</div>
+<div style="padding-left: 30%;padding-right: 30%;text-align: center;">
 <%= button_to_function 'Select visible', "selectVisibleSurveyCheckboxes(true);", :title=>"Select all the " + SURVEY.pluralize.downcase + " on the current page" -%>	
 <%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the " + SURVEY.pluralize.downcase + " (from all pages)" -%>
 <%= button_to_function 'Select none', "selectAllSurveyCheckboxes(false);", :title=>"De-select all the " + SURVEY.pluralize.downcase + " (from all pages)" -%>
 <%= button_to_function 'Invert selection', "invertAllSurveyCheckboxes();", :title=>"De-select currently selected " + SURVEY.pluralize.downcase + " and vice-versa (from all pages)" -%>
 </div>
-<div style="margin-top:5px;">
-<label for="filter">Filter by <%= SURVEY.downcase -%> title and description:</label> <input type="text" id="filter" value="" title="Only show <%= SURVEY.pluralize.downcase -%> with titles containing a particular piece of text"></input>
+<div class="clear: both;">
 </div>
-<div class="yui-skin-sam">
+<div class="yui-skin-sam center" style="margin-left: 5%; margin-right: 5%;">
 <div id="surveys_table"></div>
 </div>
 <% end  -%>
