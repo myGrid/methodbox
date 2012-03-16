@@ -35,11 +35,6 @@
 <% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <div id="selected_datasets">
 </div>
-<div style="padding: 20px; font-size:larger;">Select one or more <%= SURVEY.pluralize.downcase -%> to search by clicking on the appropriate check box next to the <%= SURVEY -%>, then enter a search term and click the 'Search for variables' button. To view all the available <%= DATASET.pluralize.downcase -%> for a <%= SURVEY.downcase -%> click the arrow next to the checkbox.</div>
-<div style="text-align: center; padding-bottom:10px;">
-<%= text_field_tag :survey_search_query, @search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>"Find variables based on the " + SURVEY.pluralize.downcase + " and " + DATASET.pluralize.downcase + " you have selected" -%>
-<%= submit_tag "Search for variables", :id=>"survey_search_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the " + SURVEY.pluralize.downcase + " and " + DATASET.pluralize.downcase + " you have selected",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('survey_search_button').form.submit();return true;}" -%>
-</div>
 <div>
 <%= button_to_function 'Select visible', "selectVisibleSurveyCheckboxes(true);", :title=>"Select all the " + SURVEY.pluralize.downcase + " on the current page" -%>	
 <%= button_to_function 'Select all', "selectAllSurveyCheckboxes(true);", :title=>"Select all the " + SURVEY.pluralize.downcase + " (from all pages)" -%>

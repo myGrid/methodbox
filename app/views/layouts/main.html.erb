@@ -98,9 +98,9 @@ loader.insert();
 <div id="main">
       <div id="doc3" class="yui-t2">
         <div>
+		  <%= render :partial => "widgets/main_tabnav" %>
           <%= render :partial=>"layouts/main_header" %>
         </div>
-        <%= render :partial => "widgets/main_tabnav" %>
         <div id="bd">
           <div id="yui-main">
             <!-- <div class="yui-b"> -->
@@ -118,7 +118,7 @@ loader.insert();
                     <%= link_to_function image_tag("close.gif", :style => "float: right;"), visual_effect(:toggle_slide, "notice_flash", :duration => 0.3) %><%= white_list flash[:notice] %>
                   </div>
                 <% end %>
-                <div class="yield-area" style="margin-left: 10%; margin-right: 10%;">
+                <div class="yield-area">
                   <%= yield :layout %>
                 </div>
               </div>	

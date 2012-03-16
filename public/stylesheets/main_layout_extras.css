@@ -798,8 +798,8 @@ body {
 	width: 40%;
 }
 .generic-search-bar-div {
-	border-top-left-radius: 6px;
-	border-top-right-radius: 6px;
+/*	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;*/
 	padding-top: 20px;
 	background-color: #ACCBE0;
 	padding-left: 30%;
