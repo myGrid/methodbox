@@ -24,7 +24,7 @@
             <p>
               <%= text_field_tag 'login', nil, :class => 'field', :style => "width: 80%;" %>
             </p>
-            <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+            <p style="font-size:1em;">
                   Password:
             </p>
             <p>
@@ -41,18 +41,6 @@
           </div>
 
         <% end %>
-        <%# if !REGISTRATION_CLOSED -%>
-          <!-- <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;"> -->
-            <!-- <b>Need an account?</b><br /> -->
-            <!-- <b> -->
-<%#= link_to "Sign up", signup_url %>
-<!-- </b> -->
-          <!-- </p> -->
-        <%# else -%>
-          <!-- <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;"> -->
-            <!-- <b>New user registration is currently closed</b> -->
-          <!-- </p> -->
-        <%# end -%>
         <br/>
         <p class="forgotten_password">
           <b><%= link_to "Forgotten password?", forgot_password_url %></b>

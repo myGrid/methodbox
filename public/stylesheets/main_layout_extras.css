@@ -802,3 +802,8 @@ body {margin:auto;}
 #comments_forum_posts {
 	width: 40%;
 }
+/* try and get things in the centre when div is between two floated divs */
+#ft .code-url {
+	padding-left: 20%;
+	padding-right: 20%;
+}
