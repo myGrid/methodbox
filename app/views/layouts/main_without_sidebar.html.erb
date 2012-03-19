@@ -7,18 +7,7 @@
 <%= page_title controller.controller_name, controller.action_name %>
 </title>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-  var surveys_url = "<%= surveys_url -%>";
-  var variables_url = "<%= variables_url -%>";
-  var datasets_url = "<%= datasets_url -%>";
-  var by_category_variables_url = "<%= by_category_variables_url -%>";
-  var survey_type = "<%= SURVEY_TYPE -%>";
-  var survey = "<%= SURVEY -%>";
-  var dataset = "<%= DATASET -%>";
-  var datasets_title = "<%= DATASET.pluralize.downcase -%>";
-  var dataset_variables_url = "<%= retrieve_variables_datasets_url -%>";
-  var survey_variables_url = "<%= retrieve_variables_surveys_url -%>";
-</script>
+<%= render :partial => "layouts/javascript_variables" -%>
 <%= csrf_meta_tag %>
 <% if defined? YUI_LOADER -%>
 <%= javascript_include_tag :defaults, 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','yuiloader-min.js' -%>

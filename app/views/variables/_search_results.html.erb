@@ -1,6 +1,6 @@
 <%= javascript_include_tag "sharing.js" -%>
 <%= javascript_include_tag 'variable_table_check.js' -%>
-<%= javascript_include_tag 'variables_table.js' -%>
+<%= javascript_include_tag 'paginated_variable_search_results_table.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <script type="text/javascript">
@@ -49,7 +49,7 @@
 <% end  -%>
 <% end -%>
 <script type="text/javascript">
-var results = <%= raw @variables_json -%>;
+// var results = <%= raw @variables_json -%>;
 createTable();
 </script>
 <script type="text/javascript">

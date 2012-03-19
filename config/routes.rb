@@ -33,7 +33,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :csvarchives, :as => "data_extracts", :member => {:add_note => :post, :download_stats_script => :get, :download => :get, :thumbs_up => :post, :thumbs_down => :post }, :collection =>{:remove_from_cart => :post, :recreate => :post, :show_links=>:post, :check_for_complete => :post, :feed => :get }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:values_array=>:get, :find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :variables, :member =>{:update => :post, :search_for_tags => :post, :open_pdf => :get, :deprecate => :post}, :collection =>{:paginated_search_results => :get, :values_array=>:get, :find_for_multiple_surveys_by_category => :post, :search => :post, :by_category => :get, :add_multiple_to_cart => :post}, :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.resources :assets,:member=>{:request_resource=>:post}, :only => :none, :requirements => {:protocol => ROUTES_PROTOCOL}
 

@@ -1,12 +1,74 @@
 class VariablesController < ApplicationController
 
-  before_filter :login_required, :except => [ :values_array, :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
+  before_filter :login_required, :except => [ :paginated_search_results, :values_array, :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
   after_filter :update_last_user_activity
   before_filter :find_comments, :only=>[ :show ]
   before_filter :find_notes, :only=>[ :show ]
 
   #caches_page :show
+  
+  def paginated_search_results  
+    query = params[:query]
+    case params[:sort]
+      when "name"
+        case params[:dir]
+          when "asc"
+            result = Sunspot.search(Variable) do
+              keywords(query) {minimum_match 1}
+              paginate(:page => params[:page] ? page : 1, :per_page => 20)
+              #with(:dataset_id, datasets)
+              order_by(:name, :asc)
+            end
+          when "desc"
+            result = Sunspot.search(Variable) do
+              keywords(query) {minimum_match 1}
+              paginate(:page => params[:page] ? page : 1, :per_page => 20)
+              #with(:dataset_id, datasets)
+              order_by(:name, :desc)
+            end
+        end
+      when "description"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "value asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "value desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "category"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "category asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "category desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "dataset"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>:dataset, :order => "datasets.name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>:dataset, :order => "datasets.name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "survey"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "popularity"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+    end
+    variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "startIndex" => params[:startIndex].to_i, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    puts @variables_json.to_s
+    render :partial=>"paginated_search_results"
+  end
 
   def values_array
     variable = Variable.find(params[:id])
