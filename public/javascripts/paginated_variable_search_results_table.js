@@ -92,11 +92,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "name", label: "Title", formatter:"variableVariablesFormatter", sortable: true, resizeable: true },
 		    { key: "description", label: "Description", sortable: true, width: 300, resizeable: true },
             { key: "category", label: "Category", formatter:"categoryFormatter", sortable: true, resizeable: true },
-            //no point sorting for a single survey or showing the dataset
-		    { key: "dataset", label: dataset, formatter:"variableDatasetsFormatter", sortable: false, resizeable: true },
-            //{ key: "survey", label: survey, formatter:"variableSurveysFormatter", sortable: false, resizeable: true },
-		    { key: "year", label: "Year", sortable: true, resizeable: true }//,
-		    //{ key: "popularity", label: "Popularity", sortable: true, resizeable: true }
+		    { key: "dataset", label: dataset, formatter:"variableDatasetsFormatter", sortable: true, resizeable: true },
+            { key: "survey", label: survey, formatter:"variableSurveysFormatter", sortable: true, resizeable: true },
+		    { key: "year", label: "Year", sortable: true, resizeable: true },
+		    { key: "popularity", label: "Popularity", sortable: false, resizeable: true }
 		];
 		//request which is sent to the server
 		var generateRequest = function(oState, oSelf) {
@@ -104,10 +103,9 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    oState = oState || { pagination: null, sortedBy: null };
 		    var sort = (oState.sortedBy) ? oState.sortedBy.key : "name";
 		    var dir = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : "asc";
-		    var startIndex = (oState.pagination) ? oState.pagination.recordOffset : 0;
-		    var results = (oState.pagination) ? oState.pagination.rowsPerPage : 20;
-            var query_params = "query=" + query + "&sort=" + sort + "&dir=" + dir + "&startIndex=" + startIndex + "&results=" + (startIndex + results);
-		    // Build custom request
+		    var page = (oState.pagination) ? oState.pagination.page : 1;
+		    //var results = (oState.pagination) ? oState.pagination.rowsPerPage : 20;
+            var query_params = "query=" + query + "&sort=" + sort + "&dir=" + dir + "&page=" + page;
 		    return  query_params;
 		};
 		 // DataTable configuration 
@@ -128,7 +126,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
             fields: ["id","name","description","survey", "dataset","survey_id","dataset_id","category","popularity", "year"],
 	        metaFields: {
               totalRecords: "totalRecords",
-              startIndex: "startIndex"
+              page: "page"
 	        }
         };
 //to sort the vars add this to the table config sortedBy : { key: "name", dir: YAHOO.widget.DataTable.CLASS_ASC },
@@ -138,7 +136,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 	    variableDataTable.subscribe( 'cellClickEvent', variableDataTable.onEventToggleRowExpansion );
 	    variableDataTable.doBeforeLoadData = function(oRequest, oResponse, oPayload) {
           oPayload.totalRecords = oResponse.meta.totalRecords;
-          oPayload.pagination.recordOffset = oResponse.meta.startIndex;
+          oPayload.pagination.page = oResponse.meta.page;
           return oPayload;
         };
         return {
