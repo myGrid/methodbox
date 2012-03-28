@@ -1,5 +1,4 @@
-<div class="middle-padding big-padding-top">
-<div class="center"><%= link_to image_tag("box_transparent_medium.png",:alt=>"www.methodbox.org",:title=>"Search and download variables from ESDS and other providers."),root_path -%></div>
+<div>
 <% form_tag('/search/', :method=>"get") do -%>
 <!-- search for everything from the main page -->
 <!-- initial search is for first page -->
@@ -10,7 +9,7 @@
 <%= hidden_field_tag 'publication_page', 1 -%>
 <%= hidden_field_tag 'variable_page', 1 -%>
 <div class="center medium-padding-bottom">
-<%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif;", :title=>'Find variables, ' + SURVEY.pluralize + ', people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
+<%= text_field_tag :search_query, @search_query, :style=>"width:20em; height: 2em;", :title=>'Find variables, ' + SURVEY.pluralize + ', people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
 </div>
 <div class="center medium-padding-bottom" id="advanced-search-options" style="<%= @advanced_controls ? '' : 'display:none'-%>">
 <div style="display: block;">
@@ -30,23 +29,64 @@
 </table>
 </div>
 </div>
+<div id="advanced_search_checkboxes">
+<table>
+<tbody>
+<tr><td>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'variables', true -%>Variables</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'variable_name', true -%>name</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'variable_description', true -%>description</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'variable_values', true -%>value domains</li>
+</ul>
+</td>
+<td>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'surveys', true -%><%= SURVEY.pluralize -%></li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'survey_title', true -%>title</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'survey_description', true -%>description</li>
+</ul>
+</td>
+<td>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'datasets', true -%><%= DATASET.pluralize -%></li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'dataset_title', true -%>title</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'dataset_description', true -%>description</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'dataset_year', true -%>year</li>
+</ul>
+</td>
+<td>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'methods', true -%>Methods</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'dataset_title', true -%>title</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'dataset_description', true -%>description</li>
+</ul>
+</td>
+</tbody>
+</table>
+<div>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'extracts', true -%>Data Extracts</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'extract_title', true -%>title</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'extract_description', true -%>description</li>
+</ul>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'publications', true -%>Publications</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'publication_title', true -%>title</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'publication_description', true -%>description</li>
+</ul>
+<ul style="margin: 0; display: inline-block;">
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'people', true -%>People</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'people_name', true -%>name</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'people_description', true -%>description</li>
+<li class="medium-left-padding"><%= check_box_tag 'search_type[]', 'people_expertise', true -%>expertise</li>
+</ul>
+</div>
+<div style="clear: both;">
+</div>
+</div>
 <div style="text-align: center;">
 <%= submit_tag "Search", :id=>"search_button", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find what you are looking for......", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"   -%>
 </div>
-<div id="advanced_search_checkboxes">
-<%= check_box_tag 'search_type[]', 'variables', true -%>Variables
-<%= check_box_tag 'search_type[]', 'variable_name', true -%>name
-<%= check_box_tag 'search_type[]', 'variable_description', true -%>description
-<%= check_box_tag 'search_type[]', 'variable_values', true -%>value domains
-<%= check_box_tag 'search_type[]', 'surveys', true -%>SURVEY.pluralize
-<%= check_box_tag 'search_type[]', 'survey_title', true -%>title
-<%= check_box_tag 'search_type[]', 'survey_description', true -%>description
-<%= check_box_tag 'search_type[]', 'dataset', true -%>DATASET.pluralize
-<%= check_box_tag 'search_type[]', 'dataset_title', true -%>title
-<%= check_box_tag 'search_type[]', 'dataset_description', true -%>description
-<%= check_box_tag 'search_type[]', 'dataset_year', true -%>year
-</div>
-
-
 <% end  -%>
 </div>
