@@ -33,5 +33,20 @@
 <div style="text-align: center;">
 <%= submit_tag "Search", :id=>"search_button", :style=>"width: 80px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find what you are looking for......", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"   -%>
 </div>
+<div id="advanced_search_checkboxes">
+<%= check_box_tag 'search_type[]', 'variables', true -%>Variables
+<%= check_box_tag 'search_type[]', 'variable_name', true -%>name
+<%= check_box_tag 'search_type[]', 'variable_description', true -%>description
+<%= check_box_tag 'search_type[]', 'variable_values', true -%>value domains
+<%= check_box_tag 'search_type[]', 'surveys', true -%>SURVEY.pluralize
+<%= check_box_tag 'search_type[]', 'survey_title', true -%>title
+<%= check_box_tag 'search_type[]', 'survey_description', true -%>description
+<%= check_box_tag 'search_type[]', 'dataset', true -%>DATASET.pluralize
+<%= check_box_tag 'search_type[]', 'dataset_title', true -%>title
+<%= check_box_tag 'search_type[]', 'dataset_description', true -%>description
+<%= check_box_tag 'search_type[]', 'dataset_year', true -%>year
+</div>
+
+
 <% end  -%>
 </div>
