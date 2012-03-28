@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
 
+  map.advanced_search '/advanced_search', :controller=>'home', :action=>'search', :requirements => {:protocol => ROUTES_PROTOCOL}
+
   map.about '/about', :controller => 'home', :action=>'about', :requirements => {:protocol => ROUTES_PROTOCOL}
 
   map.statistics STATISTICS_ROUTE, :controller=>'statistics',:action=>'index', :requirements => {:protocol => ROUTES_PROTOCOL}

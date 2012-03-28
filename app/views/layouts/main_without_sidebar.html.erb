@@ -74,15 +74,6 @@
               </div>
             <% end %>
             <%= yield :layout %>
-<% if controller.action_name != "about" -%>
-<div style = "text-align: center; font-size: larger;">
-<ol class="variable-suggestions" style="margin: 1em 0 0 0;">
-<li title="Find out more about MethodBox, it's motivations and the people behind it"><%= link_to 'About MethodBox', about_url -%></li>
-<li>|</li>
-<li title="Enter the MethodBox. See what people are sharing. Search and view <%= SURVEY.pluralize.downcase -%>, scripts, data extracts and more"><%= link_to 'View the data catalogue', surveys_url -%></li>
-<ol>
-</div>
-<% end -%>
           </div>
         </div>
 </div>

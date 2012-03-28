@@ -21,7 +21,7 @@
 </div>
 <div class="right center header-submit-div">
 <%= submit_tag "Search", :id=> "search_button", :style=>"width: 100px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and more", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"  -%>
-<%= link_to 'Advanced search', root_url(:advanced_controls=>true), :style=>"display:block; font-size: xx-small;", :title=>"Fine tune your search by including or excluding search types" -%>
+<%= link_to 'Advanced search', advanced_search_url(:advanced_controls=>true), :style=>"display:block; font-size: xx-small;", :title=>"Fine tune your search by including or excluding search types" -%>
 </div>
 <% end -%>
 <div style="clear: both;">

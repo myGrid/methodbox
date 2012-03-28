@@ -608,6 +608,9 @@ div.exhibit-collectionView-group h2 {
 .larger-font {
   font-size: larger;
 }
+.large-font {
+  font-size: large;
+}
 /* end of extra font settings*/
 
 .warning-message {
