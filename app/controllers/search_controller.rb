@@ -4,6 +4,11 @@ class SearchController < ApplicationController
   after_filter :update_last_user_activity
 
   def index
+
+   if params[:advanced_search]
+     advanced_search
+   else
+
     #if nothing has been selected then search for all types
     if !defined? params[:search_type] || params[:search_type].empty?
       params[:search_type] = ['people', 'surveys', 'methods', 'extracts', 'publications', 'variables'] 
@@ -87,6 +92,7 @@ class SearchController < ApplicationController
     #GET in the form_tag
     #expires_in 20.minutes
     end
+  end
   end
 
   private
@@ -196,6 +202,28 @@ class SearchController < ApplicationController
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
+  end
+
+  def advanced_search
+    if params[:variables]
+
+    end
+    if params[:surveys]
+
+    end
+    if params[:datasets]
+
+    end
+    if params[:methods]
+
+    end
+    if params[:people]
+
+    end
+    if params[:publications]
+
+    end
+
   end
 
 end
