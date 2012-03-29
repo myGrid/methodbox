@@ -588,13 +588,19 @@ div.exhibit-collectionView-group h2 {
 	padding-top: 8em;
 }
 .medium-padding-bottom {
-	padding-bottom: 5px;
+	padding-bottom: 3em;
 }
 .medium-padding-top {
 	padding-top: 3em;
 }
-.medium-left-padding {
+.medium-padding-left {
   padding-left: 3em;
+}
+.normal-padding-top {
+  padding-top: 1em;
+}
+.normal-padding-bottom {
+  padding-bottom: 1em;
 }
 /* extra marging and padding settings over */
 
