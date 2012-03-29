@@ -1,4 +1,5 @@
-<h3>Search Results</h3>
+<div>
+<h3 style="margin-top: 0;">Search Results</h3>
 <% if !@results_empty %>
 <!-- the results_hash is already split by class-->
   <%# resource_hash = classify_for_tabs @results -%>
@@ -8,4 +9,7 @@
     :authorization_already_done => true } -%>
 </div>
 <% end %>
+</div>
+<div style="clear:both;">
+</div>
 

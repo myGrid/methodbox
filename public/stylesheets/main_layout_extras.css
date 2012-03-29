@@ -602,6 +602,9 @@ div.exhibit-collectionView-group h2 {
 .normal-padding-bottom {
   padding-bottom: 1em;
 }
+.small-padding-top {
+  padding-top: 0.5em;
+}
 /* extra marging and padding settings over */
 
 /* extra font settings */
