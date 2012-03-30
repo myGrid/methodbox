@@ -4,11 +4,7 @@ class SearchController < ApplicationController
   after_filter :update_last_user_activity
 
   def index
-
-   if params[:advanced_search]
-     advanced_search
-   else
-
+    @results_hash = {}
     #if nothing has been selected then search for all types
     if !defined? params[:search_type] || params[:search_type].empty?
       params[:search_type] = ['people', 'surveys', 'methods', 'extracts', 'publications', 'variables'] 
@@ -39,7 +35,7 @@ class SearchController < ApplicationController
       #@datasets_json = datasets_hash.to_json
     #end 
     #only show dataset results
-    if params[:search_type].include?('surveys')
+    if params[:survey_select]
       dataset_results = find_datasets(query, params[:survey_page]).results
       survey_results = find_surveys(query, params[:survey_page]).results
       survey_datasets = []
@@ -55,21 +51,21 @@ class SearchController < ApplicationController
       datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
       @datasets_json = datasets_hash.to_json
     end 
-    if params[:search_type].include?('variables')
+    if params[:variable_select]
       #don't sort variable results but return by order of relevance
       @results_hash['variable'] = find_variables(query, params[:variable_page]).results
     end
-    if params[:search_type].include?('methods')
+    if params[:script_select]
       @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results
     end  
-    if params[:search_type].include?('extracts')
+    if params[:extract_select]
      @results_hash['csvarchive'] = select_authorised find_csvarchive(query, params[:csvarchive_page]).results
     end   
-    if params[:search_type].include?('publications')
+    if params[:publication_select]
       @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
     #can only search for people if logged in
-    if params[:search_type].include?('people') && logged_in?
+    if params[:people_select] && logged_in?
       @results_hash['people'] = find_people(query, params[:person_page]).results
     end
 
@@ -93,7 +89,6 @@ class SearchController < ApplicationController
     #expires_in 20.minutes
     end
   end
-  end
 
   private
 
@@ -108,11 +103,24 @@ class SearchController < ApplicationController
       survey.datasets.each {|dataset| datasets << dataset}
     end
     datasets.collect!{|el| el.id}
-    res = Sunspot.search(Dataset) do
-      keywords(query) {minimum_match 1}
-      with(:id, datasets)
-      paginate(:page => page ? page : 1, :per_page => 1000)
+    if params[:dataset_year]
+      
     end
+    res = Sunspot.search(Dataset) do
+        with(:id, datasets)
+        #with(:year).between(3.0..5.0)
+        paginate(:page => page ? page : 1, :per_page => 1000)
+      keywords(query) do
+        minimum_match 1
+        fields(:name) unless !params[:dataset_title]
+        fields(:description) unless !params[:dataset_description]
+      end
+    end
+#    res = Sunspot.search(Dataset) do
+#      keywords(query) {minimum_match 1}
+#      with(:id, datasets)
+#      paginate(:page => page ? page : 1, :per_page => 1000)
+#   end
   end
 
   def find_surveys(query, page)

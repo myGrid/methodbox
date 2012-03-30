@@ -15,51 +15,76 @@
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
-<li class="larger-font"><%= check_box_tag 'search_type[]', 'surveys', true -%><%= SURVEY.pluralize -%></li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_title', true -%>title</li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_description', true -%>description</li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_location', true -%>location</li>
-<li><%= select_tag 'survey_location' ,options_for_select(location_search_options, :selected=>"ANY") -%></li>
+<li class="larger-font"><%= check_box_tag 'search_type[]', 'surveys', true, :onclick=>"setHiddenFieldValue('survey_select');" -%><%= SURVEY.pluralize -%></li>
+<%= javascript_tag "storeHiddenFieldValue('survey_select', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_title', true, :onclick=>"setHiddenFieldValue('survey_title');" -%>title</li>
+<%= javascript_tag "storeHiddenFieldValue('survey_title', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_description', true, :onclick=>"setHiddenFieldValue('survey_description');" -%>description</li>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_location', true, :onchange=>"setHiddenFieldValue('survey_location');" -%>location</li>
+<%= javascript_tag "storeHiddenFieldValue('survey_description', true)"-%>
+<%= javascript_tag "storeHiddenFieldValue('survey_location', true)"-%>
+<%= javascript_tag "storeHiddenFieldValue('survey_location_place', 'ALL')"-%>
+<li><%= select_tag 'survey_location_place' ,options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setLocationValue('survey_location_place', this.value);"} -%></li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
+<%= javascript_tag "storeHiddenFieldValue('script_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'methods', true -%>Methods</li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_title', true -%>title</li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_description', true -%>description</li>
+<%= javascript_tag "storeHiddenFieldValue('script_title', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'script_title', true -%>title</li>
+<%= javascript_tag "storeHiddenFieldValue('script_description', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'script_description', true -%>description</li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'datasets', true -%><%= DATASET.pluralize -%></li>
+<%= javascript_tag "storeHiddenFieldValue('dataset_select', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_title', true -%>title</li>
+<%= javascript_tag "storeHiddenFieldValue('dataset_title', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_description', true -%>description</li>
+<%= javascript_tag "storeHiddenFieldValue('dataset_description', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_year', true -%>year</li>
 <% start_year = Dataset.scoped(:select => "DISTINCT year").sort!{|x,y| x.year.to_i <=> y.year.to_i}.delete_if{|x| x.year == nil}.first.year.to_i -%>
-<li class="small-padding-top small-padding-bottom"><%= select_year(start_year, :start_year => start_year, :end_year => Date.today.year) -%> to <%= select_year(Date.today, :start_year => start_year, :end_year => Date.today.year) -%><li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_location', true -%>location</li>
-<li><%= select_tag 'dataset_location' ,options_for_select(location_search_options, :selected=>"ANY") -%></li>
+<%= javascript_tag "storeHiddenFieldValue('dataset_start_year', #{start_year})"-%>
+<%= javascript_tag "storeHiddenFieldValue('dataset_end_year', #{Date.today.year})"-%>
+<li class="small-padding-top small-padding-bottom"><%= select_year(start_year, {:start_year => start_year, :end_year => Date.today.year}, {:onchange=>"setDateValue('dataset_start_year', this.value);"}) -%> to <%= select_year(Date.today, {:start_year => start_year, :end_year => Date.today.year}, {:onchange=>"setDateValue('dataset_end_year', this.value);"}) -%><li>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_location', true, :onchange=>"setHiddenFieldValue('dataset_location');" -%>location</li>
+<%= javascript_tag "storeHiddenFieldValue('dataset_location', true)"-%>
+<%= javascript_tag "storeHiddenFieldValue('dataset_location_place', 'ALL')"-%>
+<li><%= select_tag 'dataset_location_place', options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setLocationValue('dataset_location_place', this.value);"} -%></li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
+<%= javascript_tag "storeHiddenFieldValue('extract_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'extracts', true -%>Data Extracts</li>
+<%= javascript_tag "storeHiddenFieldValue('extract_title', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'extract_title', true -%>title</li>
+<%= javascript_tag "storeHiddenFieldValue('extract_description', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'extract_description', true -%>description</li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
+<%= javascript_tag "storeHiddenFieldValue('publication_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'publications', true -%>Publications</li>
+<%= javascript_tag "storeHiddenFieldValue('publication_title', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'publication_title', true -%>title</li>
+<%= javascript_tag "storeHiddenFieldValue('publication_description', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'publication_description', true -%>description</li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
+<%= javascript_tag "storeHiddenFieldValue('people_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'people', true -%>People</li>
+<%= javascript_tag "storeHiddenFieldValue('person_name', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'people_name', true -%>name</li>
+<%= javascript_tag "storeHiddenFieldValue('person_description', #{start_year})"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'people_description', true -%>description</li>
+<%= javascript_tag "storeHiddenFieldValue('person_expertise', #{start_year})"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'people_expertise', true -%>expertise</li>
 </ul>
 </div>
@@ -85,9 +110,13 @@
 <%= hidden_field_tag 'survey_select', true -%>
 <%= hidden_field_tag 'survey_title', true -%>
 <%= hidden_field_tag 'survey_description', true -%>
+<%= hidden_field_tag 'survey_location', 'ALL' -%>
 <%= hidden_field_tag 'dataset_select', true -%>
 <%= hidden_field_tag 'dataset_title', true -%>
 <%= hidden_field_tag 'dataset_description', true -%>
+<%= hidden_field_tag 'dataset_start_year', start_year -%>
+<%= hidden_field_tag 'dataset_end_year', Date.today.year -%>
+<%= hidden_field_tag 'dataset_location', 'ALL' -%>
 <%= hidden_field_tag 'script_select', true -%>
 <%= hidden_field_tag 'script_title', true -%>
 <%= hidden_field_tag 'script_description', true -%>

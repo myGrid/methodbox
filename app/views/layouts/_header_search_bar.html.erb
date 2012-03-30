@@ -9,13 +9,13 @@
 <%= hidden_field_tag 'csvarchive_page', 1 -%>
 <%= hidden_field_tag 'publication_page', 1 -%>
 <%= hidden_field_tag 'variable_page', 1 -%>
-<%= hidden_field_tag 'search_type[]', 'surveys' -%>
-<%= hidden_field_tag 'search_type[]', 'datasets' -%>
-<%= hidden_field_tag 'search_type[]', 'variables' -%>
-<%= hidden_field_tag 'search_type[]', 'people' -%>
-<%= hidden_field_tag 'search_type[]', 'publications' -%>
-<%= hidden_field_tag 'search_type[]', 'extracts' -%>
-<%= hidden_field_tag 'search_type[]', 'methods' -%>
+<%= hidden_field_tag 'survey_select', 'true' -%>
+<%= hidden_field_tag 'dataset_select', 'true' -%>
+<%= hidden_field_tag 'variable_select', 'true' -%>
+<%= hidden_field_tag 'people_select', 'true' -%>
+<%= hidden_field_tag 'publication_select', 'true' -%>
+<%= hidden_field_tag 'extract_select', 'true' -%>
+<%= hidden_field_tag 'script_select', 'true' -%>
 <div class="left header-search-div">
 <%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>'Find variables, surveys, people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
 </div>
