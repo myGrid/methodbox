@@ -4,4 +4,8 @@ module HomeHelper
     ["AND","OR", "must contain", "must not contain"]
   end
 
+  def location_search_options
+    ["ANY","Wales","England", "Scotland", "Northern Ireland"]
+  end
+
 end
