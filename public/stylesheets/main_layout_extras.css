@@ -602,11 +602,20 @@ div.exhibit-collectionView-group h2 {
 .normal-padding-bottom {
   padding-bottom: 1em;
 }
+.normal-padding-left {
+  padding-left: 1em;
+}
+.normal-padding-right {
+  padding-right: 1em;
+}
 .small-padding-top {
   padding-top: 0.5em;
 }
 .small-padding-bottom {
   padding-bottom: 0.5em;
+}
+.small-padding-left {
+  padding-left: 0.5em;
 }
 /* extra marging and padding settings over */
 

@@ -1,16 +1,27 @@
-<% unless controller.controller_name =="help" || controller.action_name == "search" %>
+<% if defined? @atom_feed and !@atom_feed.blank?  %>
   <div class="sidebar-bg">
     <div class="sidebar">
       <ul class="vbuttons">
-        <% if defined? @atom_feed and !@atom_feed.blank? %>
           <li><%= icon "feed", @atom_feed, "Updates", nil, "Updates" %></li>
-            <% end %>
-          <li><%= icon "help", help_index_url, "General help", {:title=>"Help on using MethodBox"}, "General help" %></li>
       </ul>
     </div>
   </div>
 <% end %>
-
+<div style="margin: 1em; border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; border: 2px solid lightgray;">
+<div class="center small-padding-top">
+Latest <%= DATASET.pluralize.downcase -%>
+</div>
+<div>
+<% datasets = Dataset.all(:order => "created_at DESC", :limit => 5) -%>
+<ul>
+<% datasets.each do |dataset| -%>
+  <% if Authorization.is_authorized?("view", nil, dataset.survey, current_user) -%>
+    <li><%= link_to dataset.name, dataset_url(dataset)-%></li>
+  <% end -%>
+<% end -%>
+</ul>
+</div>
+</div>
 
 
 
