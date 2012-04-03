@@ -20,11 +20,11 @@
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_title', true, :onchange=>"setHiddenFieldValue('survey_title', this.checked);" -%>title</li>
 <%= javascript_tag "storeHiddenFieldValue('survey_title', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_description', true, :onchange=>"setHiddenFieldValue('survey_description', this.checked);" -%>description</li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_location', true, :onchange=>"setHiddenFieldValue('survey_location', this.checked);" -%>location</li>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'survey_location', false, :onchange=>"setHiddenFieldValue('survey_location', this.checked);", :title=>"Select ALL to include searching by location in the title and description" -%>location</li>
 <%= javascript_tag "storeHiddenFieldValue('survey_description', true)"-%>
-<%= javascript_tag "storeHiddenFieldValue('survey_location', true)"-%>
+<%= javascript_tag "storeHiddenFieldValue('survey_location', false)"-%>
 <%= javascript_tag "storeHiddenFieldValue('survey_location_place', 'ALL')"-%>
-<li><%= select_tag 'survey_location_place' ,options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setHiddenFieldValue('survey_location_place', this.value);"} -%></li>
+<li><%= select_tag 'survey_location_place' ,options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setHiddenFieldValue('survey_location_place', this.value);", :title=>"Select ALL if " + SURVEY + " must have England, Scotland, NI or Wales in the title or description or select individual countries."} -%></li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
@@ -51,10 +51,10 @@
 <%= javascript_tag "storeHiddenFieldValue('dataset_start_year', #{start_year})"-%>
 <%= javascript_tag "storeHiddenFieldValue('dataset_end_year', #{Date.today.year})"-%>
 <li class="small-padding-top small-padding-bottom"><%= select_year(start_year, {:start_year => start_year, :end_year => Date.today.year}, {:onchange=>"setHiddenFieldValue('dataset_start_year', this.value);"}) -%> to <%= select_year(Date.today, {:start_year => start_year, :end_year => Date.today.year}, {:onchange=>"setHiddenFieldValue('dataset_end_year', this.value);"}) -%><li>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_location', true, :onchange=>"setHiddenFieldValue('dataset_location', this.checked);" -%>location</li>
-<%= javascript_tag "storeHiddenFieldValue('dataset_location', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'dataset_location', false, :onchange=>"setHiddenFieldValue('dataset_location', this.checked);", :title=>"Select ALL to include searching by location in the title and description" -%>location</li>
+<%= javascript_tag "storeHiddenFieldValue('dataset_location', false)"-%>
 <%= javascript_tag "storeHiddenFieldValue('dataset_location_place', 'ALL')"-%>
-<li><%= select_tag 'dataset_location_place', options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setHiddenFieldValue('dataset_location_place', this.value);"} -%></li>
+<li><%= select_tag 'dataset_location_place', options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setHiddenFieldValue('dataset_location_place', this.value);", :title=>"Select ALL if " + DATASET + " must have England, Scotland, NI or Wales in the title or description or select individual countries."} -%></li>
 </ul>
 </div>
 <div class="normal-padding-bottom">
