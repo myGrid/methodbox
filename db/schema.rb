@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111102140404) do
+ActiveRecord::Schema.define(:version => 20120403101542) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -171,23 +171,8 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.string   "reason_for_update"
     t.string   "nesstar_id"
     t.string   "nesstar_uri"
-    t.string   "year"
+    t.integer  "year"
   end
-
-  create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
-    t.text     "handler"
-    t.string   "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "delayed_jobs", ["locked_by"], :name => "index_delayed_jobs_on_locked_by"
 
   create_table "downloads", :force => true do |t|
     t.integer  "user_id"
@@ -252,6 +237,15 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.string   "subject_field_name"
     t.string   "object_field_name"
     t.integer  "user_id"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string   "name"
+    t.integer  "latitude",   :limit => 10, :precision => 10, :scale => 0
+    t.integer  "longitude",  :limit => 10, :precision => 10, :scale => 0
+    t.integer  "dataset_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "matched_variables", :force => true do |t|

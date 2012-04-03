@@ -21,44 +21,51 @@ class SearchController < ApplicationController
     if (query.nil? or query.strip.empty?)
       flash.now[:error]="Sorry your query appeared blank. Please try again"
     else
-    if params[:survey_select]
-      dataset_results = find_datasets(query, params[:survey_page]).results
+    #we only return a list of datasets
+    survey_datasets = []
+    dataset_results = []
+    if params[:survey_select] == 'true'
       survey_results = find_surveys(query, params[:survey_page]).results
-      survey_datasets = []
       survey_results.each do |survey|
         survey.datasets.each do |dataset|
           survey_datasets << dataset
         end
       end
+    end 
+    if params[:dataset_select] == 'true'
+      dataset_results = find_datasets(query, params[:survey_page]).results
+    end 
+    #combine the surveys and datasets into a list of datasets only
+    if params[:dataset_select] == 'true' || params[:survey_select] == 'true'
       results = dataset_results + survey_datasets
       results.uniq!
       @results_hash['dataset'] = results
       datasets = results.sort!{|x,y| x.name <=> y.name}
       datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
       @datasets_json = datasets_hash.to_json
-    end 
-    if params[:variable_select]
+    end
+    if params[:variable_select] == 'true'
       #don't sort variable results but return by order of relevance
       @results_hash['variable'] = find_variables(query, params[:variable_page]).results
     end
-    if params[:script_select]
+    if params[:script_select] == 'true'
       @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results
     end  
-    if params[:extract_select]
+    if params[:extract_select] == 'true'
      @results_hash['csvarchive'] = select_authorised find_csvarchive(query, params[:csvarchive_page]).results
     end   
-    if params[:publication_select]
+    if params[:publication_select] == 'true'
       @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
     #can only search for people if logged in
-    if params[:people_select] && logged_in?
+    if params[:people_select] =='true' && logged_in?
       @results_hash['people'] = find_people(query, params[:person_page]).results
     end
 
     if @results_hash.empty?
       flash.now[:notice]="No matches found for '<b>#{@search_query}</b>'."
     end
-    @results_empty = true
+    @results_empty = 'true'
     @results_hash.each_key do |key|
       if !@results_hash[key].empty?
         @results_empty = false
@@ -86,18 +93,30 @@ class SearchController < ApplicationController
       survey.datasets.each {|dataset| datasets << dataset}
     end
     datasets.collect!{|el| el.id}
-    if params[:dataset_year]
-      
+    if params[:dataset_location] == 'true'
+      case params[:dataset_location_place]
+        when 'Wales'
+          query = query + ' +wales'
+        when 'England'
+          query = query + ' +england'
+        when 'Scotland'
+          query = query + ' +scotland'
+        when 'Northern Ireland'
+          query = query + ' +ireland'
+      end
     end
     #TODO dataset location and year
+    start_year = params[:dataset_start_year].to_i
+    end_year = params[:dataset_end_year].to_i
+    puts "years are " + start_year.to_s + " and " + end_year.to_s
     res = Sunspot.search(Dataset) do
         with(:id, datasets)
-        #with(:year).between(3.0..5.0)
         paginate(:page => page ? page : 1, :per_page => 1000)
+        with(:year).between(start_year..end_year) if params[:dataset_year] == 'true'
       keywords(query) do
         minimum_match 1
-        fields(:name) if params[:dataset_title]
-        fields(:description) if params[:dataset_description]
+        fields(:name) if params[:dataset_title] == 'true'
+        fields(:description) if params[:dataset_description] == 'true'
       end
     end
   end
@@ -108,11 +127,23 @@ class SearchController < ApplicationController
     surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
     surveys.collect!{|el| el.id}
     #TODO survey location
+    if params[:survey_location] == 'true'
+      case params[:survey_location_place]
+        when 'Wales'
+          query = query + ' +wales'
+        when 'England'
+          query = query + ' +england'
+        when 'Scotland'
+          query = query + ' +scotland'
+        when 'Northern Ireland'
+          query = query + ' +ireland'
+      end
+    end
     res = Sunspot.search(Survey) do
       keywords(query) do
         minimum_match 1
-        fields(:title) if params[:survey_title]
-        fields(:title) if params[:survey_description]
+        fields(:title) if params[:survey_title] == 'true'
+        fields(:title) if params[:survey_description] == 'true'
       end
       with(:id, surveys)
       paginate(:page => page ? page : 1, :per_page => 1000)
@@ -125,9 +156,9 @@ class SearchController < ApplicationController
     res = Sunspot.search(Person) do
       keywords(query) do
         minimum_match 1
-        fields(:name) if params[:person_name]
-        fields(:description) if params[:person_description]
-        fields(:expertise) if params[:person_expertise]
+        fields(:name) if params[:person_name] == 'true'
+        fields(:description) if params[:person_description] == 'true'
+        fields(:expertise) if params[:person_expertise] == 'true'
       end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
@@ -138,8 +169,8 @@ class SearchController < ApplicationController
     res = Sunspot.search(Script) do
       keywords(query) do
         minimum_match 1
-        fields(:title) if params[:extract_title]
-        fields(:description) if params[:extract_description]
+        fields(:title) if params[:extract_title] == 'true'
+        fields(:description) if params[:extract_description] == 'true'
       end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
@@ -150,8 +181,8 @@ class SearchController < ApplicationController
     res = Sunspot.search(Csvarchive) do
       keywords(query) do
         minimum_match 1
-        fields(:title) if params[:extract_title]
-        fields(:description) if params[:extract_description]
+        fields(:title) if params[:extract_title] == 'true'
+        fields(:description) if params[:extract_description] == 'true'
       end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
@@ -163,8 +194,8 @@ class SearchController < ApplicationController
       keywords(query) do
         minimum_match 1
         fields(:title) if params[:publication_title]
-        fields(:abstract) if params[:publication_description]
-        fields(:journal) if params[:publication_journal]
+        fields(:abstract) if params[:publication_description] == 'true'
+        fields(:journal) if params[:publication_journal] == 'true'
       end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end

@@ -5,7 +5,7 @@ module HomeHelper
   end
 
   def location_search_options
-    ["ANY","Wales","England", "Scotland", "Northern Ireland"]
+    ["Wales","England", "Scotland", "Northern Ireland"]
   end
 
 end
