@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'hidden_fields.js' -%>
 <% if controller.action_name == "search" -%>
 <div class="left normal-padding-left normal-padding-top normal-padding-bottom normal-padding-right normal-margin-bottom" id="advanced_search_checkboxes" style="border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; border: 2px solid lightgray;">
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom normal-border-bottom-grey">
 <ul style="margin: 0; display: inline-block;">
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'variables', true, :onchange=>"setHiddenFieldValue('variable_select', this.checked);" -%>Variables</li>
 <%= javascript_tag "storeHiddenFieldValue('variable_select', true)"-%>
@@ -13,7 +13,7 @@
 <%= javascript_tag "storeHiddenFieldValue('variable_value', true)"-%>
 </ul>
 </div>
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom normal-border-bottom-grey small-padding-top">
 <ul style="margin: 0; display: inline-block;">
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'surveys', true, :onchange=>"setHiddenFieldValue('survey_select', this.checked);" -%><%= SURVEY.pluralize -%></li>
 <%= javascript_tag "storeHiddenFieldValue('survey_select', true)"-%>
@@ -27,7 +27,7 @@
 <li><%= select_tag 'survey_location_place' ,options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setHiddenFieldValue('survey_location_place', this.value);", :title=>"Select country which " + SURVEY + " must have in the title or description."} -%></li>
 </ul>
 </div>
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom normal-border-bottom-grey small-padding-top">
 <ul style="margin: 0; display: inline-block;">
 <%= javascript_tag "storeHiddenFieldValue('script_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'methods', true, :onchange=>"setHiddenFieldValue('script_select', this.checked);" -%>Methods</li>
@@ -37,7 +37,7 @@
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'script_description', true, :onchange=>"setHiddenFieldValue('script_description', this.checked);" -%>description</li>
 </ul>
 </div>
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom normal-border-bottom-grey small-padding-top">
 <ul style="margin: 0; display: inline-block;">
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'datasets', true, :onchange=>"setHiddenFieldValue('dataset_select', this.checked);" -%><%= DATASET.pluralize -%></li>
 <%= javascript_tag "storeHiddenFieldValue('dataset_select', true)"-%>
@@ -57,7 +57,7 @@
 <li><%= select_tag 'dataset_location_place', options_for_select(location_search_options, :selected=>"ANY"), {:onchange=>"setHiddenFieldValue('dataset_location_place', this.value);", :title=>"Select country which " + DATASET + " must have in the title or description."} -%></li>
 </ul>
 </div>
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom normal-border-bottom-grey small-padding-top">
 <ul style="margin: 0; display: inline-block;">
 <%= javascript_tag "storeHiddenFieldValue('extract_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'extracts', true, :onchange=>"setHiddenFieldValue('extract_select', this.checked);" -%>Data Extracts</li>
@@ -67,7 +67,7 @@
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'extract_description', true, :onchange=>"setHiddenFieldValue('extract_description', this.checked);" -%>description</li>
 </ul>
 </div>
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom normal-border-bottom-grey small-padding-top">
 <ul style="margin: 0; display: inline-block;">
 <%= javascript_tag "storeHiddenFieldValue('publication_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'publications', true, :onchange=>"setHiddenFieldValue('publication_select', this.checked);" -%>Publications</li>
@@ -80,7 +80,7 @@
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'publication_journal', true, :onchange=>"setHiddenFieldValue('publication_journal', this.checked);" -%>description</li>
 </ul>
 </div>
-<div class="normal-padding-bottom">
+<div class="normal-padding-bottom small-padding-top">
 <ul style="margin: 0; display: inline-block;">
 <%= javascript_tag "storeHiddenFieldValue('people_select', true)"-%>
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'people', true, :onchange=>"setHiddenFieldValue('people_select', this.checked);" -%>People</li>

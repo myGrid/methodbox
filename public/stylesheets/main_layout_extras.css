@@ -834,3 +834,8 @@ body {margin:auto;}
 	padding-left: 20%;
 	padding-right: 20%;
 }
+/* extra border settings */
+.normal-border-bottom-grey {
+  border-bottom: 1px solid lightgray;
+}
+/* end of extra border settings */
