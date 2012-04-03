@@ -16,7 +16,7 @@ Latest <%= DATASET.pluralize.downcase -%>
 <ul>
 <% datasets.each do |dataset| -%>
   <% if Authorization.is_authorized?("view", nil, dataset.survey, current_user) -%>
-    <li><%= link_to dataset.name, dataset_url(dataset)-%></li>
+    <li><%= link_to dataset.name, dataset_url(dataset) ,{:title=>dataset.description} -%></li>
   <% end -%>
 <% end -%>
 </ul>
