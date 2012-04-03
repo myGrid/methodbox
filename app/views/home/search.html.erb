@@ -76,6 +76,9 @@
 <%= javascript_tag "storeHiddenFieldValue('publication_description', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'publication_description', true, :onchange=>"setHiddenFieldValue('publication_description', this.checked);" -%>description</li>
 </ul>
+<%= javascript_tag "storeHiddenFieldValue('publication_journal', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'publication_journal', true, :onchange=>"setHiddenFieldValue('publication_journal', this.checked);" -%>description</li>
+</ul>
 </div>
 <div class="normal-padding-bottom">
 <ul style="margin: 0; display: inline-block;">
@@ -128,6 +131,7 @@
 <%= hidden_field_tag 'publication_select', true -%>
 <%= hidden_field_tag 'publication_title', true-%>
 <%= hidden_field_tag 'publication_description', true -%>
+<%= hidden_field_tag 'publication_journal', true -%>
 <%= hidden_field_tag 'people_select', true -%>
 <%= hidden_field_tag 'person_name', true -%>
 <%= hidden_field_tag 'person_description', true -%>

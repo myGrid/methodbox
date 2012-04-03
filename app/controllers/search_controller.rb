@@ -20,21 +20,7 @@ class SearchController < ApplicationController
     #only ask solr to fetch results if query is not blank
     if (query.nil? or query.strip.empty?)
       flash.now[:error]="Sorry your query appeared blank. Please try again"
-      #possible 301 too many redirects error here
-      #redirect_to :back
     else
-    #if (query.include?(' OR ') && query.include?(' AND '))
-     # flash.now[:notice]='Sorry you can not mix "or" with "and" in the same query. Please try again'
-      #return
-    #end
-     #if params[:search_type].include?('datasets')
-      #results = find_datasets(query, params[:survey_page]).results
-      #@results_hash['dataset'] = results
-      #datasets = results.sort!{|x,y| x.name <=> y.name}
-      #datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
-      #@datasets_json = datasets_hash.to_json
-    #end 
-    #only show dataset results
     if params[:survey_select]
       dataset_results = find_datasets(query, params[:survey_page]).results
       survey_results = find_surveys(query, params[:survey_page]).results
@@ -84,8 +70,6 @@ class SearchController < ApplicationController
         format.html {redirect_to(:back || root_path)}
       end
     end
-    #tell the browser that the post request is ok to cache for the next 20 minutes - NO LONGER NEEDED, action is
-    #GET in the form_tag
     #expires_in 20.minutes
     end
   end
@@ -95,7 +79,6 @@ class SearchController < ApplicationController
   def find_datasets(query, page)
     #dataset access is based on the parent survey
     #only search authorised surveys
-    #surveys are restricted to certain types at the moment
     surveys = get_surveys
     surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
     datasets = []
@@ -106,31 +89,31 @@ class SearchController < ApplicationController
     if params[:dataset_year]
       
     end
+    #TODO dataset location and year
     res = Sunspot.search(Dataset) do
         with(:id, datasets)
         #with(:year).between(3.0..5.0)
         paginate(:page => page ? page : 1, :per_page => 1000)
       keywords(query) do
         minimum_match 1
-        fields(:name) unless !params[:dataset_title]
-        fields(:description) unless !params[:dataset_description]
+        fields(:name) if params[:dataset_title]
+        fields(:description) if params[:dataset_description]
       end
     end
-#    res = Sunspot.search(Dataset) do
-#      keywords(query) {minimum_match 1}
-#      with(:id, datasets)
-#      paginate(:page => page ? page : 1, :per_page => 1000)
-#   end
   end
 
   def find_surveys(query, page)
     #only search authorised surveys
-    #surveys are restricted to certain types at the moment
     surveys = get_surveys
     surveys.select {|el| Authorization.is_authorized?("show", nil, el, current_user)}
     surveys.collect!{|el| el.id}
+    #TODO survey location
     res = Sunspot.search(Survey) do
-      keywords(query) {minimum_match 1}
+      keywords(query) do
+        minimum_match 1
+        fields(:title) if params[:survey_title]
+        fields(:title) if params[:survey_description]
+      end
       with(:id, surveys)
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
@@ -140,7 +123,12 @@ class SearchController < ApplicationController
 
   def find_people(query, page)
     res = Sunspot.search(Person) do
-      keywords(query) {minimum_match 1}
+      keywords(query) do
+        minimum_match 1
+        fields(:name) if params[:person_name]
+        fields(:description) if params[:person_description]
+        fields(:expertise) if params[:person_expertise]
+      end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
@@ -148,7 +136,11 @@ class SearchController < ApplicationController
 
   def find_methods(query, page)
     res = Sunspot.search(Script) do
-      keywords(query) {minimum_match 1}
+      keywords(query) do
+        minimum_match 1
+        fields(:title) if params[:extract_title]
+        fields(:description) if params[:extract_description]
+      end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
@@ -156,7 +148,11 @@ class SearchController < ApplicationController
 
   def find_csvarchive(query, page)
     res = Sunspot.search(Csvarchive) do
-      keywords(query) {minimum_match 1}
+      keywords(query) do
+        minimum_match 1
+        fields(:title) if params[:extract_title]
+        fields(:description) if params[:extract_description]
+      end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
@@ -164,7 +160,12 @@ class SearchController < ApplicationController
   
   def find_publications(query, page)
     res = Sunspot.search(Publication) do
-      keywords(query) {minimum_match 1}
+      keywords(query) do
+        minimum_match 1
+        fields(:title) if params[:publication_title]
+        fields(:abstract) if params[:publication_description]
+        fields(:journal) if params[:publication_journal]
+      end
       paginate(:page => page ? page : 1, :per_page => 1000)
     end
     return res
@@ -184,7 +185,12 @@ class SearchController < ApplicationController
       end
     end
     result = Sunspot.search(Variable) do
-      keywords(query) {minimum_match 1}
+      keywords(query) do
+        minimum_match 1
+        fields(:name) if params[:variable_name]
+        fields(:value) if params[:variable_description]
+        fields(:values) if params[:variable_values]
+      end
       paginate(:page => params[:page] ? page : 1, :per_page => 20)
       with(:dataset_id, datasets)
     end
@@ -210,28 +216,6 @@ class SearchController < ApplicationController
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
-  end
-
-  def advanced_search
-    if params[:variables]
-
-    end
-    if params[:surveys]
-
-    end
-    if params[:datasets]
-
-    end
-    if params[:methods]
-
-    end
-    if params[:people]
-
-    end
-    if params[:publications]
-
-    end
-
   end
 
 end
