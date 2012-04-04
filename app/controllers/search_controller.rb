@@ -156,8 +156,8 @@ class SearchController < ApplicationController
     res = Sunspot.search(Person) do
       keywords(query) do
         minimum_match 1
-        fields(:name) if params[:person_name] == 'true'
-        fields(:description) if params[:person_description] == 'true'
+        fields(:first_name) if params[:person_name] == 'true'
+        fields(:last_name) if params[:person_name] == 'true'
         fields(:expertise) if params[:person_expertise] == 'true'
       end
       paginate(:page => page ? page : 1, :per_page => 1000)

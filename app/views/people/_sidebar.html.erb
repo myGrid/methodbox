@@ -1,27 +1,15 @@
 <% if logged_in? -%>
-  <div class="sidebar-bg">
-    <div class="sidebar">
-      <ul class="vbuttons">
-        <% if controller.action_name == "show" %>
-          <% if !mine?(@person) -%>
-            <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
-          <% end -%>
-        <% end %>
-        <% if controller.action_name != "show" %>
-          <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
-        <% end %>
-        <% if controller.action_name != "edit" %>
-          <li><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
+  <% if controller.action_name == "show" %>
+    <% if !mine?(@person) -%>
+      <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
+    <% end -%>
+  <% end %>
+  <% if controller.action_name != "show" %>
+    <li><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
+  <% end %>
+  <% if controller.action_name != "edit" %>
+    <li><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
+  <% end %>
 <% end %>
-<div class="sidebar-bg">
-  <div class="sidebar">
-    <ul class="vbuttons">
-      <li><%= icon "show", surveys_url, "Search surveys", {:title=>"Look at the surveys using the tabular view and search them for variables"}, "Search surveys" %></li>
-    </ul>
-  </div>
-</div>
-<%= render :partial=>"help_sidebar" -%>
+<li><%= icon "show", surveys_url, "Search surveys", {:title=>"Look at the surveys using the tabular view and search them for variables"}, "Search surveys" %></li>
+

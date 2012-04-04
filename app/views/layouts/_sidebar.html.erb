@@ -1,13 +1,7 @@
 <% if defined? @atom_feed and !@atom_feed.blank?  %>
-  <div class="sidebar-bg">
-    <div class="sidebar">
-      <ul class="vbuttons">
-          <li><%= icon "feed", @atom_feed, "Updates", nil, "Updates" %></li>
-      </ul>
-    </div>
-  </div>
+  <li><%= icon "feed", @atom_feed, "Updates", nil, "Updates" %></li>
 <% end %>
-<div style="margin: 1em; border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; border: 2px solid lightgray;">
+<div class="sidebar-border">
 <div class="center small-padding-top">
 Latest <%= DATASET.pluralize.downcase -%>
 </div>
@@ -22,6 +16,5 @@ Latest <%= DATASET.pluralize.downcase -%>
 </ul>
 </div>
 </div>
-
 
 

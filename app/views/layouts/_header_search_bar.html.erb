@@ -3,44 +3,7 @@
 <!-- search for everything from the main page -->
 <!-- return first page of results -->
 <% start_year = Dataset.scoped(:select => "DISTINCT year").sort!{|x,y| x.year.to_i <=> y.year.to_i}.delete_if{|x| x.year == nil}.first.year.to_i -%>
-<%= hidden_field_tag 'person_page', 1 -%>
-<%= hidden_field_tag 'survey_page', 1 -%>
-<%= hidden_field_tag 'dataset_page', 1 -%>
-<%= hidden_field_tag 'script_page', 1 -%>
-<%= hidden_field_tag 'csvarchive_page', 1 -%>
-<%= hidden_field_tag 'publication_page', 1 -%>
-<%= hidden_field_tag 'variable_page', 1 -%>
-<%= hidden_field_tag 'variable_select', true -%>
-<%= hidden_field_tag 'variable_name', true -%>
-<%= hidden_field_tag 'variable_description'-%>
-<%= hidden_field_tag 'variable_value', true -%>
-<%= hidden_field_tag 'survey_select', true -%>
-<%= hidden_field_tag 'survey_title', true -%>
-<%= hidden_field_tag 'survey_description', true -%>
-<%= hidden_field_tag 'survey_location', false -%>
-<%= hidden_field_tag 'survey_location_place', 'Wales' -%>
-<%= hidden_field_tag 'dataset_select', true -%>
-<%= hidden_field_tag 'dataset_title', true -%>
-<%= hidden_field_tag 'dataset_year', true -%>
-<%= hidden_field_tag 'dataset_description', true -%>
-<%= hidden_field_tag 'dataset_start_year', start_year -%>
-<%= hidden_field_tag 'dataset_end_year', Date.today.year -%>
-<%= hidden_field_tag 'dataset_location', false -%>
-<%= hidden_field_tag 'dataset_location_place', 'Wales' -%>
-<%= hidden_field_tag 'script_select', true -%>
-<%= hidden_field_tag 'script_title', true -%>
-<%= hidden_field_tag 'script_description', true -%>
-<%= hidden_field_tag 'extract_select', true -%>
-<%= hidden_field_tag 'extract_title', true -%>
-<%= hidden_field_tag 'extract_description', true -%>
-<%= hidden_field_tag 'publication_select', true -%>
-<%= hidden_field_tag 'publication_title', true-%>
-<%= hidden_field_tag 'publication_description', true -%>
-<%= hidden_field_tag 'publication_journal', true -%>
-<%= hidden_field_tag 'people_select', true -%>
-<%= hidden_field_tag 'person_name', true -%>
-<%= hidden_field_tag 'person_description', true -%>
-<%= hidden_field_tag 'person_expertise', true -%>
+<%= render :partial => "layouts/search_hidden_fields" %>
 <div class="left header-search-div">
 <%= text_field_tag :search_query, @search_query, :style=>"width: 100%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>'Find variables, surveys, people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
 </div>
