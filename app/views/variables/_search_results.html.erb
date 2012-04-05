@@ -50,6 +50,9 @@
 <% end -%>
 <script type="text/javascript">
 // var results = <%= raw @variables_json -%>;
+var variable_name = "<%= @variable_name %>";
+var variable_description = "<%= @variable_description %>";
+var variable_values = "<%= @variable_values %>";
 createTable("<%= @search_query -%>");
 </script>
 <script type="text/javascript">

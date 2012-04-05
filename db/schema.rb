@@ -147,6 +147,12 @@ ActiveRecord::Schema.define(:version => 20120403101542) do
     t.boolean  "similarity_checked",         :default => false
   end
 
+  create_table "data_providers", :force => true do |t|
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "dataset_lists", :force => true do |t|
     t.integer  "user_search_id"
     t.integer  "dataset_id"
@@ -173,6 +179,21 @@ ActiveRecord::Schema.define(:version => 20120403101542) do
     t.string   "nesstar_uri"
     t.integer  "year"
   end
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.string   "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["locked_by"], :name => "index_delayed_jobs_on_locked_by"
 
   create_table "downloads", :force => true do |t|
     t.integer  "user_id"

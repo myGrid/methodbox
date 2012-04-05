@@ -46,7 +46,9 @@ class SearchController < ApplicationController
     end
     if params[:variable_select] == 'true'
       #don't sort variable results but return by order of relevance
-      @results_hash['variable'] = find_variables(query, params[:variable_page]).results
+      all_vars = find_variables(query, params[:variable_page])
+      @results_hash['variable'] = all_vars.results
+      @total_vars = all_vars.total
     end
     if params[:script_select] == 'true'
       @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results
@@ -79,6 +81,9 @@ class SearchController < ApplicationController
     end
     #expires_in 20.minutes
     end
+    @variable_name = params[:variable_name]
+    @variable_description = params[:variable_description]
+    @variable_values = params[:variable_value]
   end
 
   private
@@ -193,7 +198,7 @@ class SearchController < ApplicationController
     res = Sunspot.search(Publication) do
       keywords(query) do
         minimum_match 1
-        fields(:title) if params[:publication_title]
+        fields(:title) if params[:publication_title] == 'true'
         fields(:abstract) if params[:publication_description] == 'true'
         fields(:journal) if params[:publication_journal] == 'true'
       end
@@ -218,9 +223,9 @@ class SearchController < ApplicationController
     result = Sunspot.search(Variable) do
       keywords(query) do
         minimum_match 1
-        fields(:name) if params[:variable_name]
-        fields(:value) if params[:variable_description]
-        fields(:values) if params[:variable_values]
+        fields(:name) if params[:variable_name] == 'true'
+        fields(:value) if params[:variable_description] == 'true'
+        fields(:values) if params[:variable_value] == 'true'
       end
       paginate(:page => params[:page] ? page : 1, :per_page => 20)
       with(:dataset_id, datasets)

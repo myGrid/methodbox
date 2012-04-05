@@ -101,11 +101,15 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		var generateRequest = function(oState, oSelf) {
 		    // Get states or use defaults
 		    oState = oState || { pagination: null, sortedBy: null };
-		    var sort = (oState.sortedBy) ? oState.sortedBy.key : "name";
+		    var sort = (oState.sortedBy) ? oState.sortedBy.key : "none";
 		    var dir = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : "asc";
 		    var page = (oState.pagination) ? oState.pagination.page : 1;
 		    //var results = (oState.pagination) ? oState.pagination.rowsPerPage : 20;
-            var query_params = "query=" + query + "&sort=" + sort + "&dir=" + dir + "&page=" + page;
+            var query_params = "query=" + query + "&sort=" + sort +
+                               "&dir=" + dir + "&page=" + page + 
+                               "&variable_name=" + variable_name +
+                               "&variable_description=" + variable_description +
+                               "&variable_value=" + variable_values;
 		    return  query_params;
 		};
 		 // DataTable configuration 
@@ -113,7 +117,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		  generateRequest: generateRequest, 
 		  initialRequest: generateRequest(), // Initial request for first page of data 
 		  dynamicData: true, // Enables dynamic server-driven data 
-		  sortedBy : {key:"name", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow 
+		  //sortedBy : {key:"name", dir:YAHOO.widget.DataTable.CLASS_ASC}, // Sets UI initial sort arrow 
 		  paginator: new YAHOO.widget.Paginator({ rowsPerPage:20 }), // Enables pagination  
 		  rowExpansionTemplate :'{id}',
 		  draggableColumns:true
