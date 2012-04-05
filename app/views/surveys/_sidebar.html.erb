@@ -1,14 +1,13 @@
 <% if logged_in? -%>
-  <li><%= icon "new", new_survey_url, "Create a new " + SURVEY.downcase, {:title=>"Add a new " + SURVEY.downcase + " to MethodBox"}, "Create a new " + SURVEY.downcase %></li>
-   <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a new datasource" %></li>
+  <li class="normal-border-top-grey"><%= icon "new", new_survey_url, "Create a new " + SURVEY.downcase, {:title=>"Add a new " + SURVEY.downcase + " to MethodBox"}, "Create a " + SURVEY.downcase %></li>
+   <li class="normal-border-top-grey"><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a datasource" %></li>
    <% if controller.action_name == "show" %>
      <% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-       <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET.downcase+ " to this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase}, "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase -%></li>
+       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET.downcase+ " to this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase}, "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase -%></li>
      <% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-       <li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase },"Upload a new " +  DATASET.downcase -%></li>
+       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase },"Upload a new " +  DATASET.downcase -%></li>
      <% end %>
    <% end %>
 <% end -%>
-<li><%= icon "show", surveys_url, "Search " + SURVEY.pluralize.downcase, {:title=>"Look at the " + SURVEY.pluralize.downcase + " using the tabular view and search them for variables"}, "Search " + SURVEY.pluralize.downcase %></li>
 
 

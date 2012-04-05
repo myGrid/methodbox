@@ -79,7 +79,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    { key: "description", label: "Description", sortable: true, width: 300, resizeable: true },
 		    { key: "year", label: "Year", sortable: true, width: 50, resizeable: true },
 		    { key: "survey", label: survey, formatter:"datasetSurveysFormatter", sortable: true, width: 100, resizeable: true },
-		    { key: "type", label: survey_type, sortable: true, width: 100, resizeable: true },
+		    { key: "type", label: survey_type, sortable: true, width: 75, resizeable: true },
             { key: "source", label: "Source", formatter:"datasetSourceFormatter", sortable: true, width: 150, resizeable: true }
 		];
 

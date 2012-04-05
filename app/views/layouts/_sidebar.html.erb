@@ -1,16 +1,21 @@
-<% if defined? @atom_feed and !@atom_feed.blank?  %>
-  <li><%= icon "feed", @atom_feed, "Updates", nil, "Updates" %></li>
-<% end %>
+<div class="sidebar-border">
+	<ul>
+		<%= render :partial => "layouts/atom_feed" %>
+		<%= render :partial => "cart/all_buttons" -%>
+		<li><%= icon "show", surveys_url, "Search " + SURVEY.pluralize, {:title=>"Look at the " + SURVEY.downcase.pluralize + " using the tabular view and search them for variables"}, "Search " + SURVEY.pluralize %></li>
+		<%= render_sidebar -%>
+	</ul>
+</div>
 <div class="sidebar-border">
 <div class="center small-padding-top">
 Latest <%= DATASET.pluralize.downcase -%>
 </div>
-<div>
+<div class="normal-padding-left">
 <% datasets = Dataset.all(:order => "created_at DESC", :limit => 5) -%>
 <ul>
 <% datasets.each do |dataset| -%>
   <% if Authorization.is_authorized?("view", nil, dataset.survey, current_user) -%>
-    <li><%= link_to dataset.name, dataset_url(dataset) ,{:title=>dataset.description} -%></li>
+    <li class="square-list"><%= link_to dataset.name, dataset_url(dataset) ,{:title=>dataset.description} -%></li>
   <% end -%>
 <% end -%>
 </ul>
