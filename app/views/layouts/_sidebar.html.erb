@@ -2,7 +2,7 @@
 	<ul>
 		<%= render :partial => "layouts/atom_feed" %>
 		<%= render :partial => "cart/all_buttons" -%>
-		<li><%= icon "show", surveys_url, "Search " + SURVEY.pluralize, {:title=>"Look at the " + SURVEY.downcase.pluralize + " using the tabular view and search them for variables"}, "Search " + SURVEY.pluralize %></li>
+		<li><%= icon "show", surveys_url, "Search " + SURVEY.pluralize, {:title=>"Look at the " + SURVEY.downcase.pluralize + " using the tabular view and search them for variables"}, "View " + SURVEY.pluralize %></li>
 		<%= render_sidebar -%>
 	</ul>
 </div>
