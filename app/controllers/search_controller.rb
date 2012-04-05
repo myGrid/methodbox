@@ -40,8 +40,8 @@ class SearchController < ApplicationController
       results = dataset_results + survey_datasets
       results.uniq!
       @results_hash['dataset'] = results
-      datasets = results.sort!{|x,y| x.name <=> y.name}
-      datasets_hash = {"total_entries" => datasets.size, "results"=>datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+      #datasets = results.sort!{|x,y| x.name <=> y.name}
+      datasets_hash = {"total_entries" => results.size, "results"=>results.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50),  "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
       @datasets_json = datasets_hash.to_json
     end
     if params[:variable_select] == 'true'
