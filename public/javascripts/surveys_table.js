@@ -79,10 +79,10 @@ YAHOO.util.Event.addListener(window, "load", function() {
             { label: "", formatter: YAHOO.widget.RowExpansionDataTable.formatRowExpansion},
             { key:"Select", label: "", formatter: "checkbox"},
 		    { key: "title", label: "Title", formatter:"surveySurveysFormatter", sortable: true, width: 100, resizeable: true },
-		    { key: "description", label: "Description", sortable: true, width: 500, resizeable: true },
+		    { key: "description", label: "Description", sortable: true, width: 400, resizeable: true },
 		    //{ key: "year", label: "Year", sortable: true, minWidth: 100, maxWidth: 100 },
 		    { key: "type", label: survey_type, sortable: true, width: 100, resizeable: true },
-                    { key: "source", label: "Source", formatter:"surveySourceFormatter", sortable: true, width: 100, resizeable: true }
+                    { key: "source", label: "Source", formatter:"surveySourceFormatter", sortable: true, width: 150, resizeable: true }
 		];
 
         //var surveyDataSource = new YAHOO.util.LocalDataSource(survey_results);

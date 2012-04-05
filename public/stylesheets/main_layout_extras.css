@@ -81,6 +81,16 @@ text-decoration: underline;
 	padding-bottom:0.5em;
 	padding-top:0.5em;
 }
+.sidebar-border {
+    margin: 1em; 
+    border-radius: 6px; 
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px; 
+    border: 2px solid lightgray;
+}
+.sidebar-border ul {
+	margin: 1em;
+}
 .box_standout {
   	color: #333333;
   	border: 1px solid #DDD; 
@@ -588,10 +598,34 @@ div.exhibit-collectionView-group h2 {
 	padding-top: 8em;
 }
 .medium-padding-bottom {
-	padding-bottom: 5px;
+	padding-bottom: 3em;
 }
 .medium-padding-top {
 	padding-top: 3em;
+}
+.medium-padding-left {
+  padding-left: 3em;
+}
+.normal-padding-top {
+  padding-top: 1em;
+}
+.normal-padding-bottom {
+  padding-bottom: 1em;
+}
+.normal-padding-left {
+  padding-left: 1em;
+}
+.normal-padding-right {
+  padding-right: 1em;
+}
+.small-padding-top {
+  padding-top: 0.5em;
+}
+.small-padding-bottom {
+  padding-bottom: 0.5em;
+}
+.small-padding-left {
+  padding-left: 0.5em;
 }
 /* extra marging and padding settings over */
 
@@ -696,6 +730,8 @@ body {
   border-bottom-right-radius: 6px;
   padding-left: 10px;
   padding-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .add_var_button {
@@ -804,4 +840,19 @@ body {
 	background-color: #ACCBE0;
 	padding-left: 30%;
 	padding-right: 30%;
+/* try and get things in the centre when div is between two floated divs */
+#ft .code-url {
+	padding-left: 20%;
+	padding-right: 20%;
+}
+/* extra border settings */
+.normal-border-bottom-grey {
+  border-bottom: 1px solid lightgray;
+}
+.normal-border-top-grey {
+  border-top: 1px solid lightgray;
+}
+/* end of extra border settings */
+.square-list {
+	list-style: square outside;
 }

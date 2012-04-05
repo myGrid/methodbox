@@ -234,9 +234,16 @@ class DatasetsController < ApplicationController
   end
 
   def show
+    unless !Authorization.is_authorized?("show", nil, @dataset.survey, current_user)
     @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order=>"name ASC", :limit=>20) 
     variables_hash = {"startIndex" => 0, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
+  else
+    flash[:error] = "You do not have permission to carry out that action"
+    respond_to do |format|
+      format.html { redirect_to :back }
+    end
+  end
   end
   
   def new

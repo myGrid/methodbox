@@ -16,20 +16,20 @@
           <% end -%>  
 
           <div class="box1">
-            <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+            <p style="font-size:1em;">
               Email:
             </p>
             <p>
               <%= text_field_tag 'login', nil, :class => 'field', :style => "width: 140px;" %>
             </p>
-            <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+            <p style="font-size:1em;">
                   Password:
             </p>
             <p>
               <%= password_field_tag 'password', nil, :class => 'field', :style => "width: 140px;" %>
             </p>
 
-            <p style="font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+            <p style="font-size:1em;">
               Remember me: <%= check_box_tag 'remember_me' %>
             </p>
           </div>
@@ -40,7 +40,7 @@
 
         <% end %>
         <br/>
-        <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;font-family:'Trebuchet MS',Arial,Helvetica,Verdana,sans-serif;">
+        <p style="margin-top: 0.6em; line-height: 1.3em; font-size:1em;">
           <b><%= link_to "Forgotten password?", forgot_password_url %></b>
         </p>
 </div>

@@ -10,107 +10,58 @@ class VariablesController < ApplicationController
   
   def paginated_search_results  
     query = params[:query]
+    result = Sunspot.search(Variable) do
+      keywords(query) do
+        minimum_match 1
+        fields(:name) if params[:variable_name] == 'true'
+        fields(:value) if params[:variable_description] == 'true'
+        fields(:values) if params[:variable_value] == 'true'
+      end
+      paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
+      #No datasets at the moment since this is only called from the 'search everything' action
+      #with(:dataset_id, datasets)
+    end
     case params[:sort]
       when "name"
         case params[:dir]
           when "asc"
-            result = Sunspot.search(Variable) do
-              keywords(query) {minimum_match 1}
-              paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-              #with(:dataset_id, datasets)
-            end
             result.results.sort!{|x,y| x.name <=> y.name}
           when "desc"
-            result = Sunspot.search(Variable) do
-              keywords(query) {minimum_match 1}
-              paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-              #with(:dataset_id, datasets)
-            end
             result.results.sort!{|x,y| x.name <=> y.name}
         end
       when "description"
         case params[:dir]
            when "asc"
-             result = Sunspot.search(Variable) do
-               keywords(query) {minimum_match 1}
-               paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-               #with(:dataset_id, datasets)
-             end
              result.results.sort!{|x,y| x.value <=> y.value}
           when "desc"
-            result = Sunspot.search(Variable) do
-              keywords(query) {minimum_match 1}
-              paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-              #with(:dataset_id, datasets)
-            end
             result.results.sort!{|x,y| y.value <=> x.value}
           end
       when "category"
         case params[:dir]
            when "asc"
-             result = Sunspot.search(Variable) do
-               keywords(query) {minimum_match 1}
-               paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-               #with(:dataset_id, datasets)
-             end
              result.results.sort!{|x,y| x.category <=> y.category}
           when "desc"
-            result = Sunspot.search(Variable) do
-              keywords(query) {minimum_match 1}
-              paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-              #with(:dataset_id, datasets)
-            end
             result.results.sort!{|x,y| y.category <=> x.category}
           end
       when "dataset"
         case params[:dir]
            when "asc"
-             result = Sunspot.search(Variable) do
-               keywords(query) {minimum_match 1}
-               paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-               #with(:dataset_id, datasets)
-             end
              result.results.sort!{|x,y| x.dataset.name <=> y.dataset.name}
            when "desc"
-             result = Sunspot.search(Variable) do
-               keywords(query) {minimum_match 1}
-               paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-               #with(:dataset_id, datasets)
-             end
              result.results.sort!{|x,y| y.dataset.name <=> x.dataset.name}
            end
       when "survey"
         case params[:dir]
           when "asc"
-            result = Sunspot.search(Variable) do
-              keywords(query) {minimum_match 1}
-              paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-              #with(:dataset_id, datasets)
-            end
             result.results.sort!{|x,y| x.dataset.survey.title <=> y.dataset.survey.title}
           when "desc"
-            result = Sunspot.search(Variable) do
-              keywords(query) {minimum_match 1}
-              paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-              #with(:dataset_id, datasets)
-            end
             result.results.sort!{|x,y| y.dataset.survey.title <=> x.dataset.survey.title}
           end
         when "year"
           case params[:dir]
             when "asc"
-              result = Sunspot.search(Variable) do
-                keywords(query) {minimum_match 1}
-                paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-                #with(:dataset_id, datasets)
-              end
               result.results.sort!{|x,y| x.dataset.year <=> y.dataset.year}
             when "desc"
-              result = Sunspot.search(Variable) do
-                keywords(query) {minimum_match 1}
-                paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
-                #with(:dataset_id, datasets)
-              end
               result.results.sort!{|x,y| y.dataset.year <=> x.dataset.year}
             end
      #no popularity sorting at the moment until it is a variable table column

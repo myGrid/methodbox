@@ -75,11 +75,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         var columnDefs = [
             { key:"Select", label: "", formatter: "checkbox"},
-		    { key: "title", label: "Title", formatter:"datasetDatasetsFormatter", sortable: true, width: 100, resizeable: true },
+		    { key: "title", label: "Title", formatter:"datasetDatasetsFormatter", sortable: true, width: 65, resizeable: true },
 		    { key: "description", label: "Description", sortable: true, width: 300, resizeable: true },
 		    { key: "year", label: "Year", sortable: true, width: 50, resizeable: true },
 		    { key: "survey", label: survey, formatter:"datasetSurveysFormatter", sortable: true, width: 100, resizeable: true },
-		    { key: "type", label: survey_type, sortable: true, width: 100, resizeable: true },
+		    { key: "type", label: survey_type, sortable: true, width: 75, resizeable: true },
             { key: "source", label: "Source", formatter:"datasetSourceFormatter", sortable: true, width: 150, resizeable: true }
 		];
 
@@ -112,7 +112,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 
         pag = new YAHOO.widget.Paginator({rowsPerPage: 30, totalRecords: dataset_results.total_entries});
         datasetDataTable = new YAHOO.widget.RowExpansionDataTable("datasets_table",
-                columnDefs, datasetDataSource, {draggableColumns:true, caption: "List of all " + datasets_title, sortedBy : { key: "title", dir: YAHOO.widget.DataTable.CLASS_ASC }, paginator: pag, rowExpansionTemplate : '{id}' });
+                columnDefs, datasetDataSource, {draggableColumns:true, caption: "List of all " + datasets_title, paginator: pag, rowExpansionTemplate : '{id}' });
 		datasetDataTable.subscribe( 'cellClickEvent',
 				datasetDataTable.onEventToggleRowExpansion );
     var filterTimeout = null;

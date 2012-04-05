@@ -62,13 +62,15 @@ class HomeController < ApplicationController
   end
   
   def select_layout
-    # if action_name == 'about'
-      # return 'main_without_sidebar'
-    # elsif logged_in? && action_name != 'search'
+    if action_name == 'about'
+      return 'main_without_sidebar'
+    elsif action_name == 'search'
       return 'main'
-    # else
-      # return 'main_without_sidebar'
-    # end
+    elsif logged_in? && action_name != 'search'
+      return 'main'
+    else
+      return 'main_without_sidebar'
+    end
   end
 
   private

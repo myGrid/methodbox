@@ -2,27 +2,14 @@
 <% form_tag('/search/', :method=>"get") do -%>
 <!-- search for everything from the main page -->
 <!-- return first page of results -->
-<%= hidden_field_tag 'person_page', 1 -%>
-<%= hidden_field_tag 'survey_page', 1 -%>
-<%= hidden_field_tag 'dataset_page', 1 -%>
-<%= hidden_field_tag 'script_page', 1 -%>
-<%= hidden_field_tag 'csvarchive_page', 1 -%>
-<%= hidden_field_tag 'publication_page', 1 -%>
-<%= hidden_field_tag 'variable_page', 1 -%>
-<%= hidden_field_tag 'search_type[]', 'surveys' -%>
-<%= hidden_field_tag 'search_type[]', 'datasets' -%>
-<%= hidden_field_tag 'search_type[]', 'variables' -%>
-<%= hidden_field_tag 'search_type[]', 'people' -%>
-<%= hidden_field_tag 'search_type[]', 'publications' -%>
-<%= hidden_field_tag 'search_type[]', 'extracts' -%>
-<%= hidden_field_tag 'search_type[]', 'methods' -%>
+<% start_year = Dataset.scoped(:select => "DISTINCT year").sort!{|x,y| x.year.to_i <=> y.year.to_i}.delete_if{|x| x.year == nil}.first.year.to_i -%>
+<%= render :partial => "layouts/search_hidden_fields" %>
 <div class="left header-search-div">
 <%= text_field_tag :search_query, @search_query, :style=>"border-radius: 2px; width: 100%; height: 25px;font: 17px arial,sans-serif; margin-right: 5px;", :title=>'Find variables, ' + SURVEY.pluralize + ', people, methods and more . Use + for terms that must be included, - for terms to be excluded & double quotes around phrases eg. +private "health insurance" -covered' -%>
 </div>
 <div class="right center header-submit-div">
 <%= submit_tag "Search", :id=> "search_button", :style=>"width: 100px; height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables, surveys, people and more", :onclick => "if (!checkNotEmpty('search_query')) {return false;} else {Element.show('spinner');$('search_button').form.submit();return true;}"  -%>
-<%#= link_to 'Advanced search', root_url(:advanced_controls=>true), :style=>"display:block; font-size: xx-small;", :title=>"Fine tune your search by including or excluding search types" -%>
-</div>
+<%= link_to 'Advanced search', advanced_search_url(:advanced_controls=>true), :style=>"display:block; font-size: xx-small;", :title=>"Fine tune your search by including or excluding search types" -%></div>
 <% end -%>
 <div style="clear: both;">
 </div>

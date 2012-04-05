@@ -41,4 +41,4 @@ ActionMailer::Base.smtp_settings = {
 ROUTES_PROTOCOL = "http"
 STATISTICS_ROUTE = '/12345/'
 #if you want to load a local copy of yui in production mode then add this constant, otherwise remove it
-YUI_LOADER="path/to/yui/build"
+#YUI_LOCAL=true

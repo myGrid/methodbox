@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111102140404) do
+ActiveRecord::Schema.define(:version => 20120403101542) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -147,6 +147,12 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.boolean  "similarity_checked",         :default => false
   end
 
+  create_table "data_providers", :force => true do |t|
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "dataset_lists", :force => true do |t|
     t.integer  "user_search_id"
     t.integer  "dataset_id"
@@ -171,7 +177,7 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.string   "reason_for_update"
     t.string   "nesstar_id"
     t.string   "nesstar_uri"
-    t.string   "year"
+    t.integer  "year"
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -252,6 +258,15 @@ ActiveRecord::Schema.define(:version => 20111102140404) do
     t.string   "subject_field_name"
     t.string   "object_field_name"
     t.integer  "user_id"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string   "name"
+    t.integer  "latitude",   :limit => 10, :precision => 10, :scale => 0
+    t.integer  "longitude",  :limit => 10, :precision => 10, :scale => 0
+    t.integer  "dataset_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "matched_variables", :force => true do |t|

@@ -1,20 +1,4 @@
-<div id="cart-buttons">
-<%= render :partial => "cart/all_buttons" -%>
-</div>
-<div class="sidebar-bg">
-  <div class="sidebar">
-    <ul class="vbuttons">
-      <li><%= icon "show", surveys_url, "Search for variables", nil, "Search for variables" %></li>
-    </ul>
-  </div>
-</div>
 <% if logged_in? -%>
-  <div class="sidebar-bg">
-    <div class="sidebar">
-      <ul class="vbuttons">
-        <li><%= icon "new", new_survey_url, "Create a new survey", {:title=>"Add a new survey to MethodBox"}, "Create a new survey" %></li>
-        <li><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a new datasource" %></li>
-      </ul>
-    </div>
-  </div>
+  <li class="normal-border-top-grey"><%= icon "new", new_survey_url, "Create a new survey", {:title=>"Add a new survey to MethodBox"}, "Create a survey" %></li>
+  <li class="normal-border-top-grey"><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a datasource" %></li>
 <% end -%>

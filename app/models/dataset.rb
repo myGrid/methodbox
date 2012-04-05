@@ -15,7 +15,7 @@ class Dataset < ActiveRecord::Base
       integer :id
       text :description
       text :name
-      text :year
+      integer :year
       string :name
     end
   

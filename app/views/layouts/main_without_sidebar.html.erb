@@ -9,49 +9,9 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <%= render :partial => "layouts/javascript_variables" -%>
 <%= csrf_meta_tag %>
-<% if defined? YUI_LOADER -%>
-<%= javascript_include_tag :defaults, 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','yuiloader-min.js' -%>
-
-<%#= stylesheet_link_tag 'alphabetical_pagination', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', :cache=>'css_cached' -%>
-<script>
-// Instantiate and configure Loader:
-var loader = new YAHOO.util.YUILoader({
-    base: "<%= YUI_LOADER -%>",
-    // Identify the components you want to load.  Loader will automatically identify
-    // any additional dependencies required for the specified components.
-    require:["yahoo","dom","event","element","button","connection","container","cookie","datasource","paginator","datatable","json","tabview","reset","fonts","grids","base"],
-
-    // Configure loader to pull in optional dependencies.  For example, animation
-    // is an optional dependency for slider.
-    loadOptional: true,
-
-    // The function to call when all script/css resources have been loaded
-    onSuccess: function() {
-        //once yui is loaded we can load the datatable extensions
-        dynamicLoad('/javascripts/yui/datatable/datatable_expander.js');
-        dynamicLoad('/javascripts/yui/datatable/variable_table_expander.js');
-        dynamicLoad('/stylesheets/alphabetical_pagination.css');
-        dynamicLoad('/stylesheets/my_exp.css');
-        dynamicLoad('/stylesheets/gadgets.css');
-        dynamicLoad('/stylesheets/acts_as_taggable_stylesheet.css');
-        dynamicLoad('/stylesheets/styles.css');
-        dynamicLoad('/stylesheets/fast_auto_complete.css');
-        dynamicLoad('/stylesheets/redbox.css');
-        dynamicLoad('/stylesheets/autocompleter_advanced.css');
-        dynamicLoad('/stylesheets/savage_beast/forums.css');
-        dynamicLoad('/stylesheets/spiffy_corners.css');
-        dynamicLoad('/stylesheets/widget_tab_nav.css');
-        dynamicLoad('/stylesheets/main_layout_extras.css');
-    },
-
-    // Configure the Get utility to timeout after 10 seconds for any given node insert
-    timeout: 10000,
-
-    // Combine YUI files into a single request (per file type) by using the Yahoo! CDN combo service.
-    combine: true
-});
-loader.insert();
-</script>
+<% if YUI_LOCAL -%>
+  <%= javascript_include_tag :defaults, 'yui.js', 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','datatable_expander.js', 'variable_table_expander.js' -%>
+  <%= stylesheet_link_tag 'yui', 'alphabetical_pagination', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', 'main_layout_extras', :cache=>'css_cached' -%>
 <% else -%>
 <!-- load yui over the web for the moment -->
 <!-- Combo-handled YUI CSS files: -->
@@ -89,7 +49,7 @@ loader.insert();
 
 </script>
 </head>
-<body>
+<body style="background-color: gray; min-width:1050px;">
 <!-- sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html -->
 <!-- <div id="wrap"> -->
 <div id="main">
@@ -97,6 +57,7 @@ loader.insert();
         <div>
           <%= render :partial=>"layouts/main_header" %>
         </div>
+        <%= render :partial => "widgets/main_tabnav" %>
         <div class="logged-out-main" id="bd">
           <div id="yui-main">
 <div id="spinner" style='display:none;'>
@@ -113,21 +74,11 @@ loader.insert();
               </div>
             <% end %>
             <%= yield :layout %>
-<% if controller.action_name != "about" -%>
-<div style = "text-align: center; font-size: larger;">
-<ol class="variable-suggestions" style="margin: 1em 0 0 0;">
-<li title="Find out more about MethodBox, it's motivations and the people behind it"><%= link_to 'About MethodBox', about_url -%></li>
-<li>|</li>
-<li title="Enter the MethodBox. See what people are sharing. Search and view <%= SURVEY.pluralize.downcase -%>, scripts, data extracts and more"><%= link_to 'View the data catalogue', surveys_url -%></li>
-<ol>
-</div>
-<% end -%>
           </div>
-<div class="yui-b"><%= render :partial=>"widgets/nav" %></div>
         </div>
-	    <div id="ft">
-	      <%= render :partial=>"layouts/footer" %>
-	    </div>
+</div>
+<div id="ft">
+  <%= render :partial=>"layouts/footer" %>
 </div>
 </div>
 <!-- </div> -->
