@@ -93,7 +93,7 @@ module ApplicationHelper
   
   #dynamic sidebar for each contoller
   def render_sidebar
-    if FileTest.exist?(File.join(RAILS_ROOT, 'app', 'views', controller.controller_name.downcase, '_sidebar.html.erb')) 
+    if FileTest.exist?(File.join(Rails.root, 'app', 'views', controller.controller_name.downcase, '_sidebar.html.erb')) 
       render :partial => "#{controller.controller_name.downcase}/sidebar"
     end
   end

@@ -2,14 +2,14 @@
 <div id="login-list">
 <b>
 <% if REGISTRATION_CLOSED -%>
-<%= link_to "Request Access", signup_url %>
+<%= link_to "Request Access", new_user_registration_url %>
 <% else -%>
-<%= link_to "Sign up", signup_url %>
+<%= link_to "Sign up", new_user_registration_url %>
 <% end -%>
 </b>
 /
 <b>
-<%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
+<%= link_to "Log in", new_user_session_url, :onclick => "showPopup('login_box'); return false;"%>
 </b>
 (<div id="login-tooltip-question" style="display: inline; margin-left: 3px;">Why register?</div>)
 </div>

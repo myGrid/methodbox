@@ -5,7 +5,7 @@ module ProcessDatasetJob
   
  class StartJobTask < Struct.new(:dataset_id, :user_id, :separator, :base_host)
     
-   require 'fastercsv'
+   require 'csv'
     
    cattr_accessor :logger
    self.logger = RAILS_DEFAULT_LOGGER

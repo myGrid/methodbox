@@ -1,15 +1,14 @@
 source 'http://rubygems.org'
 source 'http://localhost:8808'
 source :gemcutter
-gem "rails", "3.1"
+gem "rails", "3.2"
 #rails version depends on active support of same version
 #gem "activesupport", "2.3.14"
 gem "rmagick"
 #gem "RedCloth", "4.2.3"
 gem "will_paginate", "~> 3.0"
 #gem "fastercsv", "1.5.3"
-#the ddi and nesstar gems are fixed at this version for the moment
-gem "libxml-ruby", "~> 2.2.0"
+gem "libxml-ruby", ">= 2.2.0"
 #gem "ruby-debug", "0.10.3"
 gem "rubyzip", "~> 0.9.5"
 gem "uuidtools", "~> 2.1.2"
@@ -20,8 +19,9 @@ gem "tzinfo", "~> 0.3.31"
 gem "linkeddata", "~> 0.3.4"
 gem "ipaddress", "~> 0.8.0"
 gem "POpen4",  "~> 0.1.2", :require => "popen4"
-gem "nesstar-api", "~> 0.0.5"
-gem "metric_fu"
+gem "nesstar-api", ">= 0.0.6"
+#rcov not 1.9 compatible
+#gem "metric_fu"
 gem 'sunspot_rails'
 gem 'addressable', '~> 2.2.6'
 gem 'simple-spreadsheet-extractor', '0.5.0'
@@ -36,12 +36,15 @@ gem "prototype-rails", "~> 3.1.0"
 gem "acts-as-taggable-on", "~> 2.2.2"
 #fleximage not compatible with rails 3.1
 gem "paperclip", "~> 2.0"
+gem 'exception_notification'
+gem 'devise'
 
 
 #database adaptors
 #need the odbc gem for sqlserver
-gem "ruby-odbc"
-gem "activerecord-sqlserver-adapter", "~> 3.1.5"
+#TODO some rails 3.2 issues with the sql server gems - need to switch to tinytds
+#gem "ruby-odbc"
+#gem "activerecord-sqlserver-adapter", "~> 3.1.5"
 gem "mysql2", "~> 0.3.11"
 gem "sqlite3-ruby", :require => "sqlite3"
 

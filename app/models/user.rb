@@ -2,12 +2,12 @@ require 'digest/sha1'
 require 'acts_as_contributor'
 
 class User < ActiveRecord::Base
-  #savage_beast
-  include SavageBeast::UserInit
+
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :confirmable, :validatable, 
+         :encryptable, :encryptor => :restful_authentication_sha1
 
   acts_as_contributor
-  # TODO uncomment the following line when SOPs are implemented
-  # has_many :sops, :as => :contributor
   
   has_many :notes
   
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
   #restful_authentication plugin generated code ...
   # Virtual attribute for the unencrypted password
-  attr_accessor :password
+  #attr_accessor :password
 
   #validates_presence_of     :login, :email - removed requirement on email
   #validates_length_of       :email,    :within => 3..100
@@ -44,8 +44,8 @@ class User < ActiveRecord::Base
   # validates_length_of       :login,    :within => 3..40
 
   # validates_uniqueness_of   :login, :case_sensitive => false
-  before_save :encrypt_password
-  before_create :make_activation_code
+  #before_save :encrypt_password
+  #before_create :make_activation_code
   # prevents a user from submitting a crafted form that bypasses activation
   # anything else you want your user to change should be added here.
   attr_accessible :login, :email, :email_confirmation, :password, :password_confirmation, :last_seen_at, :last_user_activity, :shibboleth_user_id, :shibboleth, :ukda_registered, :last_ukda_check
@@ -56,9 +56,9 @@ class User < ActiveRecord::Base
   # can't destroy the assets, because these might be valuable even in the absence of the parent project
   has_many :assets, :as => :contributor, :dependent => :nullify
 
-  named_scope :not_activated,:conditions=>['activated_at IS NULL'],:include=>:person
-  named_scope :without_profile,:conditions=>['person_id IS NULL']
-  named_scope :admins,:conditions=>['is_admin = ?',true],:include=>:person
+  scope :not_activated,:conditions=>['activated_at IS NULL'],:include=>:person
+  scope :without_profile,:conditions=>['person_id IS NULL']
+  scope :admins,:conditions=>['is_admin = ?',true],:include=>:person
 
   has_many :cart_items, :dependent => :destroy
   

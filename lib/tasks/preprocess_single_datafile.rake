@@ -16,7 +16,7 @@ namespace :obesity do
       if variables.size == 0
          variables = Variable.all(:conditions => "dataset_id =  #{dataset.id} and is_archived != true")
          begin
-           if check_upto_date (dataset, variables.last)
+           if check_upto_date(dataset, variables.last)
              puts "Skipping dataset "+ dataset.id.to_s + " with name " + dataset.name
              process = false
            else
@@ -39,7 +39,7 @@ namespace :obesity do
         variables = Variable.all(:conditions => "dataset_id =  #{dataset.id}")
         #variables = Variable.find(:all, :conditions => "dataset_id =  22 and name = 'INTYP01'")
         variables.each do |variable|
-          process_variable (variable)
+          process_variable(variable)
         end
       end  
     #end 
@@ -252,7 +252,7 @@ namespace :obesity do
     #Required because found a "9999999999999999999999999999999999999999999999999" in a String column
     if strings
       string_hash.sort.each do |key, frequency|
-        none_values_distribution_file.write (key.chomp!.to_s + "," + frequency.to_s + "\n")
+        none_values_distribution_file.write(key.chomp!.to_s + "," + frequency.to_s + "\n")
       end
       values_distribution_file.close
       no_value_stats(variable)

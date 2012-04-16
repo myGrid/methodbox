@@ -2,13 +2,24 @@ MethodBox::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
-  resources :surveys do
+  devise_for :users
+
+  resources :csvarchives, :path => "data_extracts"
+
+  resources :scripts, :path => SCRIPT.gsub(" ", "_")
+
+  resources :publications
+
+  resources :groups
+
+  resources :help, :only => :index
+
+  resources :surveys, :path => SURVEY.gsub(" ", "_") do
     member do
        get 'show_all_variables'
        get 'add_note'
        get 'download'
      end
-
      collection do
        get 'retrieve_details'
        get 'collapse_row'
@@ -25,6 +36,19 @@ MethodBox::Application.routes.draw do
        get 'search_variables'
        get 'sort_variables'
        get 'show_links'
+       get 'retrieve_variables'
+     end
+   end
+
+   resources :datasets, :path => DATASET.gsub(" ", "_") do 
+     member do 
+       get 'update_metadata'
+       get 'update_data'
+       post 'load_new_metadata'
+       post 'load_new_data'
+     end
+     collection do
+       get 'retrieve_variables'
      end
    end
 
@@ -36,7 +60,6 @@ MethodBox::Application.routes.draw do
        post 'deprecate'
 #TODO should search for tags and deprecate really be post?
      end
-
      collection do
        get 'values_array'
 #TODO should find for multiple surveys and search be post?
@@ -45,20 +68,12 @@ MethodBox::Application.routes.draw do
        get 'by_category'
 #TODO is add multiple to cart still used?
        post 'add_multiple_to_cart'
+       get 'paginated_search_results'
      end
    end
 
-  resources :session do
-    member do
-      get 'convert_shibboleth_login'
-      get 'pre_shibboleth_login'
-      get 'shibboleth'
-    end
-  end
-
-  match  '/signup' => 'users#new'
-  match  '/login' => 'sessions#new'
-  match '/logout' => 'sessions#destroy'
+  match 'session/pre_shibboleth_login' => 'session#pre_shibboleth_login'
+  match 'advanced_search' => 'home#search'
 
   root :to => 'home#search'
 

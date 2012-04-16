@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   include AuthenticatedSystem
   #email exceptions to nominated users
-  include ExceptionNotification::Notifiable
+  #include ExceptionNotification::Notifiable
   #https/ssl
   #include SslRequirement
   include SysMODB::SpreadsheetExtractor

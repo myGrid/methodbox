@@ -7,7 +7,7 @@ require 'rubygems'
 require 'rake'
 require 'model_execution'
 require 'active_record/fixtures'
-require 'fastercsv'
+require 'csv'
 
 namespace :obesity do
   desc "load data from csv"
