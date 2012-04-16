@@ -39,6 +39,8 @@ gem "paperclip", "~> 2.0"
 
 
 #database adaptors
+#need the odbc gem for sqlserver
+gem "ruby-odbc"
 gem "activerecord-sqlserver-adapter", "~> 3.1.5"
 gem "mysql2", "~> 0.3.11"
 gem "sqlite3-ruby", :require => "sqlite3"

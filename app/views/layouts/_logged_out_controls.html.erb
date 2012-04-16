@@ -1,5 +1,5 @@
-<div id="small-hd" class="left">
-<div>
+<div id="small-hd">
+<div id="login-list">
 <b>
 <% if REGISTRATION_CLOSED -%>
 <%= link_to "Request Access", signup_url %>
@@ -11,8 +11,33 @@
 <b>
 <%= link_to "Log in", login_url, :onclick => "showPopup('login_box'); return false;"%>
 </b>
+(<div id="login-tooltip-question" style="display: inline; margin-left: 3px;">Why register?</div>)
+</div>
 </div>
 <div id="login_box" style="display: none; z-index: 100; position: absolute; left: 2em; width: 300px;">
 	<%= render :partial=>"gadgets/sign_in_popup" %>
 </div>
+<div>
 </div>
+
+
+<div id="login-tooltip-answer">
+  <ul>
+    <li>As a registered user you can:</li>
+    <div id="login-tooltip-answer-inner">
+    <li><b>Download</b> variables from over 200 <%= SURVEY.pluralize.downcase -%>.</li>
+    <li>Upload and <b>share</b> methods and scripts.</li>
+    <li><b>Add</b> your own <%= SURVEY.pluralize.downcase -%> and <%= DATASET.pluralize.downcase -%>.</li>
+    <li>Find people to <b>collaborate</b> with.</li>
+    <li>Get help from the <b>community</b>.</li>
+    </div>
+    <li id="login-tooltip-answer-footnote">To download some of the <%= SURVEY.pluralize.downcase -%> you may need to register with <a href="http://www.esds.ac.uk" title="The Economic and Social Data Service" target="_blank"">ESDS</a></li>
+  </ul>
+</div>
+
+<script type="text/javascript">
+YAHOO.namespace("example.container")
+YAHOO.example.container.panel1 = new YAHOO.widget.Panel("login-tooltip-answer", { context:["login-tooltip-question","tl","br", ["beforeShow", "windowResize"]], width:"320px", visible:false, constraintoviewport:true } );
+YAHOO.example.container.panel1.render();
+YAHOO.util.Event.addListener("login-tooltip-question", "click", YAHOO.example.container.panel1.show, YAHOO.example.container.panel1, true);
+</script>

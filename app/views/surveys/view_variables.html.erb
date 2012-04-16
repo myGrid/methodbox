@@ -2,7 +2,7 @@
 
 <div class="show_basic">
   <br/>
-   <b>Datasets selected: <% @survey_list.each do |val| %>
+   <b><%= DATASET.pluralize -%> selected: <% @survey_list.each do |val| %>
        <%= link_to(Survey.find(val).title, survey_path(Survey.find(val))) -%>
       <% end %>
       </b><br/><br/>

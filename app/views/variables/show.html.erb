@@ -1,17 +1,3 @@
-<div class="right">
-<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style ">
-<a class="addthis_button_preferred_1"></a>
-<a class="addthis_button_preferred_2"></a>
-<a class="addthis_button_preferred_3"></a>
-<a class="addthis_button_preferred_4"></a>
-<a class="addthis_button_compact"></a>
-<a class="addthis_counter addthis_bubble_style"></a>
-</div>
-<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
-<!-- AddThis Button END -->
-<%#= addthis_bookmark_button(variable_url(@variable), @variable.name + " from " + @variable.dataset.name) -%>
-</div>
 <% form_tag({:url => {:action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
 <ul class="buttons">
 <% if logged_in? && !@variable.is_archived? -%>
@@ -33,9 +19,6 @@
 				<%= @variable.archived_reason -%>
 				</div>
 				<% else %>
-				<p class="none_text">
-		          No reason given
-		        </p>
 				<% end %>
 		</p>
 	<% end -%>
@@ -62,57 +45,41 @@
       <% end -%>
       </p>
       <p>
-        <b>Documentation:</b>
         <% unless @variable.document.blank? -%>
+        <b>Documentation:</b>
         <div class="box_standout">
           <%= link_to(@variable.document + ", page " + @variable.page, open_pdf_variable_url(@variable) + "#page=" + @variable.page,:title=>"Open the PDF document with information about this variable") -%>
         </div>
-      <% else -%>
-        <p class="none_text">
-          No documentation listed
-        </p>
       <% end -%>
       </p>
 
       <p>
-        <b>Category:</b>
         <% unless @variable.category.blank? -%>
+        <b>Category:</b>
         <div class="box_standout">
           <%= link_to(@variable.category, by_category_variables_url(:category=>@variable.category),:title=>"Show all variables with this category") -%>
         </div>
-      <% else -%>
-        <p class="none_text">
-          No category
-        </p>
       <% end -%>
       </p>
       <p>
-        <b>Variable source:</b>
         <% unless @variable.dertype.blank? -%>
+        <b>Variable source:</b>
         <div class="box_standout">
           <%= simple_format(white_list(@variable.dertype)) -%>
         </div>
-      <% else -%>
-        <p class="none_text">
-          No source
-        </p>
       <% end -%>
       </p>
       <p>
-        <b>Derivation method:</b>
         <% unless @variable.dermethod.blank? -%>
+        <b>Derivation method:</b>
         <div class="box_standout">
           <%= simple_format(white_list(@variable.dermethod)) -%>
         </div>
-      <% else -%>
-        <p class="none_text">
-          No method
-        </p>
       <% end -%>
       </p>
       <p>
-        <b>Allowed values:</b>
         <% if !@variable.info.blank? -%>
+        <b>Allowed values:</b>
         <div class="box_standout">
           <%= simple_format(white_list(@variable.info)) -%>
         </div>
@@ -127,10 +94,6 @@
         	<% end -%>
 		</tbody>
 	</table>
-      <% else -%>
-        <p class="none_text">
-          No allowed values
-        </p>
       <% end -%>
       </p>
         <b>Dataset:</b>
@@ -139,7 +102,7 @@
       </div>
       </p>
       <p>
-        <b>Survey:</b>
+        <b><%= SURVEY -%>:</b>
       <div class="box_standout">
         <%= link_to(Dataset.find(@variable.dataset_id).survey.title, survey_url(Dataset.find(@variable.dataset_id).survey)) -%>
       </div>
@@ -150,8 +113,13 @@
 
       <p>
         <b>Statistics:</b>
-
-<%=  render :partial=>"statistics_table", :locals => {:variable => @variable, :var_hash => @var_hash, :no_var_hash => @no_var_hash, :total_entries => @total_entries, :invalid_entries => @invalid_entries, :blank_rows => @blank_rows, :value_domain_hash => @value_domain_hash, :valid_entries => @valid_entries} -%>
+<div>
+<%= render :partial => "statistics_chart", :locals => {:variable => @variable, :var_hash => @var_hash, :no_var_hash => @no_var_hash, :total_entries => @total_entries, :invalid_entries => @invalid_entries, :blank_rows => @blank_rows, :value_domain_hash => @value_domain_hash, :valid_entries => @valid_entries} -%>
+</div>
+<div>
+<%= render :partial => "values_table", :locals => {:variable => @variable, :var_hash => @var_hash, :no_var_hash => @no_var_hash, :total_entries => @total_entries, :invalid_entries => @invalid_entries, :blank_rows => @blank_rows, :value_domain_hash => @value_domain_hash, :valid_entries => @valid_entries} -%>
+</div>
+<%#=  render :partial=>"statistics_table", :locals => {:variable => @variable, :var_hash => @var_hash, :no_var_hash => @no_var_hash, :total_entries => @total_entries, :invalid_entries => @invalid_entries, :blank_rows => @blank_rows, :value_domain_hash => @value_domain_hash, :valid_entries => @valid_entries} -%>
 		<div style="clear:both;">
 			</div>
 
@@ -167,10 +135,6 @@
             <div class="box_standout">
               <%= @variable.update_reason -%>
             </div>
-          <% else -%>
-            <p class="none_text">
-              No reason given
-            </p>
           <% end %>
         </p>
       <% end -%>

@@ -64,6 +64,8 @@ class HomeController < ApplicationController
   def select_layout
     if action_name == 'about'
       return 'main_without_sidebar'
+    elsif action_name == 'search'
+      return 'main'
     elsif logged_in? && action_name != 'search'
       return 'main'
     else

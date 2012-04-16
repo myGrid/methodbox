@@ -1,130 +1,198 @@
-<%# if logged_in? -%>
-<%  
-# this partial renders a tabnav, you can call it in your views with:
-#   <%= tabnav :main % > (just the tabnav) 
-# or, if you want a boxed tabnav:
-#   <% tabnav :main do % >
-#     your html here
-#   <% end % >
-# (remove the space between % and >, we don't want to mess up your brand new tabnav :-))
-#
-# you can pass render_tabnav a few options:
-#   :generate_css => true|false #=> generates a default inline css for the tabnav, defaults to false
-#   :html => aHash #=> sets html options for the tabnav's div (es :html => {:class=> 'myCssClass', :id=>'myCssId'}) 
-#     
-render_tabnav :main, 
-              :generate_css => false do 
-    
-  # this generates a tab for every controller in your app
-  # you'll probably want to delete this and
-  # add tabs one by one as shown below
-  # controller_names.each do |name|
-  #   add_tab do |t|
-  #     t.named name.camelize
-  #     t.titled "Go to #{name.camelize}"
-  #     t.links_to :controller => name
-  #   end
-  # end 
-         
+<div class="yui-skin-sam">
+<div id="methodboxmenu" class="yuimenubar yuimenubarnav">
+    <div class="bd">
+        <ul class="first-of-type">
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= datasets_url -%>">
+                    Data Sources
+                </a>
 
-  #add_tab do |t|
-   #t.named 'New Additions'
-   #t.titled "The latest Surveys, Methods and Data Extracts added to MethodBox"
-   #t.links_to :controller => 'home'
-  #end unless !logged_in?
+                <!-- A submenu -->
 
-  add_tab do |t|
-   t.named 'Data Sources'
-   t.titled "Archived surveys and other sources of data for research"
-   t.links_to :controller => 'surveys'
-  end
+                <div id="datasources" class="yuimenu">
+                    <div class="bd">
+                        <ul>
 
-  add_tab do |t|
-   t.named 'Data Extracts'
-   t.titled "Data sources created by the users"
-   t.links_to :controller => 'csvarchives'
-  end #unless !logged_in?
+                        <li><a class="yuimenuitemlabel" href="<%= surveys_url -%>" title="<%= SURVEY.pluralize -%> and other sources of data for research"><%= SURVEY.pluralize -%></a></li>
+                        <li><a class="yuimenuitemlabel" href="<%= datasets_url -%>" title="<%= DATASET.pluralize -%> belonging to <%= SURVEY.pluralize.downcase -%>"><%= DATASET.pluralize -%></a></li>
 
-	add_tab do |t|
-   t.named 'Methods and Scripts'
-   t.titled "Advice and scripts for data cleaning and statistical analysis"
-   t.links_to :controller => 'scripts'
-  end
+                        </ul>
+                    </div>
+                </div>                    
+            
+            </li>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= csvarchives_url -%>" title="Data sources created by MethodBox users">
+                    Data Extracts
+                </a>       
+                <div id="dataextracts" class="yuimenu">
+                    <div class="bd">
+                        <ul>
 
-  add_tab do |t|
-   t.named 'Publications'
-   t.titled "Publications added from PubMed"
-   t.links_to :controller => 'publications'
-  end unless !logged_in?
+                        <li><a class="yuimenuitemlabel" href="<%= csvarchives_url -%>" title="Data sources created by MethodBox users">View all Data Extracts</a></li>
+<% if logged_in? %>
+                        <li><a class="yuimenuitemlabel" href="<%= new_csvarchive_url -%>" title="Create a new Data Extract from the variables in your cart">Create a new Data Extract</a></li>
+<% end -%>
 
-  add_tab do |t|
-   t.named 'My MethodBox'
-   t.titled "Your profile"
-   t.links_to :controller => 'people', :action => 'show', :id => current_user.id
-  end unless !logged_in? 
+                        </ul>
+                    </div>
+                </div>           
+            
+            </li>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= scripts_url-%>" title="Advice and scripts for data cleaning, statistical analysis and more">
+                    <%= SCRIPT_HEADER -%>
+                </a>  
+                <!-- A submenu -->
 
-	add_tab do |t|
-   t.named 'People'
-   t.titled "Who's who in the MethodBox"
-   t.links_to :controller => 'people', :action => 'index'
-  end unless !logged_in?
+                <div id="scripts" class="yuimenu">
+                    <div class="bd">
+                        <ul>
 
-  add_tab do |t|
-   t.named 'Groups'
-   t.titled "Create groups to share things with"
-   t.links_to :controller => 'work_groups'
-  end unless !logged_in?
+                        <li><a class="yuimenuitemlabel" href="<%= scripts_url -%>" title="Advice and scripts for data cleaning, statistical analysis and more">View all <%= SCRIPT_HEADER.downcase -%></a></li>
+<% if logged_in? %>
+                        <li><a class="yuimenuitemlabel" href="<%= new_script_url -%>" title="Create a new <%= SCRIPT-%> by uploading a file containing information/syntax/help">Add a new <%= SCRIPT -%></a></li>
+<% end -%>
+                        </ul>
+                    </div>
+                </div>                                         
+            
+            </li>
+<% if logged_in? -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= publications_url -%>" title="Publications added from PubMed">
+                    Publications
+                </a>                                       
+            
+            </li>
+<% end -%>
+<% if logged_in? -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= person_url(current_user.person) -%>" title="View and edit your profile, see your resources, view your search history">
+                    My MethodBox
+                </a>                                        
+            <!-- A submenu -->
 
-  add_tab do |t|
-   t.named 'Forums'
-   t.titled "Ask questions, help others"
-   t.links_to :controller => 'forums'
-  end unless !logged_in?
+                <div id="me" class="yuimenu">
+                    <div class="bd">
+                        <ul>
+                        <li><a class="yuimenuitemlabel" href="<%= person_url(current_user.person) -%>" title="Hello <%= current_user.person.first_name -%>. View and edit your profile, see your resources, view your search history">My profile</a></li>
+                        <li><a class="yuimenuitemlabel" href="<%= cart_url -%>" title="<%= current_user.cart_items.size > 0 ? 'You have some variables in your cart' : 'There are no variables in your cart' -%>"><%= current_user.cart_items.size > 0 ? "Variable Cart(" + current_user.cart_items.size.to_s + ")" : "Variable Cart" -%></a></li>
+                        <li><a class="yuimenuitemlabel" href="<%= messages_url -%>" title="Read, create and send messages to/from other users"><%= "Messages(" + current_user.messages_to.size.to_s + ")" -%></a></li>
+                        <li><a class="yuimenuitemlabel" href="<%= logout_url -%>" title="Logout from MethodBox and end your current session. Any variables in your cart will be saved until the next time">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>      
+            </li>
+<% end -%>
+<% if logged_in? -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= people_url -%>" title="Who's who in MethodBox">
+                    People
+                </a>                                        
+            
+            </li>
+<% end -%>
+<% if logged_in? -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= work_groups_url -%>" title="Create and join groups">
+                    Groups
+                </a>                                       
+            
+            </li>
+<% end -%>
+<% if logged_in? -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= forums_url -%>" title="Ask and answer questions about <%= SURVEY.pluralize.downcase -%>, <%= DATASET.pluralize.downcase -%> and anything MethodBox related">
+                    Forums
+                </a>                                        
+            
+            </li>
+<% end -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= help_index_url -%>">
+                    Help
+                </a>
 
-  add_tab do |t|
-   t.named 'Help'
-   t.titled "How to use MethodBox to find variables, share methods and browse surveys"
-   t.links_to :controller => 'help'
-  end
+                <!-- A submenu -->
 
-if current_user && current_user.is_admin?
-  add_tab do |t|
-   t.named 'Statistics'
-   t.titled "User activity and downloads"
-   t.links_to :controller => 'statistics'
-  end 
-end
-  #  
-  # you can use restful routes with:
-  #
-  #add_tab do |t|
-  #  t.named 'Users'
-  #  t.links_to hash_for_users_path
-  #end
-  #
-  #add_tab do |t|
-  #  t.named 'Customers'
-  #  t.links_to :controller => 'customers'
-  #end
-  #  
-  # # A tab can be initialized with a Hash like this:
-  # 
-  # add_tab :name => 'welcome', :link => {:controller=>'welcome'}
-  #
-  # # You can have a dynamic name or link 
-  # # (this partial is evaluated in the page context, so it sees every helper or instance variable)
-  #  
-  # add_tab do |t|
-  #   t.named "#{current_user} details"
-  #   t.links_to :controller => 'users', :action => 'show', :id => current_user.id
-  # end
-  #
-  # # You can have an image inside 
-  #
-  # add_tab do |t|
-  #   t.named image_tag('test')
-  #   t.links_to :controller => 'users', :action => 'show', :id => current_user.id
-  # end
-end 
-%>
-<%# end -%>
+                <div id="help" class="yuimenu">
+                    <div class="bd">                                        
+                        <ul>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:Introduction" title="General MethodBox guide">Introduction to MethodBox</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:Registration" title="How to register and create an account">Help on registering</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/indes.php/UsersGuides:Searching" title="Help on searching and finding things inside MethodBox">How to search</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:Variables" title="Variables and adding to your cart for download">Variables and cart help</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:DataExtracts" title="Downloading variables and creating data extracts">Help on Data Extract creation</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:Surveys" title="Help on finding <%= SURVEY.pluralize.downcase -%> and <%= DATASET.pluralize.downcase -%>"><%= SURVEY.pluralize -%> and <%= DATASET.pluralize -%></a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:MethodsAndScripts:CreatingNewMethodsAndScripts" title="Adding new methods and scripts to MethodbBox">Help on methods and scripts</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:Surveys:CreatingNewSurveys" title="Adding <%= SURVEY.pluralize.downcase -%>">How to add <%= SURVEY.pluralize.downcase -%></a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/UsersGuides:Sharing" title="How to share resources with other users and the world with MethodBox">Help on sharing</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/index.php/UsersGuides:Profile" title="Your profile and editing it">Your profile</a></li>
+                        <li><a class="yuimenuitemlabel" href="http://wiki.methodbox.org/UsersGuides:Linking" title="How to link <%= SURVEY.pluralize.downcase -%>, <%= DATASET.pluralize.downcase -%>, methods and publications">How to link resources</a></li>
+                        </ul>                    
+                    </div>
+                </div>                                        
+            
+            </li>
+<% if logged_in? && current_user.is_admin? -%>
+            <li class="yuimenubaritem">
+            
+                <a class="yuimenubaritemlabel" href="<%= admin_url -%>" title="User activity and downloads">
+                    Admin
+                </a>
+
+                <!-- A submenu -->
+
+                <div id="admin" class="yuimenu">
+                    <div class="bd">                                        
+                        <ul>
+
+                        <li><a class="yuimenuitemlabel" href="<%= statistics_url -%>" title="<%= DATASET -%> download and user statistics">Statistics</a></li>
+                        <li><a class="yuimenuitemlabel" href="<%= admin_url -%>" title="Add, delete and manage users">User management</a></li>
+
+                        </ul>                    
+                    </div>
+                </div>                                        
+            
+            </li>
+<% end -%>
+        </ul>            
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+YAHOO.util.Event.onContentReady("methodboxmenu", function () {
+ 
+	//	Instantiate a Menu.  The first argument passed to the 
+	//	constructor is the id of the element in the DOM that represents 
+	//	the root Menu instance.
+ 
+    var oMenu = new YAHOO.widget.MenuBar("methodboxmenu", {
+      autosubmenudisplay: true,
+      hidedelay: 750,
+      lazyload: true
+    });
+
+ 
+	//	Call the "render" method with no arguments since the markup for 
+	//	this Menu instance already exists in the DOM.
+ 
+    oMenu.render();
+ 
+ 
+    // Show the Menu instance
+ 
+    oMenu.show();
+ 
+});
+</script>

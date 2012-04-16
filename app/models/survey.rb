@@ -41,6 +41,7 @@ class Survey < ActiveRecord::Base
       text :year
       string :title
     end
+
     def to_param
       "#{id}-#{title.downcase.gsub(/[^[:alnum:]]/,'-')}".gsub(/-{2,}/,'-')
     end

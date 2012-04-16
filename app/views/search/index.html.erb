@@ -1,11 +1,15 @@
-
+<div>
+<h3 style="margin-top: 0;">Search Results</h3>
 <% if !@results_empty %>
 <!-- the results_hash is already split by class-->
   <%# resource_hash = classify_for_tabs @results -%>
 <div>
   <%= render :partial => "assets/resource_listing_tabbed_by_class", :locals => { :asset_hash => @results_hash,
     :narrow_view => true,
-    :authorization_already_done => true } -%>
+    :authorization_already_done => true, :variable_name => @variable_name, :variable_description => @variable_description, :variable_values => @variable_values, :total_vars => @total_vars } -%>
 </div>
 <% end %>
+</div>
+<div style="clear:both;">
+</div>
 

@@ -81,6 +81,16 @@ text-decoration: underline;
 	padding-bottom:0.5em;
 	padding-top:0.5em;
 }
+.sidebar-border {
+    margin: 1em; 
+    border-radius: 6px; 
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px; 
+    border: 2px solid lightgray;
+}
+.sidebar-border ul {
+	margin: 1em;
+}
 .box_standout {
   	color: #333333;
   	border: 1px solid #DDD; 
@@ -353,13 +363,6 @@ ul.vbuttons .category-browse.li {
 /* header styles*/
 #small-hd {
 	margin-left: 1em;
-	margin-top: 1em;
-	padding: 3px;
-	-webkit-border-radius: 6px;
-	border-radius:6px;
-	-moz-border-radius:6px;
-	border: none;
-	background-color: wheat;
 }
 #big-hd {
 	margin-top:0;
@@ -569,6 +572,9 @@ div.exhibit-collectionView-group h2 {
 }
 
 /* some extra margin and padding settings */
+.no-margin {
+  margin: 0;
+}
 .normal-margin-bottom {
 	margin-bottom: 1em;
 }
@@ -577,6 +583,39 @@ div.exhibit-collectionView-group h2 {
 }
 .medium-padding {
 	padding: 5px;
+}
+.big-padding-top {
+	padding-top: 8em;
+}
+.medium-padding-bottom {
+	padding-bottom: 3em;
+}
+.medium-padding-top {
+	padding-top: 3em;
+}
+.medium-padding-left {
+  padding-left: 3em;
+}
+.normal-padding-top {
+  padding-top: 1em;
+}
+.normal-padding-bottom {
+  padding-bottom: 1em;
+}
+.normal-padding-left {
+  padding-left: 1em;
+}
+.normal-padding-right {
+  padding-right: 1em;
+}
+.small-padding-top {
+  padding-top: 0.5em;
+}
+.small-padding-bottom {
+  padding-bottom: 0.5em;
+}
+.small-padding-left {
+  padding-left: 0.5em;
 }
 /* extra marging and padding settings over */
 
@@ -592,6 +631,9 @@ div.exhibit-collectionView-group h2 {
 }
 .larger-font {
   font-size: larger;
+}
+.large-font {
+  font-size: large;
 }
 /* end of extra font settings*/
 
@@ -654,45 +696,154 @@ font-weight: bold;
 margin: 0.8em 0.8em; 
 line-height: 1.4;
 }
-/* sticky footer based on http://www.cssstickyfooter.com/using-sticky-footer-code.html */
-html, body {height: 100%;}
-
-#wrap {min-height: 100%;}
-
-#main {overflow:auto;
-	padding-bottom: 150px;}  /* must be same height as the footer */
-
-#footer {position: relative;
-	margin-top: -150px; /* negative value of footer height */
-	height: 150px;
-	clear:both;
-        background-color: white;
-} 
-
-/*Opera Fix*/
-body:before {
-	content:"";
-	height:100%;
-	float:left;
-	width:0;
-	margin-top:-32767px;/
-}
-/* end sticky footer */
 
 /* remove 10px border from yui grid */
-#doc3 {margin:auto;}
+/*#doc3 {margin:auto;}*/
+html {
+	background: none;
+}
+body {
+  margin:0;
+  background-color: gray;
+  min-width:1000px;
+}
+#footer {
+	background-color: gray;
+	padding-left: 10px;
+	padding-right: 10px;
+}
 #ft {
   border-top: 1px solid black;
   background-color: white;
   margin: 0;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .add_var_button {
 	height: 25px;
 	font: 17px arial,sans-serif;
+	margin-left: 1em;
 }
 /* centre the welcome text to align with the search box */
 .middle-padding {
+	padding-left: 25%;
+	padding-right: 25%;
+}
+
+#login-list {
+  	padding: 3px;
+	-webkit-border-radius: 6px;
+	border-radius:6px;
+	-moz-border-radius:6px;
+	border: none;
+	background-color: wheat;
+        text-align: center;
+}
+#login-tooltip-question {
+    color: sienna;
+    font-weight: bold;
+    padding-top: 0.5em;
+    text-align: center;
+    text-decoration: underline;
+}
+#login-tooltip-answer {
+  background-color: yellow;
+  padding: 0.5em;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  -moz-border-radius:10px;
+  -moz-box-shadow: #777 2px 3px 5px;
+  -webkit-box-shadow: 2px 3px 5px #777777;
+  box-shadow: 2px 3px 5px #777;
+}
+#login-tooltip-answer-inner {
+  padding-left: 1em;
+}
+#login-tooltip-answer-footnote {
+    color: gray;
+    font-size: smaller;
+    font-style: italic;
+    margin-top: 1em;
+}
+/* main menu */
+#methodboxmenu {
+  position: static;
+}
+.centered-controls {
+  text-align: center;
+}
+.smaller-font {
+  font-size: 93%;
+}
+.header-search-div {
+  width: 75%; 
+}
+.header-submit-div {
+  width: 20%; 
+}
+.addthis-toolbox {
+	border: 1px solid black;
+	padding: 5px;
+	border-radius: 5px;
+	box-shadow: -5px 5px #888;
+	background: white;
+	margin-top: 1em;
+	margin-right: 0.5em;
+}
+/** 
+*
+* Style the yui-dt-expandablerow-trigger column 
+*
+**/
+.yui-dt-expandablerow-trigger a {
+	display:block;
+	padding:20px 5px 0;
+	cursor:pointer;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger a{
+	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
+}
+.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
+	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
+}
+.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
+	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
+	padding-right: 10px;
+}
+#comments_comments {
+  width: 50%;
+  border-right: 2px solid black;
+  padding-right: 10px;
+}
+#comments_forum_posts {
+	width: 40%;
+}
+.generic-search-bar-div {
+/*	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;*/
+	padding-top: 20px;
+	background-color: #ACCBE0;
 	padding-left: 30%;
 	padding-right: 30%;
+}
+/* try and get things in the centre when div is between two floated divs */
+#ft .code-url {
+	padding-left: 20%;
+	padding-right: 20%;
+}
+/* extra border settings */
+.normal-border-bottom-grey {
+  border-bottom: 1px solid lightgray;
+}
+.normal-border-top-grey {
+  border-top: 1px solid lightgray;
+}
+/* end of extra border settings */
+.square-list {
+	list-style: square outside;
 }

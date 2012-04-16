@@ -15,13 +15,11 @@ class DoiQuery
   def fetch(id, params = {})
     begin
       params[:format] = "unixref"
-      params[:id] = "doi:"+id unless params[:id]
+      params[:id] = "doi:" + id unless params[:id]
       params[:pid] = self.api_key unless params[:pid]
       params[:noredirect] = true
       url = FETCH_URL + "?" + params.delete_if{|k,v| k.nil?}.to_param
-      
-      doc = query(url)  
-      
+      doc = query(url)
       return parse_xml(doc)
     rescue
       raise
@@ -32,27 +30,47 @@ class DoiQuery
   def parse_xml(doc)
     begin
       article = doc.find_first("//journal")    
-      params = {}
-      
-      params[:doc] = article
-      
-      title = article.find_first('//journal_article/titles/title')
-      params[:title] = title.nil? ? nil : title.content
-      
-      params[:authors] = []
-      article.find('//contributors/person_name').each do |author|
-        author_last_name = author.find_first(".//surname").content
-        author_first_name = author.find_first(".//given_name").content
-        params[:authors] << DoiAuthor.new(author_first_name, author_last_name)
+      if (article)
+        params = {}
+
+        params[:doc] = article
+
+        title = article.find_first('//journal_article/titles/title')
+        params[:title] = title.nil? ? nil : title.content
+
+        params[:authors] = []
+        article.find('//contributors/person_name').each do |author|
+          author_last_name = author.find_first(".//surname").content
+          author_first_name = author.find_first(".//given_name").content
+          params[:authors] << DoiAuthor.new(author_first_name, author_last_name)
+        end
+
+        journal = article.find_first('//journal_metadata/abbrev_title')
+        params[:journal] = journal.nil? ? nil : journal.content
+
+        date = article.find_first('//publication_date')
+        params[:pub_date] = date.nil? ? nil : parse_date(date)
+
+        params[:doi] = article.find_first('//doi_data/doi').content
+      else        
+        article = doc.find_first("//content_item")
+        params = {}
+
+        params[:doc] = article
+
+        title = article.find_first('//content_item/titles/title')
+        params[:title] = title.nil? ? nil : title.content
+        params[:authors] = []
+        article.find('.//contributors/person_name').each do |author|
+          author_last_name = author.find_first(".//surname").content
+          author_first_name = author.find_first(".//given_name").content
+          params[:authors] << DoiAuthor.new(author_first_name, author_last_name)
+        end
+        date = article.find_first('//publication_date')
+        params[:pub_date] = date.nil? ? nil : parse_date(date)
+        params[:doi] = article.find_first('//content_item/doi_data/doi').content
       end
-      
-      journal = article.find_first('//journal_metadata/abbrev_title')
-      params[:journal] = journal.nil? ? nil : journal.content
-      
-      date = article.find_first('//publication_date')
-      params[:pub_date] = date.nil? ? nil : parse_date(date)
-      
-      params[:doi] = article.find_first('//doi_data/doi').content
+
       
       return DoiRecord.new(params)
     rescue Exception => ex

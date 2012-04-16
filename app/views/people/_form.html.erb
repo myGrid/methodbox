@@ -35,11 +35,6 @@
             <%= f.text_field :phone, :style => "width: 100%;" %>
           </p>
 
-          <%#*<p>%>
-            <%#= f.label :skype_name %><br />
-            <%#= f.text_field :skype_name, :style => "width: 100%;" %>
-          <%#*</p>%>
-
           <p>
             <%= f.label :web_page %><br />
             <%= f.text_field :web_page, :style => "width: 100%;" %>
@@ -63,7 +58,7 @@
 <br/>
 <% if person %>
   <div class="fold">
-    <div class="foldTitle">Knowledge and expertise</div>
+    <div class="foldTitle">Knowledge, interests and expertise</div>
     <div class="foldContent">
       <%= render :partial => "select_expertise", :locals => {:person => (person ? person : Person.new) } -%>
     </div>

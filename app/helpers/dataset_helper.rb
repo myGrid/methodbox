@@ -5,7 +5,7 @@ module DatasetHelper
   end
   
   def dataset_metadata_options
-    ["CCSR", "Methodbox"]
+    ["CCSR", "Methodbox", "DDI"]
   end
   
   def dataset_revision dataset

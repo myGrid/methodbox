@@ -1,0 +1,32 @@
+<table class='listings_table'>
+<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) && total_entries != 0 %>
+<tr><td>Total Records</td><td><%= total_entries -%></td></tr>
+<tr><td>Invalid records</td><td><%= invalid_entries -%> (<%=  (invalid_entries.to_f/total_entries.to_f * 100).round(2) -%>%)</td></tr>
+<% end %>
+<% if blank_rows && total_entries != 0%>
+<tr><td>Blank rows/Missing records</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
+<% end %>
+</table>
+<table class='listings_table'>
+<% if !var_hash.empty? && var_hash.size < 20 %>
+<thead>
+<tr><th>Value Name</th><th>Number of entries</th><th>Percentage of total</th></tr>
+</thead>
+<% end %>
+<tbody>
+<% if var_hash.size < 20 %>
+<% unless total_entries == 0 or total_entries == nil -%>
+<% var_hash.each_key do |key| -%>
+	<tr><td><%= value_domain_hash[key] ?  value_domain_hash[key] : key -%></td><td><%= var_hash[key] -%></td><td><%= (var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% end -%>
+<% end -%>  
+<% if !variable.nesstar_id -%>
+<% unless total_entries == 0 or total_entries == nil -%>
+<% no_var_hash.each_key do |key| -%>
+	<tr><td><%= value_domain_hash[key] ?  value_domain_hash[key] : key -%></td><td><%= no_var_hash[key] -%></td><td><%= (no_var_hash[key].to_f/total_entries.to_f * 100).round(2) -%>%</td></tr>
+<% end -%>
+<% end -%>
+<% end -%>
+<% end %>
+</tbody>
+</table>

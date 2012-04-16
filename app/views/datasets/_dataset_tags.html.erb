@@ -1,0 +1,62 @@
+<p>
+  <b>Add keywords that describe the subject matter of this dataset.<br/>Please let the suggestions guide you, but feel free to add your own if necessary.</b>
+<br/>
+  <br/>
+  <div id="facebook" class="clearfix">
+    <div tabindex="-1" id="dataset_tags_ids" class="clearfix tokenizer" onclick="$('dataset_tags_autocomplete_input').focus();">
+      <span class="tokenizer_stretcher">^_^</span>
+      <span class="tab_stop"><input type="text" id="dataset_tags_hidden_input" tabindex="-1" ></span>
+
+      <div id="dataset_tags_autocomplete_display" class="tokenizer_input">
+        <input type="text" size="1" tabindex="" id="dataset_tags_autocomplete_input" />
+      </div>
+    </div>
+    <div id="dataset_tags_autocomplete_populate" class="clearfix autocomplete typeahead_list" style="width: 600px; height: auto; overflow-y: hidden;display:none">
+      <div class="typeahead_message">Type a word that describes the dataset subject matter</div>
+    </div>
+  </div>
+  <br/>
+  <div class="fold">
+  <div class="foldTitle">Suggestions</div>
+  <div class="foldContent">
+
+  <div id="dataset_tags_tag_suggestions" style="font-size: 93%; color: #333333;  text-align: center; margin-top: 0.5em; padding: 0.3em;">
+    <div id="dataset_tags_select_tags" class="hTagcloud">
+      <div class="popularity">
+        <% unless @tags_subjects.blank? -%>
+          <% tag_cloud @tags_subjects, %w(popular v-popular vv-popular vvv-popular vvvv-popular) do |tag, css_class| -%>
+            <%= link_to tag.name, "javascript:addDatasetListTag(#{tag.id});", :class => css_class -%>
+            <% unless tag==@tags_subjects.last %>
+            |
+          <% end %>
+          <% end -%>
+        <% end -%>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+</p>
+
+<script type="text/javascript">
+  var dataset_tags_list = <%= @all_dataset_tags_as_json -%>;
+  var prepopulate_with = <%= @dataset_tags_autocompleter_selected_ids && !@dataset_tags_autocompleter_selected_ids.empty?  ? @dataset_tags_autocompleter_selected_ids.to_json : @dataset.subjects.sort{|a,b| a.id<=>b.id}.collect{|t| t.id}.to_json -%>;
+  var dataset_tags_autocompleter_id='dataset_tags_autocompleter'
+  var dataset_tags_autocompleter = new Autocompleter.LocalAdvanced(
+  dataset_tags_autocompleter_id, 'dataset_tags_autocomplete_input', 'dataset_tags_autocomplete_display', 'dataset_tags_autocomplete_populate', dataset_tags_list, prepopulate_with, {
+    frequency: 0.1,
+    updateElement: addAction,
+    search_field: "name",
+    id_field: "id",
+    validation_type: "any"
+  });
+  var hidden_input = new HiddenInput('dataset_tags_hidden_input',dataset_tags_autocompleter);
+
+  autocompleters[dataset_tags_autocompleter_id] = dataset_tags_autocompleter;
+ var remember_dataset_tags_list = <%= @dataset_tags_autocompleter_unrecognized_items ? @dataset_tags_autocompleter_unrecognized_items.to_json : '[]' -%>;
+remember_dataset_tags_list.each(function(item) {
+  dataset_tags_autocompleter.addUnrecognizedItemToList(item);
+});
+
+</script>

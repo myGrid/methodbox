@@ -356,7 +356,7 @@ class ApplicationController < ActionController::Base
 
   #for the purpose of some user testing the surveys were restricted
   def get_surveys
-    survey_types = SurveyType.all(:conditions=>{:name=>["UKDA Government Surveys", "Research Datasets", "Teaching Datasets","Health Survey for England","General Household Survey", "SARs"]})
+    survey_types = SurveyType.all(:conditions=>["name != ?", "test"])
     non_empty_survey_types = []
     survey_types.each do |survey_type|
       any_datasets = false

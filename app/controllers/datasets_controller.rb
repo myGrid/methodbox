@@ -1,5 +1,8 @@
 require 'rest_client'
 require 'uuidtools'
+require 'zip/zip'
+require 'zip/zipfilesystem'
+require 'nesstar-api'
 #require 'simple-spreadsheet-extractor'
 
 class DatasetsController < ApplicationController
@@ -9,12 +12,109 @@ class DatasetsController < ApplicationController
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new, :create ]
-  before_filter :login_required, :except => [ :show ]
+  before_filter :login_required, :except => [ :retrieve_variables, :download, :show, :index ]
   before_filter :find_datasets, :only => [ :index ]
-  before_filter :find_dataset, :only => [ :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
+  before_filter :find_dataset, :only => [ :retrieve_variables, :update_metadata_nesstar, :download, :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter  :update_last_user_activity
   before_filter :find_previous_searches, :only => [ :show ]
+  before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
+
+  def retrieve_variables
+    case params[:sort]
+      when "name"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "description"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "value asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "value desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "category"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "category asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order => "category desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "dataset"
+        case params[:dir]
+           when "asc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>:dataset, :order => "datasets.name asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+            when "desc"
+              @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>:dataset, :order => "datasets.name desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "survey"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+      when "popularity"
+        case params[:dir]
+          when "asc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title asc", :limit=>20, :offset=>params[:startIndex].to_i) 
+          when "desc"
+            @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
+        end
+    end
+    variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "startIndex" => params[:startIndex].to_i, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+    puts @variables_json.to_s
+    render :partial=>"retrieve_variables"
+  end
+
+  #download ddi file from nesstar server and process using delayed job
+  def update_metadata_nesstar
+    parser = Nesstar::Api::CatalogApi.new
+    ddi_file = parser.get_ddi @dataset.nesstar_uri, @dataset.nesstar_id
+    uuid = UUIDTools::UUID.random_create.to_s
+    filename = File.join(METADATA_PATH, uuid + ".xml")
+    uf = File.open(filename,"w")
+    ddi_file.each_line do |line|                
+      uf.write(line)
+    end
+    uf.close
+    begin 
+       logger.info(Time.now.to_s + " Starting nesstar metadata processing job for " + @dataset.id.to_s + " user " + current_user.id.to_s)
+       Delayed::Job.enqueue ProcessMetadataJob::StartJobTask.new(@dataset.id, current_user.id, 'DDI', uf.path, params[:update][:reason], base_host)
+     rescue Exception => e
+       logger.error(Time.now.to_s + " " + e)
+       raise e
+     end    
+  end
+  
+  def download
+    if !@dataset.nesstar_id
+    if check_auth_for_dataset
+      zip_file_path = File.join(CSV_FILE_PATH, 'zip', @dataset.uuid_filename.split('.')[0] + '.zip')
+      if !File.exists?(zip_file_path)
+        dataset_file_path = File.join(CSV_FILE_PATH, @dataset.uuid_filename)
+        Zip::ZipFile.open(zip_file_path, Zip::ZipFile::CREATE) {|zipfile|
+         zipfile.add(@dataset.filename, dataset_file_path)
+        }
+      end
+        send_file zip_file_path, :filename => @dataset.filename.split('.')[0] + '.zip', :content_type => "application/zip", :disposition => 'attachment', :stream => false
+    else
+      respond_to do |format|
+        flash[:error] = "You do not have permission to download this " + DATASET.downcase
+        format.html { redirect_to dataset_url(@dataset) }
+      end
+    end
+    else
+      respond_to do |format|
+        flash[:error] = "This is a nesstar " + DATASET.downcase + ", you cannot download it via this route."
+        format.html { redirect_to dataset_url(@dataset) }
+      end
+   end
+  end
   
   #update the datafile for this dataset
   def load_new_data
@@ -114,10 +214,36 @@ class DatasetsController < ApplicationController
 
   def index
 
+    @surveys = get_surveys
+    @surveys.sort!{|x,y| x.title <=> y.title}
+    @datasets = []
+    @surveys.each do |survey|
+      survey.datasets.each {|dataset| @datasets << dataset }
+    end
+
+    datasets_hash = {"total_entries" => @datasets.size, "results"=>@datasets.collect{ |d| {"id" => d.id, "title" => d.name, "description" => truncate_words(d.description, 50), "survey" => d.survey.title, "survey_id" => d.survey.id.to_s, "type" => SurveyType.find(d.survey.survey_type).name, "year" => d.year ? d.year : 'N/A', "source" => d.survey.nesstar_id ? d.survey.nesstar_uri : "methodbox"}}}
+    @datasets_json = datasets_hash.to_json
+
+    @variables = Array.new
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml { render :xml=>@datasets}
+    end
+
   end
 
   def show
-    
+    unless !Authorization.is_authorized?("show", nil, @dataset.survey, current_user)
+    @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order=>"name ASC", :limit=>20) 
+    variables_hash = {"startIndex" => 0, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    @variables_json = variables_hash.to_json
+  else
+    flash[:error] = "You do not have permission to carry out that action"
+    respond_to do |format|
+      format.html { redirect_to :back }
+    end
+  end
   end
   
   def new
@@ -175,10 +301,14 @@ class DatasetsController < ApplicationController
   
   def edit
 
+    @tags_subjects = Dataset.subject_counts.sort{|a,b| a.name<=>b.name}
+
   end
   
   def update
     
+    set_subject_tags(@dataset,params)
+
     if @dataset.update_attributes(params[:dataset])
       respond_to do |format|
         format.html { redirect_to dataset_path(@dataset) }
@@ -449,6 +579,63 @@ class DatasetsController < ApplicationController
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
+  end
+
+  def set_subject_tags dataset,params
+
+    tags=""
+    params[:dataset_tags_autocompleter_selected_ids].each do |selected_id|
+      tag=Tag.find(selected_id)
+      tags << tag.name << ","
+    end unless params[:dataset_tags_autocompleter_selected_ids].nil?
+    params[:dataset_tags_autocompleter_unrecognized_items].each do |item|
+      tags << item << ","
+    end unless params[:dataset_tags_autocompleter_unrecognized_items].nil?
+    dataset.subject_list=tags
+
+  end
+
+  def set_tagging_parameters
+    subjects=Dataset.subject_counts.sort{|a,b| a.id<=>b.id}.collect{|t| {'id'=>t.id,'name'=>t.name}}
+    @all_dataset_tags_as_json= subjects.to_json
+  end
+
+  # Are there any surveys in this data extract which the 
+  # current user does not have permission to download
+  def check_auth_for_dataset
+    auth = true
+    ukda = false
+
+    #first thing is see whether the basic auth checks are ok
+    #we check for view since the basic premise is that if you can see a survey you can download it
+      survey = Dataset.find(params[:id]).survey
+      if !Authorization.is_authorized?("view", nil, survey, current_user)
+        auth = false
+      end
+    #then we see if there are any ukda surveys lurking in the extract
+
+      if survey.survey_type.is_ukda
+        ukda = true
+      end
+    #if its a ukda survey then we better see if they are registered
+    if ukda
+      if current_user != nil
+        @ukda_registered = ukda_registration_check(current_user)
+      else
+        @ukda_registered = false
+      end
+    end
+    
+    if ukda && @ukda_registered
+      #download ok
+      return true
+    elsif !ukda && auth
+      #download ok
+      return true
+    else
+      #download barred
+      return false
+    end
   end
   
 end

@@ -12,35 +12,35 @@
 <% end -%>
 </ul>
 
-<h1 class="contribution_title">Dataset: <%= h(@dataset.name) -%></h1>
+<h1 class="contribution_title"><%= DATASET -%>: <%= h(@dataset.name) -%></h1>
 
 <div class="show_basic">
 	<div>
 	<div class="left" style="width: 45%;">
 	<% if @new_variables && @new_variables.size>=1 -%>
 	<div class="missing_or_added_vars">
-	<div class="info-text">The following variables have been added in the new dataset.</div>
+	<div class="info-text">The following variables have been added in the new <%= DATASET -%>.</div>
 	<% @new_variables.each do |new_variable| -%>
 	<%= link_to Variable.find(new_variable).name, variable_path(Variable.find(new_variable)) %><br/>
 	<% end -%>
 	</div>
 	<% else %>
 	<div class="missing_or_added_vars">
-	<div class="info-text">There were no added variables in the dataset.</div>
+	<div class="info-text">There were no added variables in the <%= DATASET -%>.</div>
 	</div>
 	<% end -%>
 	</div>
 	<div class="right" style="width: 45%;">
 	<% if @missing_vars && @missing_vars.size>=1 -%>
 	<div class="missing_or_added_vars">
-	<div class="info-text">The following variables were in the previously uploaded dataset but were missing in the new dataset.</div>
+	<div class="info-text">The following variables were in the previously uploaded <%= DATASET -%> but were missing in the new <%= DATASET -%>.</div>
 	<% @missing_vars.each do |missing_variable| -%>
 	<%= link_to Variable.find(missing_variable).name, variable_path(Variable.find(missing_variable)) %>
 	<% end -%>
 	</div>
 	<% else %>
 	<div class="missing_or_added_vars">
-	<div class="info-text">There were no missing variables in the dataset.</div>
+	<div class="info-text">There were no missing variables in the <%= DATASET -%>.</div>
 	</div>
 	<% end -%>
 	</div>
@@ -68,7 +68,7 @@
       <% end -%>
       </p>
       <p>
-        <b>Parent Survey:</b>
+        <b>Parent <%= SURVEY -%>:</b>
         <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>
       </p>
 <% if @dataset.current_version -%>

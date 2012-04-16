@@ -6,6 +6,13 @@ Your new metadata for dataset, <%= @dataset.name %>, has been processed.
 
 Find the dataset at <%= dataset_url(@dataset) %>
 
+<% if !@missing_variables.empty? %>
+The following variables were no longer in the dataset:
+  <% @missing_variables.each do |variable| %>
+    <%= variable.name %>
+  <% end -%>
+<% end -%>
+
 - The MethodBox Team
 
 <%= render :partial => "disclaimer" -%>

@@ -132,7 +132,6 @@ class PublicationsController < ApplicationController
         
         #Update policy so current authors have manage permissions
         @publication.asset.creators.each do |author|
-          puts "author is " + author.person.name
           @publication.asset.policy.permissions.clear
           # @publication.asset.policy.permissions << Permission.create(:contributor => author.person, :policy => @publication.asset.policy, :access_type => 4)
           permis = Permission.create(:contributor => author.person, :policy => @publication.asset.policy, :access_type => 4)
@@ -186,22 +185,12 @@ class PublicationsController < ApplicationController
         end
       end      
       result = get_data(@publication, pubmed_id, doi)
-      puts result
     rescue Exception => e
-      puts e
       logger.error("Pubmed fetch problem " + e)
       if protocol == "pubmed"
-        if key.match(/[0-9]+/).nil?
-          @error_text = "Please ensure the PubMed ID is entered in the correct format, e.g. <i>16845108</i>"
-        else
-          @error_text = "No publication could be found on PubMed with that ID"  
-        end
+        @error_text = "No publication could be found on PubMed with that ID. Please ensure the PubMed ID is entered in the correct format, e.g. <i>16845108</i>"
       elsif protocol == "doi"
-        if key.match(/[0-9]+(\.)[0-9]+.*/).nil?
-          @error_text = "Please ensure the DOI is entered in the correct format, e.g. <i>10.1093/nar/gkl320</i>"
-        else
-          @error_text = "No valid publication could be found with that DOI"
-        end
+        @error_text = "No valid publication could be found with that DOI. Please ensure the DOI is entered in the correct format, e.g. <i>10.1093/nar/gkl320</i>"
       end          
       respond_to do |format|
         format.html { render :partial => "publications/publication_error", :locals => { :publication => @publication, :error_text => @error_text}, :status => 500}

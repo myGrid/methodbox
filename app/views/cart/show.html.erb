@@ -65,7 +65,7 @@ The following variables have been archived and have been removed from your cart:
 <div class="medium-padding" id="cart_suggestions">
 <%= render :partial => "cart_suggestions", :locals=>{:target_matches => @target_matches} -%>
 </div>
-<% form_tag new_csvarchive_url, {:onSubmit=>"$('spinner').show();"} do -%>
+<% form_tag new_csvarchive_url, {:method=> :get, :onSubmit=>"$('spinner').show();"} do -%>
 <% if !@sorted_variables.empty? -%>
 <%= submit_tag 'Create a new data extract' %>
 <% end -%>

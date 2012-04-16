@@ -169,6 +169,31 @@ Ajax.Responders.register({
   }
 });
 
+/* Load JS or CSS files dynamically */
+function dynamicLoad(filename){
+  var head;
+  var script;
+  var filetype = filename.split('.').pop();
+
+  head = $$('head')[0];
+  if (filetype == 'js'){
+    script = new Element('script', { type: 'text/javascript', src: filename });
+    head.appendChild(script);
+  } else if (filetype == 'css') {
+    script = new Element('link', { rel: 'stylesheet', type: 'text/css', href: filename });
+    head.appendChild(script);
+  }
+}
+
+function addDatasetListTag(tag_id) {
+    expertise_autocompleter=autocompleters['dataset_tags_autocompleter']
+    var index=dataset_tags_autocompleter.itemIDsToJsonArrayIDs([tag_id])[0];
+    var item = new Element('a', {
+        'value': index
+    });
+    dataset_tags_autocompleter.addContactToList(item);
+}
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  

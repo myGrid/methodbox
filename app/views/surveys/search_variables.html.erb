@@ -7,28 +7,6 @@
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
-<style type="text/css">
-/** 
-*
-* Style the yui-dt-expandablerow-trigger column 
-*
-**/
-.yui-dt-expandablerow-trigger a {
-	display:block;
-	padding:20px 5px 0;
-	cursor:pointer;
-}
-.yui-dt-expanded .yui-dt-expandablerow-trigger a{
-	background:url('/images/yui/dt-arrow-up.png') 0 6px no-repeat;
-}
-.yui-dt-expandablerow-trigger a, .yui-dt-collapsed .yui-dt-expandablerow-trigger a {
-	background:url('/images/yui/dt-arrow-dn.png') 0 4px no-repeat;
-}
-.yui-dt-expanded .yui-dt-expandablerow-trigger.spinner a {
-	background:url('/images/yui/spinner.gif') 0 4px no-repeat;
-	padding-right: 10px;
-}
-</style>
 <% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <% if !@selected_datasets.empty? %>
   <% @selected_datasets.each do |val| -%>
@@ -37,17 +15,17 @@
 <% end -%>
 <% if !@sorted_variables.empty? -%>
 <div style="margin-bottom: 10px;">
+<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;margin-left: 2em;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
+<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" , :onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('search_variables_button').form.submit();return true;}"-%>
 <% if logged_in? -%>
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :html => {:class => 'add_var_button'}} -%>
 <% end -%>
-<%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;margin-left: 2em;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
-<%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" , :onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('search_variables_button').form.submit();return true;}"-%>
 </div>
 <div class="fold">
-  <div class="foldTitle">Currently selected datasets (click to display)</div>
+  <div class="foldTitle">Currently selected <%= DATASET.pluralize.downcase -%> (click to display)</div>
   <div class="foldContent" style="display:none;">
 <% if !@datasets_with_results.empty? -%>
-  <div>Datasets with search results (<%= @datasets_with_results.size -%>)
+  <div><%= DATASET.pluralize.downcase -%> with search results (<%= @datasets_with_results.size -%>)
     <ol class="variable-suggestions">
       <% @datasets_with_results.each do |dataset| -%>
         <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
@@ -58,7 +36,7 @@
 There were no search results
 <% end -%>
 <% if !@datasets_without_results.empty? -%>
-  <div>Datasets with no search results (<%= @datasets_without_results.size -%>)
+  <div><%= DATASET.pluralize.downcase -%> with no search results (<%= @datasets_without_results.size -%>)
     <ol class="variable-suggestions">
       <% @datasets_without_results.each do |dataset| -%>
         <li style="list-style: none outside none;"><%= link_to Dataset.find(dataset).name, dataset_url(dataset) -%></li>
@@ -66,13 +44,14 @@ There were no search results
     </ol>
    </div>
 <% else -%>
-All datasets returned at least one search result
+All <%= DATASET.pluralize.downcase -%> returned at least one search result
 <% end -%>
   </div>
 </div>
 <div id="selected_variables">
 </div>
 <div>
+<%= button_to_function 'Select visible', "selectVisibleVariableCheckboxes(true);", :title=>"Select all the variables on the current page" -%>
 <%= button_to_function 'Select all', "selectAllVariableCheckboxes(true);", :title=>"Select all the variables (from all pages)" -%>
 <%= button_to_function 'Select none', "selectAllVariableCheckboxes(false);", :title=>"De-select all the variables (from all pages)" -%>
 <%= button_to_function 'Invert selection', "invertAllVariableCheckboxes();", :title=>"De-select currently selected variables and vice-versa (from all pages)" -%>

@@ -1,104 +1,98 @@
-<%= javascript_include_tag 'variables_table.js' -%>
+<%= javascript_include_tag 'variable_table_check.js' -%>
+<%= javascript_include_tag 'surveys_variables_table.js' -%>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <% truncate_length_for_boxes = 22 -%>
-<div class="right">
-<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style ">
-<a class="addthis_button_preferred_1"></a>
-<a class="addthis_button_preferred_2"></a>
-<a class="addthis_button_preferred_3"></a>
-<a class="addthis_button_preferred_4"></a>
-<a class="addthis_button_compact"></a>
-<a class="addthis_counter addthis_bubble_style"></a>
-</div>
-<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
-<!-- AddThis Button END -->
-<%#= addthis_bookmark_button(survey_url(@survey), @survey.title) -%>
-</div>
-	<ul class="buttons">
-<% if logged_in? -%>
-	  <li><%= icon "new", new_survey_url, "Create a new survey", nil, "Create a new survey" %></li>
-	<% if controller.action_name == "show" %>
-		<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-	<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-	<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-		<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a dataset to this survey", nil, "Add a dataset to this survey" -%></li>
-		<li><%= icon "edit", edit_survey_url(@survey), "Edit this survey", nil, "Edit this survey" -%></li>
-	<% end %>
-	<% end %>
-<li><%= icon "topic", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey"), "Start forum topic", {:title=> "Create a new forum topic about this survey"}, "Start forum topic" -%></li>
-		<% end -%>
+<h1 class="contribution_title"><%= SURVEY -%>: <%= h(@survey.title) -%></h1>
+<div class="yui-skin-sam">
+  <div id="survey_tabview" class="yui-navset">
+    <ul class="yui-nav">
+      <li class="selected"><a href="#survey_tab_details" title="Details about <%= SURVEY -%> <%=@survey.title -%>"><em>Details</em></a></li>
+      <li><a href="#survey_tab_variables" title="Variables and <%= DATASET.pluralize -%> belonging to <%= SURVEY -%> <%=@survey.title -%>"><em>Variables and <%= DATASET.pluralize -%></em></a></li>
+      <li><a href="#survey_tab_links" title="Links to other methodbox assets"><em>Links</em></a></li>
+      <% if logged_in? %>
+        <li><a href="#survey_tab_notes" title="Your private notes"><em>Your notes</em></a></li>
+        <li><a href="#survey_tab_comments" title="Public comments and forum posts"><em>Comments and Questions</em></a></li>
+      <% end %>
 	</ul>
-<h1 class="contribution_title">Survey: <%= h(@survey.title) -%></h1>
-<div class="show_basic">
-	<% @survey_search_query="Enter search terms" unless @survey_search_query -%>
-	<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
-	<% @survey.datasets.each do |dataset| %>
-		<%= hidden_field_tag "entry_ids[]", dataset.id.to_s -%>
-	<% end %>
-	<div style="position: relative;background-color:#ACCBE0;padding-top:5px;padding-bottom:5px;padding-left:5px;width:100%;height:60px;">
-	  <div style="position: absolute; ;top:1em;left:1em"><%= text_field_tag :survey_search_query, @survey_search_query %>
-				<%= image_tag(method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
-	    <%= submit_tag 'Search this survey',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
-	  </div>
-		  <% if logged_in? && !@recent_searches.empty? -%>
-		  <div style="position: absolute; top:1em;left:30em">
-			Recent searches:
-		<%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>
+	<div class="yui-content">
+	  <div id="survey_tab_details">
+				<div class="show_basic">
+		<div>
+		  <div class="medium-padding">
+		    <div class="left center" style="width:20%;">
+			  <% form_tag(:controller => "surveys", :action => "search_variables") do -%>
+			    <% @survey.datasets.each do |dataset| %>
+				  <%= hidden_field_tag "entry_ids[]", dataset.id.to_s -%>
+			    <% end %>
+			  <div>
+			    <div>
+			      <%= text_field_tag :survey_search_query, @survey_search_query %>
+			      <%= submit_tag 'Search this survey',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
+			    </div>
+			  </div>
+			<% end -%>
+	 	  </div>
+			<ul class="buttons">
+		<% if logged_in? -%>
+			  <li><%= icon "new", new_survey_url, "Create a new " +  SURVEY , nil, "Create a new " + SURVEY %></li>
+			<% if controller.action_name == "show" %>
+				<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
+			<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET + " to this " + SURVEY, nil, "Add a " + DATASET + " to this " + SURVEY  -%></li>
+			<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
+				<li><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET + " to this " + SURVEY , nil, "Add a " + DATASET + " to this " + SURVEY -%></li>
+				<li><%= icon "edit", edit_survey_url(@survey), "Edit this " + SURVEY , nil, "Edit this " + SURVEY -%></li>
+			<% end %>
+			<% end %>
+		<li><%= icon "topic", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey"), "Start forum topic", {:title=> "Create a new forum topic about this " + SURVEY}, "Start forum topic" -%></li>
+				<% end -%>
+			</ul>
 		</div>
-		<% end -%>
-		<% end -%>
+		    	<div class="box_about_actor">
+		      		<p>
+		        		<b>Title:</b>
+		        		<span class="title"><%=h @survey.title -%></span>
+		      		</p>
+		      		<p>
+		        		<b>Description</b>
+		        		<% unless @survey.description.blank? -%>
+		        			<div class="box_standout">
+		          				<%= simple_format(white_list(@survey.description)) -%>
+		        			</div>
+		      			<% else -%>
+		        			<p class="none_text">
+		          				No description
+		        			</p>
+		      			<% end -%>
+		      		</p>
+					<% if @survey.UKDA_summary || @survey.headline_report -%>
+		      			<p>
+		        			<b>Further information</b>
+		      				<div class="box_standout">        
+								<% if @survey.UKDA_summary -%>
+		        					<a href="<%= @survey.UKDA_summary%>">ESDS Summary</a><br/>
+								<% end -%>
+		        				<% if @survey.headline_report -%>
+		          					<a href="<%= @survey.headline_report%>">Headline Report</a>
+		        				<% end -%>
+		  	      			</div>
+						</p>
+					<% end -%>
+		</div>
+		</div>
+	  </div>
 	</div>
-    	<div class="box_about_actor">
-      		<p>
-        		<b>Title:</b>
-        		<span class="title"><%=h @survey.title -%></span>
-      		</p>
-      		<p>
-        		<b>Type:</b>
-        		<%=h @survey.survey_type.name -%>
-      		</p>
-      		<p>
-        		<b>Description</b>
-        		<% unless @survey.description.blank? -%>
-        			<div class="box_standout">
-          				<%= simple_format(white_list(@survey.description)) -%>
-        			</div>
-      			<% else -%>
-        			<p class="none_text">
-          				No description
-        			</p>
-      			<% end -%>
-      		</p>
-<% unless @all_categories.empty? -%>
-<div class="fold">
-<div class="foldTitle">Variable Categories (click to display)</div>
-<div class="foldContent" style="display:none;">
-<%= render :partial => "categories_list", :locals=>{:all_categories => @all_categories, :survey=>@survey}-%>
-</div>
-</div>
-<% else %>
-<p>
-<b>There are no categories listed for this survey</b>
-</p>
-<% end %>
-      		<p>
-        		<b>Child Datasets:</b>
-        		<% if !@survey.datasets.empty? -%>
-					<% @survey.datasets.each do |dataset| -%>
-            			<%= link_to(h(dataset.name), dataset_path(dataset)) -%>
-          			<% end -%>
-					<div class="small-padding" title="Showing all variables could take some time">
-					<p><b>Variables: </b><%= link_to "Show all variables for this survey", show_all_variables_survey_url(@survey), :onlcik=>"Element.show('spinner');" -%></p>
-					</div>
-					<div id='variables-table'>
-					</div>
-        		<% else -%>
-          		None
-        		<% end -%>
-      		</p>
-      		<br/>
+	  <div id="survey_tab_variables">
+		<% form_tag(search_variables_surveys_url, :method=>"get") do -%>
+		<div id="selected_variables">
+		</div>
+		<% if logged_in? -%>
+		<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :html => {:class => 'add_var_button'}} -%>
+		<% end -%>
+		<div id="variables_table"></div>
+		<% end -%>
+	  </div>
+	  <div id="survey_tab_links">
 			<% if logged_in? %>
 				<div class="link_box">
 					Show: 
@@ -108,123 +102,82 @@
 			<% end -%>
 			<div class="actual_link_box">
 				<div id="links">
-      				<b>Linked with Data Extracts(s):</b>
-      				<% if !@archives.empty? -%>
-        				<% @archives.each do |archive| -%>
-          					<%= link_to(archive.title, csvarchive_path(archive)) -%>
-        				<% end -%>
-      				<% else -%>
-        			None
+    				<b>Linked with Data Extracts(s):</b>
+    				<% if !@archives.empty? -%>
+      				<% @archives.each do |archive| -%>
+        					<%= link_to(archive.title, csvarchive_path(archive)) -%>
       				<% end -%>
-      				<br/>
+    				<% else -%>
+      			None
+    				<% end -%>
+    				<br/>
 					<br/>
-      				<b>Linked with Script(s):</b>
+    				<b>Linked with Script(s):</b>
 					<% if !@scripts.empty? -%>
-        				<% @scripts.each do |script| -%>
-          					<%= link_to(script.title, script_path(script)) -%>
-        				<% end -%>
-      				<% else -%>
-        			None
+      				<% @scripts.each do |script| -%>
+        					<%= link_to(script.title, script_path(script)) -%>
       				<% end -%>
+    				<% else -%>
+      			None
+    				<% end -%>
 				</div>
-			</div>
-      		<br/>
-      		<br/>
-      		<br/>
-			<% if @survey.UKDA_summary || @survey.headline_report -%>
-      			<p>
-        			<b>Further information</b>
-      				<div class="box_standout">        
-						<% if @survey.UKDA_summary -%>
-        					<a href="<%= @survey.UKDA_summary%>">ESDS Summary</a><br/>
-						<% end -%>
-        				<% if @survey.headline_report -%>
-          					<a href="<%= @survey.headline_report%>">Headline Report</a>
-        				<% end -%>
-  	      			</div>
-				</p>
-			<% end -%>
-			<br/>
-			<% if logged_in? -%>
-				<% if @forum != nil -%>
-					<b>Forum</b>
-					<div class="box_standout">
-						<%= link_to h("View the forum"), forum_path(@forum), :class => "title" %>
-    				</div>
-				<% end -%>
-				<% if @forum != nil -%>
-      				<% if @forum.recent_post -%>
-						<div class="box_standout">
-							<b>Recent forum activity</b>
-							<br/>
-							<br/>
-        					<%= time_ago_in_words(@forum.recent_post.created_at) -%><br />
-        					<%= '{user}'[:by_user,"<strong>#{h(@forum.recent_post.user.display_name)}</strong>"] -%>
-		replied <strong><%= @forum.recent_post.body -%></strong>
-		to <strong><%= @forum.recent_post.topic.title -%></strong>
-        <span>(<%= link_to 'view'[], forum_topic_path(:forum_id => @forum, :id => @forum.recent_post.topic_id, :page => @forum.recent_post.topic.last_page, :anchor => @forum.recent_post.dom_id) -%>)</span>
-						</div>
-      				<% end -%>
-				<% end -%>
-			<% end -%>
-    	</div>
-<% if current_user %>
-<div class="yui-skin-sam">
-<div id="notes" class="yui-navset">
-    <ul class="yui-nav">
-        <li class="selected"><a href="#tab1"><em>Your private notes</em></a></li>
-        <li><a href="#tab2"><em>Comments</em></a></li>
-        <li><a href="#tab3"><em>Questions</em></a></li>
-    </ul>            
-    <div class="yui-content">
-        <div><h3>Notes</h3>
+				</div>
+	  </div>
+	  <% if logged_in? %>
+	  <div id="survey_tab_notes">
 		<%= render :partial => "notes/add_note", :locals=>{:resource_id => @survey.id} -%>
 		<% @notes.each do |note| %>
 		<%= render :partial => "notes/note", :locals=>{:note=>note} %>
 		<% end %>
 		<div id="new_note">
 		</div>
-        </div>
-        <div><h3>Comments</h3>
-	        <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @survey.id, :controller => "Surveys", :comment_div_id => "comment", :update_div_id => "new_comment"} -%>
-		<% @comments.each do |comment| %>
-		<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
-		<% end %>
-		<div id="new_comment">
+	  </div>
+	  <% end %>
+	  <div id="survey_tab_comments">
+		<div class="left" id="comments_comments">
+		  <% if logged_in? %>
+		      <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @survey.id, :controller => "Surveys", :comment_div_id => "comment", :update_div_id => "new_comment"} -%>
+		  <% end -%>
+		  <% @comments.each do |comment| %>
+		    <%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
+		  <% end %>
+		  <div id="new_comment">
+		  </div>
 		</div>
-        </div>
-        <div>
-	      <% if !@survey.topics.empty? %>
-	<table>
-		<thead>
-			<tr><th>Topic Title</th><th>Number of posts</th><th>Time of last post</th><th>Post</th></tr>
-		</thead>
-		<tbody>
-          <% @survey.topics.each do |topic| -%>
-<tr>            
-<td><%= link_to(topic.title, forum_topic_path(:forum_id => topic.forum, :id => topic.id, :page => topic.last_page), :title=>"View all the posts for this topic") %></td>
-<td>            <%= '{count}'[(count=topic.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %></td>
-            <% if topic.posts.size >1 -%>
-<td><%= time_ago_in_words(topic.replied_at) %> ago</td>
-<td><%= topic.posts.last.body %></td>
-<% else %>
-<td rowspan="2">No posts yet</td>
-           <% end %>
-</tr>
-          <% end -%>
-</tbody>
-</table>
-          <% else %>
-		There are no forum questions linked to this survey, why not <%= link_to("start a new topic.", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey")) -%>
-          <% end %>
-        </div>
-    </div>
+		<div class="right" id="comments_forum_posts">
+				<% if !@survey.topics.empty? %>
+				<table>
+					<thead>
+						<tr><th>Topic Title</th><th>Number of posts</th><th>Time of last post</th><th>Post</th></tr>
+					</thead>
+					<tbody>
+			          <% @survey.topics.each do |topic| -%>
+			<tr>            
+			<td><%= link_to(topic.title, forum_topic_path(:forum_id => topic.forum, :id => topic.id, :page => topic.last_page), :title=>"View all the posts for this topic") %></td>
+			<td>            <%= '{count}'[(count=topic.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %></td>
+			            <% if topic.posts.size >1 -%>
+			<td><%= time_ago_in_words(topic.replied_at) %> ago</td>
+			<td><%= topic.posts.last.body %></td>
+			<% else %>
+			<td rowspan="2">No posts yet</td>
+			           <% end %>
+			</tr>
+			          <% end -%>
+			</tbody>
+			</table>
+			          <% elsif logged_in? -%>
+			        <div class="medium-padding-top">
+					There are no forum questions linked to this <%= SURVEY -%>, why not <%= link_to("start a new topic.", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey")) -%>
+					</div>
+			          <% end %>
+	    </div>
+	  </div>
+  </div>
 </div>
-</div>
-<% end -%>
-</div>
-<div style="clear:both;">
 </div>
 <script type="text/javascript">
-var myTabs = new YAHOO.widget.TabView("notes");
+var myTabs = new YAHOO.widget.TabView("survey_tabview");
+</script>
+<script type="text/javascript">
+createTable(<%= @survey.id -%>);
 </script>

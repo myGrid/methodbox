@@ -1,18 +1,4 @@
 <% if logged_in? -%>
-<div class="sidebar-bg">
-  <div class="sidebar">
-    <%#= render :partial=>controller.controller_name.downcase + "/search_bar" %>
-    <ul class="vbuttons">
-        <li><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a new method/script" %></li>
-    </ul>
-  </div>
-</div>
+  <li class="normal-border-top-grey"><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a method" %></li>
 <% end %>
-<div class="sidebar-bg">
-  <div class="sidebar">
-    <ul class="vbuttons">
-      <li><%= icon "show", surveys_url, "Search surveys", {:title=>"Look at the surveys using the tabular view and search them for variables"}, "Search surveys" %></li>
-    </ul>
-  </div>
-</div>
-<%= render :partial=>"help_sidebar" -%>
+
