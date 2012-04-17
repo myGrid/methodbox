@@ -2,7 +2,7 @@
 
 # Uncomment below to force Rails into production mode when
 # you don't control web/app server and can't set it the proper way
-# ENV['RAILS_ENV'] ||= 'production'
+# ENV['Rails.env'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.3.14' unless defined? RAILS_GEM_VERSION
@@ -48,18 +48,18 @@ config.gem 'RedCloth'
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  # config.load_paths += %W( #{Rails.root}/extras )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
   # config.log_level = :debug
   begin
-    RAILS_DEFAULT_LOGGER = Logger.new("#{RAILS_ROOT}/log/#{RAILS_ENV}.log")
+    Rails.logger = Logger.new("#{Rails.root}/log/#{Rails.env}.log")
   rescue StandardError
-    RAILS_DEFAULT_LOGGER = Logger.new(STDERR)
-    RAILS_DEFAULT_LOGGER.level = Logger::WARN
-    RAILS_DEFAULT_LOGGER.warn(
-      "Rails Error: Unable to access log file. Please ensure that log/#{RAILS_ENV}.log exists and is chmod 0666. " +
+    Rails.logger = Logger.new(STDERR)
+    Rails.logger.level = Logger::WARN
+    Rails.logger.warn(
+      "Rails Error: Unable to access log file. Please ensure that log/#{Rails.env}.log exists and is chmod 0666. " +
         "The log level has been raised to WARN and the output directed to STDERR until the problem is fixed."
     )
   end
@@ -76,7 +76,7 @@ config.gem 'RedCloth'
   config.action_controller.session = {
       :key => '_method_box_session',
       :secret      => '1576ebcfekhjb234hkjhefg0j98273598273598237921cccc605a5abafc299ba87747jhvv9mmlll7c66537361f77',
-      :session_secure      => RAILS_ENV == 'production',
+      :session_secure      => Rails.env == 'production',
       :http_only   => true
     }
 
@@ -101,7 +101,7 @@ config.gem 'RedCloth'
   
   #seems to fix the "A copy of AuthenticatedSystem has been removed from the module tree but is still active" problem - http://yanpritzker.com/2008/02/27/rails-20-dependency-system-problems/
   #also need to set config.cache_classes = false in development.rb
-  config.autoload_once_paths += %W( #{RAILS_ROOT}/lib )
+  config.autoload_once_paths += %W( #{Rails.root}/lib )
   
 end
 

@@ -29,9 +29,9 @@ Daemons.run_proc('methodbox_delayed_job_worker', daemon_options) do
   # So if you are testing locally then ensure that your database config
   # has the same database for both development and production modes
   # (though it is not recommend to keep this config at all times!)
-  RAILS_ENV = 'production'
+  Rails.env = 'production'
   
-  puts "Starting in Rails #{RAILS_ENV} mode"
+  puts "Starting in Rails #{Rails.env} mode"
   
   require File.join('config', 'environment')
   

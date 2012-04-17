@@ -7,7 +7,7 @@ SARS_SHARED_SECRET = "something"
 #the root url where the shib login process should redirect to
 SHIB_LOGIN_URL = "http://some.url:port"
 #where should completed data extracts be stored
-CSV_OUTPUT_DIRECTORY = "/Users/you/data/#{ENV['RAILS_ENV']}/complete"
+CSV_OUTPUT_DIRECTORY = "/Users/you/data/#{ENV['Rails.env']}/complete"
 #is the server running ssl routes or not, to get the dev server to use http set it to false
 HTTPS_ON = true
 #you need this so it doesn't do eg localhost:3000:3001 in ssl paths and redirects to correct port from https to http
@@ -37,8 +37,8 @@ CSV_SERVER_LOCATION='localhost'
 CSV_SERVER_PORT='25000'
 CSV_SERVER_PATH='/server/eos'
 # CSV_SERVER_PATH='/eos'
-CSV_FILE_PATH="/Users/you/obesity_data/#{ENV['RAILS_ENV']}/csv/"
+CSV_FILE_PATH="/Users/you/obesity_data/#{ENV['Rails.env']}/csv/"
 #can users register themselves
 REGISTRATION_CLOSED = true
-NEW_CSV_FILE_PATH="/Users/you/obesity_data/#{ENV['RAILS_ENV']}/csv/complete"
+NEW_CSV_FILE_PATH="/Users/you/obesity_data/#{ENV['Rails.env']}/csv/complete"
 

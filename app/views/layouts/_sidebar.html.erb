@@ -2,7 +2,15 @@
 	<ul>
 		<%= render :partial => "layouts/atom_feed" %>
 		<%= render :partial => "cart/all_buttons" -%>
-		<li><%= icon "show", surveys_url, "Search " + SURVEY.pluralize, {:title=>"Look at the " + SURVEY.downcase.pluralize + " using the tabular view and search them for variables"}, "View " + SURVEY.pluralize %></li>
+        </ul>
+<div class="yui-skin-sam normal-margin-left normal-padding-bottom">
+<span id="browse-surveys-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= surveys_url %>" title="Look at the <%= SURVEY.downcase.pluralize %> using the tabular view and search them for variables">View <%= SURVEY.pluralize %></a>
+    </span>
+</span>
+</div>
+        </ul>
 		<%= render_sidebar -%>
 	</ul>
 </div>
@@ -21,5 +29,9 @@ Latest <%= DATASET.pluralize.downcase -%>
 </ul>
 </div>
 </div>
+
+<script type="text/javascript">
+var oLinkButton2 = new YAHOO.widget.Button("browse-surveys-button");
+</script>
 
 

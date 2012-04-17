@@ -1,7 +1,5 @@
 <div class="generic-search-bar-div">
-<% form_tag('/search/', :method=>"get") do -%>
-<!-- search for everything from the main page -->
-<!-- return first page of results -->
+<%= form_tag('/search', :method=>"get") do -%>
 <% start_year = Dataset.scoped(:select => "DISTINCT year").sort!{|x,y| x.year.to_i <=> y.year.to_i}.delete_if{|x| x.year == nil}.first.year.to_i -%>
 <%= render :partial => "layouts/search_hidden_fields" %>
 <div class="left header-search-div">

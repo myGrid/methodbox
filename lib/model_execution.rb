@@ -23,7 +23,7 @@ module ModelExecution
 
   def store_data_to_tmp model
         
-    rootpath="#{RAILS_ROOT}/tmp/models"
+    rootpath="#{Rails.root}/tmp/models"
     FileUtils.mkdir_p(rootpath)
     
     filename="model-#{model.id}-#{Time.now.to_i}-#{model.original_filename}"

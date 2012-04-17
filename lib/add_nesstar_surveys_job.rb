@@ -8,7 +8,7 @@ module AddNesstarSurveysJob
     
     
     cattr_accessor :logger
-    self.logger = RAILS_DEFAULT_LOGGER
+    self.logger = Rails.logger
     
     def perform
       begin

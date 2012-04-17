@@ -55,7 +55,7 @@ var survey_id = <%= @survey.id.to_s -%>;
 createDynamicVariablesTable();
 </script>
 <script type="text/javascript">
-  document.observe('dom:loaded', function() {
-    //uncheckAll();
+  $j(document).ready(function() {
+    uncheckAll();
   });
 </script>

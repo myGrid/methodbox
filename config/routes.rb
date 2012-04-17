@@ -73,9 +73,10 @@ MethodBox::Application.routes.draw do
    end
 
   match 'session/pre_shibboleth_login' => 'session#pre_shibboleth_login'
+  match 'search' => 'search#index'
   match 'advanced_search' => 'home#search'
 
-  root :to => 'home#search'
+  root :to => 'home#about'
 
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'

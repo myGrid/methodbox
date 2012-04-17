@@ -8,7 +8,7 @@ module ProcessMetadataJob
     
     
     cattr_accessor :logger
-    self.logger = RAILS_DEFAULT_LOGGER
+    self.logger = Rails.logger
     @missing_variables=[]
     def perform
       begin

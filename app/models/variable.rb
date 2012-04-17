@@ -22,7 +22,7 @@ class Variable < ActiveRecord::Base
   #acts_as_solr(:fields=>[:name, :value, :dataset_id], :if => proc{|record| !record.is_archived?}) if SOLR_ENABLED
   
   acts_as_taggable_on :title
-  acts_as_annotatable
+  #acts_as_annotatable
   
   #sunspot solr
   searchable do

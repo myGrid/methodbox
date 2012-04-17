@@ -54,7 +54,7 @@ var dataset_results = <%= raw @datasets_json -%>;
 createDatasetTable();
 </script>
 <script type="text/javascript">
-  document.observe('dom:loaded', function() {
+  $j(document).ready(function() {
     uncheckAll();
   });
 </script>

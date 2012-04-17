@@ -571,54 +571,6 @@ div.exhibit-collectionView-group h2 {
 	margin-top: 1em;
 }
 
-/* some extra margin and padding settings */
-.no-margin {
-  margin: 0;
-}
-.normal-margin-bottom {
-	margin-bottom: 1em;
-}
-.small-margin-bottom {
-	margin-bottom: 0.5em;
-}
-.medium-padding {
-	padding: 5px;
-}
-.big-padding-top {
-	padding-top: 8em;
-}
-.medium-padding-bottom {
-	padding-bottom: 3em;
-}
-.medium-padding-top {
-	padding-top: 3em;
-}
-.medium-padding-left {
-  padding-left: 3em;
-}
-.normal-padding-top {
-  padding-top: 1em;
-}
-.normal-padding-bottom {
-  padding-bottom: 1em;
-}
-.normal-padding-left {
-  padding-left: 1em;
-}
-.normal-padding-right {
-  padding-right: 1em;
-}
-.small-padding-top {
-  padding-top: 0.5em;
-}
-.small-padding-bottom {
-  padding-bottom: 0.5em;
-}
-.small-padding-left {
-  padding-left: 0.5em;
-}
-/* extra marging and padding settings over */
-
 /* extra font settings */
 .bold {
 	font-weight: bold;
@@ -720,8 +672,8 @@ body {
   border-bottom-right-radius: 6px;
   padding-left: 10px;
   padding-right: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+  /* margin-left: 10px; */
+  /* margin-right: 10px; */
 }
 
 .add_var_button {

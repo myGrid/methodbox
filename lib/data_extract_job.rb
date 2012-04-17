@@ -9,7 +9,7 @@ module DataExtractJob
   class StartJobTask < Struct.new(:variable_hash, :user_id, :data_extract_id, :output_directory, :send_email, :base_host)
     
     cattr_accessor :logger
-    self.logger = RAILS_DEFAULT_LOGGER
+    self.logger = Rails.logger
     
     def perform
       begin

@@ -16,7 +16,7 @@ class DefaultDataMigration < ActiveRecord::Migration
   end
 
   def self.default_data_directory
-    File.join(RAILS_ROOT, "config/default_data" )
+    File.join(Rails.root, "config/default_data" )
   end
 
   

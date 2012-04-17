@@ -10,11 +10,11 @@ The project is developed by the myGrid team at the University of Manchester, fun
 
 = Overview
 
-MethodBox is a Ruby on Rails 2.3.x (tested up to rails 2.3.14 and ruby 1.8.7) application designed for the storage, finding and sharing of tabular and csv data.  User can upload survey data, search for columns, download only the columns they require in various formats, make comments and add methods which can be linked to the data.
+MethodBox is a Ruby on Rails 3 (tested up to rails 3.2.1 and ruby 1.9.3) application designed for the storage, finding and sharing of tabular and csv data.  User can upload survey data, search for columns, download only the columns they require in various formats, make comments and add methods which can be linked to the data.
 
 = Architecture
 
-The main application is a Ruby on Rails 2.3.x application which has been tested on WEBrick and Apache with Passenger Phusion (tested up to version 3.0.1).
+The main application is a Ruby on Rails 3 application which has been tested on WEBrick and Apache with Passenger Phusion (tested up to version 3.0.1).
 Apache SOLR is used through the sunspot plugin http://outoftime.github.com/sunspot/
 Delayed Job (https://github.com/collectiveidea/delayed_job/tree/v2.0) is used to process the data files in the background.
 
@@ -22,7 +22,7 @@ Delayed Job (https://github.com/collectiveidea/delayed_job/tree/v2.0) is used to
 
 config/environment_local.example.rb contains various constants which are used eg. to point the delayed job tasks to the correct folder for data storage.  Copy file to config/initializers/environment_local.rb and then make the changes.  There are a few redundant contstants in this file and we are in the process of removing them.
 config/environment.example.rb includes set up for the exception handler and needs your email address so it can send any bug reports to the correct address.  Copy file to environment.rb and then make the changes
-config/environments/RAILS_ENV.example.rb (eg production.rb) need email details that MethodBox uses to send out notifications.  It also has a STATISTICS_ROUTE which is an obfuscated url that you can use to give to someone interested in the download stats.  In these file there is a constant called ROUTES_PROTOCOL which can be set to 'http' or 'https' and is used by the config/routes.rb file to make certain routes over 'https' if you require (don't forget certificates for apache etc, hard to test in development).  Copy file to eg. development.rb and then make the changes.
+config/environments/Rails.env.example.rb (eg production.rb) need email details that MethodBox uses to send out notifications.  It also has a STATISTICS_ROUTE which is an obfuscated url that you can use to give to someone interested in the download stats.  In these file there is a constant called ROUTES_PROTOCOL which can be set to 'http' or 'https' and is used by the config/routes.rb file to make certain routes over 'https' if you require (don't forget certificates for apache etc, hard to test in development).  Copy file to eg. development.rb and then make the changes.
 
 MethodBox uses bundler to handle its gems.  (sudo) gem install bundler to install it and then bundle install in the MethodBox root to install the gems in the application. 
 When installing these gems you may also have to install some native libraries, the following list is for gnu/linux:
@@ -50,7 +50,7 @@ to set up the tables for the savage beasts forum plugin.
 
 = SOLR setup
 
-MethodBox uses the Sunspot plugin to drive SOLR (http://outoftime.github.com/sunspot/).  By default the config and index will be saved in the rails root in a directory called 'solr'. If you want it to store things in a different place then copy the config/sunspot_example.yml to config/sunspot.yml and change the file paths inside it to the correct places.  Start solr with rake sunspot:solr:start, for production add "RAILS_ENV=production" to the end.  To stop use rake sunspot:solr:stop and to reindex use rake sunspot:reindex. You could also install it in tomcat, see http://wiki.apache.org/solr/SolrTomcat. It seems to work better adding the solr-home parameter to the appropriate place in the tomcat/webapps/solr/WEB-INF/web.xml . You will also need to copy the conf files from the sunspot gems conf directory and add to the solr conf directory.
+MethodBox uses the Sunspot plugin to drive SOLR (http://outoftime.github.com/sunspot/).  By default the config and index will be saved in the rails root in a directory called 'solr'. If you want it to store things in a different place then copy the config/sunspot_example.yml to config/sunspot.yml and change the file paths inside it to the correct places.  Start solr with rake sunspot:solr:start, for production add "Rails.env=production" to the end.  To stop use rake sunspot:solr:stop and to reindex use rake sunspot:reindex. You could also install it in tomcat, see http://wiki.apache.org/solr/SolrTomcat. It seems to work better adding the solr-home parameter to the appropriate place in the tomcat/webapps/solr/WEB-INF/web.xml . You will also need to copy the conf files from the sunspot gems conf directory and add to the solr conf directory.
 Note that on windows the rake sunspot:solr:start task does not work since windows does not support the fork() directive, use rake sunspot:solr:run instead or install in a servlet container like tomcat
 
 = Delayed job setup
@@ -59,9 +59,9 @@ Uses the delayed job ruby gem from the 2.0 branch (2.1 is only for rails 3+). Ch
 Development: 
 > rake jobs:work
 Production 
-> RAILS_ENV=production script/delayed_job -n 2 
+> Rails.env=production script/delayed_job -n 2 
 the number after n is the amount of workers you want to start.  You can also start it in dev mode this way with script/delayed_job start instead of the rake task. Note that the environment info comes at the start and is not quoted.
-To stop it use RAILS_ENV=production script/delayed_job stop
+To stop it use Rails.env=production script/delayed_job stop
 We found that using the delayed_job gem with daemons gem higher than 1.0.10 caused unpredictable behaviour when starting workers so we lock that in the bundle Gemfile. 
 On windows script/delayed_job does not work so use rake jobs:work instead with one command terminal for each worker.
 

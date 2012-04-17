@@ -31,13 +31,13 @@ gem 'ddi-parser', '~> 0.0.4'
 gem "recaptcha", :require => "recaptcha/rails"
 gem "i18n", "~> 0.6.0"
 gem "delayed_job", "~> 3.0.0"
-#prototype removed in favour of jquery in rails 3.1
-gem "prototype-rails", "~> 3.1.0"
+gem 'jquery-rails'
 gem "acts-as-taggable-on", "~> 2.2.2"
 #fleximage not compatible with rails 3.1
 gem "paperclip", "~> 2.0"
 gem 'exception_notification'
 gem 'devise'
+gem 'progress_bar'
 
 
 #database adaptors
@@ -67,10 +67,19 @@ gem "daemons", "1.0.10"
 group :development do
   # bundler requires these gems in development
   # gem "rails-footnotes"
+    gem 'sunspot_solr'
 end
 
 group :test do
   # bundler requires these gems while running tests
   # gem "rspec"
   # gem "faker"
+end
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails'
+  gem 'coffee-rails'
+  gem 'uglifier'
 end

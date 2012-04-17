@@ -54,7 +54,7 @@ var survey_results = <%= raw surveys_json -%>;
 createSurveyTable();
 </script>
 <script type="text/javascript">
-  document.observe('dom:loaded', function() {
+  $j(document).ready(function() {
     uncheckAll();
   });
 </script>

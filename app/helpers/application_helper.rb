@@ -649,6 +649,7 @@ module ApplicationHelper
   def image method,options={}
     image_tag(method_to_icon_filename(method),options)
   end
+
   def icon(method, url=nil, alt=nil, url_options={}, label=method.humanize, remote=false)
     if (label == 'Destroy')
       label = 'Delete';
@@ -1056,7 +1057,7 @@ module ApplicationHelper
   def page_title controller_name, action_name
     name=PAGE_TITLES[controller_name]
     name ||=""
-    name += " (Development)" if ENV["RAILS_ENV"]=="development"
+    name += " (Development)" if ENV["Rails.env"]=="development"
     return "MethodBox&nbsp;"+name
   end
 

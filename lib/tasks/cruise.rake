@@ -5,7 +5,7 @@ require 'fileutils'
 
 desc "task for cruise control"
 task :cruise do
-  ENV['RAILS_ENV'] = 'test'
+  ENV['Rails.env'] = 'test'
   
   if !File.exists?(Dir.pwd+"/config/database.yml")
     FileUtils.copy(Dir.pwd+"/config/database.cc.yml", Dir.pwd+"/config/database.yml")

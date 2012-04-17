@@ -10,7 +10,7 @@
 
 module Authorization
   
-  @@logger = RAILS_DEFAULT_LOGGER
+  @@logger = Rails.logger
 
   #the types of Assets supported by the Authorization module
   ASSET_TYPES=["Script","Survey", "Csvarchive","Publication"]
