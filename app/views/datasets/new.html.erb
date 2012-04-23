@@ -32,6 +32,10 @@
           <%= text_area_tag 'dataset[description]', '', :style => "width: 100%;", :rows => 5 -%>
         </p>
 
+        <p style="margin-top: 0.5em;">
+          <b>Year:</b> (Enter the year of the <%= DATASET -%> here eg. 2010)<br/>
+          <%= text_field_tag 'dataset[year]', '' -%>
+        </p>
       </div>
     </center>
 

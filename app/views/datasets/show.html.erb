@@ -74,6 +74,14 @@
 		          No description
 		        </p>
 		      <% end -%>
+		        <b>Year:</b>
+		        <% unless @dataset.year.blank? -%>
+		          <span class="title"><%= @dataset.year -%></span>
+		      <% else -%>
+		        <p class="none_text">
+		          No year provided
+		        </p>
+		      <% end -%>
 			      <p>
 			        <b><%= SURVEY -%>:</b>
 			        <%= link_to(h(Survey.find(@dataset.survey_id).title), survey_path(Survey.find(@dataset.survey_id))) -%>

@@ -273,6 +273,7 @@ class DatasetsController < ApplicationController
         dataset.survey = @survey
         dataset.name = params[:dataset][:title]
         dataset.description = params[:dataset][:description]
+        dataset.year = params[:dataset][:year]
         dataset.filename = params[:dataset][:data].original_filename
         dataset.uuid_filename = uuid + ".data"
         dataset.save
