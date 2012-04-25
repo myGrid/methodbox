@@ -96,7 +96,7 @@
 	</table>
       <% end -%>
       </p>
-        <b>Dataset:</b>
+        <b><%= DATASET -%>:</b>
       <div class="box_standout">
         <%= link_to(Dataset.find(@variable.dataset_id).name, dataset_url(Dataset.find(@variable.dataset_id))) -%>
       </div>
