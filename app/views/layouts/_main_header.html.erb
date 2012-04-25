@@ -14,7 +14,7 @@
 <% end -%>
 </div>
 <%= render :partial => "layouts/add_this_toolbox" -%>
-<% if controller.controller_name != "home" && controller.action_name != "search" -%>
+<% unless controller.controller_name == "home" && controller.action_name == "search" -%>
   <%= render :partial => "layouts/header_search_bar" -%>
 <% end -%>
 <div style="clear:both;">
