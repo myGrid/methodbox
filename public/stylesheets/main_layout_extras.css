@@ -730,8 +730,8 @@ body {
   border-bottom-right-radius: 6px;
   padding-left: 10px;
   padding-right: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
+/*  margin-left: 10px;
+  margin-right: 10px; */
 }
 
 .add_var_button {
