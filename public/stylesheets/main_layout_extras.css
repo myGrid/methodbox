@@ -11,9 +11,12 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
+.mb-background {
+  background-color: #ACCBE0;
+}
 #bd {
-	background-color: white;
-	color: #000000; 
+  background-color: white;
+  color: #000000; 
 }
 #notice_flash {
 color: green;
