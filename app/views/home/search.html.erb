@@ -1,7 +1,10 @@
 <%= javascript_include_tag 'hidden_fields.js' -%>
 <% if controller.action_name == "search" -%>
 <div class="left normal-padding-left normal-padding-top normal-padding-bottom normal-padding-right normal-margin-bottom" id="advanced_search_checkboxes" style="border-radius: 6px; -moz-border-radius: 6px; -webkit-border-radius: 6px; border: 2px solid lightgray;">
-<div class="normal-padding-bottom normal-border-bottom-grey">
+<div class="larger-font normal-padding-bottom normal-border-bottom-grey center">
+Search Options
+</div>
+<div class="normal-padding-bottom normal-padding-top normal-border-bottom-grey">
 <ul style="margin: 0; display: inline-block;">
 <li class="larger-font"><%= check_box_tag 'search_type[]', 'variables', true, :onchange=>"setHiddenFieldValue('variable_select', this.checked);" -%>Variables</li>
 <%= javascript_tag "storeHiddenFieldValue('variable_select', true)"-%>
