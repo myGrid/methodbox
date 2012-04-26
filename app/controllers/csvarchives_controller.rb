@@ -240,7 +240,8 @@ class CsvarchivesController < ApplicationController
     params[:recommended_only]? @recommended_only = true : @recommended_only = false
     respond_to do |format|
       format.html # index.html.erb
-      format.xml { render :xml=>@my_archives, :xml=>@all_archives}
+      format.xml {render :xml=>@my_archives, :xml=>@all_archives}
+      format.json {render :json=>@all_archives}
     end
   end
 
