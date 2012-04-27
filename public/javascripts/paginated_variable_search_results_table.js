@@ -123,6 +123,7 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		  draggableColumns:true
 		};
 
+        YAHOO.util.Connect.initHeader("Accept", "application/json", true);
         variableDataSource = new YAHOO.util.DataSource(retrieve_variables_url + "?");
         variableDataSource.responseType = YAHOO.util.DataSource.TYPE_JSON;
         variableDataSource.responseSchema = {

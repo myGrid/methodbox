@@ -73,11 +73,14 @@ class VariablesController < ApplicationController
             @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
         end
     end
-    puts "total results " + result.total.to_s
     variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "recordsReturned" => 20, "totalRecords"=>result.total, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
-    puts @variables_json.to_s
-    render :partial=>"paginated_search_results"
+    #render :partial=>"paginated_search_results"
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => variables_hash}
+      format.json  { render :json => variables_hash}
+    end
   end
 
   def values_array
