@@ -188,7 +188,7 @@ class UsersController < ApplicationController
         redirect_to admin_url
       else
         self.current_user = user
-        if logged_in?
+        if user_signed_in?
           flash[:notice] = "You have succesfully signed up!"
           redirect_to self.current_user.person
         else
@@ -196,7 +196,7 @@ class UsersController < ApplicationController
           logger.info("Login Failed for "+ self.current_user.person_id.to_s)
           flash[:error] = "login fialed"
           redirect_back_or_default('/')
-        end #!logged_in?
+        end #!user_signed_in?
       end #!current_user
     end # user  &&  user.person
   end #def
@@ -211,7 +211,7 @@ class UsersController < ApplicationController
           user.reset_password_code_until = nil
           if user.save
             self.current_user = user
-            if logged_in?
+            if user_signed_in?
               flash[:notice] = "You can change your password here"
               format.html { redirect_to(:action => "edit", :id => user.id) }
             else

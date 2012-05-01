@@ -9,7 +9,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   def create
     self.current_<%= file_name %> = <%= class_name %>.authenticate(params[:login], params[:password])
-    if logged_in?
+    if user_signed_in?
       if params[:remember_me] == "1"
         current_<%= file_name %>.remember_me unless current_<%= file_name %>.remember_token?
         cookies[:auth_token] = { :value => self.current_<%= file_name %>.remember_token , :expires => self.current_<%= file_name %>.remember_token_expires_at }
@@ -22,7 +22,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   end
 
   def destroy
-    self.current_<%= file_name %>.forget_me if logged_in?
+    self.current_<%= file_name %>.forget_me if user_signed_in?
     cookies.delete :auth_token
     reset_session
     flash[:notice] = "You have been logged out."

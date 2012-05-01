@@ -1,4 +1,4 @@
-<% if logged_in? -%>
+<% if user_signed_in? -%>
   <% if controller.action_name == "show" %>
     <% if !mine?(@person) -%>
       <li class="normal-border-top-grey"><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>

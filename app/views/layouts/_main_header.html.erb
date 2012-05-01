@@ -5,7 +5,7 @@
 </div>
 <div class="left" style="margin-left: 1em; padding-top: 2px;">
 <%= link_to image_tag("box_transparent_small.png",:alt=>"www.methodbox.org",:title=>"Methodbox"), root_url -%>
-<% if logged_in? -%>
+<% if user_signed_in? -%>
 <%= render :partial => "layouts/logged_in_controls" -%>
 <% else -%>
 <div class="small-margin-bottom">

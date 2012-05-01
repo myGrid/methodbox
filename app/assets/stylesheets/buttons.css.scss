@@ -3,3 +3,18 @@
   background: asset-url("famfamfam_silk/zoom.png", image) 10% 50% no-repeat;
   text-decoration: none;
 }
+.yui-button#cart-button a {
+  padding-left: 2.25em;
+  background: asset-url("famfamfam_silk/cart.png", image) 10% 50% no-repeat;
+  text-decoration: none;
+}
+.yui-button#add-survey-button a {
+  padding-left: 2.25em;
+  background: asset-url("famfamfam_silk/add.png", image) 10% 50% no-repeat;
+  text-decoration: none;
+}
+.yui-button#add-datasource-button a {
+  padding-left: 2.25em;
+  background: asset-url("famfamfam_silk/add.png", image) 10% 50% no-repeat;
+  text-decoration: none;
+}

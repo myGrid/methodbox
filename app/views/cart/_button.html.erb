@@ -1,1 +1,10 @@
-<%= icon('cart', cart_path, "View Cart", {:title => "View cart"},current_user.cart_items.size.to_s + (current_user.cart_items.size > 1 || current_user.cart_items.size == 0 ? " Variables" : " Variables")) -%>
+<li class="normal-border-bottom-grey" id="cart_button">
+<span id="cart-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= cart_url %>" title="View cart"><%= current_user.cart_items.size.to_s + (current_user.cart_items.size > 1 || current_user.cart_items.size == 0 ? " Variables" : " Variables") -%></a>
+    </span>
+</span>
+</li>
+<script type="text/javascript">
+var cartButton = new YAHOO.widget.Button("cart-button");
+</script>

@@ -1,6 +1,6 @@
 <% form_tag({:url => {:action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
 <ul class="buttons">
-<% if logged_in? && !@variable.is_archived? -%>
+<% if user_signed_in? && !@variable.is_archived? -%>
 <%= hidden_field_tag 'variable_ids[]', @variable.id -%>
 <%= submit_to_remote '_submit', 'Add variable to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "Element.show('spinner')",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
 <% end -%>

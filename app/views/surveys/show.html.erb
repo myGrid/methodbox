@@ -10,7 +10,7 @@
       <li class="selected"><a href="#survey_tab_details" title="Details about <%= SURVEY -%> <%=@survey.title -%>"><em>Details</em></a></li>
       <li><a href="#survey_tab_variables" title="Variables and <%= DATASET.pluralize -%> belonging to <%= SURVEY -%> <%=@survey.title -%>"><em>Variables and <%= DATASET.pluralize -%></em></a></li>
       <li><a href="#survey_tab_links" title="Links to other methodbox assets"><em>Links</em></a></li>
-      <% if logged_in? %>
+      <% if user_signed_in? %>
         <li><a href="#survey_tab_notes" title="Your private notes"><em>Your notes</em></a></li>
         <li><a href="#survey_tab_comments" title="Public comments and forum posts"><em>Comments and Questions</em></a></li>
       <% end %>
@@ -34,7 +34,7 @@
 			<% end -%>
 	 	  </div>
 			<ul class="buttons">
-		<% if logged_in? -%>
+		<% if user_signed_in? -%>
 			  <li><%= icon "new", new_survey_url, "Create a new " +  SURVEY , nil, "Create a new " + SURVEY %></li>
 			<% if controller.action_name == "show" %>
 				<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
@@ -86,14 +86,14 @@
 		<% form_tag(search_variables_surveys_url, :method=>"get") do -%>
 		<div id="selected_variables">
 		</div>
-		<% if logged_in? -%>
+		<% if user_signed_in? -%>
 		<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :html => {:class => 'add_var_button'}} -%>
 		<% end -%>
 		<div id="variables_table"></div>
 		<% end -%>
 	  </div>
 	  <div id="survey_tab_links">
-			<% if logged_in? %>
+			<% if user_signed_in? %>
 				<div class="link_box">
 					Show: 
 					<%= link_to_remote "Only my links", :url=> show_links_surveys_path, :with=> "'link_state=mine&survey_id=#{@survey.id}'" %>, 
@@ -123,7 +123,7 @@
 				</div>
 				</div>
 	  </div>
-	  <% if logged_in? %>
+	  <% if user_signed_in? %>
 	  <div id="survey_tab_notes">
 		<%= render :partial => "notes/add_note", :locals=>{:resource_id => @survey.id} -%>
 		<% @notes.each do |note| %>
@@ -135,7 +135,7 @@
 	  <% end %>
 	  <div id="survey_tab_comments">
 		<div class="left" id="comments_comments">
-		  <% if logged_in? %>
+		  <% if user_signed_in? %>
 		      <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @survey.id, :controller => "Surveys", :comment_div_id => "comment", :update_div_id => "new_comment"} -%>
 		  <% end -%>
 		  <% @comments.each do |comment| %>
@@ -165,7 +165,7 @@
 			          <% end -%>
 			</tbody>
 			</table>
-			          <% elsif logged_in? -%>
+			          <% elsif user_signed_in? -%>
 			        <div class="medium-padding-top">
 					There are no forum questions linked to this <%= SURVEY -%>, why not <%= link_to("start a new topic.", new_forum_topic_url(:forum_id=>SURVEYS_FORUM_ID, :topicable_id=> @survey.id, :topicable_type=>"Survey")) -%>
 					</div>

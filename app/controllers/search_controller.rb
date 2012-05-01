@@ -60,7 +60,7 @@ class SearchController < ApplicationController
       @results_hash['publication'] = select_authorised find_publications(query, params[:publication_page]).results
     end
     #can only search for people if logged in
-    if params[:people_select] =='true' && logged_in?
+    if params[:people_select] =='true' && user_signed_in?
       @results_hash['people'] = find_people(query, params[:person_page]).results
     end
 
@@ -252,7 +252,7 @@ class SearchController < ApplicationController
 
   def find_previous_searches
     search=[]
-    if logged_in?
+    if user_signed_in?
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search

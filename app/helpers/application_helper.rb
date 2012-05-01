@@ -879,7 +879,7 @@ module ApplicationHelper
         return "Anonymous"
       end  
       # this string will output " (you) " for current user next to the display name, when invoked with 'you_text == true'
-      you_string = (you_text && logged_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>" : ""
+      you_string = (you_text && user_signed_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>" : ""
       contributor_person = contributor.person
       contributor_name = h(contributor_person.name)
       contributor_url = person_path(contributor_person.id)
@@ -1005,7 +1005,7 @@ module ApplicationHelper
   # user - for example, SOPs and others
   def mine?(thing)
     return false if thing.nil?
-    return false unless logged_in?
+    return false unless user_signed_in?
     
     c_id = current_user.id.to_i
     
@@ -1174,6 +1174,19 @@ module ApplicationHelper
     current_user ? current_user.id.to_s : 'anon'
   end
 
+#DEVISE helpers so that sign in form can go anywhere
+
+  def resource_name
+    :user
+  end
+ 
+  def resource
+    @resource ||= User.new
+  end
+ 
+  def devise_mapping
+    @devise_mapping ||= Devise.mappings[:user]
+  end
   
   private  
   PAGE_TITLES={"home"=>"Home", "projects"=>"Projects","institutions"=>"Institutions", "people"=>"People","sessions"=>"Login","users"=>"Signup","search"=>"Search","experiments"=>"Experiments","sops"=>"Sops","models"=>"Models","experiments"=>"Experiments","data_files"=>"Data"}

@@ -4,6 +4,30 @@ MethodBox::Application.routes.draw do
 
   devise_for :users
 
+  authenticated :user do
+    root to: 'datasets#index'
+  end
+
+  resources :statistics, :only => :index
+
+  match '/admin/' => 'admin#show'
+
+  resources :work_groups do
+    member do
+      post 'request_access'
+    end
+  end
+
+  resources :messages do
+    collection do 
+      post 'autocomplete_message_to'
+      get 'sent'
+      delete 'delete_all_selected'
+    end
+  end
+
+  resources :people
+
   resources :csvarchives, :path => "data_extracts"
 
   resources :scripts, :path => SCRIPT.gsub(" ", "_")
@@ -13,6 +37,14 @@ MethodBox::Application.routes.draw do
   resources :groups
 
   resources :help, :only => :index
+
+  match '/cart/' =>'cart#show'
+
+  resources :cart, :only => :none do
+    collection do 
+      post 'remove_from_cart'
+    end
+  end
 
   resources :surveys, :path => SURVEY.gsub(" ", "_") do
     member do

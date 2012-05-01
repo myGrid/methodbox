@@ -29,7 +29,7 @@
 <% form_tag({:url => {:action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('spinner').show();"}) do -%>
 <% if !@sorted_variables.empty? -%>
 <div style="margin-bottom: 10px;">
-<% if logged_in? -%>
+<% if user_signed_in? -%>
 <%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
 <% end -%>
 </div>

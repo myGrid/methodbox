@@ -2,7 +2,7 @@ module AuthenticatedSystem
   protected
     # Returns true or false if the user is logged in.
     # Preloads @current_user with the user model if they're logged in.
-    def logged_in?
+    def user_signed_in?
       #flash[:error] = nil if (flash[:error] == "Please log in first" || flash[:error]=="Admin rights required")
       !!current_user
     end
@@ -32,7 +32,7 @@ module AuthenticatedSystem
     #    current_user.login != "bob"
     #  end
     def authorized?
-      logged_in?
+      user_signed_in?
     end
 
     # Filter method to enforce a login requirement.
@@ -82,7 +82,7 @@ module AuthenticatedSystem
     #
     # We can return to this location by calling #redirect_back_or_default.
     def store_location
-      session[:return_to] = request.request_uri
+      session[:return_to] = request.url
     end
 
     # Redirect to the URI stored by the most recent store_location call or
@@ -92,10 +92,10 @@ module AuthenticatedSystem
       session[:return_to] = nil
     end
 
-    # Inclusion hook to make #current_user and #logged_in?
+    # Inclusion hook to make #current_user and #user_signed_in?
     # available as ActionView helper methods.
     def self.included(base)
-      base.send :helper_method, :current_user, :logged_in?
+      base.send :helper_method, :current_user, :user_signed_in?
     end
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.

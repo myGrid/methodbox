@@ -13,7 +13,7 @@
   <%= render :partial=>"assets/resource_list", :locals => {:collection=>@publications} %>
 </div>
 <% else %>
-<% if logged_in? %>
+<% if user_signed_in? %>
  <h1>No publications have been added to the methodbox.</h1>
 <p class="center"> Why not <%= link_to "add a new publication", new_publication_url -%></p>
 <% else %>

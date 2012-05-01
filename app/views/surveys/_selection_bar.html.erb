@@ -3,13 +3,13 @@
               <%= image_tag(method_to_icon_filename("help"), :size => "25x25", :alt => "Search terms quick guide", :title=>"Search terms quick guide", :onclick => "showPopup('help_box'); return false;",:class=> "help_image") -%>
               <%= submit_tag 'Search selected surveys',:id => "search_button",:onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else if (!areAnyDatasetsSelected()) {alert('Please select some datasets.');return false;} else {$('search_button').value='Searching for variables......';$('search_button').disable();$('search_button').form.submit();return true;}" %>
             </div>
-            <% if logged_in? && !@recent_searches.empty? -%>
+            <% if user_signed_in? && !@recent_searches.empty? -%>
               <div style="position: absolute; top:1em;left:30em">
                 Recent searches:
                 <%= select_tag 'recent searches' ,options_from_collection_for_select(@recent_searches, 'id', 'terms'), :onchange=>"javascript:$('survey_search_query').value = this.options[this.selectedIndex].text" -%>
               </div>
             <% end -%>
-            <% if logged_in? -%>
+            <% if user_signed_in? -%>
               <div id="cart_button" style="float: right; margin-right: 1em;">
 	        <ul class="vbuttons">
                   <li><%= render :partial => "cart/button" -%></li>

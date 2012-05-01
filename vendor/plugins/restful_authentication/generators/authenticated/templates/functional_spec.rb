@@ -46,7 +46,7 @@ describe <%= controller_class_name %>Controller do
     <%= table_name %>(:quentin).remember_me
     request.cookies["auth_token"] = cookie_for(:quentin)
     get :new
-    controller.send(:logged_in?).should be_true
+    controller.send(:user_signed_in?).should be_true
   end
   
   it 'fails expired cookie login' do
@@ -54,14 +54,14 @@ describe <%= controller_class_name %>Controller do
     <%= table_name %>(:quentin).update_attribute :remember_token_expires_at, 5.minutes.ago
     request.cookies["auth_token"] = cookie_for(:quentin)
     get :new
-    controller.send(:logged_in?).should_not be_true
+    controller.send(:user_signed_in?).should_not be_true
   end
   
   it 'fails cookie login' do
     <%= table_name %>(:quentin).remember_me
     request.cookies["auth_token"] = auth_token('invalid_auth_token')
     get :new
-    controller.send(:logged_in?).should_not be_true
+    controller.send(:user_signed_in?).should_not be_true
   end
 
   def auth_token(token)

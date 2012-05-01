@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'survey_checkbox.js' -%>
 <% @survey_search_query="Enter search terms" unless @survey_search_query -%>
 <% @survey_search_query= params[:survey_search_query] unless params[:survey_search_query]==nil -%>
-<% if !logged_in? -%>
+<% if !user_signed_in? -%>
   <h2>Welcome, guest.  Please select some surveys and search for variables of interest to your research.  You can browse the metadata and see what is inside the MethodBox but only <%= link_to "registered users", signup_url -%> can add variables to their cart and download them.</h2><br/>
 <% else -%>
   <h2>Select some surveys, enter a search term and click the button to find some variables</h2><br/>

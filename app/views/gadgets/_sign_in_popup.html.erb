@@ -4,48 +4,7 @@
 	</div>
 	<center>
       <div class="contents">
-        <% form_tag user_session_url do %>
-          <%= hidden_field_tag "called_from[controller]", controller.controller_name -%>
-          <%= hidden_field_tag "called_from[action]", controller.action_name -%>
-          <%= hidden_field_tag "called_from[id]", params[:id] -%>
-          <% if params[:entry_ids] -%>
-            <%= hidden_field_tag "called_from[entry_ids]", params[:entry_ids].join(",").to_s -%>
-            <%= hidden_field_tag "called_from[survey_search_query]", params[:survey_search_query] -%>
-          <% end -%>
-		  <div style="margin-top:0;-moz-border-radius:6px; -moz-box-shadow: 1px 1px 3px #777777; border: 1px solid #C0C4C6; color: #000000; padding: 10px;  background-color: #FFFFFF;">
-			<p><%= link_to "Login using UK Federation", session_pre_shibboleth_login_url -%></p>
-		  </div>
-		<div style="text-align:center; padding: 5px; font-weight: bold; ">OR</div>
-          <div class="email_login_box">
-            <p>
-              Email:
-            </p>
-            <% params[:survey_search_query] %>
-            <p>
-              <%= text_field_tag 'login', nil, :class => 'field', :style => "width: 80%;" %>
-            </p>
-            <p style="font-size:1em;">
-                  Password:
-            </p>
-            <p>
-              <%= password_field_tag 'password', nil, :class => 'field', :style => "width: 80%;" %>
-            </p>
-
-            <p>
-              Remember me: <%= check_box_tag 'remember_me' %>
-            </p>
-          <p>
-            <%= submit_tag "Log in", :disable_with => "Logging in..." %>
-          </p>
-
-          </div>
-
-        <% end %>
-        <br/>
-        <p class="forgotten_password">
-          <b><%#= link_to "Forgotten password?", forgot_password_url %></b>
-        </p>
-
+        <%= render :partial => "devise/sessions/login" -%>
       </div>
   </center>
 </div>

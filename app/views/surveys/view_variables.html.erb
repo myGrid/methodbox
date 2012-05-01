@@ -6,7 +6,7 @@
        <%= link_to(Survey.find(val).title, survey_path(Survey.find(val))) -%>
       <% end %>
       </b><br/><br/>
-  <% if SOLR_ENABLED && logged_in? && current_user.person %>
+  <% if SOLR_ENABLED && user_signed_in? && current_user.person %>
 
     <% form_remote_tag :url => search_variables_surveys_url do -%>
       <%#= hidden_field_tag 'survey_list', @survey_list %>

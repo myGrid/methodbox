@@ -25,7 +25,7 @@ class UserSearchesController < ApplicationController
      #profile
      def find_all_previous_searches
        search=[]
-       if logged_in? && current_user.id == Person.find(params[:id]).user.id
+       if user_signed_in? && current_user.id == Person.find(params[:id]).user.id
          search = UserSearch.all(:order => "created_at DESC", :conditions => { :user_id => current_user.id})
        end
        @recent_searches = search
@@ -34,7 +34,7 @@ class UserSearchesController < ApplicationController
      #find any previous searches if you are looking at your own
      #profile
      def find_search
-       if logged_in? && current_user.id == UserSearch.find(params[:id]).user.id
+       if user_signed_in? && current_user.id == UserSearch.find(params[:id]).user.id
          @search = UserSearch.find(params[:id])
        end
      end

@@ -32,7 +32,7 @@
                         <ul>
 
                         <li><a class="yuimenuitemlabel" href="<%= csvarchives_url -%>" title="Data sources created by MethodBox users">View all Data Extracts</a></li>
-<% if logged_in? %>
+<% if user_signed_in? %>
                         <li><a class="yuimenuitemlabel" href="<%= new_csvarchive_url -%>" title="Create a new Data Extract from the variables in your cart">Create a new Data Extract</a></li>
 <% end -%>
 
@@ -53,7 +53,7 @@
                         <ul>
 
                         <li><a class="yuimenuitemlabel" href="<%= scripts_url -%>" title="Advice and scripts for data cleaning, statistical analysis and more">View all <%= SCRIPT_HEADER.downcase -%></a></li>
-<% if logged_in? %>
+<% if user_signed_in? %>
                         <li><a class="yuimenuitemlabel" href="<%= new_script_url -%>" title="Create a new <%= SCRIPT-%> by uploading a file containing information/syntax/help">Add a new <%= SCRIPT -%></a></li>
 <% end -%>
                         </ul>
@@ -61,7 +61,7 @@
                 </div>                                         
             
             </li>
-<% if logged_in? -%>
+<% if user_signed_in? -%>
             <li class="yuimenubaritem">
             
                 <a class="yuimenubaritemlabel" href="<%= publications_url -%>" title="Publications added from PubMed">
@@ -70,7 +70,7 @@
             
             </li>
 <% end -%>
-<% if logged_in? -%>
+<% if user_signed_in? -%>
             <li class="yuimenubaritem">
             
                 <a class="yuimenubaritemlabel" href="<%= person_url(current_user.person) -%>" title="View and edit your profile, see your resources, view your search history">
@@ -84,13 +84,13 @@
                         <li><a class="yuimenuitemlabel" href="<%= person_url(current_user.person) -%>" title="Hello <%= current_user.person.first_name -%>. View and edit your profile, see your resources, view your search history">My profile</a></li>
                         <li><a class="yuimenuitemlabel" href="<%= cart_url -%>" title="<%= current_user.cart_items.size > 0 ? 'You have some variables in your cart' : 'There are no variables in your cart' -%>"><%= current_user.cart_items.size > 0 ? "Variable Cart(" + current_user.cart_items.size.to_s + ")" : "Variable Cart" -%></a></li>
                         <li><a class="yuimenuitemlabel" href="<%= messages_url -%>" title="Read, create and send messages to/from other users"><%= "Messages(" + current_user.messages_to.size.to_s + ")" -%></a></li>
-                        <li><a class="yuimenuitemlabel" href="<%= logout_url -%>" title="Logout from MethodBox and end your current session. Any variables in your cart will be saved until the next time">Logout</a></li>
+                        <li><%= link_to('Logout', destroy_user_session_path, :method => :delete, :title=> "Logout and end this MethodBox session. Any variables in your cart will be saved for the next time.", :class=>'yuimenuitemlabel') %></li>
                         </ul>
                     </div>
                 </div>      
             </li>
 <% end -%>
-<% if logged_in? -%>
+<% if user_signed_in? -%>
             <li class="yuimenubaritem">
             
                 <a class="yuimenubaritemlabel" href="<%= people_url -%>" title="Who's who in MethodBox">
@@ -99,7 +99,7 @@
             
             </li>
 <% end -%>
-<% if logged_in? -%>
+<% if user_signed_in? -%>
             <li class="yuimenubaritem">
             
                 <a class="yuimenubaritemlabel" href="<%= work_groups_url -%>" title="Create and join groups">
@@ -135,7 +135,7 @@
                 </div>                                        
             
             </li>
-<% if logged_in? && current_user.is_admin? -%>
+<% if user_signed_in? && current_user.is_admin? -%>
             <li class="yuimenubaritem">
             
                 <a class="yuimenubaritemlabel" href="<%= admin_url -%>" title="User activity and downloads">

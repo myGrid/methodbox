@@ -107,7 +107,7 @@
 	  </div>
 	  <div id="dataset_tab_variables">
 		<% form_tag(search_variables_surveys_url, :method=>"get") do -%>
-		<% if logged_in? -%>
+		<% if user_signed_in? -%>
 		<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :html => {:class => 'add_var_button'}} -%>
 		<% end -%>
 		<div id="selected_variables">

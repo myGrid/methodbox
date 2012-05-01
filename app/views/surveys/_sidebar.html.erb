@@ -1,4 +1,4 @@
-<% if logged_in? -%>
+<% if user_signed_in? -%>
   <li class="normal-border-top-grey"><%= icon "new", new_survey_url, "Create a new " + SURVEY.downcase, {:title=>"Add a new " + SURVEY.downcase + " to MethodBox"}, "Create a " + SURVEY.downcase %></li>
    <li class="normal-border-top-grey"><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a datasource" %></li>
    <% if controller.action_name == "show" %>

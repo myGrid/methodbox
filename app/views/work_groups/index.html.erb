@@ -1,5 +1,5 @@
 <% if @groups.empty? %>
-<% if logged_in? %>
+<% if user_signed_in? %>
 <h1>There are no groups inside the MethodBox.</h1>
 <p class="center">Why not <%= link_to "create one", new_work_group_url -%></p>
 <% else %>

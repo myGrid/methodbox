@@ -1,5 +1,5 @@
 <div id="cart-buttons">
-<% if logged_in? -%>
-  <li class="normal-border-bottom-grey" id="cart_button"><%= render :partial => "cart/button" -%></li>
+<% if user_signed_in? -%>
+  <%= render :partial => "cart/button" -%>
 <% end -%>
 </div>

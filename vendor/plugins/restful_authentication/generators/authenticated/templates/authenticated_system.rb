@@ -2,7 +2,7 @@ module AuthenticatedSystem
   protected
     # Returns true or false if the <%= file_name %> is logged in.
     # Preloads @current_<%= file_name %> with the <%= file_name %> model if they're logged in.
-    def logged_in?
+    def user_signed_in?
       !!current_<%= file_name %>
     end
 
@@ -31,7 +31,7 @@ module AuthenticatedSystem
     #    current_<%= file_name %>.login != "bob"
     #  end
     def authorized?
-      logged_in?
+      user_signed_in?
     end
 
     # Filter method to enforce a login requirement.
@@ -86,10 +86,10 @@ module AuthenticatedSystem
       session[:return_to] = nil
     end
 
-    # Inclusion hook to make #current_<%= file_name %> and #logged_in?
+    # Inclusion hook to make #current_<%= file_name %> and #user_signed_in?
     # available as ActionView helper methods.
     def self.included(base)
-      base.send :helper_method, :current_<%= file_name %>, :logged_in?
+      base.send :helper_method, :current_<%= file_name %>, :user_signed_in?
     end
 
     # Called from #current_<%= file_name %>.  First attempt to login by the <%= file_name %> id stored in the session.

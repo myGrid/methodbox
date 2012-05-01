@@ -99,7 +99,7 @@ class SessionsController < ApplicationController
           current_user.person.save
           redirect_to root_url
         else
-          self.current_user.forget_me if logged_in?
+          self.current_user.forget_me if user_signed_in?
           cookies.delete :auth_token
           reset_session
           flash[:notice] = "This account is no longer active."
@@ -189,7 +189,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    self.current_user.forget_me if logged_in?
+    self.current_user.forget_me if user_signed_in?
     cookies.delete :auth_token
     reset_session
 #    flash[:notice] = "You have been logged out."

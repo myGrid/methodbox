@@ -1,4 +1,4 @@
-<% if logged_in? -%>
+<% if user_signed_in? -%>
   <li class="normal-border-top-grey"><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
   <li class="normal-border-top-grey"><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
   <li class="normal-border-top-grey"><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a method" %></li>

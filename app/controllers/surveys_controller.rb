@@ -778,7 +778,7 @@ end
 
   def find_previous_searches
     search=[]
-    if logged_in?
+    if user_signed_in?
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
@@ -788,7 +788,7 @@ end
   #profile
   def find_previous_searches
     search=[]
-    if logged_in?
+    if user_signed_in?
       search = UserSearch.all(:order => "created_at DESC", :limit =>10, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search
@@ -903,7 +903,7 @@ end
     @selected_datasets = authorized_datasets
     @sorted_variables = result.results
 
-    if logged_in?
+    if user_signed_in?
       #TODO There must be a way to avoid duplicating the save if the search is repeated.
       user_search = UserSearch.new
       user_search.user = current_user
@@ -970,7 +970,7 @@ end
               end
             end
           end
-          if logged_in? && new_search_terms.include?(term)
+          if user_signed_in? && new_search_terms.include?(term)
           #TODO There must be a way to avoid duplicating the save if the search is repeated.
             user_search = UserSearch.new
             user_search.user = current_user
@@ -1060,7 +1060,7 @@ end
 
   def find_previous_searches
     search=[]
-    if logged_in?
+    if user_signed_in?
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search

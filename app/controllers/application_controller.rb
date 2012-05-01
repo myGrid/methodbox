@@ -4,7 +4,7 @@ require 'xml'
 
 class ApplicationController < ActionController::Base
 
-  include AuthenticatedSystem
+  #include AuthenticatedSystem
   #email exceptions to nominated users
   #include ExceptionNotification::Notifiable
   #https/ssl
@@ -191,7 +191,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logout_user
-    self.current_user.forget_me if logged_in?
+    self.current_user.forget_me if user_signed_in?
     cookies.delete :auth_token
     session[:user_id]=nil
   end

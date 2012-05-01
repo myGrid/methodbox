@@ -576,7 +576,7 @@ class DatasetsController < ApplicationController
 
   def find_previous_searches
     search=[]
-    if logged_in?
+    if user_signed_in?
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search

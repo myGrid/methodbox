@@ -1,3 +1,3 @@
-<% if logged_in? -%>
+<% if user_signed_in? -%>
 	<li class="normal-border-top-grey"><%= icon "new", new_work_group_url, "Add a new group", {:title=>"Create a new group of users to share resources with"}, "Add a new group" %></li>
 <% end %>

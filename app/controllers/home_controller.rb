@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   
-  before_filter :login_required, :except=> [ :about, :search ]
+  before_filter :authenticate_user!, :except=> [ :about, :search ]
 
   before_filter :find_previous_searches, :only => [ :index ]
 
@@ -66,7 +66,7 @@ class HomeController < ApplicationController
       return 'main_without_sidebar'
     elsif action_name == 'search'
       return 'main'
-    elsif logged_in? && action_name != 'search'
+    elsif user_signed_in? && action_name != 'search'
       return 'main'
     else
       return 'main_without_sidebar'
@@ -77,7 +77,7 @@ class HomeController < ApplicationController
 
   def find_previous_searches
     search=[]
-    if logged_in?
+    if user_signed_in?
       search = UserSearch.all(:order => "created_at DESC", :limit => 5, :conditions => { :user_id => current_user.id})
     end
     @recent_searches = search

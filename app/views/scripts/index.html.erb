@@ -1,5 +1,5 @@
 <% if @scripts.empty? %>
-  <% if !logged_in? -%>
+  <% if !user_signed_in? -%>
     <h1>There are no public Methods available to view.</h1>
   <% else -%>
     <h1>There are no Methods available to view.</h1>
