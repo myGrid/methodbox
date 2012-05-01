@@ -10,22 +10,12 @@
 <% else -%>
 <div class="small-margin-bottom">
 <%= render :partial => "layouts/logged_out_controls" -%>
+</div>
 <% end -%>
 </div>
-</div>
-<div class="right addthis-toolbox">
-<!-- AddThis Button BEGIN -->
-<div class="addthis_toolbox addthis_default_style ">
-<a class="addthis_button_preferred_1"></a>
-<a class="addthis_button_preferred_2"></a>
-<a class="addthis_button_preferred_3"></a>
-<a class="addthis_button_preferred_4"></a>
-<a class="addthis_button_compact"></a>
-<a class="addthis_counter addthis_bubble_style"></a>
-</div>
-</div>
-<script type="text/javascript" src="<%= HTTPS_ON ? 'https' : 'http' -%>://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4e9c397f37867286"></script>
-<!-- AddThis Button END -->
-<%= render :partial => "layouts/header_search_bar" -%>
+<%= render :partial => "layouts/add_this_toolbox" -%>
+<% unless controller.controller_name == "home" && controller.action_name == "search" -%>
+  <%= render :partial => "layouts/header_search_bar" -%>
+<% end -%>
 <div style="clear:both;">
 </div>

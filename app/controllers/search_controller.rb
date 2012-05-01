@@ -84,6 +84,10 @@ class SearchController < ApplicationController
     @variable_name = params[:variable_name]
     @variable_description = params[:variable_description]
     @variable_values = params[:variable_value]
+    respond_to do |format|
+      format.html
+      format.json {render :json=>@results_hash}
+    end
   end
 
   private
