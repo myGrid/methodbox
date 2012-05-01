@@ -75,12 +75,12 @@
 </div>
             <% if flash[:error] %>
               <div id="error_flash" class="box_standout">
-                <%= link_to_function image_tag("close.gif", :style => "float: right;", "$j('#error_flash').fadeOut(1000);") %><%= white_list flash[:error] %>
+                <%= link_to_function(image_tag("close.gif", :style => "float: right;"), "$j('#error_flash').fadeOut(1000);") %><%= white_list flash[:error] %>
               </div>
             <% end %>
             <% if flash[:notice] %>
               <div id="notice_flash" class="box_standout">
-                <%= link_to_function image_tag("close.gif", :style => "float: right;", "$j('#notice_flash').fadeOut(1000);") %><%= white_list flash[:notice] %>
+                <%= link_to_function(image_tag("close.gif", :style => "float: right;"), "$j('#notice_flash').fadeOut(1000);") %><%= white_list flash[:notice] %>
               </div>
             <% end %>
             <%= yield :layout %>

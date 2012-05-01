@@ -2,7 +2,7 @@ require 'net/http'
 
 class PeopleController < ApplicationController
 
-  before_filter :login_required,:except=>[:select,:userless_project_selected_ajax,:create,:new]
+  before_filter :authenticate_user!,:except=>[:select,:userless_project_selected_ajax,:create,:new]
   before_filter :current_user_exists,:only=>[:select,:userless_project_selected_ajax,:create,:new]
   before_filter :current_user_dormant,:except=>[:feed, :index,:new,:create,:select]
   before_filter :profile_belongs_to_current_or_is_admin, :only=>[:edit, :update,:destroy]

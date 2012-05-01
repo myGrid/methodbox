@@ -1,6 +1,6 @@
 class SurveysController < ApplicationController
   
-  before_filter :login_required, :except => [ :retrieve_variables, :show_all_variables, :retrieve_details, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
+  before_filter :authenticate_user!, :except => [ :retrieve_variables, :show_all_variables, :retrieve_details, :index, :search_variables, :sort_variables, :show, :facets, :category_browse, :show_datasets_for_categories, :collapse_row, :expand_row]
   
   before_filter :find_previous_searches, :only => [ :index, :show ]
 

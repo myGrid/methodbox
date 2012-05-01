@@ -1,6 +1,6 @@
 class VariablesController < ApplicationController
 
-  before_filter :login_required, :except => [ :paginated_search_results, :values_array, :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
+  before_filter :authenticate_user!, :except => [ :paginated_search_results, :values_array, :help, :open_pdf, :by_category, :show, :find_for_multiple_surveys_by_category]
   before_filter :is_user_admin_auth, :only =>[ :deprecate_variable, :edit, :update, :create]
   after_filter :update_last_user_activity
   before_filter :find_comments, :only=>[ :show ]

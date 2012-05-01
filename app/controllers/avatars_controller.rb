@@ -4,7 +4,7 @@ class AvatarsController < ApplicationController
   #so we have to allow that
   ssl_allowed :show
   
-  before_filter :login_required, :except => [ :show ]
+  before_filter :authenticate_user!, :except => [ :show ]
   before_filter :check_owner_specified
   before_filter :find_avatars, :only => [ :index ]
   before_filter :find_avatar_auth, :only => [ :show, :select, :edit, :update, :destroy ]

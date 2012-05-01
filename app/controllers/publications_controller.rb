@@ -2,7 +2,7 @@ class PublicationsController < ApplicationController
   
   require 'pubmed_query_tool'
   
-  before_filter :login_required
+  before_filter :authenticate_user!
   before_filter :fetch_publication, :only => [:show, :edit, :update, :destroy]
   before_filter :associate_authors, :only => [:edit, :update]
   before_filter :init_atom_feed, :only => [:index]

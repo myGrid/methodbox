@@ -4,7 +4,7 @@
 # See license for details.
 
 class MessagesController < ApplicationController
-  before_filter :login_required
+  before_filter :authenticate_user!
   #   might not be the safest way but helps for the moment until i figure out how to do it properly
   protect_from_forgery :except => [:delete]
   

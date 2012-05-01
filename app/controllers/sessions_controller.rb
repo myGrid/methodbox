@@ -3,7 +3,7 @@ require 'digest/md5'
 # This controller handles the login/logout function of the site.
 class SessionsController < ApplicationController
     
-  before_filter :login_required, :only => [:convert_shibboleth_login]
+  before_filter :authenticate_user!, :only => [:convert_shibboleth_login]
 
   after_filter :update_last_user_activity
   

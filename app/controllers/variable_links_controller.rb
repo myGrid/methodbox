@@ -1,5 +1,5 @@
 class VariableLinksController < ApplicationController
-  before_filter :login_required, :find_link
+  before_filter :authenticate_user!, :find_link
 
   def show
 

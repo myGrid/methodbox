@@ -12,7 +12,7 @@ class DatasetsController < ApplicationController
 
   # before_filter :is_user_admin_auth, :only =>[ :new, :create, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata]
   before_filter :authorize_new, :only => [ :new, :create ]
-  before_filter :login_required, :except => [ :retrieve_variables, :download, :show, :index ]
+  before_filter :authenticate_user!, :except => [ :retrieve_variables, :download, :show, :index ]
   before_filter :find_datasets, :only => [ :index ]
   before_filter :find_dataset, :only => [ :retrieve_variables, :update_metadata_nesstar, :download, :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]

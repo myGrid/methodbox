@@ -3,7 +3,7 @@ require 'white_list_helper'
 class WorkGroupsController < ApplicationController
   include WhiteListHelper
   
-  before_filter :login_required
+  before_filter :authenticate_user!
   before_filter :find_people, :only => [:new,:edit,:create]
   before_filter :set_no_layout, :only => [ :review_popup ]
   before_filter :find_work_group, :only => [ :review_popup ]

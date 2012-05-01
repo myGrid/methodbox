@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
 
-  before_filter :login_required, :except => [ :index]
+  before_filter :authenticate_user!, :except => [ :index]
   after_filter :update_last_user_activity
 
   def index

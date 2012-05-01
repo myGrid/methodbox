@@ -3,7 +3,7 @@ require 'white_list_helper'
 class FavouriteGroupsController < ApplicationController
   include WhiteListHelper
   
-  before_filter :login_required
+  before_filter :authenticate_user!
   before_filter :find_favourite_group, :only => [ :edit, :update, :destroy ]
   before_filter :set_no_layout, :only => [ :new, :edit ]
   

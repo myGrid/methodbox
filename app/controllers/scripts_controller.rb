@@ -1,6 +1,6 @@
 class ScriptsController < ApplicationController
   #FIXME: re-add REST for each of the core methods
-  before_filter :login_required, :except => [ :download, :index, :show]
+  before_filter :authenticate_user!, :except => [ :download, :index, :show]
   before_filter :find_scripts_by_page, :only => [ :index ]
   before_filter :find_script_auth, :except => [ :thumbs_down, :thumbs_up, :index, :new, :create,:script_preview_ajax, :download_all_variables, :download_selected, :show_links,:add_comment, :add_note ]
   before_filter :find_comments, :only=>[ :show ]

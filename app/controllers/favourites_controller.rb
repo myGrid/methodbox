@@ -1,6 +1,6 @@
 class FavouritesController < ApplicationController
   
-  before_filter :login_required
+  before_filter :authenticate_user!
   
   def add
     #FIXME validate id with a regular expression

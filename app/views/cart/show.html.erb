@@ -42,7 +42,7 @@ The following variables have been archived and have been removed from your cart:
 <% end -%>
 <br/>
 <% end -%>
-<% form_tag remove_from_cart_cart_url, {:onSubmit=>"$('spinner').show();"} do -%>
+<%= form_tag remove_from_cart_cart_index_url, {:onSubmit=>"$('spinner').show();"} do -%>
 <% if !@sorted_variables.empty? -%>
 <%= submit_to_remote '_submit', 'Remove selected variables from cart', {:url=>{:action=> "remove_from_cart", :value=>"remove"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to remove from your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
 <div id="selected_variables">

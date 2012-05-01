@@ -19,6 +19,10 @@ class ApplicationController < ActionController::Base
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery#  :secret => 'cfb59feef722633aaee5ee0fd816b5fb'
 
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) || datasets_url
+  end
+
   def truncate_words(text, length = 30, end_string = ' …')
     return if text == nil
     words = text.split()
