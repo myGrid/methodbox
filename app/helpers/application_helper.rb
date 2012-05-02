@@ -655,18 +655,19 @@ module ApplicationHelper
       label = 'Delete';
     end
     return nil unless (filename = method_to_icon_filename(method.downcase))
-    image_options = alt ? { :alt => alt } : { :alt => method.humanize }
+    image_options = alt ? { :alt => alt } : { :alt => h(method.humanize).html_safe }
     img_tag = image_tag(filename, image_options)
     inner = img_tag;
-    inner = "#{img_tag} #{label}" unless label == nil
+    inner = "#{h(img_tag)} #{h(label)}".html_safe unless label == nil
     if (url)
       if (remote)
-        inner = link_to_remote(inner, url, url_options);
+        inner = link_to_remote(inner, url, url_options)
       else
         inner = link_to(inner, url, url_options)
       end
     end
-    return raw('<span class="icon">' + inner + '</span>')
+    html_string = '<span class="icon">' + h(inner) + '</span>'
+    return html_string.html_safe
   end
   
   def method_to_icon_filename(method)
@@ -876,24 +877,24 @@ module ApplicationHelper
     
     if contributor.class.name == "User"
       if contributor.dormant &&!current_user.can_see_dormant?
-        return "Anonymous"
+        return "Anonymous".html_safe
       end  
       # this string will output " (you) " for current user next to the display name, when invoked with 'you_text == true'
-      you_string = (you_text && user_signed_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>" : ""
+      you_string = (you_text && user_signed_in? && user.id == current_user.id) ? "<small style='vertical-align: middle; color: #666666; margin-left: 0.5em;'>(you)</small>".html_safe : "".html_safe
       contributor_person = contributor.person
       contributor_name = h(contributor_person.name)
       contributor_url = person_path(contributor_person.id)
       contributor_name_link = link_to(contributor_name, contributor_url)
       if Person.find(contributor_person.id).dormant?
-        result = null_avatar("person", size, "Former Member " + contributor_name)
-        result += "<p style='margin: 0; text-align: center;'>#{'Former Member ' + contributor_name}#{you_string}</p>"
-        return result
+        result = null_avatar("person", size, "Former Member " + contributor_name).html_safe
+        result += "<p style='margin: 0; text-align: center;'>#{'Former Member ' + h(contributor_name)}#{h(you_string)}</p>".html_safe
+        return result.html_safe
       elsif avatar
-        result = avatar(contributor_person, size, false, contributor_url, contributor_name, false)
-        result += "<p style='margin: 0; text-align: center;'>#{contributor_name_link}#{you_string}</p>"
+        result = avatar(contributor_person, size, false, contributor_url, contributor_name, false).html_safe
+        result += "<p style='margin: 0; text-align: center;'>#{h(contributor_name_link)}#{h(you_string)}</p>".html_safe
         return result
       else
-        return (contributor_name_link + you_string)
+        return (h(contributor_name_link) + h(you_string)).html_safe
       end
       # other types might be supported
       # elsif contributortype.to_s == "Network"
@@ -966,7 +967,7 @@ module ApplicationHelper
       return img
     else 
       unless url
-        url = eval("#{object.class.name.downcase}_url(#{object.id})")
+        url = eval("#{h(object.class.name.downcase)}_url(#{h(object.id)})")
       end
       return link_to(img, url, :title => tooltip_text)
       #      return link_to(img, url, :title => tooltip_title_attrib(tooltip_text))
