@@ -639,11 +639,11 @@ module ApplicationHelper
   end
   
   def expand_image(margin_left="0.3em")
-    image_tag "folds/unfold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Expand', :title=>"Expand for more details"
+    image_tag "/assets/folds/unfold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Expand', :title=>"Expand for more details"
   end
   
   def collapse_image(margin_left="0.3em")
-    image_tag "folds/fold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Collapse', :title=>"Collapse the details"
+    image_tag "/assets/folds/fold.png", :style => "margin-left: #{margin_left}; vertical-align: middle;", :alt => 'Collapse', :title=>"Collapse the details"
   end
 
   def image method,options={}
@@ -666,7 +666,7 @@ module ApplicationHelper
         inner = link_to(inner, url, url_options)
       end
     end
-    return '<span class="icon">' + inner + '</span>';
+    return raw('<span class="icon">' + inner + '</span>')
   end
   
   def method_to_icon_filename(method)

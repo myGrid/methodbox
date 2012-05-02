@@ -29,15 +29,16 @@
 	padding-right: 10px;
 }
 </style>
-<%= form_tag({:url => { :action => "add_to_cart"}, :value=>"search"}, {:onSubmit=>"$('search_variables_button').disable();"}) do -%>
 <% if !variables.empty? -%>
+<%= form_tag(add_to_cart_cart_index_url, {:remote=>true, :id=>'cart-submit-form'}) do -%>
 <div id="selected_variables">
 </div>
 <% if user_signed_in? -%>
 <div>
-<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :class=>'add_var_button'} -%>
+<%= submit_tag('Add selected variables to cart', {:id=>'cart-submit-button', :class=>'add_var_button'}) -%>
 </div>
 <% end -%>
+<% end  -%>
 <div style= "margin-top: 5px;">
 <%= button_to_function 'Select all', "selectAllVariableCheckboxes(true);", :title=>"Select all the variables (from all pages)" -%>
 <%= button_to_function 'Select none', "selectAllVariableCheckboxes(false);", :title=>"De-select all the variables (from all pages)" -%>
@@ -46,8 +47,12 @@
 <div class="yui-skin-sam">
 <div id="variables_table"></div>
 </div>
-<% end  -%>
 <% end -%>
+<script type="text/javascript">
+$j("#cart-submit-form")
+    .bind("ajax:beforeSend", toggleLoading)
+    .bind("ajax:complete", toggleLoading);
+</script>
 <script type="text/javascript">
 // var results = <%= raw @variables_json -%>;
 var variable_name = "<%= @variable_name %>";

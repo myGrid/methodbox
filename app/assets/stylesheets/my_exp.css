@@ -7,7 +7,7 @@
    http://developer.yahoo.com/yui/fonts/#fontsize
 */
 body {
-	/*background: #8e8e8e url('/images/body-bg.gif') repeat-y center;*/
+	/*background: #8e8e8e url('/assets/body-bg.gif') repeat-y center;*/
         background: #8e8e8e;
 	/* Only need to define one font here because the 
 	   YUI Fonts CSS provides a degradation path
@@ -45,7 +45,7 @@ h1 {
 }
 
 h2 {
-	background-image: url('/images/header-bg.png');
+	background-image: url('/assets/header-bg.png');
 	background-position: top;
 	background-repeat: repeat-x;
 	background-color: #EEEEEE;
@@ -149,7 +149,7 @@ li {
 #myexp_searchbar {
 	height: 20px;
 	text-align: center;
-	background-image: url('/images/searchbar-flare.png');
+	background-image: url('/assets/searchbar-flare.png');
 	background-repeat: no-repeat;
 	background-position: top center;
 	padding: 10px;
@@ -181,7 +181,7 @@ li {
 /*	border: 2px solid #999999;*/
 /*	border-width: 1px 0 1px 0;*/
 	color: #333333;
-/*	background-image: url('/images/footer-bg.png');*/
+/*	background-image: url('/assets/footer-bg.png');*/
 /*	background-position: top;*/
 /*	background-repeat: repeat-x;*/
 /*	background-color: #EEEEEE;*/
@@ -242,7 +242,7 @@ li {
 }
 
 #openid_url {
-	background: url(/images/openid.gif) no-repeat;
+	background: url(/assets/openid.gif) no-repeat;
 	background-color: #FFFFFF;
 	padding-left: 16px;
 }
@@ -306,7 +306,7 @@ li {
 	/*border-right: 1px solid #BBBBBB;*/
 	/*border-bottom: 1px solid transparent;*/
 	text-decoration: none;
-	/*background-image: url('/images/tab-bg-light-blue.png');*/
+	/*background-image: url('/assets/tab-bg-light-blue.png');*/
 	/*background-position: top;*/
 	/*background-repeat: repeat-x;*/
 	background-color: #1B619B;
@@ -474,7 +474,7 @@ ul.breadcrumb_list a:hover {
 	color: #222222;
 	padding: 0.1em 1em 0.4em 1em;
 	text-align: center;
-	background-image: url('/images/header-bg2.png');
+	background-image: url('/assets/header-bg2.png');
 	background-position: top;
 	background-repeat: repeat-x;
 	background-color: #CFDFEF;
@@ -596,7 +596,7 @@ ul.breadcrumb_list a:hover {
 }
 
 .foldTitle {
-	background-image: url('/images/header-bg.png');
+	background-image: url('/assets/header-bg.png');
 	background-position: top;
 	background-repeat: repeat-x;
 	background-color: #EEEEEE;
@@ -1062,7 +1062,7 @@ a.button_slim * {
 }
 
 .contribution_section_box {
-	background-image: url('/images/box-bg1.png');
+	background-image: url('/assets/box-bg1.png');
 	background-position: top;
 	background-repeat: repeat-x;
 	background-color: #FFFFCC;
@@ -1175,7 +1175,7 @@ a.button_slim * {
 	padding: 0.6em 0.5em 0.4em 0.5em;
 	border: 0px dotted #999999;
 	border-width: 0 0 1px 0;
-	background-image: url('/images/box-bg1.png');
+	background-image: url('/assets/box-bg1.png');
 	background-position: top;
 	background-repeat: repeat-x;
 	background-color: #FFFFCC;

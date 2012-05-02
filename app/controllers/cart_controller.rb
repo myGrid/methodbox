@@ -4,6 +4,73 @@ class CartController < ApplicationController
   after_filter :update_last_user_activity
   #  before_filter :find_archives, :only => [ :index ]
 
+  def add_to_cart
+    #if params[:extract_id]
+    #  extract_id_for_items = params[:extract_id]
+    #end
+    #if params[:search_terms]
+    #  search_terms = Array.new(params[:search_terms])
+    #  search_term_tracker = params[:search_term_tracker]
+    #end
+    #if params[:from_a_previous_search]
+    #  previous_search_id = params[:from_a_previous_search]
+    #end
+
+
+#    case params[:value]
+#    when "add"
+      @variable_list = Array.new(params[:variable_ids])
+
+      @variable_list.each do |var|
+        #search_term_for_var = String.new
+        #if search_terms
+        #  search_terms.each do |term|
+        #    if search_term_tracker.has_key?(term)
+        #      search_term_tracker[term].each do |search_term_hash|
+        #        search_term_hash.each do |term_var|
+        #          if (term_var == var)
+        #            search_term_for_var = term
+        #            break
+        #          end
+        #        end
+        #      end
+        #    end
+        #  end
+#        elsif params[:survey_search_query]
+#            search_term_for_var = params[:survey_search_query]
+        #end
+        
+       if CartItem.find_by_user_id_and_variable_id(current_user,var)
+         
+       else
+	 an_item = CartItem.new
+         an_item.user = current_user
+         an_item.variable_id = var
+         #if extract_id_for_items
+         #  an_item.extract_id = extract_id_for_items
+         #end
+         #if previous_search_id
+         #  an_item.user_search_id = previous_search_id
+         #end
+         #an_item.search_term = search_term_for_var
+         an_item.save
+         current_user.reload
+       end
+      end
+
+      #render :update, :status=>:created do |page|
+      #  page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
+      #  #page.replace_html "create-data-extract-button", :partial=>"surveys/create_extract_button"
+      #  page[:cart_button].visual_effect(:pulsate, :duration=>2)
+      #end
+    respond_to do |format|
+      format.html # index.html.erb
+      #format.xml 
+      format.js
+    end
+#    end
+  end
+
   def show
     missing_vars=[]
     @archived_vars=[]

@@ -7,13 +7,17 @@
 	<!-- in line style due to css cascade!  should FIXME-->
 	<td style="text-align: center; vertical-align: middle;">
 		<% person_name = h(person.name) -%>
-        <%= person_name.blank? ? "<span class='none_text'>Unknown</span>" : link_to(person_name, person_path(person)) -%>
+        <% if person_name.blank? -%>
+<span class='none_text'>Unknown</span>
+        <% else -%>
+<%= link_to(person_name, person_path(person)) -%>
+<% end -%>
 	</td>
 	<!-- </tr> -->
 	<!-- <tr> -->
       <td class="item_avatar" style="width: 100px">
         <% image_tag = avatar(person, 60, true) -%>
-        <%= link_to_draggable(image_tag, url_for(person), :id=>drag_id, :class=>"asset", :title=>tooltip_title_attrib(h(person.name))) -%>
+        <%#= link_to_draggable(image_tag, url_for(person), :id=>drag_id, :class=>"asset", :title=>tooltip_title_attrib(h(person.name))) -%>
       </td>
 <tr>
 <td colspan=2>

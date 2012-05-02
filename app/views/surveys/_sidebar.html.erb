@@ -1,13 +1,43 @@
 <% if user_signed_in? -%>
-  <li class="normal-border-top-grey"><%= icon "new", new_survey_url, "Create a new " + SURVEY.downcase, {:title=>"Add a new " + SURVEY.downcase + " to MethodBox"}, "Create a " + SURVEY.downcase %></li>
-   <li class="normal-border-top-grey"><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a datasource" %></li>
-   <% if controller.action_name == "show" %>
-     <% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET.downcase+ " to this " + SURVEY.downcase, {:title=>"Upload " +  DATASET.downcase + " from file for this " + SURVEY.downcase}, "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase -%></li>
-     <% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase, {:title=>"Upload a new " +  DATASET.downcase + " from file for this " + SURVEY.downcase },"Upload " +  DATASET.downcase -%></li>
-     <% end %>
-   <% end %>
+<li class="normal-border-bottom-grey normal-border-top-grey">
+<span id="add-survey-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= new_survey_url %>" title="Add a new <%= SURVEY.downcase -%> to MethodBox">Create a <%= SURVEY.downcase -%></a>
+    </span>
+</span>
+</li>
+<li class="normal-border-bottom-grey">
+<span id="add-datasource-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= nesstar_datasource_surveys_url %>" title="Add a new datasource">Add datasource</a>
+    </span>
+</span>
+</li>
+<% if controller.action_name == "show" %>
+<% if current_user.is_admin? && @survey.survey_type.is_ukda %>
+<li>
+<span id="add-datafile-ukda-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= url_for({:action => 'new', :controller=> 'datasets',:survey => @survey.id}) %>" title="Upload <%= DATASET.downcase -%> from file for this <%= SURVEY.downcase -%>">Upload new <%= DATASET.downcase -%></a>
+    </span>
+</span>
+</li>
+<% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
+<li>
+<span id="add-datafile-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= url_for({:action => 'new', :controller=> 'datasets',:survey => @survey.id}) %>" title="Upload <%= DATASET.downcase -%> from file for this <%= SURVEY.downcase -%>">Upload new <%= DATASET.downcase -%></a>
+    </span>
+</span>
+</li>
 <% end -%>
+<% end -%>
+<% end -%>
+<script type="text/javascript">
+var addSurveyButton = new YAHOO.widget.Button("add-survey-button");
+var addDatasourceButton = new YAHOO.widget.Button("add-datasource-button");
+var addDatafileUKDAButton = new YAHOO.widget.Button("add-datafile-ukda-button");
+var addDatafileButton = new YAHOO.widget.Button("add-datafile-button");
+</script>
 
 

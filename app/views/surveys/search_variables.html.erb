@@ -7,18 +7,30 @@
   // Load the Visualization API and the piechart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
-<% form_tag(search_variables_surveys_url, :method=>"get") do -%>
+<% if !@sorted_variables.empty? -%>
+<div class="side-by-side-form-container normal-margin-bottom">
+<%= form_tag(search_variables_surveys_url, :method=>"get") do -%>
 <% if !@selected_datasets.empty? %>
   <% @selected_datasets.each do |val| -%>
     <%= hidden_field_tag "entry_ids[]", val -%>
   <% end -%>
 <% end -%>
-<% if !@sorted_variables.empty? -%>
 <div style="margin-bottom: 10px;">
 <%= text_field_tag :survey_search_query, @survey_search_query, :style=>"width: 50%; height: 25px;font: 17px arial,sans-serif; margin-right:5px;margin-left: 2em;", :title=>"Find variables based on the surveys and datasets you have selected" -%>
 <%= submit_tag "Search for variables", :id=>"search_variables_button", :style=> "height: 25px;font: 17px arial,sans-serif;", :title=>"Find variables based on the surveys and datasets you have selected" , :onclick => "if (!checkNotEmpty('survey_search_query')) {return false;} else {Element.show('spinner');$('search_variables_button').form.submit();return true;}"-%>
+</div>
+<% end -%>
 <% if user_signed_in? -%>
-<%= submit_to_remote '_submit', 'Add selected variables to cart', {:url=>{:action=> "add_to_cart", :value=>"add"}, :before => "if (!anyVariablesSelected()) {alert('There are no variables selected to add to your cart.  Please select some and try again.'); return false;} else {Element.show('spinner')}",:success => "Element.hide('spinner')", :html => {:class => 'add_var_button'}} -%>
+<%= form_tag(add_to_cart_cart_index_url, {:remote=>true, :id=>'cart-submit-form'}) do -%>
+<div id="selected_variables">
+</div>
+<%= submit_tag('Add selected variables to cart', {:id=>'cart-submit-button', :class=>'add_var_button'}) -%>
+<script type="text/javascript">
+$j("#cart-submit-form")
+    .bind("ajax:beforeSend", toggleLoading)
+    .bind("ajax:complete", toggleLoading);
+</script>
+<% end -%>
 <% end -%>
 </div>
 <div class="fold">
@@ -48,8 +60,6 @@ All <%= DATASET.pluralize.downcase -%> returned at least one search result
 <% end -%>
   </div>
 </div>
-<div id="selected_variables">
-</div>
 <div>
 <%= button_to_function 'Select visible', "selectVisibleVariableCheckboxes(true);", :title=>"Select all the variables on the current page" -%>
 <%= button_to_function 'Select all', "selectAllVariableCheckboxes(true);", :title=>"Select all the variables (from all pages)" -%>
@@ -59,12 +69,11 @@ All <%= DATASET.pluralize.downcase -%> returned at least one search result
 <div class="yui-skin-sam">
 <div id="variables_table"></div>
 </div>
-<% end -%>
-<% end -%>
 <script type="text/javascript">
 var results = <%= raw @variables_json -%>;
 createTable();
 </script>
+<% end -%>
 <script type="text/javascript">
   $j(document).ready(function() {
     uncheckAll();

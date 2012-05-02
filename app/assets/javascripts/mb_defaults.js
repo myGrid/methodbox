@@ -193,6 +193,18 @@ function addDatasetListTag(tag_id) {
     dataset_tags_autocompleter.addContactToList(item);
 }
 
+function checkVariablesSelected() {
+  if (!anyVariablesSelected()) {
+    alert('There are no variables selected to add to your cart.  Please select some and try again.'); 
+    return false;
+  } else {
+    $j("#spinner").toggle();
+  }
+}
+function toggleLoading() {
+  $j("#spinner").toggle();
+}
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  

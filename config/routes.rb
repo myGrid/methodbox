@@ -4,6 +4,35 @@ MethodBox::Application.routes.draw do
 
   devise_for :users
 
+  resources :scripts do
+    member do
+      post 'add_note'
+      get 'download'
+      post 'add_comment'
+      post 'thumbs_up'
+      post 'thumbs_down'
+    end
+    collection do
+      post 'show_links'
+    end
+  end
+
+  resources :people do
+    # avatars / pictures 'owned by' person
+    resources :avatars do
+      member do
+        post 'select'
+      end
+      collection do
+        post 'new'
+      end
+    end
+    collection do 
+      get 'feed'
+    end
+  end
+
+
   authenticated :user do
     root to: 'datasets#index'
   end
@@ -26,8 +55,6 @@ MethodBox::Application.routes.draw do
     end
   end
 
-  resources :people
-
   resources :csvarchives, :path => "data_extracts"
 
   resources :scripts, :path => SCRIPT.gsub(" ", "_")
@@ -43,6 +70,7 @@ MethodBox::Application.routes.draw do
   resources :cart, :only => :none do
     collection do 
       post 'remove_from_cart'
+      post 'add_to_cart'
     end
   end
 
