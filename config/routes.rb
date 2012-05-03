@@ -3,6 +3,8 @@ MethodBox::Application.routes.draw do
   # first created -> highest priority.
 
   devise_for :users
+  
+  resources :user_searches
 
   resources :scripts do
     member do
@@ -55,7 +57,22 @@ MethodBox::Application.routes.draw do
     end
   end
 
-  resources :csvarchives, :path => "data_extracts"
+  resources :csvarchives, :path => "data_extracts" do
+    member do 
+      post 'add_note'
+      get 'download_stats_script'
+      get 'download'
+      post 'thumbs_up'
+      post 'thumbs_down'
+    end
+    collection do 
+      post 'remove_from_cart'
+      post 'recreate'
+      post 'show_links'
+      post 'check_for_complete'
+      get 'feed'
+    end
+  end
 
   resources :scripts, :path => SCRIPT.gsub(" ", "_")
 
