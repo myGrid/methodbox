@@ -1,15 +1,14 @@
 .metadata
 .project
 .idea
-config/environment.rb
-config/environment_local.rb
+#environment doesn't contain anything except code to boot the app so is ok to commit
+#config/environment.rb
 config/environments/development.rb
 config/environments/production.rb
 config/environments/test.rb
 config/database.yml
 config/sunspot.yml
 initializers/environment_local.rb
-#methodbox/db/schema.rb
 Gemfile.lock
 
 # empty dirs
