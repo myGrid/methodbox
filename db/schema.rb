@@ -256,15 +256,6 @@ ActiveRecord::Schema.define(:version => 20120416110424) do
     t.integer  "user_id"
   end
 
-  create_table "locations", :force => true do |t|
-    t.string   "name"
-    t.decimal  "latitude",   :precision => 10, :scale => 0
-    t.decimal  "longitude",  :precision => 10, :scale => 0
-    t.integer  "dataset_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "matched_variables", :force => true do |t|
     t.integer  "variable_id"
     t.integer  "target_variable_id"

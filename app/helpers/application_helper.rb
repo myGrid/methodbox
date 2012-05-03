@@ -621,17 +621,17 @@ module ApplicationHelper
     if text.nil? or text.chomp.empty?
       not_specified_text="Not specified"
       not_specified_text="No description set" if options[:description]==true
-      res = "<span class='none_text'>#{not_specified_text}</span>"
+      res = "<span class='none_text'>#{h(not_specified_text)}</span>".html_safe
     else
       text=truncate(text,:length=>options[:length]) if options[:length]
-      res = h(text)
-      res = simple_format(res) if options[:description]==true || options[:address]==true
-      res=mail_to(res) if options[:email]==true
-      res=link_to(res,res,:popup=>true) if options[:external_link]==true
-      res=res+"&nbsp;"+flag_icon(text) if options[:flag]==true
-      res = "&nbsp;" + flag_icon(text) + link_to(res,country_path(res)) if options[:link_as_country]==true 
+      res = h(text.html_safe)
+      res = h(simple_format(res)) if options[:description]==true || options[:address]==true
+      res=h(mail_to(res)) if options[:email]==true
+      res=h(link_to(res,res,:popup=>true)) if options[:external_link]==true
+      res=res+"&nbsp;"+ h(flag_icon(text)) if options[:flag]==true
+      res = "&nbsp;" + flag_icon(text) + h(link_to(res, h(country_path(res)))) if options[:link_as_country]==true 
     end
-    return res
+    return res.html_safe
   end
   
   def tooltip_title_attrib(text, delay=200)
@@ -1097,29 +1097,31 @@ module ApplicationHelper
     length=options[:truncate_length]
     length||=150
     if (options[:type]==:expertise)
-      link=people_url(:expertise=>tag.name)
-      link_title = "Click to show all people who have expertise/knowledge in: " + tag.name
+      link=h(people_url(:expertise=>tag.name))
+      link_title = "Click to show all people who have expertise/knowledge in: #{h(tag.name)}".html_safe
     end
     if (options[:type]==:tools)
-      link=people_url(:tools=>tag.name)
-      link_title = "Click to show all people who have used the tool: " + tag.name
+      link=h(people_url(:tools=>tag.name))
+      link_title = "Click to show all people who have used the tool: #{h(tag.name)}".html_safe
     end
     if (options[:type]==:variable)
-      link=variables_url(:variable=>tag.name)
-      link_title = "Click to show all variables tagged with: " + tag.name
+      link=h(variables_url(:variable=>tag.name))
+      link_title = "Click to show all variables tagged with: #{h(tag.name)}".html_safe
     end
     if (options[:type]==:dataset)
-      link=datasets_url(:subject=>tag.name)
-      link_title = "Click to show all datasets tagged with: " + tag.name
+      link=h(datasets_url(:subject=>tag.name))
+      link_title = "Click to show all datasets tagged with: #{h(tag.name)}".html_safe
     end
-    link_to h(truncate(tag.name,:length=>length)), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>link_title
+    h(link_to(truncate(tag.name,:length=>length), link, :class=>options[:class],:id=>options[:id],:style=>options[:style],:title=>link_title)).html_safe
   end
 
   def list_item_tags_list tags,options={}
+    tag_list = ""
     tags.map do |t|
-      divider=tags.last==t ? "" : "  <span class='spacer'>|</span>  "
-      link_for_tag(t,options)+divider
+      divider = tags.last == t ? "".html_safe : "  <span class='spacer'>|</span>  ".html_safe
+      tag_list += link_for_tag(t,options) + divider
     end
+    return tag_list.html_safe
   end
 
   def favourite_group_popup_link_action_new
