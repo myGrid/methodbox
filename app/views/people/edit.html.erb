@@ -4,7 +4,7 @@
 </h1>
 
 <div class="show_basic">
-	<% form_for @person do |f| %>
+	<%= form_for @person do |f| %>
 	  <%= render :partial => "form", :locals => { :f => f, :person => @person } -%>
 	<% end -%>
 </div>

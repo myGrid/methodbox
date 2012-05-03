@@ -33,3 +33,18 @@
   background: asset-url("famfamfam_silk/add.png", image) 10% 50% no-repeat;
   text-decoration: none;
 }
+.yui-button#view-profile-button a {
+  padding-left: 2.25em;
+  background: asset-url("famfamfam_silk/zoom.png", image) 10% 50% no-repeat;
+  text-decoration: none;
+}
+.yui-button#edit-profile-button a {
+  padding-left: 2.25em;
+  background: asset-url("famfamfam_silk/page_white_edit.png", image) 10% 50% no-repeat;
+  text-decoration: none;
+}
+.yui-button#add-method-button a {
+  padding-left: 2.25em;
+  background: asset-url("famfamfam_silk/add.png", image) 10% 50% no-repeat;
+  text-decoration: none;
+}

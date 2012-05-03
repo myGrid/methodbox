@@ -1,6 +1,17 @@
 <%= javascript_include_tag "people.js" %>
 
-<%= f.error_messages %>
+<%#= f.error_messages %>
+<% if @person.errors.any? %>
+<div id="errorExplanation">
+  <h2><%= pluralize(@person.errors.count, "error") %> prohibited
+      this post from being saved:</h2>
+  <ul>
+  <% @person.errors.full_messages.each do |msg| %>
+    <li><%= msg %></li>
+  <% end %>
+  </ul>
+</div>
+<% end %>
 
 <h2>Personal Information & Contact Details</h2>
 

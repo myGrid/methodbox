@@ -1,4 +1,10 @@
 <% if user_signed_in? -%>
-  <li class="normal-border-top-grey"><%= icon "new", new_script_url, "Add a new method/script", nil, "Add a method" %></li>
+<li class="normal-border-top-grey">
+<span id="add-method-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= new_script_url %>" title="Add a new method, script or syntax file">Add a method</a>
+    </span>
+</span>
+</li>
 <% end %>
 

@@ -1,14 +1,23 @@
 <% if user_signed_in? -%>
   <% if controller.action_name == "show" %>
     <% if !mine?(@person) -%>
-      <li class="normal-border-top-grey"><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
+	<li class="normal-border-top-grey">
+	<span id="view-profile-button" class="yui-button yui-link-button">
+	    <span class="first-child">
+	        <a href="<%= person_url(current_user.person) %>" title="View your profile, searches and things you have added">View your profile</a>
+	    </span>
+	</span>
+	</li>
     <% end -%>
   <% end %>
-  <% if controller.action_name != "show" %>
-    <li class="normal-border-top-grey"><%= icon "show", person_url(current_user.person), "View your profile", nil, "View your profile" %></li>
-  <% end %>
   <% if controller.action_name != "edit" %>
-    <li class="normal-border-top-grey"><%= icon "edit", edit_person_url(current_user.person), "Edit your profile", nil, "Edit your profile" %></li>
+<li class="normal-border-top-grey">
+<span id="edit-profile-button" class="yui-button yui-link-button">
+    <span class="first-child">
+        <a href="<%= edit_person_url(current_user.person) %>" title="Edit yor profile, picture and login details">Edit your profile</a>
+    </span>
+</span>
+</li>
   <% end %>
 <% end %>
 

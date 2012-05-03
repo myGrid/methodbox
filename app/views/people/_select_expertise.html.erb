@@ -40,7 +40,7 @@
 </p>
 
 <script type="text/javascript">
-  var expertise_list = <%= @all_expertise_as_json -%>;
+  var expertise_list = <%= raw @all_expertise_as_json -%>;
   var prepopulate_with = <%= @expertise_autocompleter_selected_ids && !@expertise_autocompleter_selected_ids.empty?  ? @expertise_autocompleter_selected_ids.to_json : @person.expertise.sort{|a,b| a.id<=>b.id}.collect{|t| t.id}.to_json -%>;
   var expertise_autocompleter_id='expertise_autocompleter'
   var expertise_autocompleter = new Autocompleter.LocalAdvanced(

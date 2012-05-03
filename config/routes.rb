@@ -4,6 +4,12 @@ MethodBox::Application.routes.draw do
 
   devise_for :users
   
+  resources :assets, :only => :none do
+    member do 
+      post 'request_resource'
+    end
+  end
+  
   resources :user_searches
 
   resources :scripts do
