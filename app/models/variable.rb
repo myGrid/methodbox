@@ -15,7 +15,7 @@ class Variable < ActiveRecord::Base
   has_many :variable_links, :through => :variable_linkages
   has_many :user_searches, :through => :search_variable_lists
   has_many :cart_items, :dependent => :destroy
-  has_many :value_domains
+  has_many :value_domains, :dependent => :destroy
   has_many :matched_variables
   has_many :target_variables, :through => :matched_variables, :class_name => "Variable" 
 
