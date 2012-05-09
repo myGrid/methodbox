@@ -368,6 +368,7 @@
                                    //it would not run it - possible yui issue?
 //var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
 //YAHOO.util.Connect.initHeader('X-CSRF-Token', csrf_meta_tag.readAttribute('content'));
+                                   YAHOO.util.Connect.initHeader("Accept", "application/json", true);
                                    var json_transaction = YAHOO.util.Connect.asyncRequest('GET', variables_url + '/values_array?id='+ expanded_data.id, json_callback, null);
 		                    return true;
 
@@ -406,8 +407,24 @@
 				  if(o.responseText !== undefined){
                                     var messages = YAHOO.lang.JSON.parse(o.responseText);
                                     for (var k in messages) {
-                                     data.addRow([k,parseInt(messages[k])]);
-                                     number_of_vals += 1;
+                                     var var_id = messages[k].id;
+                                     //$(var_id + "_blank_rows").insert(messages[k].number_of_blank_rows ? messages[k].number_of_blank_rows : "None");
+                                     //var total_entries;
+                                     //messages[k].valid_entries ? total_entries += messages[k].valid_entries : '';
+                                     //messages[k].invalid_entries ? total_entries += messages[k].invalid_entries : '';
+                                     //$(var_id + "_total_entries").insert(total_entries);
+                                     for(var v in messages[k].value_domains) {
+                                        var label = messages[k].value_domains[v].label;
+                                        var value = messages[k].value_domains[v].value;
+                                        var frequency;
+                                        try {
+                                          frequency = messages[k].value_domains[v].value_domain_statistic.frequency;
+                                        label != 'N/A' ? data.addRow([label,parseInt(frequency)]) : data.addRow([value,parseInt(frequency)]);
+                                        number_of_vals += 1;
+                                        } catch(err) {
+
+                                        }
+                                      }
                                     }
                                   }
                                   if (number_of_vals > 20) {
