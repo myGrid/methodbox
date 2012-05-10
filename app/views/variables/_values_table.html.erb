@@ -1,10 +1,7 @@
 <table class='listings_table'>
-<% if invalid_entries.is_a?(Numeric) && valid_entries.is_a?(Numeric) && total_entries != 0 %>
-<tr><td>Total Records</td><td><%= total_entries -%></td></tr>
-<% end %>
-<% if blank_rows && total_entries != 0%>
-<tr><td>Blank rows/Missing records</td><td><%= blank_rows -%><%= total_entries.is_a?(Numeric) ? ' (' + (blank_rows.to_f/total_entries.to_f * 100).round(2).to_s + ')' : 'N/A' -%>%</td></tr>
-<% end %>
+<tr><td>Total Records</td><td id="<%= variable.id.to_s -%>_total_entries"></td></tr>
+<tr><td>Blank records</td><td id="<%= variable.id.to_s -%>_blank_rows"></td></tr>
+<tr><td>Missing values</td><td id="<%= variable.id.to_s -%>_missing_values"></td></tr>
 </table>
 <table class='listings_table'>
 <% if !var_hash.empty? && var_hash.size < 20 %>
@@ -29,3 +26,6 @@
 <% end %>
 </tbody>
 </table>
+<div class="yui-skin-sam">
+<div id="<%= variable.id.to_s -%>_values_table"></div>
+</div>

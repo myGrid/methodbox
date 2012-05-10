@@ -7,6 +7,12 @@
  * @class YAHOO.widget.RowExpansionDataTable
  ***********/
 (function(){
+	function ValueDomain(label, value, frequency, percentage) {
+	    this.valueLabel = label;
+        this.valueValue = value;
+	    this.valueFrequency = frequency;
+	    this.valuePercentage = percentage;
+	}
     var expanded_rows = [];
     var expand_done = {};
     var Dom = YAHOO.util.Dom,
@@ -413,14 +419,48 @@
                                      //messages[k].valid_entries ? total_entries += messages[k].valid_entries : '';
                                      //messages[k].invalid_entries ? total_entries += messages[k].invalid_entries : '';
                                      //$(var_id + "_total_entries").insert(total_entries);
+                                     try {
+										var dsLocalJSON = new YAHOO.util.LocalDataSource({
+										    found: 3,
+										    total: 20,
+										    results: [
+										        {name: "apples", type:"fruit", color: "red"},
+										        {name: "broccoli", type:"veg", color: "green"},
+										        {name: "cherries", type:"fruit", color: "red"}
+										    ]
+										});
+										var columnDefs = [
+										    { key: "valueLabel", label: "Label" },
+										    { key: "valueValue", label: "Value" },
+										    { key: "valueFrequency", label: "Frequency" },
+										    { key: "valuePercentage", label: "Percentage"}
+										];
+										var valuesDataTable = new YAHOO.widget.DataTable(messages[k].id+"_values_table", columnDefs, dsLocalJSON);
+                                       var total_entries;
+                                       var blank_rows;
+                                       var missing_values;
+                                       total_entries = messages[k].total_entries;
+                                       blank_rows = messages[k].number_of_blank_rows;
+                                       missing_values = messages[k].invalid_entries;
+                                       var blank_rows_percent = ((blank_rows/total_entries) * 100).toFixed(2);
+                                       var missing_values_percent = ((missing_values/total_entries) * 100).toFixed(2);
+                                       $(messages[k].id + "_total_entries").insert(total_entries);
+                                       $(messages[k].id + "_blank_rows").insert(blank_rows + " (" + blank_rows_percent + "%)");
+                                       $(messages[k].id + "_missing_values").insert(missing_values + " (" + missing_values_percent + "%)");
+                                 	 } catch (err) {
+	                                   alert(err);
+									 }
+									var valueDomains = [];
                                      for(var v in messages[k].value_domains) {
                                         var label = messages[k].value_domains[v].label;
                                         var value = messages[k].value_domains[v].value;
                                         var frequency;
                                         try {
                                           frequency = messages[k].value_domains[v].value_domain_statistic.frequency;
-                                        label != 'N/A' ? data.addRow([label,parseInt(frequency)]) : data.addRow([value,parseInt(frequency)]);
-                                        number_of_vals += 1;
+                                          label != 'N/A' ? data.addRow([label,parseInt(frequency)]) : data.addRow([value,parseInt(frequency)]);
+                                          percentage = ((frequency/total_entries) * 100).toFixed(2);
+                                          number_of_vals += 1;
+										  valueDomains.push( new ValueDomain(label, value, frequency, precentage) );
                                         } catch(err) {
 
                                         }
