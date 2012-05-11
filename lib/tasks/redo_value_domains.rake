@@ -23,10 +23,10 @@ namespace :obesity do
           invalid_entries += no_var_hash[key]
         end
         total_entries = 0
-        variable.valid_entries ? total_entries += variable.valid_entries : ''
-        variable.invalid_entries ? total_entries += variable.invalid_entries : ''
-        variable.blank_rows ? total_entries += variable.blank_rows : ''
-        variable.update_attributes(:valid_entries=> valid_entries, :invalid_entries=>invalid_entries, :blank_rows=>blank_rows, :total_entries=>total_entries)
+        total_entries += valid_entries
+        total_entries += invalid_entries
+        variable.number_of_blank_rows ? total_entries += variable.number_of_blank_rows : ''
+        variable.update_attributes(:valid_entries=> valid_entries, :invalid_entries=>invalid_entries, :total_entries=>total_entries)
         #destroy any existing value domains since the reference has to be the new ones
         #but use all the old value domain labels if there are any
         labels = Hash.new
