@@ -8,8 +8,8 @@ namespace :obesity do
   desc "add value domains and statistics for mb native variables"
   task :redo_value_domains => :environment do
 
-    dataset = Dataset.all(:conditions=>["nesstar_id is ?", nil]).first
-    #Dataset.all(:conditions=>["nesstar_id is ?", nil]).each do |dataset|
+    #dataset = Dataset.all(:conditions=>["nesstar_id is ?", nil]).first
+    Dataset.all(:conditions=>["nesstar_id is ?", nil]).each do |dataset|
       puts("Updating dataset: " + dataset.name + " : " + dataset.id.to_s)
       dataset.variables.each do |variable|
         var_hash = variable.values_hash
@@ -93,7 +93,7 @@ namespace :obesity do
         rescue Exception => e
           puts("Problem with stats for variable " + variable.id.to_s + ". " + e)
         end
-      #end
+      end
     end
   end
 end
