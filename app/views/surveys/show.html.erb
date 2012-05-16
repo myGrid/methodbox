@@ -1,5 +1,9 @@
 <%= javascript_include_tag 'variable_table_check.js' -%>
 <%= javascript_include_tag 'surveys_variables_table.js' -%>
+<script type="text/javascript">
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1', {'packages':['corechart']});
+</script>
 <%= stylesheet_link_tag 'survey_ul'%>
 <%= stylesheet_link_tag 'faux_table'%>
 <% truncate_length_for_boxes = 22 -%>

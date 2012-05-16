@@ -1,5 +1,9 @@
 <%= javascript_include_tag 'variable_table_check.js' -%>
 <%= javascript_include_tag 'server_paginated_variables_table.js' -%>
+<script type="text/javascript">
+  // Load the Visualization API and the piechart package.
+  google.load('visualization', '1', {'packages':['corechart']});
+</script>
 <h1 class="contribution_title"><%= DATASET -%>: <%= h(@dataset.name) -%></h1>
 <div class="yui-skin-sam">
   <div id="datasets_tabview" class="yui-navset">
