@@ -90,6 +90,7 @@ text-decoration: underline;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px; 
     border: 2px solid lightgray;
+    font-weight: normal;
 }
 .sidebar-border ul {
 	margin: 1em;
