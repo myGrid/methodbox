@@ -1,0 +1,47 @@
+<% truncate_length_for_boxes = 22 -%>
+<%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
+<div class="show_basic">
+  <div class="main_content_left_box">
+    <div class="box_about_actor">
+      <p>
+        <b>Title:</b>
+        <span class="title"><%=h @script.title -%></span>
+      </p>
+
+      <p>
+        <b>File name:</b>
+        <%=h @script.original_filename -%>
+      </p>
+      <p>
+        <b>Type:</b>
+        <% unless @script.method_type == "Other" -%>
+          <%=h @script.method_type -%>
+        <% else -%>
+          <%=h @script.content_type -%>
+        <% end -%>
+      </p>
+
+      <br/>
+
+      <p>
+        <b>Description</b>
+        <% unless @script.description.blank? -%>
+        <div class="box_standout">
+          <%= auto_link(simple_format(white_list(@script.description))) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
+      </p>
+      <br/>
+    </div>
+</div>
+<div class="main_content_right_box">
+  <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @script } -%>
+  <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @script, :attributed_to => Authorization.authorize_collection("show", @script.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
+</div>
+<div style="clear:both;">
+</div>
+</div>

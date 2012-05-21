@@ -1,0 +1,22 @@
+<div class="left comments_box">
+  <% if current_user %>
+    <h3>Notes</h3>
+    <%= render :partial => "notes/add_note", :locals=>{:resource_id => @script.id} -%>
+    <% @notes.each do |note| %>
+      <%= render :partial => "notes/note", :locals=>{:note=>note} %>
+    <% end %>
+    <div id="new_note">
+    </div>
+  <% end %>
+</div>
+<div class="right comments_box">
+  <% if current_user %>
+    <h3>Comments</h3>
+    <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @script.id, :controller => "Scripts", :comment_div_id => "comment", :update_div_id => "new_comment"} -%>
+    <% @comments.each do |comment| %>
+      <%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
+    <% end %>
+    <div id="new_comment">
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,1 @@
+<%= link_to current_user.cart_items.size > 0 ? "Variable Cart(" + current_user.cart_items.size.to_s + ")" : "Variable Cart", cart_url, :title => current_user.cart_items.size > 0 ? "You have some variables in your cart" : "There are no variables in your cart" %>

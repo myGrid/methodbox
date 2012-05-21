@@ -3,8 +3,8 @@
         <li style="list-style: none; display: inline;">
         	<%= link_to "Me", person_url(current_user.person), :title=>"Hello #{current_user.person.first_name}. View your profile, resources and searches" -%>
         |</li>
-        <li style="list-style: none; display: inline;">
-        	<%= link_to current_user.cart_items.size > 0 ? "Variable Cart(" + current_user.cart_items.size.to_s + ")" : "Variable Cart", cart_url, :title => current_user.cart_items.size > 0 ? "You have some variables in your cart" : "There are no variables in your cart" %>
+        <li style="list-style: none; display: inline;" id="cart-link">
+          <%= render :partial=>"cart/cart_link" -%>
         |</li>
         <li style="list-style: none; display:inline">
           <%= link_to "Logout", logout_url , :title=> "Logout and end this MethodBox session. Any variables in your cart will be saved for the next time."-%>

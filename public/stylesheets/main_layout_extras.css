@@ -861,3 +861,7 @@ body {
 .square-list {
 	list-style: square outside;
 }
+
+.comments_box {
+  width: 30%;
+}

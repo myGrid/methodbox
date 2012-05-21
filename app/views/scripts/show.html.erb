@@ -1,157 +1,24 @@
-<% truncate_length_for_boxes = 22 -%>
-<ul class="buttons">
-	<% if current_user && current_user.id != @script.contributor_id %>
-	<div id="recommended" style="display: inline;">
-		<% if @recommended == true %>
-			<%= render :partial => "recommendations/thumbs_down", :locals => {:item => @script} -%>
-	<% else %>
-		<%= render :partial => "recommendations/thumbs_up", :locals => {:item => @script} -%>
-	<% end %>
-	</div>
-	<% end %>
-  <% if Authorization.is_authorized?("manage", nil, @script, current_user) && !User.find(@script.contributor_id).dormant? -%>
-    <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
-  <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
-  <%# this is not owner, but current user can edit -%>
-    <li><%= icon('edit', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
-  <% end -%>
-
-  <% if Authorization.is_authorized?("destroy", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
-    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Method') -%></li>
-  <% end -%>
-
-  <% if Authorization.is_authorized?("download", nil, @script, current_user) -%>
-    <li><%= icon('download', download_script_url, "Download Method", nil, "Download Method") -%></li>
-  <% elsif current_user -%>
-    <li>
-    <li>
-      <%= render :partial=>"assets/request_resource",:locals=>{:resource=>@script} %>
-    </li>
-  </li>
-<% end -%>
-</ul>
+<%= render :partial => "buttons" -%>
 
 <h1 class="contribution_title">Method/Script: <%= h (@script.title) -%><div class="inline" id="award"><%= render :partial => "recommendations/awards", :locals => { :count => @script.recommendations.size } %></div></h1>
-
-<%= render :partial => "assets/resource_datetime_info", :locals => { :resource => @script } -%>
-
-
-<div class="show_basic">
-  <div class="main_content_left_box">
-    <div class="box_about_actor">
-      <p>
-        <b>Title:</b>
-        <span class="title"><%=h @script.title -%></span>
-      </p>
-
-      <p>
-        <b>File name:</b>
-        <%=h @script.original_filename -%>
-      </p>
-      <p>
-        <b>Type:</b>
-        <% unless @script.method_type == "Other" -%>
-          <%=h @script.method_type -%>
-        <% else -%>
-          <%=h @script.content_type -%>
-        <% end -%>
-      </p>
-
-      <br/>
-
-      <p>
-        <b>Description</b>
-        <% unless @script.description.blank? -%>
-        <div class="box_standout">
-          <%= auto_link(simple_format(white_list(@script.description))) -%>
-        </div>
-      <% else -%>
-        <p class="none_text">
-          No description
-        </p>
+<div class="yui-skin-sam">
+  <div id="script_tabview" class="yui-navset">
+    <ul class="yui-nav">
+      <li class="selected"><a href="#script_tab_details" title="Details about <%=@script.title -%>"><em>Details</em></a></li>
+      <li><a href="#script_tab_links" title="Links to other assets from <%=@script.title -%>"><em>Links</em></a></li>
+      <% if logged_in? -%>
+        <li><a href="#script_tab_comments" title="Notes and comments for <%=@script.title -%>"><em>Notes and Comments</em></a></li>
       <% end -%>
-      </p>
-      <br/>
-	<div class="link_box">
-	<b>Show:</b> 
-	<%= link_to_remote "Only my links", :url=> show_links_scripts_path, :with=> "'link_state=mine&script_id=#{@script.id}'" %>, 
-	<%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
-	</div>
-		<div class="actual_link_box">
-
-	  <div id="links">
-      <b>Linked with Data Extracts(s):</b>
-      <% if !@archives.empty? -%>
-
-        <% @archives.each do |archive| -%>
-          <%= link_to(archive.title, csvarchive_path(archive)) -%>
-        <% end -%>
-      <% else -%>
-        None
+    </ul>
+    <div class="yui-content">
+      <div id="script_tab_details"><%= render :partial=>"details" -%></div>
+      <div id="script_tab_links"><%= render :partial=>"links" -%></div>
+      <% if logged_in? -%>
+        <div id="script_tab_comments"><%= render :partial=>"comments" -%></div>
       <% end -%>
-      <br/>
-      <br/>
-      <b>Linked with <%= SURVEY -%>(s):</b>
-      <% if !@surveys.empty? -%>
-
-        <% @surveys.each do |survey| -%>
-          <%= link_to(survey.title, survey_path(survey)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-	<br/>
-      <b>Linked with Script(s):</b>
-		<% if !@scripts.empty? -%>
-        <% @scripts.each do |script| -%>
-          <%= link_to(script.title, script_path(script)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-	<br/>
-      <b>Linked with Publication(s):</b>
-		<% if !@publications.empty? -%>
-        <% @publications.each do |publication| -%>
-          <%= link_to(publication.title, publication_path(publication)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-	</div>
-	</div>
     </div>
-<div class="left">
-	<% if current_user %>
-	<h3>Notes</h3>
-	  <%= render :partial => "notes/add_note", :locals=>{:resource_id => @script.id} -%>
-			<% @notes.each do |note| %>
-			<%= render :partial => "notes/note", :locals=>{:note=>note} %>
-			<% end %>
-			<div id="new_note">
-				</div>
-				<% end %>
-</div>
-<div class="right">
-	<% if current_user %>
-	<h3>Comments</h3>
-	  <%= render :partial => "comments/add_comment", :locals=>{:resource_id => @script.id, :controller => "Scripts", :comment_div_id => "comment", :update_div_id => "new_comment"} -%>
-			<% @comments.each do |comment| %>
-			<%= render :partial => "comments/comment", :locals=>{:comment=>comment} %>
-			<% end %>
-			<div id="new_comment">
-				</div>
-				<% end %>
-</div>
   </div>
 </div>
-
-<div class="main_content_right_box">
-  <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @script } -%>
-  <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @script, :attributed_to => Authorization.authorize_collection("show", @script.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
-</div>
-
-<div style="clear:both;">
-</div>
+<script type="text/javascript">
+   tabView = new YAHOO.widget.TabView("script_tabview");
+</script>

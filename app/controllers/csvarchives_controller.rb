@@ -51,6 +51,7 @@ class CsvarchivesController < ApplicationController
         #refresh the var table with the remaining variables
         page << "updateTable('#{@variables_json}');"
         page.replace_html "cart-buttons", :partial=>"cart/all_buttons"
+        page.replace_html "cart-link", :partial=>"cart/cart_link"
         page[:cart_button].visual_effect(:pulsate, :duration=>2)
       end
     end

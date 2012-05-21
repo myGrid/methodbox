@@ -1,0 +1,27 @@
+<ul class="buttons">
+  <% if current_user && current_user.id != @script.contributor_id %>
+    <div id="recommended" style="display: inline;">
+      <% if @recommended == true %>
+        <%= render :partial => "recommendations/thumbs_down", :locals => {:item => @script} -%>
+      <% else %>
+        <%= render :partial => "recommendations/thumbs_up", :locals => {:item => @script} -%>
+      <% end %>
+    </div>
+  <% end %>
+  <% if Authorization.is_authorized?("manage", nil, @script, current_user) && !User.find(@script.contributor_id).dormant? -%>
+    <li><%= icon('manage', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
+  <% elsif Authorization.is_authorized?("edit", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
+  <%# this is not owner, but current user can edit -%>
+    <li><%= icon('edit', edit_script_path(@script), nil, nil, 'Edit Method') -%></li>
+  <% end -%>
+
+  <% if Authorization.is_authorized?("destroy", nil, @script, current_user) && !User.find(@script.contributor_id).dormant?-%>
+    <li><%= icon('destroy', script_path(@script), nil, { :confirm => 'This deletes the Method and all metadata. Are you sure?', :method => :delete }, 'Delete Method') -%></li>
+  <% end -%>
+
+  <% if Authorization.is_authorized?("download", nil, @script, current_user) -%>
+    <li><%= icon('download', download_script_url, "Download Method", nil, "Download Method") -%></li>
+  <% elsif current_user -%>
+    <li><%= render :partial=>"assets/request_resource",:locals=>{:resource=>@script} %></li>
+  <% end -%>
+</ul>

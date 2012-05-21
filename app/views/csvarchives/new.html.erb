@@ -34,8 +34,9 @@
     }
 </style>
 <h1>New Data Extract<%= render :partial=>"layouts/sandbox_warning" %></h1>
-<div class="show_basic">
-    <div class="fold">
+<div class="show_basic center">
+    <center>
+    <div class="fold" style="width: 90%;">
         <div class="foldTitle">
             Currently selected variables (click to display)
         </div>
@@ -57,7 +58,6 @@
     </div>
     <% form_tag({:action => :create}, :multipart => true) do -%>
     <%= error_messages_for :archive -%>
-    <center>
         <div style="width: 90%;">
         <p style="margin-top: 1.5em;">
             <b>Title:</b>
