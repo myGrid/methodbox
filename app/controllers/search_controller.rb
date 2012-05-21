@@ -78,15 +78,16 @@ class SearchController < ApplicationController
       respond_to do |format|
         format.html {redirect_to(:back || root_path)}
       end
-    end
-    #expires_in 20.minutes
-    end
+    else
     @variable_name = params[:variable_name]
     @variable_description = params[:variable_description]
     @variable_values = params[:variable_value]
     respond_to do |format|
       format.html
       format.json {render :json=>@results_hash}
+    end
+    end
+    #expires_in 20.minutes
     end
   end
 
