@@ -1,8 +1,10 @@
-<div class="link_box">
-<b>Show:</b> 
-<%= link_to_remote "Only my links", :url=> show_links_scripts_path, :with=> "'link_state=mine&script_id=#{@script.id}'" %>, 
-<%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
-</div>
+<% if logged_in? -%>
+  <div class="link_box">
+    <b>Show:</b>
+    <%= link_to_remote "Only my links", :url=> show_links_scripts_path, :with=> "'link_state=mine&script_id=#{@script.id}'" %>, 
+    <%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
+  </div>
+<% end -%>
 <div class="actual_link_box">
   <div id="links">
     <b>Linked with Data Extracts(s):</b>
