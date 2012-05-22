@@ -1,0 +1,8 @@
+      <b>Linked with Script(s):</b>
+		<% if !@scripts.empty? -%>
+        <% @scripts.each do |script| -%>
+          <%= link_to(script.title, script_path(script)) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>

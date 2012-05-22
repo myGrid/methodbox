@@ -72,6 +72,7 @@ text-decoration: underline;
 .actual_link_box {
 	border: 1px dotted gray;
 	padding: 5px;
+        min-height: 100px;
 }
 .view-content {
         width:70%;

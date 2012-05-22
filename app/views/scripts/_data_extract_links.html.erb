@@ -1,0 +1,8 @@
+<b>Linked with Data Extracts(s):</b>
+<% if !@archives.empty? -%>
+  <% @archives.each do |archive| -%>
+    <%= link_to(archive.title, csvarchive_path(archive)) -%>
+  <% end -%>
+<% else -%>
+   None
+<% end -%>

@@ -1,3 +1,18 @@
+<div id="link_tabs" class="yui-navset">
+  <ul class="yui-nav">
+    <li class="selected"><a href="#link_extract_tab" title="Links to Data Extracts"><em>Data Extracts</em></a></li>
+    <li><a href="#link_survey_tab" title="Links to <%= SURVEY.pluralize -%>"><em><%= SURVEY.pluralize -%></em></a></li>
+    <li><a href="#link_script_tab" title="Links to other Scripts and Methods"><em>Scripts</em></a></li>
+    <li><a href="#link_publication_tab" title="Links to Publications"><em>Publications</em></a></li>
+  </ul>
+  <div class="yui-content actual_link_box">
+    <div id="link_extract_tab"><%= render :partial=>"data_extract_links" -%></div>
+    <div id="link_survey_tab"><%= render :partial=>"survey_links" -%></div>
+    <div id="link_script_tab"><%= render :partial=>"script_links" -%></div>
+    <div id="link_publication_tab"><%= render :partial=>"publication_links" -%></div>
+  </div>
+</div>
+
 <% if logged_in? -%>
   <div class="link_box">
     <b>Show:</b>
@@ -5,47 +20,6 @@
     <%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
   </div>
 <% end -%>
-<div class="actual_link_box">
-  <div id="links">
-    <b>Linked with Data Extracts(s):</b>
-      <% if !@archives.empty? -%>
-
-        <% @archives.each do |archive| -%>
-          <%= link_to(archive.title, csvarchive_path(archive)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-      <br/>
-      <b>Linked with <%= SURVEY -%>(s):</b>
-      <% if !@surveys.empty? -%>
-
-        <% @surveys.each do |survey| -%>
-          <%= link_to(survey.title, survey_path(survey)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-	<br/>
-      <b>Linked with Script(s):</b>
-		<% if !@scripts.empty? -%>
-        <% @scripts.each do |script| -%>
-          <%= link_to(script.title, script_path(script)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-      <br/>
-	<br/>
-      <b>Linked with Publication(s):</b>
-		<% if !@publications.empty? -%>
-        <% @publications.each do |publication| -%>
-          <%= link_to(publication.title, publication_path(publication)) -%>
-        <% end -%>
-      <% else -%>
-        None
-      <% end -%>
-  </div>
-</div>
+<script type="text/javascript">
+   linkTabs = new YAHOO.widget.TabView("link_tabs", {orientation: "left"});
+</script>

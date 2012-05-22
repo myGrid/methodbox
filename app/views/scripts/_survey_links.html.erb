@@ -1,0 +1,9 @@
+      <b>Linked with <%= SURVEY -%>(s):</b>
+      <% if !@surveys.empty? -%>
+
+        <% @surveys.each do |survey| -%>
+          <%= link_to(survey.title, survey_path(survey)) -%>
+        <% end -%>
+      <% else -%>
+        None
+      <% end -%>
