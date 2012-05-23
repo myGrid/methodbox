@@ -72,7 +72,10 @@ text-decoration: underline;
 .actual_link_box {
 	border: 1px dotted gray;
 	padding: 5px;
-        min-height: 100px;
+        min-height: 150px;
+}
+#link_tabs {
+  margin: 1em;
 }
 .view-content {
         width:70%;

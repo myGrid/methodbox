@@ -1,3 +1,13 @@
+<% if logged_in? -%>
+  <div class="link_box">
+    <b>Show:</b>
+    <%= link_to_remote "Only my links", :url=> show_links_scripts_path, :with=> "'link_state=mine&script_id=#{@script.id}'" %>, 
+    <%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
+  </div>
+<% end -%>
+<script type="text/javascript">
+   linkTabs = new YAHOO.widget.TabView("link_tabs", {orientation: "left"});
+</script>
 <div id="link_tabs" class="yui-navset">
   <ul class="yui-nav">
     <li class="selected"><a href="#link_extract_tab" title="Links to Data Extracts"><em>Data Extracts</em></a></li>
@@ -12,14 +22,3 @@
     <div id="link_publication_tab"><%= render :partial=>"publication_links" -%></div>
   </div>
 </div>
-
-<% if logged_in? -%>
-  <div class="link_box">
-    <b>Show:</b>
-    <%= link_to_remote "Only my links", :url=> show_links_scripts_path, :with=> "'link_state=mine&script_id=#{@script.id}'" %>, 
-    <%= link_to_remote "All links", :url=> show_links_scripts_path, :with=> "'link_state=all&script_id=#{@script.id}'" %>
-  </div>
-<% end -%>
-<script type="text/javascript">
-   linkTabs = new YAHOO.widget.TabView("link_tabs", {orientation: "left"});
-</script>
