@@ -201,6 +201,10 @@ class ScriptsController < ApplicationController
     @archives = source_archives | target_archives
     @scripts = source_scripts | target_scripts
     @surveys = source_surveys | target_surveys
+    @all_links = @archives
+    @all_links < @scripts
+    @all_links < @surveys
+    @all_links < @publications
 
     # update timestamp in the current SOP record
     # (this will also trigger timestamp update in the corresponding Asset)
