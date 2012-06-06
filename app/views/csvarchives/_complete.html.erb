@@ -1,6 +1,6 @@
 <b>Status:</b>
 <% if @archive.complete && !@archive.failure %>
-  <span class="title"><%=h "ready for download" -%></span>
+  <span class="title"><%=link_to "ready for download", download_csvarchive_url + "?type=CSV" -%></span>
 <% elsif @archive.failure -%>
   <span class="title" style="color:red;"><%=h "Failed: please re-create" -%></span>
 <% else -%>

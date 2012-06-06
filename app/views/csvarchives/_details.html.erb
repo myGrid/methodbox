@@ -1,6 +1,7 @@
 <% truncate_length_for_boxes = 22 -%>
 <div class="show_basic">
   <div class="box_about_actor left" style="width:70%">
+    <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
     <p>
       <b>Title:</b>
       <% unless @archive.title.blank? -%>
@@ -24,7 +25,6 @@
       <% end -%>
       <br/>
       <%= render :partial => "complete" %>
-      <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
     </div>
   <div class="right" style="width:20%">
     <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @archive } -%>
