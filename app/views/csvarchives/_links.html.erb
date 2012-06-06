@@ -1,40 +1,49 @@
-  <b>Linked with Data Extracts(s):</b>
-  <% if !@archives.empty? -%>
-
-    <% @archives.each do |archive| -%>
-      <%= link_to(archive.title, csvarchive_path(archive)) -%>
+<% if current_user %>
+  <div class="link_box">
+    Show: 
+    <%= link_to_remote "Only my links", :url=> show_links_csvarchives_path, :with=> "'link_state=mine&extract_id=#{@archive.id}'" %>, 
+    <%= link_to_remote "All links", :url=> show_links_csvarchives_path, :with=> "'link_state=all&extract_id=#{@archive.id}'" %>
+  </div>
+<% end %>
+<div class="actual_link_box">
+  <div id="links">
+    <b>Linked with Data Extracts(s):</b>
+    <% if !@archives.empty? -%>
+      <% @archives.each do |archive| -%>
+        <%= link_to(archive.title, csvarchive_path(archive)) -%>
+      <% end -%>
+    <% else -%>
+      None
     <% end -%>
-  <% else -%>
-    None
-  <% end -%>
-  <br/>
-  <br/>
-  <b>Linked with <%= SURVEY -%>(s):</b>
-  <% if !@surveys.empty? -%>
-
-    <% @surveys.each do |survey| -%>
-      <%= link_to(survey.title, survey_path(survey)) -%>
+    <br/>
+    <br/>
+    <b>Linked with <%= SURVEY -%>(s):</b>
+    <% if !@surveys.empty? -%>
+      <% @surveys.each do |survey| -%>
+        <%= link_to(survey.title, survey_path(survey)) -%>
+      <% end -%>
+    <% else -%>
+      None
     <% end -%>
-  <% else -%>
-    None
-  <% end -%>
-  <br/>
-<br/>
-  <b>Linked with Script(s):</b>
-	<% if !@scripts.empty? -%>
-    <% @scripts.each do |script| -%>
-      <%= link_to(script.title, script_path(script)) -%>
+    <br/>
+    <br/>
+    <b>Linked with Script(s):</b>
+    <% if !@scripts.empty? -%>
+      <% @scripts.each do |script| -%>
+        <%= link_to(script.title, script_path(script)) -%>
+      <% end -%>
+    <% else -%>
+      None
     <% end -%>
-  <% else -%>
-    None
-  <% end -%>
-<br/>
-<br/>
-  <b>Linked with Publication(s):</b>
-	<% if !@publications.empty? -%>
-    <% @publications.each do |publication| -%>
-      <%= link_to(publication.title, publication_path(publication)) -%>
+    <br/>
+    <br/>
+    <b>Linked with Publication(s):</b>
+    <% if !@publications.empty? -%>
+      <% @publications.each do |publication| -%>
+        <%= link_to(publication.title, publication_path(publication)) -%>
+      <% end -%>
+    <% else -%>
+      None
     <% end -%>
-  <% else -%>
-    None
-  <% end -%>
+  </div>
+</div>

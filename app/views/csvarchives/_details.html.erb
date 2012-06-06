@@ -1,0 +1,33 @@
+<% truncate_length_for_boxes = 22 -%>
+<div class="show_basic">
+  <div class="box_about_actor left" style="width:70%">
+    <p>
+      <b>Title:</b>
+      <% unless @archive.title.blank? -%>
+        <span class="title"><%=h @archive.title -%></span>
+      <% else -%>
+      <p class="none_text">
+        No title
+      </p>
+      <% end -%>
+    </p>
+    <p>
+      <b>Description</b>
+      <% unless @archive.description.blank? -%>
+        <div class="box_standout" style="background-color:#FFFFFF;">
+          <%= simple_format(white_list(@archive.description)) -%>
+        </div>
+      <% else -%>
+        <p class="none_text">
+          No description
+        </p>
+      <% end -%>
+      <br/>
+      <%= render :partial => "complete" %>
+      <%= render :partial => "datetime_info", :locals => { :resource => @archive } -%>
+    </div>
+  <div class="right" style="width:20%">
+    <%= render :partial => "assets/resource_original_uploader_box", :locals => { :resource => @archive } -%>
+    <%= render :partial => "assets/resource_attributions_box", :locals => { :resource => @archive, :attributed_to => Authorization.authorize_collection("show", @archive.attributions_objects, current_user, true), :truncate_to => truncate_length_for_boxes } -%>
+  </div>
+</div>
