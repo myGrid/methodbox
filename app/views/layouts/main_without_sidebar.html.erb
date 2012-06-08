@@ -9,16 +9,9 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <%= render :partial => "layouts/javascript_variables" -%>
 <%= csrf_meta_tag %>
-<% if YUI_LOCAL -%>
-  <%= javascript_include_tag :defaults, 'yui.js', 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','datatable_expander.js', 'variable_table_expander.js' -%>
-  <%= stylesheet_link_tag 'yui', 'alphabetical_pagination', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', 'main_layout_extras', :cache=>'css_cached' -%>
-<% else -%>
-
 <%= stylesheet_link_tag 'yui-2.9.0', 'alphabetical_pagination', 'my_exp', 'gadgets', 'acts_as_taggable_stylesheet', 'styles', 'fast_auto_complete', 'redbox', 'autocompleter_advanced', 'savage_beast/forums', 'spiffy_corners', 'widget_tab_nav', 'main_layout_extras', :cache=>'css_cached' -%>
 
 <%= javascript_include_tag :defaults, 'yui-2.9.0.js', 'scriptaculous.js', 'redbox.js', 'autocompleter_advanced.js','tooltips.js', 'savage-beast/application.js','datatable_expander.js', 'variable_table_expander.js' -%>
-
-<% end -%>
 
 <!--[if lte IE 6]>
 <%= stylesheet_link_tag 'ie6_hacks'-%>

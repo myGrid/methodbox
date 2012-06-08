@@ -170,7 +170,7 @@ module ProcessMetadataJob
     def read_ddi_metadata
       dataset = Dataset.find(dataset_id)
       ddi_parser = DDI::Parser.new
-      all_variables = Variable.all(:dataset => dataset)
+      all_variables = Variable.all(:dataset_id => dataset.id)
       all_variable_ids = all_variables.collect{|var| var.id}
       parsed_variable_ids
       new_variables = []
@@ -181,13 +181,13 @@ module ProcessMetadataJob
       #create variables for the dataset
       study.variables.each do |variable|
         #TODO find the variable from the dataset and if nil then add new var since this is from nesstar and we don't use the dataset to find the vars
-        existing_variable = Variable.all(:conditions=>{:name=>variable.name, :dataset => dataset}).first
+        existing_variable = Variable.all(:conditions=>{:name=>variable.name, :dataset_id => dataset.id}).first
         if variable.group == nil
           variable_category = 'N/A'
         end
         parsed_variable_ids << existing_variable.id
         if existing_variable == nil
-          var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable_category, :interval => variable.interval, :dataset => catalog_dataset, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
+          var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable_category, :interval => variable.interval, :dataset_id => dataset.id, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
           logger.info Time.now.to_s + " : creating new variable " + variable.name + " from " + study.title
           var.save
           new_variables << var.id
