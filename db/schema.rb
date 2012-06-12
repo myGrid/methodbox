@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120403101542) do
+ActiveRecord::Schema.define(:version => 20120612095809) do
 
   create_table "activity_limits", :force => true do |t|
     t.string   "contributor_type", :null => false
@@ -518,6 +518,7 @@ ActiveRecord::Schema.define(:version => 20120403101542) do
     t.string   "source"
     t.string   "nesstar_id"
     t.string   "nesstar_uri"
+    t.string   "weighting_guide"
   end
 
   create_table "taggings", :force => true do |t|
@@ -674,6 +675,7 @@ ActiveRecord::Schema.define(:version => 20120403101542) do
     t.string   "interval"
     t.integer  "valid_entries"
     t.integer  "invalid_entries"
+    t.integer  "total_entries"
   end
 
   create_table "watched_variables", :force => true do |t|

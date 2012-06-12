@@ -69,6 +69,18 @@
 		        			</p>
 		      			<% end -%>
 		      		</p>
+		      		<p>
+		        		<b>Weighting guide</b>
+		        		<% unless @survey.weighting_guide.blank? -%>
+		        			<div class="box_standout">
+		          				<a href="<%= @survey.weighting_guide -%>"><%= @survey.weighting_guide %></a>
+		        			</div>
+		      			<% else -%>
+		        			<p class="none_text">
+		          				No weighting guide details provided
+		        			</p>
+		      			<% end -%>
+		      		</p>
 					<% if @survey.UKDA_summary || @survey.headline_report -%>
 		      			<p>
 		        			<b>Further information</b>

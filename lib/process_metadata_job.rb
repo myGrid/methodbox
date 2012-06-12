@@ -1,6 +1,7 @@
 # Use delayed job. Process metadata for a dataset
 
 require 'ddi-parser'
+require 'xml'
 
 module ProcessMetadataJob
   
@@ -25,7 +26,7 @@ module ProcessMetadataJob
       dataset.update_attributes(:has_metadata => true)
       email_user
     rescue Exception => e     
-      logger.error "Problem processing dataset " + dataset.id.to_s + ", "  + e
+      logger.error Time.now.to_s + ", Problem processing metadata for dataset " + dataset.id.to_s + ", "  + e
       puts "Problem processing dataset " + dataset.id.to_s + ", "  + e
       # send an error message
       Mailer.deliver_metadata_processing_error(dataset_id, user_id, e, base_host) if EMAIL_ENABLED && User.find(user_id).person.send_notifications?
@@ -169,35 +170,34 @@ module ProcessMetadataJob
     #import ddi metadata for an existing dataset
     def read_ddi_metadata
       dataset = Dataset.find(dataset_id)
+      logger.info '1'
       ddi_parser = DDI::Parser.new
-      all_variables = Variable.all(:dataset_id => dataset.id)
+      all_variables = Variable.all(:conditions=> {:dataset_id => dataset_id})
       all_variable_ids = all_variables.collect{|var| var.id}
-      parsed_variable_ids
+      logger.info '2'
+      parsed_variable_ids = []
       new_variables = []
-      #the encoding may be a bit of a fudge but all these nesstar ddi files seem to have this encoding and without it nothing works
-      parser = XML::Parser.io(File.open(filename, "r"), :encoding => XML::Encoding::ISO_8859_1)
-      doc = parser.parse
-      study = ddi_parser.parse doc
+      logger.info '2a'
+      study = ddi_parser.parse filename
+      logger.info '3'
       #create variables for the dataset
-      study.variables.each do |variable|
+      study.ddi_variables.each do |variable|
         #TODO find the variable from the dataset and if nil then add new var since this is from nesstar and we don't use the dataset to find the vars
-        existing_variable = Variable.all(:conditions=>{:name=>variable.name, :dataset_id => dataset.id}).first
+        existing_variable = Variable.all(:conditions=>{:name=>variable.name, :dataset_id => dataset_id}).first
+        #if the variable does not exist then go on to the next one, only load metadata for vars in the db
+        if existing_variable != nil
         if variable.group == nil
           variable_category = 'N/A'
         end
-        parsed_variable_ids << existing_variable.id
-        if existing_variable == nil
-          var = Variable.new(:name=> variable.name, :value => variable.label, :category => variable_category, :interval => variable.interval, :dataset_id => dataset.id, :nesstar_id => variable.id, :nesstar_file => variable.file, :max_value => variable.max, :min_value => variable.min)
-          logger.info Time.now.to_s + " : creating new variable " + variable.name + " from " + study.title
-          var.save
-          new_variables << var.id
-        end          
+        logger.info '4'
+        parsed_variable_ids << existing_variable.id         
         variable.categories.each do |category|
-          valDom = ValueDomain.all(:conditions=>{:variable => var, :value => category.value, :label => category.label}).first   
+          valDom = ValueDomain.all(:conditions=>{:variable => existing_variable, :value => category.value, :label => category.label}).first   
           if valDom == nil 
-            valDom = ValueDomain.new(:variable => var, :value => category.value, :label => category.label)
+            valDom = ValueDomain.new(:variable => existing_variable, :value => category.value, :label => category.label)
             valDom.save
           end     
+          logger.info '5'
           category.category_statistics.each do |statistic|
           #the frequency statistics for the value domain
           #guessing that 'freq' is consistent, however......
@@ -213,29 +213,30 @@ module ProcessMetadataJob
             end
           end
         end
+        logger.info '6'
         variable.summary_stats.each do |summary_stat|
           begin
             if summary_stat.type == 'mean'
-              var.update_attributes(:mean => summary_stat.value) if var.mean != summary_stat.value
+              existing_variable.update_attributes(:mean => summary_stat.value) if var.mean != summary_stat.value
             elsif summary_stat.type == 'stdev'
-              var.update_attributes(:standard_deviation => summary_stat.value) if var.standard_deviation != summary_stat.value
+              existing_variable.update_attributes(:standard_deviation => summary_stat.value) if existing_variable.standard_deviation != summary_stat.value
             elsif summary_stat.type == 'invd'
-              var.update_attributes(:invalid_entries => summary_stat.value) if var.invalid_entries != summary_stat.value
+              existing_variable.update_attributes(:invalid_entries => summary_stat.value) if existing_variable.invalid_entries != summary_stat.value
             elsif summary_stat.type == 'vald'
-              var.update_attributes(:valid_entries => summary_stat.value) if var.valid_entries != summary_stat.value
+              existing_variable.update_attributes(:valid_entries => summary_stat.value) if existing_variable.valid_entries != summary_stat.value
             end
           rescue
-            logger.warn Time.now.to_s + 'One of the summary stats failed for variable ' +  var.id.to_s
+            logger.warn Time.now.to_s + 'One of the summary stats failed for variable ' +  existing_variable.id.to_s
           end
         end
         question = variable.question != nil ? variable.question : ""
         interview = variable.interview_instruction != nil ? variable.interview_instruction : ""
         derivation = question + interview
         if variable.question != nil && variable.interview_instruction != nil
-          var.update_attributes(:dermethod => derivation) if var.dermethod != derivation
+          existing_variable.update_attributes(:dermethod => derivation) if existing_variable.dermethod != derivation
         end
       end
-      @missing_variables = all_variable_ids - parsed_variable_ids
+      end
     end
   end
 end
