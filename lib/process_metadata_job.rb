@@ -192,9 +192,9 @@ module ProcessMetadataJob
         logger.info '4'
         parsed_variable_ids << existing_variable.id         
         variable.categories.each do |category|
-          valDom = ValueDomain.all(:conditions=>{:variable => existing_variable, :value => category.value, :label => category.label}).first   
+          valDom = ValueDomain.all(:conditions=>{:variable_id => existing_variable.id, :value => category.value, :label => category.label}).first   
           if valDom == nil 
-            valDom = ValueDomain.new(:variable => existing_variable, :value => category.value, :label => category.label)
+            valDom = ValueDomain.new(:variable_id => existing_variable.id, :value => category.value, :label => category.label)
             valDom.save
           end     
           logger.info '5'
@@ -202,9 +202,9 @@ module ProcessMetadataJob
           #the frequency statistics for the value domain
           #guessing that 'freq' is consistent, however......
             if statistic.type == 'freq'
-              val_dom_stat = ValueDomainStatistic.all(:conditions=>{:frequency => statistic.value, :value_domain => valDom}).first
+              val_dom_stat = ValueDomainStatistic.all(:conditions=>{:frequency => statistic.value, :value_domain_id => valDom.id}).first
               if val_dom_stat == nil
-                val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain => valDom)
+                val_dom_stat = ValueDomainStatistic.new(:frequency => statistic.value, :value_domain_id => valDom.id)
                 val_dom_stat.save
               else
                 val_dom_stat.update_attributes(:frequency => statistic.value) if val_dom_stat.frequency != statistic.value
