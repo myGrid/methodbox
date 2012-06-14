@@ -3,9 +3,9 @@
    <li class="normal-border-top-grey"><%= icon "new", nesstar_datasource_surveys_url, "Add a new datasource", {:title=>"Add a new Nesstar datasource to MethodBox"}, "Add a datasource" %></li>
    <% if controller.action_name == "show" %>
      <% if current_user.is_admin? && @survey.survey_type.is_ukda %>
-       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET.downcase+ " to this " + SURVEY.downcase, {:title=>"Upload " +  DATASET.downcase + " from file for this " + SURVEY.downcase}, "Upload new " +  DATASET.downcase -%></li>
+       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Add a " + DATASET.downcase+ " to this " + SURVEY.downcase, {:title=>"Upload " +  DATASET.downcase + " from file for this " + SURVEY.downcase}, "Upload " +  DATASET.downcase -%></li>
      <% elsif Authorization.is_authorized?("edit", nil, @survey, current_user) %>
-       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload new " +  DATASET.downcase, {:title=>"Upload a new " +  DATASET.downcase + " for this " + SURVEY.downcase },"Upload " +  DATASET.downcase -%></li>
+       <li class="normal-border-top-grey"><%= icon "new", url_for({:action => "new", :controller=> "datasets",:survey => @survey.id}), "Upload " +  DATASET.downcase, {:title=>"Upload a new " +  DATASET.downcase + " for this " + SURVEY.downcase },"Upload " +  DATASET.downcase -%></li>
      <% end %>
    <% end %>
 <% end -%>
