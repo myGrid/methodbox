@@ -170,26 +170,22 @@ module ProcessMetadataJob
     #import ddi metadata for an existing dataset
     def read_ddi_metadata
       dataset = Dataset.find(dataset_id)
-      logger.info '1'
       ddi_parser = DDI::Parser.new
       all_variables = Variable.all(:conditions=> {:dataset_id => dataset_id})
       all_variable_ids = all_variables.collect{|var| var.id}
-      logger.info '2'
       parsed_variable_ids = []
       new_variables = []
-      logger.info '2a'
       study = ddi_parser.parse filename
-      logger.info '3'
       #create variables for the dataset
       study.ddi_variables.each do |variable|
         #TODO find the variable from the dataset and if nil then add new var since this is from nesstar and we don't use the dataset to find the vars
         existing_variable = Variable.all(:conditions=>{:name=>variable.name, :dataset_id => dataset_id}).first
         #if the variable does not exist then go on to the next one, only load metadata for vars in the db
         if existing_variable != nil
+	  existing_variable.update_attributes(:value=>variable.label) if variable.label != nil
         if variable.group == nil
           variable_category = 'N/A'
         end
-        logger.info '4'
         parsed_variable_ids << existing_variable.id         
         variable.categories.each do |category|
           valDom = ValueDomain.all(:conditions=>{:variable_id => existing_variable.id, :value => category.value, :label => category.label}).first   
@@ -197,7 +193,6 @@ module ProcessMetadataJob
             valDom = ValueDomain.new(:variable_id => existing_variable.id, :value => category.value, :label => category.label)
             valDom.save
           end     
-          logger.info '5'
           category.category_statistics.each do |statistic|
           #the frequency statistics for the value domain
           #guessing that 'freq' is consistent, however......
@@ -213,7 +208,6 @@ module ProcessMetadataJob
             end
           end
         end
-        logger.info '6'
         variable.summary_stats.each do |summary_stat|
           begin
             if summary_stat.type == 'mean'
