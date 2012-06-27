@@ -17,7 +17,7 @@
 		  <div>
 			<div class="medium-padding">
 			<div class="left center" style="width:20%;">
-			<% form_tag(:controller => "surveys", :action => "search_variables") do -%>
+			<% form_tag search_variables_surveys_url, :method => :get do -%>
 				<%= hidden_field_tag "entry_ids[]", @dataset.id.to_s -%>
 			<div>
 			  <div><%= text_field_tag :survey_search_query, @survey_search_query %>
