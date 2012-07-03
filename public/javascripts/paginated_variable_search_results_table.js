@@ -105,11 +105,11 @@ YAHOO.util.Event.addListener(window, "load", function() {
 		    var dir = (oState.sortedBy && oState.sortedBy.dir === YAHOO.widget.DataTable.CLASS_DESC) ? "desc" : "asc";
 		    var page = (oState.pagination) ? oState.pagination.page : 1;
 		    //var results = (oState.pagination) ? oState.pagination.rowsPerPage : 20;
-            var query_params = "query=" + query + "&sort=" + sort +
+            var query_params = "query=" + encodeURIComponent(query) + "&sort=" + sort +
                                "&dir=" + dir + "&page=" + page + 
                                "&variable_name=" + variable_name +
                                "&variable_description=" + variable_description +
-                               "&variable_value=" + variable_values;
+                               "&variable_values=" + variable_values;
 		    return  query_params;
 		};
 		 // DataTable configuration 

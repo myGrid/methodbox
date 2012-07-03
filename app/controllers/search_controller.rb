@@ -230,7 +230,7 @@ class SearchController < ApplicationController
         minimum_match 1
         fields(:name) if params[:variable_name] == 'true'
         fields(:value) if params[:variable_description] == 'true'
-        fields(:values) if params[:variable_value] == 'true'
+        fields(:values) if params[:variable_values] == 'true'
       end
       paginate(:page => params[:page] ? page : 1, :per_page => 20)
       with(:dataset_id, datasets)

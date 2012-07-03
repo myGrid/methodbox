@@ -15,7 +15,7 @@ class VariablesController < ApplicationController
         minimum_match 1
         fields(:name) if params[:variable_name] == 'true'
         fields(:value) if params[:variable_description] == 'true'
-        fields(:values) if params[:variable_value] == 'true'
+        fields(:values) if params[:variable_values] == 'true'
       end
       paginate(:page => params[:page] ? params[:page] : 1, :per_page => 20)
       #No datasets at the moment since this is only called from the 'search everything' action
@@ -73,7 +73,7 @@ class VariablesController < ApplicationController
             @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :joins=>{:dataset => :survey}, :order => "surveys.title desc", :limit=>20, :offset=>params[:startIndex].to_i) 
         end
     end
-    variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "recordsReturned" => 20, "totalRecords"=>result.total, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    variables_hash = {"sort" => "#{params[:sort]}", "dir" => "#{params[:dir]}", "pageSize" => 20, "recordsReturned" => 20, "totalRecords"=>result.results.total_entries, "results" => result.results.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
     @variables_json = variables_hash.to_json
     #render :partial=>"paginated_search_results"
     respond_to do |format|
