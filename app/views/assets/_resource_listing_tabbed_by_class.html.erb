@@ -5,7 +5,6 @@
 <%# - narrow_view: type of the partial to use for asset listings: 'false' to use the same partial with much info as on SOPs listing page -%>
 <%#                                                               'true' to use a partial with fewer information; suitable for 'show' pages for people/projects -%>
 <%# - authorization_already_done: boolean value indicating whether all items in the collection have already been authorized for the current user to view or not -%>
-
 <% narrow_view ||= false -%>
 <% authorization_already_done ||= false -%>
 <% tab_count = 1 %>
@@ -24,13 +23,15 @@
 				<% if tab_count == 1 %>
 				<% if resource_type.downcase == "dataset" -%>
 									<li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= SURVEY.pluralize.downcase -%> and <%= DATASET.pluralize.downcase -%> with <%= resources.length.to_s -%> results"><em><%= h truncate(SURVEY.pluralize + ' and ' + DATASET.pluralize + '(' + resources.length.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
+				<% elsif resource_type.downcase == "variable" -%>
+				  <li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= 'Variables with ' + total_vars.to_s + ' results' -%>"><em><%= h truncate(visible_resource_type + '(' + total_vars.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
 				<% else -%>
 					<li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= visible_resource_type.downcase + ' with ' + resources.length.to_s + ' results' -%>"><em><%= h truncate(visible_resource_type + '(' + resources.length.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
 				<% end -%>
 				<% elsif resource_type.downcase == "dataset" -%>
 					<li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= SURVEY.pluralize.downcase -%> and <%= DATASET.pluralize.downcase -%> with <%= resources.length.to_s -%> results"><em><%= h truncate(SURVEY.pluralize + ' and ' + DATASET.pluralize + '(' + resources.length.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
 					<% elsif resource_type.downcase == "variable" -%>
-						<li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= visible_resource_type.downcase + ' with ' + @total_vars.to_s + ' results' -%>"><em><%= h truncate(visible_resource_type + '(' + @total_vars.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
+						<li class="selected"><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= 'Variables with ' + total_vars.to_s + ' results' -%>"><em><%= h truncate(visible_resource_type + '(' + total_vars.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
 				<% else -%>
 					<li><a href="#assets_tab_<%= tab_count.to_s -%>" title="Search results for all <%= visible_resource_type.downcase + ' with ' + resources.length.to_s + ' results' -%>"><em><%= h truncate(visible_resource_type + '(' + resources.length.to_s + ')', :length=> 30, :omission => '...') %></em></a></li>
 				<% end -%>

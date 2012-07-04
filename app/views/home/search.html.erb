@@ -12,8 +12,8 @@ Search Options
 <%= javascript_tag "storeHiddenFieldValue('variable_name', true)"-%>
 <li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'variable_description', true, :onchange=>"setHiddenFieldValue('variable_description', this.checked);" -%>description</li>
 <%= javascript_tag "storeHiddenFieldValue('variable_description', true)"-%>
-<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'variable_value', true, :onchange=>"setHiddenFieldValue('variable_value', this.checked);" -%>values</li>
-<%= javascript_tag "storeHiddenFieldValue('variable_value', true)"-%>
+<li class="medium-padding-left"><%= check_box_tag 'search_type[]', 'variable_values', true, :onchange=>"setHiddenFieldValue('variable_values', this.checked);" -%>values</li>
+<%= javascript_tag "storeHiddenFieldValue('variable_values', true)"-%>
 </ul>
 </div>
 <div class="normal-padding-bottom normal-border-bottom-grey small-padding-top">

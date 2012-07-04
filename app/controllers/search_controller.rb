@@ -48,7 +48,7 @@ class SearchController < ApplicationController
       #don't sort variable results but return by order of relevance
       all_vars = find_variables(query, params[:variable_page])
       @results_hash['variable'] = all_vars.results
-      @total_vars = all_vars.total
+      @total_vars = all_vars.results.total_entries
     end
     if params[:script_select] == 'true'
       @results_hash['script'] = select_authorised find_methods(query, params[:method_page]).results
@@ -81,7 +81,7 @@ class SearchController < ApplicationController
     else
     @variable_name = params[:variable_name]
     @variable_description = params[:variable_description]
-    @variable_values = params[:variable_value]
+    @variable_values = params[:variable_values]
     respond_to do |format|
       format.html
       format.json {render :json=>@results_hash}
@@ -118,7 +118,6 @@ class SearchController < ApplicationController
     #TODO dataset location and year
     start_year = params[:dataset_start_year].to_i
     end_year = params[:dataset_end_year].to_i
-    puts "years are " + start_year.to_s + " and " + end_year.to_s
     res = Sunspot.search(Dataset) do
         with(:id, datasets)
         paginate(:page => page ? page : 1, :per_page => 1000)
