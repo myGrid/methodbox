@@ -262,8 +262,8 @@ ActiveRecord::Schema.define(:version => 20120612095809) do
 
   create_table "locations", :force => true do |t|
     t.string   "name"
-    t.integer  "latitude",   :limit => 10, :precision => 10, :scale => 0
-    t.integer  "longitude",  :limit => 10, :precision => 10, :scale => 0
+    t.integer  "latitude"
+    t.integer  "longitude"
     t.integer  "dataset_id"
     t.datetime "created_at"
     t.datetime "updated_at"

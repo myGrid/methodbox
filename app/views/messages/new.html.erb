@@ -12,9 +12,14 @@
 	      <center><%= render :partial => "users/avatar", :locals => { :user => @message.to } %></center>
 	      <%= f.hidden_field :to %>
 	    <% else %>
-			<p><b>To</b></p>
-			  <% # sending message to the user themself is not allowed -> exclude current user from the 'to' list -%>
-	      <%= select(:message, :to, Person.find(:all, :conditions => ["id <> ?", User.find(current_user.id).person_id], :order => "last_name ASC").collect {|p| [p.first_name + " " +  p.last_name, p.user.id ] }, { :include_blank => false }, :style => "width: 390px;") %>
+	<!-- Holder for the selected recipient of the message -->
+	<div id="message_to_person"></div>
+			<p><b>To</b> (Type name of the recipient to receive suggestions)</p>
+			<%#= text_area :user, :message_to %>
+			<%#= fast_auto_complete_field :user_message_to, :url =>autocomplete_message_to_messages_url %>
+			<%= text_field_with_auto_complete :message, :to, {}, :after_update_element => "function(element,value){ messageToID(value['id']) }" %>
+			  <%# sending message to the user themself is not allowed -> exclude current user from the 'to' list -%>
+	      <%#= select(:message, :to, Person.find(:all, :conditions => ["id <> ?", User.find(current_user.id).person_id], :order => "last_name ASC").collect {|p| [p.first_name + " " +  p.last_name, p.user.id ] }, { :include_blank => false }, :style => "width: 390px;") %>
 	    <% end %>
 		
 		  <p><b>Subject</b></p>

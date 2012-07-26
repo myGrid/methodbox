@@ -28,7 +28,7 @@ ActionController::Routing::Routes.draw do |map|
   #not currently used
   #map.resources :variable_links, :requirements => {:protocol => ROUTES_PROTOCOL}
 
-  map.resources :messages, :collection => { :autocomplete_message_to => :post, :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => ROUTES_PROTOCOL}
+  map.resources :messages, :collection => { :auto_complete_for_message_to => :get, :sent => :get, :delete_all_selected => :delete }, :requirements => {:protocol => ROUTES_PROTOCOL}
 
 
   map.resources :surveys, :as => SURVEY.gsub(" ", "_"), :member => { :show_all_variables => :get, :add_note => :post, :download => :get}, :collection => {:retrieve_variables => :get, :retrieve_details => :get, :collapse_row => :get, :expand_row => :get, :add_nesstar_surveys => :post, :nesstar_datasource => :get, :new_nesstar_datasource => :post, :show_datasets_for_categories => :get, :category_browse => :get, :view_variables => :post, :hide_info => :get, :more_info => :get, :search_variables => :get,:sort_variables => :get, :show_links=>:get}, :requirements => {:protocol => ROUTES_PROTOCOL}

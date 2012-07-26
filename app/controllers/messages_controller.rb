@@ -14,12 +14,17 @@ class MessagesController < ApplicationController
   # declare sweepers and which actions should invoke them
   # cache_sweeper :message_sweeper, :only => [ :create, :show, :destroy, :delete_all_selected ]
   
+  def auto_complete_for_message_to
+    query = params[:message][:to]
+    @people = Person.all(:order => "last_name ASC", :conditions => ['first_name LIKE ? or last_name LIKE ?', "#{query}%", "#{query}%"])
+    render :partial=>"auto_complete_for_message_to"
+  end
+  
   # GET /messages
   def index
     # inbox
     @message_folder = "inbox"
-    @messages = Message.find(:all, 
-      :conditions => ["`to` = ? AND `deleted_by_recipient` = ?", current_user.id, false],
+    @messages = Message.all(:conditions => ["`to` = ? AND `deleted_by_recipient` = ?", current_user.id, false],
       :order => produce_sql_ordering_string(params[:sort_by], params[:order]),
       :page => { :size => 20,
         :current => params[:page] })
@@ -33,8 +38,7 @@ class MessagesController < ApplicationController
   def sent
     # outbox
     @message_folder = "outbox"
-    @messages = Message.find(:all, 
-      :conditions => ["`from` = ? AND `deleted_by_sender` = ?", User.find(current_user.id), false],
+    @messages = Message.all(:conditions => ["`from` = ? AND `deleted_by_sender` = ?", User.find(current_user.id), false],
       :order => produce_sql_ordering_string(params[:sort_by], params[:order]),
       :page => { :size => 20,
         :current => params[:page] })
@@ -124,9 +128,11 @@ class MessagesController < ApplicationController
   def create
     # check if sending is allowed and increment the message counter
     # sending_allowed = ActivityLimit.check_limit(current_user, "internal_message")[0]
+    unless params[:message_to] == nil || params[:message][:subject] || params[:message][:body]
     sending_allowed = true
     if sending_allowed
       @message = Message.new(params[:message])
+      @message.to = params[:message_to].first
       @message.from ||= current_user.id
       
       # set initial datetimes
@@ -180,6 +186,12 @@ class MessagesController < ApplicationController
 
       end
 
+    end
+  else
+      respond_to do |format|
+        flash[:error] = 'The message must have a recipient, a subject and a message'
+        format.html { redirect_to new_message_url }
+      end
     end
   end
 

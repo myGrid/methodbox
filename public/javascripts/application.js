@@ -194,6 +194,15 @@ function addDatasetListTag(tag_id) {
     dataset_tags_autocompleter.addContactToList(item);
 }
 
+//Add a hidden element with the recipients id
+function messageToID(id) {
+	//first remove any existing elements since only 1 person can be messaged at a time currently
+	$("message_to_person").childElements().invoke('remove');
+	var hidden_input = new Element('input',{'id': 'message_to_person' + '_' + id,'name': 'message_to[]','type':'hidden'});
+    hidden_input.value = id;
+    $('message_to_person').insert(hidden_input);	
+}
+
 
 // document.observe('dom:loaded', function() {  
 //      $('new-group-link').observe('click', function(event) {  

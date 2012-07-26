@@ -108,6 +108,15 @@
             
             </li>
 <% end -%>
+<% if logged_in? %>
+	<li class="yuimenubaritem">
+    
+        <a class="yuimenubaritemlabel" href="<%= messages_url -%>" title="View received messages and send messages to other users">
+            Messages
+        </a>                                        
+    
+    </li>
+<% end %>
 <% if logged_in? -%>
             <li class="yuimenubaritem">
             
