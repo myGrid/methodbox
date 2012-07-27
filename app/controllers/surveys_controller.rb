@@ -622,7 +622,7 @@ end
     source_scripts = []
     # no survey link to publications yet, maybe in the future
 
-    links = Link.find(:all, :conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link" })
+    links = Link.all(:conditions => { :object_type => "Survey", :object_id => @survey.id, :predicate => "link" })
 
     links.each do |link|
       case link.subject.class.name
@@ -636,7 +636,7 @@ end
     @archives = source_archives
     @scripts = source_scripts
     
-    find_all_categories_for_survey
+    #find_all_categories_for_survey
 
     respond_to do |format|
       format.html # show.html.erb
@@ -795,11 +795,11 @@ end
   end
 
   def find_survey
-        @survey = Survey.find(params[:id])
+    @survey = Survey.find(params[:id])
   end
 
   def find_surveys
-    found = Survey.find( :all, :order => "title" )
+    found = Survey.all(:order => "title" )
     @surveys = found
   end
 

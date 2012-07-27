@@ -1,0 +1,7 @@
+<ul class="fast_auto_complete">
+  <% @people.each do |person| %>
+    <% unless person == current_user.person %>
+      <li class="fast_auto_complete" id="<%= person.user.id %>"><%= person.name %></li>
+    <% end %>
+  <% end %>
+</ul>

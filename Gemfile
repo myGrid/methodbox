@@ -30,6 +30,7 @@ gem "recaptcha", :require => "recaptcha/rails"
 #later versions cause issues with time to words since {{variable}} is now %{variable} in later versions
 gem "i18n", "0.4.1"
 gem 'delayed_job', '~>2.0.4'
+gem 'faker'
 
 #database adaptors
 #need the odbc gem for sqlserver
