@@ -1,7 +1,7 @@
 <%= javascript_include_tag 'variable_table_check.js' -%>
 <%= javascript_include_tag 'server_paginated_variables_table.js' -%>
 <script type="text/javascript">
-  // Load the Visualization API and the piechart package.
+  // Load the Visualization API and the chart package.
   google.load('visualization', '1', {'packages':['corechart']});
 </script>
 <h1 class="contribution_title"><%= DATASET -%>: <%= h(@dataset.name) -%></h1>
@@ -25,6 +25,6 @@
    tabView = new YAHOO.widget.TabView("datasets_tabview");
 </script>
 <script type="text/javascript">
-var results = <%= raw @variables_json -%>;
+//var results = <%= raw @variables_json -%>;
 createTable(<%= @dataset.id -%>);
 </script>

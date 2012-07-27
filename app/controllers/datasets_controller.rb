@@ -17,7 +17,7 @@ class DatasetsController < ApplicationController
   before_filter :find_dataset, :only => [ :retrieve_variables, :update_metadata_nesstar, :download, :show, :edit, :update, :update_data, :update_metadata, :load_new_data, :load_new_metadata ]
   before_filter :can_add_or_edit_datasets, :only => [ :edit, :load_new_data, :load_new_metadata, :update ]
   after_filter  :update_last_user_activity
-  before_filter :find_previous_searches, :only => [ :show ]
+  #before_filter :find_previous_searches, :only => [ :show ]
   before_filter :set_tagging_parameters,:only=>[:edit,:new,:create,:update]
 
   def retrieve_variables
@@ -235,15 +235,16 @@ class DatasetsController < ApplicationController
 
   def show
     unless !Authorization.is_authorized?("show", nil, @dataset.survey, current_user)
-    @variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :order=>"name ASC", :limit=>20) 
-    variables_hash = {"startIndex" => 0, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
-    @variables_json = variables_hash.to_json
-  else
-    flash[:error] = "You do not have permission to carry out that action"
-    respond_to do |format|
-      format.html { redirect_to :back }
+    #no need to grab variables since this is done after page render by XHR
+    #@variables = Variable.all(:conditions=>{:dataset_id=>@dataset.id}, :limit=>20) 
+    #variables_hash = {"startIndex" => 0, "recordsReturned" => 20, "totalRecords"=>Variable.all(:conditions=>{:dataset_id=>@dataset.id}).count, "results" => @variables.collect{|variable| {"id" => variable.id, "name"=> variable.name, "description"=>variable.value, "dataset"=>variable.dataset.name, "dataset_id"=>variable.dataset.id.to_s, "survey"=>variable.dataset.survey.title, "survey_id"=>variable.dataset.survey.id.to_s, "year" => variable.dataset.year, "category"=>variable.category, "popularity" => VariableList.all(:conditions=>"variable_id=" + variable.id.to_s).size}}}
+    #@variables_json = variables_hash.to_json
+    else
+      flash[:error] = "You do not have permission to carry out that action"
+      respond_to do |format|
+        format.html { redirect_to :back }
+      end
     end
-  end
   end
   
   def new
