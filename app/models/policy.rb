@@ -102,13 +102,16 @@ class Policy < ActiveRecord::Base
     
     # read the permission data from params[]
     unless params[:sharing][:permissions].blank?
-      contributor_types = ActiveSupport::JSON.decode(params[:sharing][:permissions][:contributor_types])
-      new_permission_data = ActiveSupport::JSON.decode(params[:sharing][:permissions][:values])
-      puts "Inside policy"
-      puts params[:sharing][:permissions][:values]
-      puts params[:sharing][:permissions][:contributor_types]
-      puts contributor_types
-      puts new_permission_data
+      if params[:sharing][:permissions][:contributor_types].blank?
+        contributor_types = []
+      else
+        contributor_types = ActiveSupport::JSON.decode(params[:sharing][:permissions][:contributor_types])
+      end
+      if params[:sharing][:permissions][:values].blank?
+        new_permission_data = {}
+      else
+        new_permission_data = ActiveSupport::JSON.decode(params[:sharing][:permissions][:values])
+      end
     else
       contributor_types = []
       new_permission_data = {}

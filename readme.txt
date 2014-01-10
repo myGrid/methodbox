@@ -25,6 +25,7 @@ config/environment.example.rb includes set up for the exception handler and need
 config/environments/RAILS_ENV.example.rb (eg production.rb) need email details that MethodBox uses to send out notifications.  It also has a STATISTICS_ROUTE which is an obfuscated url that you can use to give to someone interested in the download stats.  In these file there is a constant called ROUTES_PROTOCOL which can be set to 'http' or 'https' and is used by the config/routes.rb file to make certain routes over 'https' if you require (don't forget certificates for apache etc, hard to test in development).  Copy file to eg. development.rb and then make the changes.
 
 MethodBox uses bundler to handle its gems.  (sudo) gem install bundler to install it and then bundle install in the MethodBox root to install the gems in the application. 
+You may need to downgrade to gem 1.8.25 to avoid "undefined method `source_index' for Gem:Module (NoMethodError)"
 When installing these gems you may also have to install some native libraries, the following list is for gnu/linux:
 libxml2
 libxml2-dev

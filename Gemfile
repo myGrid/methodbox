@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 gem "rails", "2.3.18"
 #rails version depends on active support of same version
 #gem "activesupport", "2.3.14"
-gem "rmagick", "2.13.1"
+gem "rmagick"
 gem "RedCloth", "4.2.3"
 gem "will_paginate", "2.3.12"
 gem "fastercsv", "1.5.3"
@@ -18,7 +18,10 @@ gem "linkeddata", "0.3.1"
 gem "ipaddress", "0.7.0"
 gem "POpen4",  "0.1.4", :require => "popen4"
 gem "nesstar-api"
-#gem "metric_fu"
+#use  this instead of metric_fu to get the 1.8.7 dependencies correct
+gem "progressbar", "0.21.0"
+gem "metrical", :require => false
+#gem "metric_fu", "2.1.1"
 gem 'sunspot_rails', '~> 1.2.1'
 gem 'addressable', '2.2.4'
 gem 'simple-spreadsheet-extractor', '0.5.0'

@@ -125,6 +125,8 @@ class CsvarchivesController < ApplicationController
     extract = Csvarchive.find(params[:id])
     if extract.complete
       render :partial=>"csvarchives/check_for_complete"
+    elsif extract.failure
+      render :partial=>"csvarchives/failed_extract"
     else
       render :text=>"still being processed......"
     end
